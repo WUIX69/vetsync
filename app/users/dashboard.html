@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-reboot.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="assets/css/app.css" />
+    <link rel="stylesheet" href="assets/css/spinner.css" />
+</head>
+
+<body>
+
+    <div class="window-spinner-overlay"></div>
+    <div class="la-square-jelly-box window-spinner la-2x">
+        <div></div>
+        <div></div>
+    </div>
+
+    <!-- Archive Old Messages Flyout -->
+    <div class="ui flyout" id="archiveFlyout">
+        <i class="close icon"></i>
+        <div class="ui header">
+            <i class="question icon"></i>
+            <div class="content">Archive Old Messages</div>
+        </div>
+        <div class="scrolling content">
+            <p>
+                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical
+                Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at
+                Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a
+                Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the
+                undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et
+                Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the
+                theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor
+                sit amet..", comes from a line in section 1.10.32.
+
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.
+                Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their
+                exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+            </p>
+        </div>
+        <div class="actions">
+            <div class="ui red cancel button">
+                <i class="remove icon"></i>
+                No
+            </div>
+            <div class="ui green ok button">
+                <i class="checkmark icon"></i>
+                Yes
+            </div>
+        </div>
+    </div>
+
+    <!-- Reminder Modal -->
+    <div class="ui tiny modal" id="reminderModal">
+        <div class="header">Add Time Entry</div>
+        <div class="content">
+            <form class="ui form" id="reminderForm">
+                <div class="field">
+                    <label for="employee">Employee</label>
+                    <div class="ui fluid floating dropdown">
+                        <input type="hidden" name="employee" />
+                        <div class="default text">Select employee</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            <div class="ui icon search input">
+                                <i class="search icon"></i>
+                                <input type="text" name="employee_search" placeholder="Search employee...">
+                            </div>
+                            <div class="divider"></div>
+                            <div class="header">
+                                <i class="tags icon"></i>
+                                Tag Label
+                            </div>
+                            <div class="scrolling menu">
+                                <div class="item" data-value="1">
+                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars//jenny.jpg" />
+                                    John Smith
+                                </div>
+                                <div class="item" data-value="2">
+                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars//elliot.jpg" />
+                                    Sarah Johnson
+                                </div>
+                                <div class="item" data-value="3">
+                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars//stevie.jpg" />
+                                    Michael Williams
+                                </div>
+                                <div class="item" data-value="4">
+                                    <img class="ui avatar image rounded-circle"
+                                        src="assets/img/avatars//veronika.jpg" />
+                                    Emily Brown
+                                </div>
+                                <div class="item" data-value="1">
+                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars//jenny.jpg" />
+                                    John Smith
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="eight wide field">
+                        <label for="date">Date</label>
+                        <input type="date" name="date" placeholder="Select Date" />
+                    </div>
+                    <div class="four wide field">
+                        <label for="timeIn">Time In</label>
+                        <input type="time" name="time_in" id="timeIn" />
+                    </div>
+                    <div class="four wide field">
+                        <label for="timeOut">Time Out</label>
+                        <input type="time" name="time_out" id="timeOut" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="memo">Memo</label>
+                    <textarea rows="4" name="memo" placeholder="What this time entry is for..."></textarea>
+                </div>
+                <div class="actions">
+                    <button class="ui cancel button" type="button">Cancel</button>
+                    <button class="ui positive button" type="submit">Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container-body pusher">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-auto">
+                <div class="sidebar">
+                    <div class="sidebar-logo">
+                        <img class="rounded-circle" src="assets/img/logo.jpg" />
+                        <h2>Admin<span class="text-danger">Panel</span></h2>
+                    </div>
+                    <div class="nav flex-column sidebar-menu">
+                        <a class="nav-link active" href="#"><span class="material-icons-sharp">dashboard</span>
+                            <h3>Dashboard</h3>
+                        </a>
+                        <a class="nav-link" href="users.html"><span class="material-icons-sharp">person_outline</span>
+                            <h3>Users</h3>
+                        </a>
+                        <a class="nav-link" href="#"><span class="material-icons-sharp">history</span>
+                            <h3>History</h3>
+                        </a>
+                        <a class="nav-link" href="analytics.html"><span class="material-icons-sharp">analytics</span>
+                            <h3>Analytics</h3>
+                        </a>
+                        <a class="nav-link" href="#"><span class="material-icons-sharp">confirmation_number</span>
+                            <h3>Tickets</h3>
+                        </a>
+                        <a class="nav-link" href="#"><span class="material-icons-sharp">receipt_long</span>
+                            <h3>Sales List</h3>
+                        </a>
+                        <a class="nav-link" href="#"><span class="material-icons-sharp">report</span>
+                            <h3>Reports</h3>
+                        </a>
+                        <a class="nav-link" href="settings.html"><span class="material-icons-sharp">settings</span>
+                            <h3>Settings</h3>
+                        </a>
+                        <a class="nav-link" href="#"><span class="material-icons-sharp">logout</span>
+                            <h3>Logout</h3>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col">
+                <main class="container-main">
+                    <h1>Dashboard</h1>
+
+                    <!-- Stats Cards -->
+                    <div class="section-container">
+                        <div class="section-wrapper stat-cards">
+                            <div class="row g-4">
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="box stat-card">
+                                        <div class="info">
+                                            <h6 class="text-muted mb-2">
+                                                Total Sales
+                                            </h6>
+                                            <h2>$65,024</h2>
+                                        </div>
+                                        <div class="progress-circle">
+                                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                                <path d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
+                                                    stroke-width="3" />
+                                                <path d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#20c997"
+                                                    stroke-width="4.3" stroke-dasharray="81, 100" />
+                                                <text x="18" y="20.35" class="percentage">
+                                                    +81%
+                                                </text>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="box stat-card">
+                                        <div class="info">
+                                            <h6 class="text-muted mb-2">
+                                                Site Visitors
+                                            </h6>
+                                            <h2>1,234</h2>
+                                        </div>
+                                        <div class="progress-circle">
+                                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                                <path d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
+                                                    stroke-width="3" />
+                                                <path d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff0060"
+                                                    stroke-width="4.3" stroke-dasharray="23, 100" />
+                                                <text x="18" y="20.35" class="percentage">
+                                                    +23%
+                                                </text>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4">
+                                    <div class="box stat-card">
+                                        <div class="info">
+                                            <h6 class="text-muted mb-2">
+                                                Searches
+                                            </h6>
+                                            <h2>1,234</h2>
+                                        </div>
+                                        <div class="progress-circle">
+                                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                                <path d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
+                                                    stroke-width="3" />
+                                                <path d="M18 2.0845
+                                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c9bcf"
+                                                    stroke-width="4.3" stroke-dasharray="12, 100" />
+                                                <text x="18" y="20.35" class="percentage">
+                                                    +12%
+                                                </text>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- New Users -->
+                    <div class="section-container">
+                        <h2 class="title">New Users</h2>
+                        <div class="section-wrapper box new-users">
+                            <div class="d-flex flex-wrap justify-content-around">
+                                <div class="user">
+                                    <img src="assets/img/user-1.jpg" class="rounded-circle" alt="User avatar" />
+                                    <label class="mt-2 name">John Doe</label>
+                                    <small class="text-muted time-ago">2 mins ago</small>
+                                </div>
+                                <div class="user">
+                                    <img src="assets/img/user-2.jpg" class="rounded-circle" alt="User avatar" />
+                                    <label class="mt-2">John Doe</label>
+                                    <small class="text-muted">5 mins ago</small>
+                                </div>
+                                <div class="user">
+                                    <img src="assets/img/user-3.jpg" class="rounded-circle" alt="User avatar" />
+                                    <label class="mt-2">John Doe</label>
+                                    <small class="text-muted">15 mins ago</small>
+                                </div>
+                                <div class="user">
+                                    <img src="assets/img/user-4.jpg" class="rounded-circle" alt="User avatar" />
+                                    <label class="mt-2">John Doe</label>
+                                    <small class="text-muted">42 mins ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="section-container">
+                        <h2 class="title">Recent Orders</h2>
+                        <div class="section-wrapper table-list box">
+                            <div class="table-filters">
+                                <div class="base-filters">
+                                    <div class="ui fluid mini category search">
+                                        <div class="ui icon input">
+                                            <input class="prompt" type="text" placeholder="Search orders..." />
+                                            <i class="search icon"></i>
+                                        </div>
+                                        <div class="results"></div>
+                                    </div>
+                                    <div class="quick-filters">
+                                        <div class="ui mini compact selection floating labeled icon dropdown">
+                                            <input type="hidden" name="status" />
+                                            <i class="signal icon"></i>
+                                            <div class="default text">Status</div>
+                                            <div class="menu">
+                                                <div class="header">
+                                                    <i class="tags icon"></i>
+                                                    Filter by Status
+                                                </div>
+                                                <div class="item" data-value="active">
+                                                    Pending
+                                                </div>
+                                                <div class="item" data-value="inactive">
+                                                    Declined
+                                                </div>
+                                                <div class="item" data-value="pending">
+                                                    Completed
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="ui mini secondary button filter-reset-btn">
+                                            <i class="times icon"></i>
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="ui mini secondary button">
+                                    View All
+                                </button>
+                            </div>
+                            <div class="table-responsive recent-orders">
+                                <table class="ui fixed single line small center aligned very basic selectable table">
+                                    <thead>
+                                        <tr>
+                                            <th>Course Name</th>
+                                            <th>Course Number</th>
+                                            <th>Payment</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentOrderItems">
+                                        <!-- Table Data -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+            <!-- Right Section -->
+            <div class="col-lg-3">
+                <div class="right-section">
+                    <!-- Nav -->
+                    <div class="nav">
+                        <div class="dark-mode-toggle">
+                            <span class="material-icons-sharp light active">
+                                light_mode
+                            </span>
+                            <span class="material-icons-sharp dark">
+                                dark_mode
+                            </span>
+                        </div>
+                        <div class="profile">
+                            <div class="info">
+                                <span>Hey, <b>Jonathan</b></span>
+                                <small class="text-muted">Admin</small>
+                            </div>
+                            <div class="profile-photo">
+                                <img class="rounded-circle" width="37" src="assets/img/profile.jpg" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Nav -->
+
+                    <div class="system-info box">
+                        <div class="logo">
+                            <img class="rounded-circle" width="140" src="assets/img/logo.jpg" />
+                        </div>
+                        <div class="info">
+                            <h2>Lorem</h2>
+                            <label>Lorem ipsum dolor</label>
+                        </div>
+                    </div>
+
+                    <div class="reminders">
+                        <div class="header">
+                            <h2 class="mt-2">Reminders</h2>
+                            <span class="material-icons-sharp">
+                                notifications_none
+                            </span>
+                        </div>
+
+                        <div class="notification box-tiny">
+                            <div class="content">
+                                <span class="material-icons-sharp icon">
+                                    volume_up
+                                </span>
+                                <div class="info">
+                                    <h3>Workshop</h3>
+                                    <small class="text_muted">
+                                        08:00 AM - 12:00 PM
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="details">
+                                <span class="material-icons-sharp">
+                                    more_vert
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="notification box-tiny deactive">
+                            <div class="content">
+                                <span class="material-icons-sharp icon">
+                                    edit
+                                </span>
+                                <div class="info">
+                                    <h3>Workshop</h3>
+                                    <small class="text_muted">
+                                        08:00 AM - 12:00 PM
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="details">
+                                <span class="material-icons-sharp">
+                                    more_vert
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="notification box-tiny add-reminder" data-open-modal="#reminderModal">
+                            <span class="material-icons-sharp"> add </span>
+                            <h3>Add Reminder</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/lib/jquery/jquery.min.js"></script>
+    <script src="assets/lib/jquery/jquery.validate.min.js"></script>
+    <script src="assets/lib/jquery/additional-methods.min.js"></script>
+    <script src="assets/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="assets/lib/lodash/lodash.min.js"></script>
+    <script src="assets/js/spinner.js"></script>
+    <script src="assets/js/darkmode.js"></script>
+    <script src="assets/js/scripts.js"></script>
+    <script type="text/javascript">
+
+        const $reminderModal = $('#reminderModal');
+        const $reminderForm = $reminderModal.find('.ui.form');
+
+        function getRecentOrders() {
+            // Table Data
+            const orders = [
+                {
+                    courseName: "JavaScript Tutorial",
+                    courseNumber: "85743",
+                    payment: "Due",
+                    status: {
+                        text: "Pending",
+                        color: "#ffb400",
+                    },
+                },
+                {
+                    courseName: "CSS Full Course",
+                    courseNumber: "97245",
+                    payment: "Refunded",
+                    status: {
+                        text: "Declined",
+                        color: "#ff0060",
+                    },
+                },
+                {
+                    courseName: "Python for Beginners",
+                    courseNumber: "34521",
+                    payment: "Paid",
+                    status: {
+                        text: "Completed",
+                        color: "#00ba88",
+                    },
+                },
+                {
+                    courseName: "React Fundamentals",
+                    courseNumber: "65432",
+                    payment: "Due",
+                    status: {
+                        text: "Pending",
+                        color: "#ffb400",
+                    },
+                },
+                {
+                    courseName: "UI/UX Design Course",
+                    courseNumber: "78901",
+                    payment: "Paid",
+                    status: {
+                        text: "Completed",
+                        color: "#00ba88",
+                    },
+                },
+            ];
+
+            let recentOrderItems = $("#recentOrderItems");
+            recentOrderItems.empty();
+
+            let recentOrdersHTML = "";
+            orders.forEach((order) => {
+                recentOrdersHTML += `
+                    <tr>
+                        <td>${order.courseName}</td>
+                        <td>${order.courseNumber}</td>
+                        <td>${order.payment}</td>
+                        <td style="color: ${order.status.color}">
+                            ${order.status.text}
+                        </td>
+                        <td>
+                            <div class="ui compact floating selection dropdown recent-orders-dd">
+                                <i class="dropdown icon"></i>
+                                <div class="text">Actions</div>
+                                <div class="menu">
+                                    <div class="item" data-value="view">View</div>
+                                    <div class="item" data-value="edit">Edit</div>
+                                    <div class="item" data-value="delete">Delete</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            recentOrderItems.append(recentOrdersHTML);
+            recentOrderItems.find(".ui.dropdown").dropdown();
+
+            // Add event listener to dropdown
+            $(".recent-orders-dd").dropdown({
+                onChange: function (value) {
+                    console.log(value);
+                    if (value === "view") {
+                        $(".ui.flyout").flyout("toggle");
+                    }
+                },
+            });
+        }
+
+        function validateReminderForm($form = null) {
+            let reminderFormConf = {
+                form: $form,
+                fields: {
+                    employee: {
+                        identifier: "employee",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please enter a name"
+                            },
+                        ]
+                    },
+                    employee_search: {
+                        identifier: "employee_search",
+                        optional: true,
+                    },
+                    date: {
+                        identifier: "date",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please enter a date"
+                            },
+                        ]
+                    },
+                    time_in: {
+                        identifier: "time_in",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please select a time in"
+                            }
+                        ]
+                    },
+                    time_out: {
+                        identifier: "time_out",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please select a time in"
+                            }
+                        ]
+                    },
+                    memo: {
+                        identifier: "memo",
+                        rules: [
+                            {
+                                type: "empty",
+                                prompt: "Please enter a memo"
+                            },
+                            {
+                                type: "minLength[2]",
+                                prompt: "Memo must be at least 2 characters"
+                            }
+                        ]
+                    }
+                }
+            };
+            validateHandler(reminderFormConf);
+        }
+
+        $(function () {
+
+            initModal({
+                modal_id: $reminderModal,
+                transition: "swing down",
+                duration: 800,
+            });
+
+            getRecentOrders();
+            validateReminderForm($reminderForm);
+
+        });
+    </script>
+</body>
+
+</html>
