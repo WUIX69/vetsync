@@ -128,7 +128,6 @@ p {
 .sidebar {
     height: 100% !important;
     position: relative;
-
     margin-bottom: 3rem;
 }
 
@@ -151,7 +150,7 @@ p {
     transition: all 0.4s ease-in-out;
     box-shadow: var(--box-shadow);
     background-color: var(--color-white);
-    height: 95% !important;
+    height: 94.3% !important;
     min-width: 168px;
     width: fit-content !important;
     position: relative;
@@ -412,11 +411,11 @@ main
     display: none;
 }
 
-main .section-container .table-list .table-responsive {
+main .section-container .table-list .table-container {
     position: relative !important;
 }
 
-main .section-container .table-list .table-responsive .table {
+main .section-container .table-list .table-container .table {
     margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
@@ -425,28 +424,28 @@ main .section-container .table-list .table-responsive .table {
     background-color: transparent !important;
 }
 
-main .section-container .table-list .table-responsive .table * {
+main .section-container .table-list .table-container .table * {
     font-size: 0.75rem !important;
 }
 
-main .section-container .table-list .table-responsive .table th {
+main .section-container .table-list .table-container .table th {
     color: var(--color-dark);
 }
 
-main .section-container .table-list .table-responsive .table td {
+main .section-container .table-list .table-container .table td {
     color: var(--color-dark-variant);
 }
 
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .table
     td:has(.ui.dropdown) {
     overflow: visible !important;
 }
 
-main .section-container .table-list .table-responsive .table .ui.dropdown {
+main .section-container .table-list .table-container .table .ui.dropdown {
     border: 1px solid var(--color-dark-variant) !important;
     color: var(--color-dark-variant) !important;
     background-color: var(--color-white) !important;
@@ -455,32 +454,26 @@ main .section-container .table-list .table-responsive .table .ui.dropdown {
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .table
     .ui.dropdown
     .div.text {
     color: var(--color-dark-variant) !important;
 }
 
-main
-    .section-container
-    .table-list
-    .table-responsive
-    .table
-    .ui.dropdown
-    .icon {
+main .section-container .table-list .table-container .table .ui.dropdown .icon {
     margin-top: -0.75rem;
 }
 
 /* DataTables Custom Styles (.dt-container) */
-main .section-container .table-list .table-responsive .dt-container th {
+main .section-container .table-list .table-container .dt-container th {
     padding-top: 0.8rem !important;
 }
 
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     th
     span.dt-column-order {
@@ -490,7 +483,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     th:first-child {
     padding-left: 0.3rem !important;
@@ -499,7 +492,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     .bottom-controls
     * {
@@ -509,7 +502,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     .bottom-controls {
     display: flex;
@@ -521,7 +514,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     .bottom-controls
     .right-controls {
@@ -533,7 +526,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     .bottom-controls
     .right-controls
@@ -546,7 +539,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     .bottom-controls
     .right-controls
@@ -558,7 +551,7 @@ main
 main
     .section-container
     .table-list
-    .table-responsive
+    .table-container
     .dt-container
     .bottom-controls
     .right-controls
@@ -588,6 +581,16 @@ main .dt-container.dt-semanticUI .dt-processing div.ui.loader {
 main .dt-container.dt-semanticUI .dt-processing div:last-child {
     /* Disabled DataTables default processing indicator */
     display: none;
+}
+
+main .dt-container.dt-semanticUI table colgroup {
+    display: none !important;
+}
+
+main .dt-container.dt-semanticUI .dt-scroll:has(table.quick-view) {
+    /* Table custom width fix for quick-view table */
+    max-width: 794px;
+    /* overflow: hidden; */
 }
 
 /*--- Right Section ---*/
