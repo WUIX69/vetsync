@@ -5,12 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-reboot.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets/vendor/fomantic-ui/dist/semantic.min.css" />
-    <link rel="stylesheet" href="assets/css/app.css" />
-    <link rel="stylesheet" href="assets/css/spinner.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <style>
         main .account-settings .section-wrapper {
             margin-top: 1.3rem !important;
@@ -66,7 +66,7 @@
             <div class="col-auto">
                 <div class="sidebar">
                     <div class="sidebar-logo">
-                        <img class="rounded-circle" src="assets/img/logo.jpg">
+                        <img class="rounded-circle" src="../../../public/assets/img/logo.jpg">
                         <h2>Admin<span class="text-danger">Panel</span></h2>
                     </div>
                     <div class="nav flex-column sidebar-menu">
@@ -104,91 +104,65 @@
 
             <div class="col">
                 <main class="container-main">
-                    <h1>Reports</h1>
+                    <h1>Account Settings</h1>
 
-                    <!-- reports stats cards -->
-                    <div class="section-container">
-                        <div class="section-wrapper stat-cards">
-                            <div class="row g-4">
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="box stat-card">
-                                        <div class="info">
-                                            <h6 class="text-muted mb-2">
-                                                Total Sales
-                                            </h6>
-                                            <h2>$65,024</h2>
-                                        </div>
-                                        <div class="progress-circle">
-                                            <svg viewBox="0 0 36 36" class="circular-chart">
-                                                <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                                    stroke-width="3" />
-                                                <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#20c997"
-                                                    stroke-width="4.3" stroke-dasharray="81, 100" />
-                                                <text x="18" y="20.35" class="percentage">
-                                                    +81%
-                                                </text>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="box stat-card">
-                                        <div class="info">
-                                            <h6 class="text-muted mb-2">
-                                                Site Visitors
-                                            </h6>
-                                            <h2>1,234</h2>
-                                        </div>
-                                        <div class="progress-circle">
-                                            <svg viewBox="0 0 36 36" class="circular-chart">
-                                                <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                                    stroke-width="3" />
-                                                <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff0060"
-                                                    stroke-width="4.3" stroke-dasharray="23, 100" />
-                                                <text x="18" y="20.35" class="percentage">
-                                                    +23%
-                                                </text>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="box stat-card">
-                                        <div class="info">
-                                            <h6 class="text-muted mb-2">
-                                                Searches
-                                            </h6>
-                                            <h2>1,234</h2>
-                                        </div>
-                                        <div class="progress-circle">
-                                            <svg viewBox="0 0 36 36" class="circular-chart">
-                                                <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                                    stroke-width="3" />
-                                                <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c9bcf"
-                                                    stroke-width="4.3" stroke-dasharray="12, 100" />
-                                                <text x="18" y="20.35" class="percentage">
-                                                    +12%
-                                                </text>
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
+                    <!-- Account Settings -->
+                    <div class="section-container account-settings">
+                        <div class="section-wrapper box">
+                            <div class="section-informative-header">
+                                <div class="title">Profile</div>
+                                <div class="description">This is how others will see you on the site.</div>
                             </div>
+                            <div class="section-divider"></div>
+                            <form class="ui form">
+                                <div class="field">
+                                    <label>Username</label>
+                                    <input class="ui input" type="text" placeholder="Enter your username">
+                                    <div class="description">This is your public display name. It can be your
+                                        real name
+                                        or a pseudonym. You
+                                        can only change this once every 30 days.</div>
+                                </div>
+                                <div class="field">
+                                    <label>Password</label>
+                                    <input class="ui input" type="password" placeholder="Enter new password">
+                                    <div class="description">Your password must be at least 8 characters long and
+                                        contain
+                                        at least one
+                                        uppercase letter, one lowercase letter, and one number.</div>
+                                </div>
+                                <div class="field">
+                                    <label>Email Address</label>
+                                    <input class="ui input" type="email" placeholder="Enter your email">
+                                    <div class="description">You can manage verified email addresses in your email
+                                        settings.</div>
+                                </div>
+                                <div class="field">
+                                    <label>Bio</label>
+                                    <textarea class="ui input" placeholder="Enter your bio"></textarea>
+                                    <div class="description">Tell us about yourself. You can @mention other users and
+                                        organizations to link to them.</div>
+                                </div>
+                                <div class="field">
+                                    <label>URLs</label>
+                                    <div class="description">Add links to your website, blog, or social media profiles.
+                                    </div>
+                                    <div class="url-inputs">
+                                        <input class="ui input" type="text" placeholder="Enter your URLs">
+                                        <input class="ui input" type="text" placeholder="Enter your URLs">
+                                        <button type="button" class="ui mini basic button add-url-btn"
+                                            style="margin: 0 !important; width: 100px !important;"><i
+                                                class="add icon"></i>
+                                            Add
+                                            URL</button>
+                                    </div>
+                                </div>
+                                <div class="actions mt-4">
+                                    <button class="ui primary button" type="submit">Save Changes</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-
 
                     <!-- Notification Preferences -->
                     <!-- <div class="section-container">
@@ -220,7 +194,7 @@
 
             <!-- Right Section -->
             <div class="col-lg-3">
-                <div class="right-section d-none">
+                <div class="right-section">
                     <!-- Nav -->
                     <div class="nav">
                         <div class="dark-mode-toggle">
@@ -237,7 +211,8 @@
                                 <small class="text-muted">Admin</small>
                             </div>
                             <div class="profile-photo">
-                                <img class="rounded-circle" width="37" src="assets/img/profile.jpg" />
+                                <img class="rounded-circle" width="37"
+                                    src="../../../public/assets/img/profiles/profile.jpg" />
                             </div>
                         </div>
                     </div>
@@ -245,7 +220,7 @@
 
                     <div class="system-info box">
                         <div class="logo">
-                            <img class="rounded-circle" width="140" src="assets/img/logo.jpg" />
+                            <img class="rounded-circle" width="140" src="../../../public/assets/img/logo.jpg" />
                         </div>
                         <div class="info">
                             <h2>Lorem</h2>
@@ -309,14 +284,14 @@
         </div>
     </div>
 
-    <script src="assets/lib/jquery/jquery.min.js"></script>
-    <script src="assets/lib/jquery/jquery.validate.min.js"></script>
-    <script src="assets/lib/jquery/additional-methods.min.js"></script>
-    <script src="assets/vendor/fomantic-ui/dist/semantic.min.js"></script>
-    <script src="assets/lib/lodash/lodash.min.js"></script>
-    <script src="assets/js/spinner.js"></script>
-    <script src="assets/js/darkmode.js"></script>
-    <script src="assets/js/scripts.js"></script>
+    <script src="../../../public/lib/jquery/jquery.min.js"></script>
+    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
+    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
+    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="../../../public/lib/lodash/lodash.min.js"></script>
+    <script src="../../../public/assets/js/spinner.js"></script>
+    <script src="../../../public/assets/js/darkmode.js"></script>
+    <script src="../../../public/assets/js/scripts.js"></script>
     <script type="text/javascript">
         $(function () {
             // Custom js here...

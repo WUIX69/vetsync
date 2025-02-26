@@ -5,12 +5,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="assets/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
-    <link rel="stylesheet" href="assets/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
-    <link rel="stylesheet" href="assets/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
-    <link rel="stylesheet" href="assets/vendor/fomantic-ui/dist/semantic.min.css" />
-    <link rel="stylesheet" href="assets/css/app.css" />
-    <link rel="stylesheet" href="assets/css/spinner.css" />
+    <link rel="stylesheet" href="public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
+    <link rel="stylesheet" href="public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="public/assets/css/global.css" />
+    <link rel="stylesheet" href="public/assets/css/spinner.css" />
 </head>
 
 <body>
@@ -79,23 +79,28 @@
                             </div>
                             <div class="scrolling menu">
                                 <div class="item" data-value="1">
-                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars/jenny.jpg" />
+                                    <img class="ui avatar image rounded-circle"
+                                        src="public/assets/img/avatars/jenny.jpg" />
                                     John Smith
                                 </div>
                                 <div class="item" data-value="2">
-                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars/elliot.jpg" />
+                                    <img class="ui avatar image rounded-circle"
+                                        src="public/assets/img/avatars/elliot.jpg" />
                                     Sarah Johnson
                                 </div>
                                 <div class="item" data-value="3">
-                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars/stevie.jpg" />
+                                    <img class="ui avatar image rounded-circle"
+                                        src="public/assets/img/avatars/stevie.jpg" />
                                     Michael Williams
                                 </div>
                                 <div class="item" data-value="4">
-                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars/veronika.jpg" />
+                                    <img class="ui avatar image rounded-circle"
+                                        src="public/assets/img/avatars/veronika.jpg" />
                                     Emily Brown
                                 </div>
                                 <div class="item" data-value="1">
-                                    <img class="ui avatar image rounded-circle" src="assets/img/avatars/jenny.jpg" />
+                                    <img class="ui avatar image rounded-circle"
+                                        src="public/assets/img/avatars/jenny.jpg" />
                                     John Smith
                                 </div>
                             </div>
@@ -134,7 +139,7 @@
             <div class="col-auto">
                 <div class="sidebar">
                     <div class="sidebar-logo">
-                        <img class="rounded-circle" src="assets/img/logo.jpg" />
+                        <img class="rounded-circle" src="public/assets/img/logo.jpg" />
                         <h2>Admin<span class="text-danger">Panel</span></h2>
                     </div>
                     <div class="nav flex-column sidebar-menu">
@@ -263,25 +268,25 @@
                         <div class="section-wrapper box new-users">
                             <div class="d-flex flex-wrap justify-content-around">
                                 <div class="user">
-                                    <img src="assets/img/profiles/user-1.jpg" class="rounded-circle"
+                                    <img src="public/assets/img/profiles/user-1.jpg" class="rounded-circle"
                                         alt="User avatar" />
                                     <label class="mt-2 name">John Doe</label>
                                     <small class="text-muted time-ago">2 mins ago</small>
                                 </div>
                                 <div class="user">
-                                    <img src="assets/img/profiles/user-2.jpg" class="rounded-circle"
+                                    <img src="public/assets/img/profiles/user-2.jpg" class="rounded-circle"
                                         alt="User avatar" />
                                     <label class="mt-2">John Doe</label>
                                     <small class="text-muted">5 mins ago</small>
                                 </div>
                                 <div class="user">
-                                    <img src="assets/img/profiles/user-3.jpg" class="rounded-circle"
+                                    <img src="public/assets/img/profiles/user-3.jpg" class="rounded-circle"
                                         alt="User avatar" />
                                     <label class="mt-2">John Doe</label>
                                     <small class="text-muted">15 mins ago</small>
                                 </div>
                                 <div class="user">
-                                    <img src="assets/img/profiles/user-4.jpg" class="rounded-circle"
+                                    <img src="public/assets/img/profiles/user-4.jpg" class="rounded-circle"
                                         alt="User avatar" />
                                     <label class="mt-2">John Doe</label>
                                     <small class="text-muted">42 mins ago</small>
@@ -374,7 +379,7 @@
                                 <small class="text-muted">Admin</small>
                             </div>
                             <div class="profile-photo">
-                                <img class="rounded-circle" width="37" src="assets/img/profiles/profile.jpg" />
+                                <img class="rounded-circle" width="37" src="public/assets/img/profiles/profile.jpg" />
                             </div>
                         </div>
                     </div>
@@ -382,7 +387,7 @@
 
                     <div class="system-info box">
                         <div class="logo">
-                            <img class="rounded-circle" width="140" src="assets/img/logo.jpg" />
+                            <img class="rounded-circle" width="140" src="public/assets/img/logo.jpg" />
                         </div>
                         <div class="info">
                             <h2>Lorem</h2>
@@ -447,14 +452,14 @@
     </div>
 
     <!-- Scripts -->
-    <script src="assets/lib/jquery/jquery.min.js"></script>
-    <script src="assets/lib/jquery/jquery.validate.min.js"></script>
-    <script src="assets/lib/jquery/additional-methods.min.js"></script>
-    <script src="assets/vendor/fomantic-ui/dist/semantic.min.js"></script>
-    <script src="assets/lib/lodash/lodash.min.js"></script>
-    <script src="assets/js/spinner.js"></script>
-    <script src="assets/js/darkmode.js"></script>
-    <script src="assets/js/scripts.js"></script>
+    <script src="public/lib/jquery/jquery.min.js"></script>
+    <script src="public/lib/jquery/jquery.validate.min.js"></script>
+    <script src="public/lib/jquery/additional-methods.min.js"></script>
+    <script src="public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="public/lib/lodash/lodash.min.js"></script>
+    <script src="public/assets/js/spinner.js"></script>
+    <script src="public/assets/js/darkmode.js"></script>
+    <script src="public/assets/js/scripts.js"></script>
     <script type="text/javascript">
 
         const $reminderModal = $('#reminderModal');
