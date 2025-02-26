@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
+    <style>
+        /*-- Unique styles for this page only --*/
+        main .section-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        main .section-container .section-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="window-spinner-overlay"></div>
+    <div class="la-square-jelly-box window-spinner la-2x">
+        <div></div>
+        <div></div>
+    </div>
+
+    <div class="container-body">
+        <div class="row">
+
+            <!-- Main Content -->
+            <div class="col">
+                <main class="container-main">
+
+                    <!-- Login Form -->
+                    <div class="section-container">
+                        <div class="section-wrapper box column">
+                            <h2 class="ui teal image header">
+                                <img src="../../../public/assets/img/logo.jpg" class="image">
+                                <div class="content">
+                                    Log-in to your account
+                                </div>
+                            </h2>
+                            <form class="ui large form">
+                                <div class="ui stacked segment">
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="user icon"></i>
+                                            <input type="text" name="email" placeholder="E-mail address">
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="lock icon"></i>
+                                            <input type="password" name="password" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="ui fluid large teal submit button">Login</div>
+                                </div>
+                                <div class="ui error message"></div>
+                            </form>
+                            <div class="ui message">
+                                New to us? <a href="register.html">Sign Up</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../../public/lib/jquery/jquery.min.js"></script>
+    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
+    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
+    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="../../../public/lib/lodash/lodash.min.js"></script>
+    <script src="../../../public/assets/js/spinner.js"></script>
+    <script src="../../../public/assets/js/darkmode.js"></script>
+    <script src="../../../public/assets/js/scripts.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // Custom js here...
+        });
+    </script>
+</body>
+
+</html>
