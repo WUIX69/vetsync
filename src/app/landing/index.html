@@ -341,6 +341,192 @@
                 text-align: center;
             }
         }
+
+        /* Add these new styles for the info section */
+        .info-section {
+            padding: 100px 0;
+            background: var(--color-background);
+        }
+
+        .info-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card {
+            background: var(--color-white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .info-content {
+            padding: 20px;
+        }
+
+        .info-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--color-dark);
+        }
+
+        .info-preview {
+            color: var(--color-dark-variant);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .info-full {
+            display: none;
+            color: var(--color-dark-variant);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .read-more-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #4e54c8;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .read-more-btn:hover {
+            background: #3a3f9c;
+            transform: translateY(-2px);
+        }
+
+        /* Updated styles for single location */
+        .locations-section {
+            padding: 100px 0;
+            background: var(--color-background);
+        }
+
+        .location-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .location-card {
+            background: var(--color-white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .location-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .location-content {
+            padding: 30px;
+        }
+
+        .location-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--color-dark);
+        }
+
+        .location-details {
+            color: var(--color-dark-variant);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+
+        .location-details .material-icons-sharp {
+            color: #4e54c8;
+        }
+
+        .location-hours {
+            font-size: 1rem;
+            color: var(--color-dark-variant);
+            background: rgba(78, 84, 200, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .location-hours p {
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--color-dark);
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--color-dark-variant);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(78, 84, 200, 0.1);
+            text-align: center;
+        }
+
+        .contact-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 30px;
+            background-color: #4e54c8;
+            color: white;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .contact-button:hover {
+            background-color: #3a3f9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
+        }
+
+        .contact-button .material-icons-sharp {
+            font-size: 20px;
+        }
     </style>
 </head>
 
@@ -447,6 +633,105 @@
         </div>
     </nav>
 
+    <div class="section-container">
+        <div class="info-container">
+            <H1>Information goes here</H1>
+        </div>
+        <section class="info-section">
+            <div class="info-container">
+                <div class="info-grid">
+                    <!-- Info Card 1 -->
+                    <div class="info-card">
+                        <img src="/public/assets/img/dog.jpg" alt="Mobile Development" class="info-image">
+                        <div class="info-content">
+                            <h3 class="info-title">Mobile Development</h3>
+                            <p class="info-preview">
+                                Create powerful mobile applications with our cutting-edge development solutions...
+                            </p>
+                            <p class="info-full">
+                                Create powerful mobile applications with our cutting-edge development solutions. Our
+                                team of experts specializes in both iOS and Android platforms, delivering native and
+                                cross-platform applications that provide seamless user experiences. We utilize the
+                                latest technologies and frameworks to ensure your app is fast, secure, and scalable.
+                            </p>
+                            <div class="read-more-btn">Read More</div>
+                        </div>
+                    </div>
+
+                    <!-- Info Card 2 -->
+                    <div class="info-card">
+                        <img src="/public/assets/images/info2.jpg" alt="Cloud Solutions" class="info-image">
+                        <div class="info-content">
+                            <h3 class="info-title">Cloud Solutions</h3>
+                            <p class="info-preview">
+                                Scale your business with our comprehensive cloud infrastructure services...
+                            </p>
+                            <p class="info-full">
+                                Scale your business with our comprehensive cloud infrastructure services. We provide
+                                end-to-end cloud solutions including migration, optimization, and management. Our cloud
+                                experts help you leverage the power of AWS, Azure, or Google Cloud to reduce costs,
+                                improve performance, and ensure 24/7 availability of your applications.
+                            </p>
+                            <div class="read-more-btn">Read More</div>
+                        </div>
+                    </div>
+
+                    <!-- Info Card 3 -->
+                    <div class="info-card">
+                        <img src="/public/assets/images/info3.jpg" alt="AI Integration" class="info-image">
+                        <div class="info-content">
+                            <h3 class="info-title">AI Integration</h3>
+                            <p class="info-preview">
+                                Transform your business with artificial intelligence and machine learning...
+                            </p>
+                            <p class="info-full">
+                                Transform your business with artificial intelligence and machine learning solutions. Our
+                                AI experts help you implement smart algorithms, predictive analytics, and automated
+                                decision-making systems. We develop custom AI solutions that help you analyze data,
+                                identify patterns, and make informed business decisions.
+                            </p>
+                            <div class="read-more-btn">Read More</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="section-container">
+        <section class="locations-section">
+            <div class="section-title">
+                <h2>Visit Our Clinic</h2>
+                <p>Our state-of-the-art facility is equipped with the latest technology to provide the best care for
+                    your pets.</p>
+            </div>
+            <div class="location-container">
+                <div class="location-card">
+                    <img src="/public/assets/images/clinic-front.jpg" alt="Our Clinic" class="location-image">
+                    <div class="location-content">
+                        <h3 class="location-title">Main Clinic</h3>
+                        <p class="location-details">
+                            <span class="material-icons-sharp">location_on</span>
+                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
+                        </p>
+                        <div class="location-hours">
+                            <p><strong>Operating Hours:</strong></p>
+                            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                            <p>Saturday: 9:00 AM - 4:00 PM</p>
+                            <p>Sunday: Closed</p>
+                        </div>
+                        <div class="contact-info">
+                            <a href="contact-us.html" class="contact-button">
+                                <span class="material-icons-sharp">contact_support</span>
+                                Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
     <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
     <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
@@ -478,6 +763,25 @@
 
         mobileMenuBtn.addEventListener('click', function () {
             navLinks.classList.toggle('active');
+        });
+
+        // Handle Read More functionality
+        document.querySelectorAll('.read-more-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const content = this.parentElement;
+                const preview = content.querySelector('.info-preview');
+                const fullText = content.querySelector('.info-full');
+
+                if (preview.style.display !== 'none') {
+                    preview.style.display = 'none';
+                    fullText.style.display = 'block';
+                    this.textContent = 'Read Less';
+                } else {
+                    preview.style.display = 'block';
+                    fullText.style.display = 'none';
+                    this.textContent = 'Read More';
+                }
+            });
         });
     </script>
 </body>
