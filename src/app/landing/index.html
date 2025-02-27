@@ -232,7 +232,7 @@
             align-items: center;
             gap: 10px;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
         }
 
@@ -527,6 +527,81 @@
         .contact-button .material-icons-sharp {
             font-size: 20px;
         }
+
+        /* Add these styles for the profile menu */
+        .profile-menu {
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid rgba(78, 84, 200, 0.2);
+            border-radius: 5px;
+            cursor: pointer;
+            color: var(--color-dark);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled .profile-trigger {
+            color: var(--color-dark);
+        }
+
+        .profile-trigger:hover {
+            background: rgba(78, 84, 200, 0.1);
+        }
+
+        .profile-menu-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--color-white);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .profile-menu.active .profile-menu-content {
+            display: block;
+        }
+
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            color: var(--color-dark);
+            transition: all 0.3s ease;
+        }
+
+        .profile-menu-item:hover {
+            background: rgba(78, 84, 200, 0.1);
+        }
+
+        .profile-menu-divider {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .profile-menu {
+                margin: 10px 0;
+            }
+
+            .profile-menu-content {
+                position: static;
+                box-shadow: none;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 
@@ -617,7 +692,7 @@
         <div class="navbar-container">
             <a href="#" class="navbar-logo">
                 <img src="/public/assets/images/logo.svg" alt="Logo">
-                Chain App
+                Josephine Anne Angeles Veterinary Clinic
             </a>
             <button class="mobile-menu-btn">
                 <span class="material-icons-sharp">menu</span>
@@ -628,7 +703,24 @@
                 <a href="Product.html" class="nav-link">Products</a>
                 <a href="contact-us.html" class="nav-link">Contact Us</a>
                 <a href="about-us.html" class="nav-link">About Us</a>
-                <a href="../auth/register.html" class="nav-link signup-btn">Sign Up</a>
+                <div class="profile-menu">
+                    <button class="profile-trigger">
+                        <span class="material-icons-sharp">account_circle</span>
+                        <span>Account</span>
+                        <span class="material-icons-sharp">arrow_drop_down</span>
+                    </button>
+                    <div class="profile-menu-content">
+                        <a href="users_login.html" class="profile-menu-item">
+                            <span class="material-icons-sharp">login</span>
+                            Sign In
+                        </a>
+                        <div class="profile-menu-divider"></div>
+                        <a href="users_register.html" class="profile-menu-item">
+                            <span class="material-icons-sharp">person_add</span>
+                            Sign Up
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -782,6 +874,22 @@
                     this.textContent = 'Read More';
                 }
             });
+        });
+
+        // Handle profile menu toggle
+        const profileTrigger = document.querySelector('.profile-trigger');
+        const profileMenu = document.querySelector('.profile-menu');
+
+        profileTrigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!profileMenu.contains(e.target)) {
+                profileMenu.classList.remove('active');
+            }
         });
     </script>
 </body>
