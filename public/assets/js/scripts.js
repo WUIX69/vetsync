@@ -43,6 +43,10 @@ function initModal(options = {}) {
     });
 }
 
+function initAccordion() {
+    $(".ui.accordion").accordion();
+}
+
 function ajaxErrorHandler(jqXHR, textStatus, errorThrown, error) {
     console.log("Detailed error information:");
     console.log("Stringy Response:", JSON.stringify(jqXHR));
@@ -277,6 +281,7 @@ $(function () {
     // Initialize core components
     if ($(".ui.dropdown").length) initDropdowns();
     if ($(".ui.modal").length) initModal();
+    if ($(".ui.accordion").length) initAccordion();
 
     // Modal opening via data attribute
     $("body").on("click", "[data-open-modal]", function () {
