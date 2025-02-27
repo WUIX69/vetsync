@@ -1,7 +1,227 @@
-<div class="container-body">
-    <div class="row">
-        <div class="col">
-            <h1>Contact Us</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Josephine Anne Angeles Veterinary Clinic</title>
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
+    <style>
+        .contact-section {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, #4e54c8 0%, #8fd3f4 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .contact-info-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            color: white;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .contact-item .material-icons-sharp {
+            font-size: 24px;
+        }
+
+        .map-container {
+            margin-top: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .location-card {
+            display: block;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .location-card:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .location-preview {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .location-icon {
+            font-size: 40px;
+            color: white;
+        }
+
+        .location-text {
+            flex: 1;
+        }
+
+        .location-text h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+        }
+
+        .location-text p {
+            margin: 0;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo">
+                <img src="/public/assets/images/logo.svg" alt="Logo">
+                Josephine Anne Angeles Veterinary Clinic
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="Product.html" class="nav-link">Products</a>
+                <a href="contact-us.html" class="nav-link">Contact Us</a>
+                <a href="about-us.html" class="nav-link active">About Us</a>
+                <div class="profile-menu">
+                    <button class="profile-trigger">
+                        <span class="material-icons-sharp">account_circle</span>
+                        <span>Account</span>
+                        <span class="material-icons-sharp">arrow_drop_down</span>
+                    </button>
+                    <div class="profile-menu-content">
+                        <a href="../auth/login.html" class="profile-menu-item">
+                            <span class="material-icons-sharp">login</span>
+                            Sign In
+                        </a>
+                        <div class="profile-menu-divider"></div>
+                        <a href="../auth/register.html" class="profile-menu-item">
+                            <span class="material-icons-sharp">person_add</span>
+                            Sign Up
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </nav>
+
+    <section class="contact-section">
+        <div class="contact-container">
+            <div class="section-title">
+                <h1>Contact Us</h1>
+                <p>Get in touch with us for any inquiries or appointments</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info-card">
+                    <h2>Get In Touch</h2>
+                    <div class="contact-item">
+                        <span class="material-icons-sharp">location_on</span>
+                        <div>
+                            <h3>Location</h3>
+                            <p>123 Main Street, City Center</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="material-icons-sharp">phone</span>
+                        <div>
+                            <h3>Phone</h3>
+                            <p>+63 912 345 6789</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="material-icons-sharp">email</span>
+                        <div>
+                            <h3>Email</h3>
+                            <p>info@javetclinic.com</p>
+                        </div>
+                    </div>
+                    <a href="https://maps.app.goo.gl/ZkD3Ui9C2sfd3cCz5" target="_blank" class="location-card">
+                        <div class="location-preview">
+                            <span class="material-icons-sharp location-icon">map</span>
+                            <div class="location-text">
+                                <h3>Visit Our Clinic</h3>
+                                <p>Click to view on Google Maps</p>
+                            </div>
+                            <span class="material-icons-sharp">arrow_forward</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="contact-form">
+                    <h2>Send us a Message</h2>
+                    <form class="ui form">
+                        <div class="field">
+                            <label>Name</label>
+                            <input type="text" placeholder="Your Name">
+                        </div>
+                        <div class="field">
+                            <label>Email</label>
+                            <input type="email" placeholder="Your Email">
+                        </div>
+                        <div class="field">
+                            <label>Subject</label>
+                            <input type="text" placeholder="Subject">
+                        </div>
+                        <div class="field">
+                            <label>Message</label>
+                            <textarea rows="5" placeholder="Your Message"></textarea>
+                        </div>
+                        <button class="ui fluid large teal submit button">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="../../../public/lib/jquery/jquery.min.js"></script>
+    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+</body>
+
+</html>
