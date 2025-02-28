@@ -15,7 +15,7 @@
     <style>
         .contact-section {
             padding: 120px 0 80px;
-            background: linear-gradient(135deg, #4e54c8 0%, #8fd3f4 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%);
             min-height: 100vh;
             position: relative;
         }
@@ -115,19 +115,29 @@
 </head>
 
 <body>
-
+    <div class="window-spinner-overlay"></div>
+    <div class="la-square-jelly-box window-spinner la-2x">
+        <div></div>
+        <div></div>
+    </div>
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-logo">
-                <img src="/public/assets/images/logo.svg" alt="Logo">
-                Josephine Anne Angeles Veterinary Clinic
+                <img src="/public/assets/img/vetlogo.png" alt="Logo">
+                <div class="logo-text">
+                    <span class="logo-text-main">Josephine Anne Angeles</span>
+                    <span class="logo-text-sub">Veterinary Clinic</span>
+                </div>
             </a>
+            <button class="mobile-menu-btn">
+                <span class="material-icons-sharp">menu</span>
+            </button>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="index.html" class="nav-link active">Home</a>
                 <a href="services.html" class="nav-link">Services</a>
                 <a href="Product.html" class="nav-link">Products</a>
                 <a href="contact-us.html" class="nav-link">Contact Us</a>
-                <a href="about-us.html" class="nav-link active">About Us</a>
+                <a href="about-us.html" class="nav-link">About Us</a>
                 <div class="profile-menu">
                     <button class="profile-trigger">
                         <span class="material-icons-sharp">account_circle</span>
@@ -135,12 +145,12 @@
                         <span class="material-icons-sharp">arrow_drop_down</span>
                     </button>
                     <div class="profile-menu-content">
-                        <a href="../auth/login.html" class="profile-menu-item">
+                        <a href="users_login.html" class="profile-menu-item">
                             <span class="material-icons-sharp">login</span>
                             Sign In
                         </a>
                         <div class="profile-menu-divider"></div>
-                        <a href="../auth/register.html" class="profile-menu-item">
+                        <a href="users_register.html" class="profile-menu-item">
                             <span class="material-icons-sharp">person_add</span>
                             Sign Up
                         </a>
@@ -221,7 +231,48 @@
 
     <!-- Scripts -->
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
+    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
+    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
     <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="../../../public/lib/lodash/lodash.min.js"></script>
+    <script src="../../../public/assets/js/spinner.js"></script>
+    <script src="../../../public/assets/js/darkmode.js"></script>
+    <script src="../../../public/assets/js/scripts.js"></script>
+    <script type="text/javascript">
+        // Handle navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Handle mobile menu
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', function () {
+            navLinks.classList.toggle('active');
+        });
+
+        // Handle profile menu toggle
+        const profileTrigger = document.querySelector('.profile-trigger');
+        const profileMenu = document.querySelector('.profile-menu');
+
+        profileTrigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!profileMenu.contains(e.target)) {
+                profileMenu.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 
 </html>
