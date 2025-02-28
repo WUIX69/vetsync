@@ -291,7 +291,9 @@ $(function () {
     // Prevent submission of unconfigured forms
     $("body").on("click", ".ui.form button[type=submit]", function () {
         let isConfigured = $(this).closest(".ui.form").data("is-configured");
-        if (!isConfigured) return false;
-        console.log("Form is not validated yet, check validate handler");
+        if (!isConfigured){
+            console.log("Form is not validated yet, TODO: use validateHandler");
+            return false;
+        }
     });
 });
