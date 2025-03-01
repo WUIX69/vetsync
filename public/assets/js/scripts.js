@@ -43,6 +43,10 @@ function initModal(options = {}) {
     });
 }
 
+function initAccordion() {
+    $(".ui.accordion").accordion();
+}
+
 function ajaxErrorHandler(jqXHR, textStatus, errorThrown, error) {
     console.log("Detailed error information:");
     console.log("Stringy Response:", JSON.stringify(jqXHR));
@@ -153,7 +157,6 @@ function timeAgo(date) {
     return null;
 }
 
-// Initialize form validation using Fomantic UI
 function validateHandler(options = {}) {
     const defaults = {
         fields: {},
@@ -165,7 +168,7 @@ function validateHandler(options = {}) {
     if (!$form || !$form.length) return false;
 
     let $submitBtn = $form.find("button[type=submit]");
-    $form.attr("data-is-configured", true); // Set flag for later use
+    $form.attr("data-is-configured", true); // Set flag to true for form configuration submission use
 
     $form.form({
         fields: config.fields,
@@ -174,7 +177,7 @@ function validateHandler(options = {}) {
         onSuccess: function (event) {
             event.preventDefault();
 
-            // // Double check button state before proceeding
+            // Double check button state before proceeding
             if ($submitBtn.hasClass("loading")) return false;
             $submitBtn.addClass("loading");
 
@@ -277,16 +280,20 @@ $(function () {
     // Initialize core components
     if ($(".ui.dropdown").length) initDropdowns();
     if ($(".ui.modal").length) initModal();
+    if ($(".ui.accordion").length) initAccordion();
 
     // Modal opening via data attribute
     $("body").on("click", "[data-open-modal]", function () {
         const modalId = $(this).data("open-modal");
-        $(modalId).modal("show");
+        if (modalId) $(modalId).modal("show");
     });
 
     // Prevent submission of unconfigured forms
     $("body").on("click", ".ui.form button[type=submit]", function () {
         let isConfigured = $(this).closest(".ui.form").data("is-configured");
-        if (!isConfigured) return false;
+        if (!isConfigured){
+            console.log("Form is not validated yet, TODO: use validateHandler");
+            return false;
+        }
     });
 });
