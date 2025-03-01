@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../../../public/assets/css/global.css" />
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
-
+    <link rel="stylesheet" href="../../../public/assets/css/responsive.css" />
 </head>
 
 <body>
@@ -23,13 +23,63 @@
         <div></div>
     </div>
 
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-logo">
+                <img src="../../../public/assets/img/logo.png" alt="Logo">
+                <div class="logo-text">
+                    <span class="logo-text-main">Vetsync</span>
+                </div>
+            </a>
+            <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
+                <span class="material-icons-sharp">menu</span>
+            </button>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="Product.html" class="nav-link">Products</a>
+                <a href="contact-us.html" class="nav-link">Contact Us</a>
+                <a href="about-us.html" class="nav-link">About Us</a>
+                <div class="actions">
+                    <div class="profile-menu">
+                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                            <i class="circle user icon"></i>
+                            <span class="text">Account</span>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item">
+                                    <a href="../auth/index.html" class="link">
+                                        <span class="material-icons-sharp">login</span>
+                                        Sign In
+                                    </a>
+                                </div>
+                                <div class="item">
+                                    <a href="../auth/register.html" class="link">
+                                        <span class="material-icons-sharp">person_add</span>
+                                        Sign Up
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="ui red large button">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container-body">
         <div class="row">
+
             <div class="col">
                 <main class="container-main">
 
+                    <!-- Hero -->
                     <div class="section-container">
-                        <section class="hero-section">
+                        <section class="section-wrapper hero-section">
                             <div class="hero-content">
                                 <div class="hero-text">
                                     <h1 class="hero-title">Get The Latest App<br>From App Stores</h1>
@@ -50,14 +100,15 @@
                                     </div>
                                 </div>
                                 <div class="hero-image">
-                                    <img src="/public/assets/images/phone-illustration.svg" alt="App Interface">
+                                    <img src="../../../public/assets/img/placeholders/image.png" alt="App Interface">
                                 </div>
                             </div>
                         </section>
                     </div>
 
+                    <!-- Features -->
                     <div class="section-container">
-                        <section class="features-section">
+                        <section class="section-wrapper features-section">
                             <div class="features-grid">
                                 <div class="feature-card">
                                     <div class="feature-icon">
@@ -69,7 +120,6 @@
                                         and user-friendly
                                         interface.</p>
                                 </div>
-
                                 <div class="feature-card">
                                     <div class="feature-icon">
                                         <span class="material-icons-sharp">security</span>
@@ -79,7 +129,6 @@
                                         and
                                         encryption.</p>
                                 </div>
-
                                 <div class="feature-card">
                                     <div class="feature-icon">
                                         <span class="material-icons-sharp">insights</span>
@@ -93,148 +142,161 @@
                         </section>
                     </div>
 
+                    <!-- Services -->
+                    <div class="section-container">
+                        <div class="info-container">
+                            <H1>Information goes here</H1>
+                        </div>
+                        <section class="section-wrapper info-section">
+                            <div class="info-container">
+                                <div class="info-grid">
+                                    <!-- Info Card 1 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/dog.jpg" alt="Mobile Development"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Mobile Development</h3>
+                                            <p class="info-preview">
+                                                Create powerful mobile applications with our cutting-edge development
+                                                solutions...
+                                            </p>
+                                            <p class="info-full">
+                                                Create powerful mobile applications with our cutting-edge development
+                                                solutions. Our
+                                                team of experts specializes in both iOS and Android platforms,
+                                                delivering native and
+                                                cross-platform applications that provide seamless user experiences. We
+                                                utilize the
+                                                latest technologies and frameworks to ensure your app is fast, secure,
+                                                and scalable.
+                                            </p>
+                                            <div class="read-more-btn">Read More</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Info Card 2 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/placeholders/image.png"
+                                            alt="Cloud Solutions" class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Cloud Solutions</h3>
+                                            <p class="info-preview">
+                                                Scale your business with our comprehensive cloud infrastructure
+                                                services...
+                                            </p>
+                                            <p class="info-full">
+                                                Scale your business with our comprehensive cloud infrastructure
+                                                services. We provide
+                                                end-to-end cloud solutions including migration, optimization, and
+                                                management. Our cloud
+                                                experts help you leverage the power of AWS, Azure, or Google Cloud to
+                                                reduce costs,
+                                                improve performance, and ensure 24/7 availability of your applications.
+                                            </p>
+                                            <div class="read-more-btn">Read More</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Info Card 3 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/placeholders/image.png"
+                                            alt="AI Integration" class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">AI Integration</h3>
+                                            <p class="info-preview">
+                                                Transform your business with artificial intelligence and machine
+                                                learning...
+                                            </p>
+                                            <p class="info-full">
+                                                Transform your business with artificial intelligence and machine
+                                                learning solutions. Our
+                                                AI experts help you implement smart algorithms, predictive analytics,
+                                                and automated
+                                                decision-making systems. We develop custom AI solutions that help you
+                                                analyze data,
+                                                identify patterns, and make informed business decisions.
+                                            </p>
+                                            <div class="read-more-btn">Read More</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Visit location -->
+                    <div class="section-container">
+                        <section class="section-wrapper locations-section">
+                            <div class="section-title">
+                                <h2>Visit Our Clinic</h2>
+                                <p>Our state-of-the-art facility is equipped with the latest technology to provide the
+                                    best care for
+                                    your pets.</p>
+                            </div>
+                            <div class="location-container">
+                                <div class="location-card">
+                                    <img src="../../../public/assets/img/placeholders/image.png" alt="Our Clinic"
+                                        class="location-image">
+                                    <div class="location-content">
+                                        <h3 class="location-title">Main Clinic</h3>
+                                        <p class="location-details">
+                                            <span class="material-icons-sharp">location_on</span>
+                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
+                                        </p>
+                                        <div class="location-hours">
+                                            <p><strong>Operating Hours:</strong></p>
+                                            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                                            <p>Saturday: 9:00 AM - 4:00 PM</p>
+                                            <p>Sunday: Closed</p>
+                                        </div>
+                                        <div class="contact-info">
+                                            <a href="contact-us.html" class="contact-button">
+                                                <span class="material-icons-sharp">contact_support</span>
+                                                Contact Us
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
                 </main>
+
+                <footer class="footer-container">
+                    <div class="footer-section">
+                        <div class="ui inverted vertical footer segment pt-5 pb-5">
+                            <div class="ui container">
+                                <div class="ui stackable inverted divided equal height stackable grid">
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">About</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Sitemap</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                            <a href="#" class="item">Religious Ceremonies</a>
+                                            <a href="#" class="item">Gazebo Plans</a>
+                                        </div>
+                                    </div>
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">Services</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Banana Pre-Order</a>
+                                            <a href="#" class="item">DNA FAQ</a>
+                                            <a href="#" class="item">How To Access</a>
+                                            <a href="#" class="item">Favorite X-Men</a>
+                                        </div>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <h4 class="ui inverted header">Footer Header</h4>
+                                        <p>Extra space for a call to action inside the footer that could help re-engage
+                                            users.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
-    </div>
-
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-logo">
-                <img src="/public/assets/img/logo.png" alt="Logo">
-                <div class="logo-text">
-                    <span class="logo-text-main">Josephine Anne Angeles</span>
-                    <span class="logo-text-sub">Veterinary Clinic</span>
-                </div>
-            </a>
-            <button class="mobile-menu-btn">
-                <span class="material-icons-sharp">menu</span>
-            </button>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="services.html" class="nav-link">Services</a>
-                <a href="Product.html" class="nav-link">Products</a>
-                <a href="contact-us.html" class="nav-link">Contact Us</a>
-                <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="profile-menu">
-                    <button class="profile-trigger">
-                        <span class="material-icons-sharp">account_circle</span>
-                        <span>Account</span>
-                        <span class="material-icons-sharp">arrow_drop_down</span>
-                    </button>
-                    <div class="profile-menu-content">
-                        <a href="users_login.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">login</span>
-                            Sign In
-                        </a>
-                        <div class="profile-menu-divider"></div>
-                        <a href="users_register.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">person_add</span>
-                            Sign Up
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div class="section-container">
-        <div class="info-container">
-            <H1>Information goes here</H1>
-        </div>
-        <section class="info-section">
-            <div class="info-container">
-                <div class="info-grid">
-                    <!-- Info Card 1 -->
-                    <div class="info-card">
-                        <img src="/public/assets/img/contents/dog.jpg" alt="Mobile Development" class="info-image">
-                        <div class="info-content">
-                            <h3 class="info-title">Mobile Development</h3>
-                            <p class="info-preview">
-                                Create powerful mobile applications with our cutting-edge development solutions...
-                            </p>
-                            <p class="info-full">
-                                Create powerful mobile applications with our cutting-edge development solutions. Our
-                                team of experts specializes in both iOS and Android platforms, delivering native and
-                                cross-platform applications that provide seamless user experiences. We utilize the
-                                latest technologies and frameworks to ensure your app is fast, secure, and scalable.
-                            </p>
-                            <div class="read-more-btn">Read More</div>
-                        </div>
-                    </div>
-
-                    <!-- Info Card 2 -->
-                    <div class="info-card">
-                        <img src="/public/assets/images/info2.jpg" alt="Cloud Solutions" class="info-image">
-                        <div class="info-content">
-                            <h3 class="info-title">Cloud Solutions</h3>
-                            <p class="info-preview">
-                                Scale your business with our comprehensive cloud infrastructure services...
-                            </p>
-                            <p class="info-full">
-                                Scale your business with our comprehensive cloud infrastructure services. We provide
-                                end-to-end cloud solutions including migration, optimization, and management. Our cloud
-                                experts help you leverage the power of AWS, Azure, or Google Cloud to reduce costs,
-                                improve performance, and ensure 24/7 availability of your applications.
-                            </p>
-                            <div class="read-more-btn">Read More</div>
-                        </div>
-                    </div>
-
-                    <!-- Info Card 3 -->
-                    <div class="info-card">
-                        <img src="/public/assets/images/info3.jpg" alt="AI Integration" class="info-image">
-                        <div class="info-content">
-                            <h3 class="info-title">AI Integration</h3>
-                            <p class="info-preview">
-                                Transform your business with artificial intelligence and machine learning...
-                            </p>
-                            <p class="info-full">
-                                Transform your business with artificial intelligence and machine learning solutions. Our
-                                AI experts help you implement smart algorithms, predictive analytics, and automated
-                                decision-making systems. We develop custom AI solutions that help you analyze data,
-                                identify patterns, and make informed business decisions.
-                            </p>
-                            <div class="read-more-btn">Read More</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <div class="section-container">
-        <section class="locations-section">
-            <div class="section-title">
-                <h2>Visit Our Clinic</h2>
-                <p>Our state-of-the-art facility is equipped with the latest technology to provide the best care for
-                    your pets.</p>
-            </div>
-            <div class="location-container">
-                <div class="location-card">
-                    <img src="/public/assets/images/clinic-front.jpg" alt="Our Clinic" class="location-image">
-                    <div class="location-content">
-                        <h3 class="location-title">Main Clinic</h3>
-                        <p class="location-details">
-                            <span class="material-icons-sharp">location_on</span>
-                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
-                        </p>
-                        <div class="location-hours">
-                            <p><strong>Operating Hours:</strong></p>
-                            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
-                            <p>Saturday: 9:00 AM - 4:00 PM</p>
-                            <p>Sunday: Closed</p>
-                        </div>
-                        <div class="contact-info">
-                            <a href="contact-us.html" class="contact-button">
-                                <span class="material-icons-sharp">contact_support</span>
-                                Contact Us
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
@@ -247,62 +309,23 @@
     <script src="../../../public/assets/js/scripts.js"></script>
     <script type="text/javascript">
         $(function () {
-            // Custom js here...
-        });
-    </script>
-
-    <script>
-        // Handle navbar scroll effect
-        window.addEventListener('scroll', function () {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Handle mobile menu
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-
-        mobileMenuBtn.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
-        });
-
-        // Handle Read More functionality
-        document.querySelectorAll('.read-more-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const content = this.parentElement;
-                const preview = content.querySelector('.info-preview');
-                const fullText = content.querySelector('.info-full');
-
-                if (preview.style.display !== 'none') {
-                    preview.style.display = 'none';
-                    fullText.style.display = 'block';
-                    this.textContent = 'Read Less';
+            // Handle navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
                 } else {
-                    preview.style.display = 'block';
-                    fullText.style.display = 'none';
-                    this.textContent = 'Read More';
+                    navbar.classList.remove('scrolled');
                 }
             });
-        });
 
-        // Handle profile menu toggle
-        const profileTrigger = document.querySelector('.profile-trigger');
-        const profileMenu = document.querySelector('.profile-menu');
+            // Handle mobile menu
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
 
-        profileTrigger.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileMenu.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!profileMenu.contains(e.target)) {
-                profileMenu.classList.remove('active');
-            }
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
         });
     </script>
 </body>

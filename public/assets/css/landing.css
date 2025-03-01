@@ -1,3 +1,4 @@
+/*#### GLOBAL.css small overrides ####*/
 .container-body {
     margin: 0 !important;
     padding: 0 !important;
@@ -8,12 +9,196 @@
     margin: 0;
 }
 
-/* Landing page specific styles */
+/*############ NAVBAR ############*/
+nav.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: linear-gradient(135deg, #2c3e50 0%, #7fccbf 100%);
+    transition: all 0.3s ease;
+    z-index: 101;
+}
+
+nav .navbar-container {
+    /* max-width: 1200px; */
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
+nav .navbar-logo img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: white;
+    padding: 2px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+nav .navbar-logo:hover {
+    text-decoration: underline;
+}
+
+nav .navbar-logo img:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+nav .navbar-logo .logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+nav .navbar-logo .logo-text-main {
+    font-size: 1.82rem;
+    text-transform: capitalize;
+}
+
+nav .navbar-logo .logo-text-sub {
+    font-size: 1.9rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/*---- NAVBAR (Scrolled) ----*/
+nav.scrolled {
+    background: var(--color-white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+}
+
+nav.scrolled .nav-link,
+nav.scrolled .profile-trigger {
+    color: var(--color-dark);
+}
+
+nav.scrolled .logo-text-main,
+nav.scrolled .logo-text-sub {
+    color: var(--color-dark);
+}
+
+nav.scrolled .mobile-menu-btn {
+    color: var(--color-dark);
+}
+
+nav.scrolled .navbar-logo {
+    color: var(--color-dark);
+}
+
+nav.scrolled .navbar-logo .logo-text-sub {
+    color: rgba(0, 0, 0, 0.8);
+}
+
+nav.scrolled .navbar-logo img {
+    background: #294766;
+    padding: 2px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/*---- Mobile view support a.k.a (Hamburger) ----*/
+nav .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+nav.scrolled .mobile-menu-btn {
+    color: var(--color-dark);
+}
+
+/*------ NAVBAR (Links & Actions) ------*/
+nav .nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+nav .nav-link {
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+nav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+nav .nav-link.active {
+    font-weight: 600;
+    color: #ff1b6d;
+}
+
+nav .nav-links .actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: fit-content;
+}
+
+nav .nav-links .actions .button {
+    height: inherit;
+    width: 100%;
+}
+
+nav .nav-links .actions .profile-menu {
+    position: relative;
+    margin-left: 20px;
+}
+
+nav .nav-links .actions .profile-menu .profile-menu-dd {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem;
+    background: transparent !important;
+    min-width: 0 !important;
+    color: var(--color-dark);
+}
+
+nav .nav-links .actions .profile-menu .profile-menu-dd i.user.icon {
+    font-size: 1.3rem;
+}
+
+nav .nav-links .actions .profile-menu .profile-menu-dd i.dropdown.icon {
+    /* position: relative; */
+    top: 0.8rem !important;
+}
+
+nav .nav-links .actions .profile-menu .profile-menu-dd .menu .item .link {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 1.3rem;
+    color: var(--color-dark);
+    transition: all 0.3s ease;
+}
+
+/*####### MAIN (HERO) ########*/
 .hero-section {
     min-height: 100vh;
     display: flex;
     align-items: center;
     padding: 100px 0;
+    padding-top: 150px; /* Adjust to account for navbar */
     background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%);
     position: relative;
     overflow: hidden;
@@ -114,26 +299,7 @@
     }
 }
 
-@media (max-width: 768px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .hero-title {
-        font-size: 2.5rem;
-    }
-
-    .cta-buttons {
-        justify-content: center;
-    }
-
-    .hero-image {
-        text-align: center;
-        margin-top: 40px;
-    }
-}
-
+/*###### MAIN (Features) ######*/
 .features-section {
     padding: 100px 0;
     background: var(--color-background);
@@ -175,217 +341,6 @@
 .feature-description {
     color: var(--color-dark-variant);
     line-height: 1.6;
-}
-
-/* Navigation styles */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 0;
-    background: linear-gradient(135deg, #2c3e50 0%, #7fccbf 100%);
-    transition: all 0.3s ease;
-    z-index: 1000;
-}
-
-.navbar.scrolled {
-    background: var(--color-white);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-}
-
-.navbar.scrolled .nav-link,
-.navbar.scrolled .profile-trigger {
-    color: var(--color-dark);
-}
-
-.navbar.scrolled .logo-text-main,
-.navbar.scrolled .logo-text-sub {
-    color: var(--color-dark);
-}
-
-.navbar.scrolled .mobile-menu-btn {
-    color: var(--color-dark);
-}
-
-.navbar-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    color: white;
-    font-weight: 700;
-    text-decoration: none;
-    line-height: 1.2;
-}
-
-.navbar-logo img {
-    height: 100px;
-    width: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    background: white;
-    padding: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-}
-
-.navbar-logo:hover {
-    text-decoration: underline;
-}
-
-.navbar-logo img:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
-}
-
-.navbar.scrolled .navbar-logo img {
-    background: #294766;
-    padding: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.navbar-logo .logo-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.navbar-logo .logo-text-main {
-    font-size: 2.1rem;
-    text-transform: capitalize;
-}
-
-.navbar-logo .logo-text-sub {
-    font-size: 1.9rem;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.navbar.scrolled .navbar-logo {
-    color: var(--color-dark);
-}
-
-.navbar.scrolled .navbar-logo .logo-text-sub {
-    color: rgba(0, 0, 0, 0.8);
-}
-
-.nav-links {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-}
-
-.nav-link {
-    color: white;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.nav-link:hover {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.nav-link.active {
-    font-weight: 600;
-}
-
-.mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 5px;
-}
-
-.navbar.scrolled .mobile-menu-btn {
-    color: var(--color-dark);
-}
-
-@media (max-width: 768px) {
-    .mobile-menu-btn {
-        display: block;
-    }
-
-    .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: var(--color-white);
-        padding: 20px;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .nav-link {
-        color: var(--color-dark);
-    }
-
-    .nav-link:hover {
-        color: #4e54c8;
-    }
-
-    .navbar-logo .logo-text-main {
-        font-size: 1.2rem;
-    }
-
-    .navbar-logo .logo-text-sub {
-        font-size: 1rem;
-    }
-
-    .navbar-logo img {
-        height: 45px;
-        width: 45px;
-    }
-}
-
-/* Adjust hero section to account for navbar */
-.hero-section {
-    padding-top: 120px;
-}
-
-/* Add these new styles for the sign-up button */
-.signup-btn {
-    padding: 8px 20px;
-    background-color: #4e54c8;
-    color: white !important;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.signup-btn:hover {
-    background-color: #3a3f9c;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
-}
-
-.navbar.scrolled .signup-btn {
-    background-color: #4e54c8;
-    color: white !important;
-}
-
-@media (max-width: 768px) {
-    .signup-btn {
-        margin-top: 10px;
-        width: 200px;
-        text-align: center;
-    }
 }
 
 /* Add these new styles for the info section */
@@ -574,81 +529,6 @@
     font-size: 20px;
 }
 
-/* Add these styles for the profile menu */
-.profile-menu {
-    position: relative;
-    margin-left: 20px;
-}
-
-.profile-trigger {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: transparent;
-    border: 1px solid rgba(78, 84, 200, 0.2);
-    border-radius: 5px;
-    cursor: pointer;
-    color: var(--color-dark);
-    transition: all 0.3s ease;
-}
-
-.navbar.scrolled .profile-trigger {
-    color: var(--color-dark);
-}
-
-.profile-trigger:hover {
-    background: rgba(78, 84, 200, 0.1);
-}
-
-.profile-menu-content {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    margin-top: 8px;
-    background: var(--color-white);
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    display: none;
-    z-index: 1000;
-}
-
-.profile-menu.active .profile-menu-content {
-    display: block;
-}
-
-.profile-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    color: var(--color-dark);
-    transition: all 0.3s ease;
-}
-
-.profile-menu-item:hover {
-    background: rgba(78, 84, 200, 0.1);
-}
-
-.profile-menu-divider {
-    height: 1px;
-    background: rgba(0, 0, 0, 0.1);
-    margin: 8px 0;
-}
-
-@media (max-width: 768px) {
-    .profile-menu {
-        margin: 10px 0;
-    }
-
-    .profile-menu-content {
-        position: static;
-        box-shadow: none;
-        margin-top: 10px;
-    }
-}
-
 /* Update background colors to match logo */
 .about-section,
 .services-section,
@@ -662,22 +542,6 @@
     ); /* Updated gradient */
     min-height: 100vh;
     position: relative;
-}
-
-/* Update navbar background */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px 0;
-    background: linear-gradient(
-        135deg,
-        #2c3e50 0%,
-        #7fccbf 100%
-    ); /* Match the section background */
-    transition: all 0.3s ease;
-    z-index: 1000;
 }
 
 /* Update hover effects to match theme */

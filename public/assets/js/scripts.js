@@ -3,7 +3,7 @@ function initDropdowns() {
         allowAdditions: false,
         forceSelection: true,
         autofocus: false,
-        clearable: true,
+        // clearable: false,
     });
 }
 
@@ -291,7 +291,7 @@ $(function () {
     // Prevent submission of unconfigured forms
     $("body").on("click", ".ui.form button[type=submit]", function () {
         let isConfigured = $(this).closest(".ui.form").data("is-configured");
-        if (!isConfigured){
+        if (!isConfigured) {
             console.log("Form is not validated yet, TODO: use validateHandler");
             return false;
         }
