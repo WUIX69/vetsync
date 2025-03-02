@@ -90,20 +90,6 @@ nav.scrolled .navbar-logo img {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-/*---- Mobile view support a.k.a (Hamburger) ----*/
-nav .mobile-menu-btn {
-    display: none;
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 5px;
-}
-
-nav.scrolled .mobile-menu-btn {
-    color: var(--color-dark);
-}
-
 /*------ NAVBAR (Links & Actions) ------*/
 nav .nav-links {
     display: flex;
@@ -171,6 +157,20 @@ nav .nav-links .actions .profile-menu .profile-menu-dd .menu .item .link {
     transition: all 0.3s ease;
 }
 
+/*---- Mobile view support a.k.a (Hamburger) ----*/
+nav .mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+}
+
+nav.scrolled .mobile-menu-btn {
+    color: var(--color-dark);
+}
+
 /*############## MAIN #############*/
 main .section-container {
     padding: 0 !important;
@@ -204,313 +204,11 @@ main .section-container section .section-title p {
     max-width: 600px;
 }
 
-/*----------- MAIN (Hero) -----------*/
-main .section-container section.hero-section {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 80px 0 !important;
-    padding-top: 150px !important; /* Adjust to account for navbar */
-    background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%);
-    position: relative;
-    overflow: hidden;
-}
-
-main section.hero-section::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    background: url("/public/assets/images/wave-bg.svg") no-repeat bottom right;
-    background-size: contain;
-    z-index: 1;
-}
-
-main section.hero-section .hero-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-}
-
-main section.hero-section .hero-text {
-    color: white;
-}
-
-main section.hero-section .hero-title {
-    font-size: 4rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    color: white;
-}
-
-main section.hero-section .hero-description {
-    font-size: 1.1rem;
-    margin-bottom: 40px;
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.6;
-}
-
-main section.hero-section .cta-buttons {
-    display: flex;
-    gap: 20px;
-}
-
-main section.hero-section .cta-button {
-    padding: 15px 30px;
-    border-radius: 30px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-main section.hero-section .cta-button.primary {
-    background-color: white;
-    color: #4e54c8;
-}
-
-main section.hero-section .cta-button.secondary {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-    backdrop-filter: blur(5px);
-}
-
-main section.hero-section .cta-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-main section.hero-section .hero-image {
-    text-align: right;
-}
-
-main section.hero-section .hero-image img {
-    max-width: 100%;
-    height: auto;
-    animation: float 6s ease-in-out infinite;
-}
-
-/* @keyframes float {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-20px);
-    }
-} */
-
-/*----------- MAIN (Features) -----------*/
-main .section-container section.features-section {
-    background: var(--color-background);
-}
-
-main section.features-section .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-main section.features-section .feature-card {
-    background: var(--color-white);
-    border: 1px solid transparent !important;
-}
-
-main section.features-section .feature-card:hover {
-    transform: translateY(-5px);
-    border: 1px solid var(--color-dark-variant) !important;
-    cursor: pointer;
-}
-
-main section.features-section .feature-icon {
-    font-size: 2.5rem;
-    color: #6c9bcf;
-    margin-bottom: 20px;
-}
-
-main section.features-section .feature-title {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: var(--color-dark);
-}
-
-main section.features-section .feature-description {
-    color: var(--color-dark-variant);
-    line-height: 1.6;
-}
-
-/*----------- MAIN (Services) -----------*/
-main .section-container section.info-section {
-    background: var(--color-white);
-}
-
-main section.info-section .info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-main section.info-section .info-card {
-    background: var(--color-white);
-}
-
-main section.info-section .info-card {
-    padding: 0 !important;
-}
-
-main section.info-section .info-image {
-    width: 100%;
-    max-height: 230px;
-    object-fit: cover;
-}
-
-main section.info-section .info-content {
-    padding: 1.7rem;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
-    gap: 1.5rem;
-}
-
-main section.info-section .info-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-dark);
-}
-
-main section.info-section .info-text {
-    color: var(--color-dark-variant);
-    line-height: 1.6;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
-    -webkit-box-orient: vertical;
-}
-
-main section.info-section .read-more-btn {
-    display: inline-block;
-    padding: 8px 20px;
-    background: #4e54c8;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-/*----------- MAIN (Locations) -----------*/
-main .section-container section.locations-section {
-    padding: 100px 0;
-    background: var(--color-background);
-}
-
-main section.locations-section .location-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-main section.locations-section .location-card {
-    background: var(--color-white);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-    transition: all 0.3s ease;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-main section.locations-section .location-card:hover {
-    transform: translateY(-5px);
-}
-
-main section.locations-section .location-image {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-}
-
-main section.locations-section .location-content {
-    padding: 30px;
-}
-
-main section.locations-section .location-title {
-    font-size: 2rem;
-    margin-bottom: 15px;
-    color: var(--color-dark);
-}
-
-main section.locations-section .location-details {
-    color: var(--color-dark-variant);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: start;
-    gap: 10px;
-}
-
-main section.locations-section .location-details .material-icons-sharp {
-    color: #4e54c8;
-}
-
-main section.locations-section .location-hours {
-    font-size: 1rem;
-    color: var(--color-dark-variant);
-    background: rgba(78, 84, 200, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-}
-
-main section.locations-section .location-hours p {
-    margin-bottom: 8px;
-}
-
-main section.locations-section .contact-info {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(78, 84, 200, 0.1);
-    text-align: center;
-}
-
-main section.locations-section .contact-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 30px;
-    background-color: #4e54c8;
-    color: white;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-main section.locations-section .contact-button:hover {
-    background-color: #3a3f9c;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
-}
-
-main section.locations-section .contact-button .material-icons-sharp {
-    font-size: 20px;
-}
+/*
+*****************************************************
+** TODO: Seperate this concern for their own pages **
+*****************************************************
+*/
 
 /* Update background colors to match logo */
 .about-section,

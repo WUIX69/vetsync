@@ -54,23 +54,27 @@
     }
 
     /****** MAIN (HERO) *******/
-    .hero-content {
+    main section.hero-section {
+        padding: 2rem;
+    }
+
+    main section.hero-section .hero-content {
         grid-template-columns: 1fr;
         text-align: center;
     }
 
-    .hero-title {
-        font-size: 2.3rem;
+    main section.hero-section .hero-title {
+        font-size: 2.2rem !important;
     }
 
-    .cta-buttons {
+    main section.hero-section .cta-buttons {
         justify-content: center;
         font-size: 0.7rem;
         text-align: center;
         text-wrap: nowrap;
     }
 
-    .hero-image {
+    main section.hero-section .hero-image {
         text-align: center;
         margin-top: 40px;
     }
