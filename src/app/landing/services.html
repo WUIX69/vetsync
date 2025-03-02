@@ -107,143 +107,217 @@
 </head>
 
 <body>
-    <!-- Add these spinner elements at the start of body -->
     <div class="window-spinner-overlay"></div>
     <div class="la-square-jelly-box window-spinner la-2x">
         <div></div>
         <div></div>
     </div>
+
+    <!-- Top Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-logo">
-                <img src="/public/assets/img/logo.png" alt="Logo">
+                <img src="../../../public/assets/img/logo.png" alt="Logo">
                 <div class="logo-text">
-                    <span class="logo-text-main">Josephine Anne Angeles</span>
-                    <span class="logo-text-sub">Veterinary Clinic</span>
+                    <span class="logo-text-main">Vetsync</span>
                 </div>
             </a>
             <button class="mobile-menu-btn">
                 <span class="material-icons-sharp">menu</span>
             </button>
             <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="services.html" class="nav-link">Services</a>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="services.html" class="nav-link active">Services</a>
                 <a href="Product.html" class="nav-link">Products</a>
                 <a href="contact-us.html" class="nav-link">Contact Us</a>
                 <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="profile-menu">
-                    <button class="profile-trigger">
-                        <span class="material-icons-sharp">account_circle</span>
-                        <span>Account</span>
-                        <span class="material-icons-sharp">arrow_drop_down</span>
-                    </button>
-                    <div class="profile-menu-content">
-                        <a href="users_login.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">login</span>
-                            Sign In
-                        </a>
-                        <div class="profile-menu-divider"></div>
-                        <a href="users_register.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">person_add</span>
-                            Sign Up
-                        </a>
+                <div class="actions">
+                    <div class="profile-menu">
+                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                            <i class="circle user icon"></i>
+                            <span class="text">Account</span>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item">
+                                    <a href="../auth/index.html" class="link">
+                                        <span class="material-icons-sharp">login</span>
+                                        Sign In
+                                    </a>
+                                </div>
+                                <div class="item">
+                                    <a href="../auth/register.html" class="link">
+                                        <span class="material-icons-sharp">person_add</span>
+                                        Sign Up
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <button class="ui red large button">
+                        Book Now
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <section class="services-section">
-        <div class="services-container">
-            <div class="section-title">
-                <h1>Our Services</h1>
-                <p>Comprehensive veterinary care for your beloved pets</p>
-            </div>
+    <div class="container-body">
+        <div class="row">
+            <div class="col">
+                <main class="container-main">
+                    <!-- Services Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper services-section">
+                            <div class="section-title">
+                                <h2>Our Services</h2>
+                                <p>Comprehensive veterinary care for your beloved pets</p>
+                            </div>
 
-            <div class="services-grid">
-                <!-- Wellness Checkup -->
-                <div class="service-card">
-                    <img src="/public/assets/images/wellness-checkup.jpg" alt="Wellness Checkup" class="service-image">
-                    <div class="service-content">
-                        <h3 class="service-title">Wellness Checkup</h3>
-                        <p class="service-description">Regular health examinations and preventive care for your pets.
-                        </p>
-                        <a href="#book" class="book-button">
-                            <span class="material-icons-sharp">event</span>
-                            Book Now
-                        </a>
-                    </div>
-                </div>
+                            <div class="info-container">
+                                <div class="info-grid">
+                                    <!-- Service Card 1 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/wellness.jpg"
+                                            alt="Wellness Checkup" class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Wellness Checkup</h3>
+                                            <p class="info-preview">
+                                                Regular health examinations and preventive care for your pets...
+                                            </p>
+                                            <p class="info-full">
+                                                Our comprehensive wellness checkups include thorough physical
+                                                examinations,
+                                                vaccinations, parasite prevention, and nutritional counseling to keep
+                                                your
+                                                pets healthy and happy.
+                                            </p>
+                                            <div class="read-more-btn">Book Now</div>
+                                        </div>
+                                    </div>
 
-                <!-- Vaccination -->
-                <div class="service-card">
-                    <img src="/public/assets/images/vaccination.jpg" alt="Vaccination" class="service-image">
-                    <div class="service-content">
-                        <h3 class="service-title">Vaccination</h3>
-                        <p class="service-description">Essential vaccines to protect your pets from common diseases.</p>
-                        <a href="#book" class="book-button">
-                            <span class="material-icons-sharp">event</span>
-                            Book Now
-                        </a>
-                    </div>
-                </div>
+                                    <!-- Service Card 2 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/vaccination.jpg" alt="Vaccination"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Vaccination</h3>
+                                            <p class="info-preview">
+                                                Essential vaccines to protect your pets from common diseases...
+                                            </p>
+                                            <p class="info-full">
+                                                We provide all core and recommended vaccinations for dogs and cats,
+                                                following the latest guidelines to ensure your pets are protected
+                                                against infectious diseases.
+                                            </p>
+                                            <div class="read-more-btn">Book Now</div>
+                                        </div>
+                                    </div>
 
-                <!-- Surgery -->
-                <div class="service-card">
-                    <img src="/public/assets/images/surgery.jpg" alt="Surgery" class="service-image">
-                    <div class="service-content">
-                        <h3 class="service-title">Surgery</h3>
-                        <p class="service-description">Professional surgical procedures in a state-of-the-art facility.
-                        </p>
-                        <a href="#book" class="book-button">
-                            <span class="material-icons-sharp">event</span>
-                            Book Now
-                        </a>
+                                    <!-- Service Card 3 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/surgery.jpg" alt="Surgery"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Surgery</h3>
+                                            <p class="info-preview">
+                                                Professional surgical procedures in a state-of-the-art facility...
+                                            </p>
+                                            <p class="info-full">
+                                                Our experienced veterinary surgeons perform both routine and complex
+                                                procedures in our modern surgical suite, ensuring the highest standards
+                                                of care and safety for your pets.
+                                            </p>
+                                            <div class="read-more-btn">Book Now</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                </div>
-            </div>
 
-            <!-- Appointment Form -->
-            <div class="appointment-form" id="book">
-                <h2 class="form-title">Book an Appointment</h2>
-                <form class="ui form">
-                    <div class="form-grid">
-                        <div class="field">
-                            <label>Pet Owner Name</label>
-                            <input type="text" placeholder="Your Name">
-                        </div>
-                        <div class="field">
-                            <label>Pet Name</label>
-                            <input type="text" placeholder="Pet's Name">
-                        </div>
-                        <div class="field">
-                            <label>Service</label>
-                            <select class="ui dropdown">
-                                <option value="">Select Service</option>
-                                <option value="wellness">Wellness Checkup</option>
-                                <option value="vaccination">Vaccination</option>
-                                <option value="surgery">Surgery</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label>Preferred Date</label>
-                            <input type="date">
-                        </div>
-                        <div class="field">
-                            <label>Preferred Time</label>
-                            <input type="time">
-                        </div>
-                        <div class="field">
-                            <label>Contact Number</label>
-                            <input type="tel" placeholder="Your Phone Number">
+                    <!-- Appointment Form Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper">
+                            <div class="box">
+                                <h2 class="section-title">Book an Appointment</h2>
+                                <form class="ui form">
+                                    <div class="form-grid">
+                                        <div class="field">
+                                            <label>Pet Owner Name</label>
+                                            <input type="text" placeholder="Your Name">
+                                        </div>
+                                        <div class="field">
+                                            <label>Pet Name</label>
+                                            <input type="text" placeholder="Pet's Name">
+                                        </div>
+                                        <div class="field">
+                                            <label>Service</label>
+                                            <select class="ui dropdown">
+                                                <option value="">Select Service</option>
+                                                <option value="wellness">Wellness Checkup</option>
+                                                <option value="vaccination">Vaccination</option>
+                                                <option value="surgery">Surgery</option>
+                                            </select>
+                                        </div>
+                                        <div class="field">
+                                            <label>Preferred Date</label>
+                                            <input type="date">
+                                        </div>
+                                        <div class="field">
+                                            <label>Preferred Time</label>
+                                            <input type="time">
+                                        </div>
+                                        <div class="field">
+                                            <label>Contact Number</label>
+                                            <input type="tel" placeholder="Your Phone Number">
+                                        </div>
+                                    </div>
+                                    <button class="ui fluid large teal submit button" style="margin-top: 20px;">
+                                        Book Appointment
+                                    </button>
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+
+                <!-- Footer -->
+                <footer class="footer-container">
+                    <div class="footer-section">
+                        <div class="ui inverted vertical footer segment pt-5 pb-5">
+                            <div class="ui container">
+                                <div class="ui stackable inverted divided equal height stackable grid">
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">About</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Sitemap</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                            <a href="#" class="item">Religious Ceremonies</a>
+                                            <a href="#" class="item">Gazebo Plans</a>
+                                        </div>
+                                    </div>
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">Services</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Banana Pre-Order</a>
+                                            <a href="#" class="item">DNA FAQ</a>
+                                            <a href="#" class="item">How To Access</a>
+                                            <a href="#" class="item">Favorite X-Men</a>
+                                        </div>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <h4 class="ui inverted header">Footer Header</h4>
+                                        <p>Extra space for a call to action inside the footer that could help re-engage
+                                            users.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <button class="ui fluid large teal submit button" style="margin-top: 20px;">Book
-                        Appointment</button>
-                </form>
+                </footer>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Scripts -->
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
