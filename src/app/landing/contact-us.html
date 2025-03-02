@@ -12,106 +12,6 @@
     <link rel="stylesheet" href="../../../public/assets/css/global.css" />
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
-    <style>
-        .contact-section {
-            padding: 120px 0 80px;
-            background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .contact-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            margin-top: 50px;
-        }
-
-        .contact-info-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 30px;
-            color: white;
-        }
-
-        .contact-form {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .contact-item .material-icons-sharp {
-            font-size: 24px;
-        }
-
-        .map-container {
-            margin-top: 30px;
-            border-radius: 15px;
-            overflow: hidden;
-            height: 300px;
-        }
-
-        @media (max-width: 768px) {
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .location-card {
-            display: block;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 30px;
-            color: white;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .location-card:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .location-preview {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .location-icon {
-            font-size: 40px;
-            color: white;
-        }
-
-        .location-text {
-            flex: 1;
-        }
-
-        .location-text h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.2rem;
-        }
-
-        .location-text p {
-            margin: 0;
-            opacity: 0.9;
-        }
-    </style>
 </head>
 
 <body>
@@ -120,114 +20,204 @@
         <div></div>
         <div></div>
     </div>
+
+    <!-- Top Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-logo">
-                <img src="/public/assets/img/logo.png" alt="Logo">
+                <img src="../../../public/assets/img/logo.png" alt="Logo">
                 <div class="logo-text">
-                    <span class="logo-text-main">Josephine Anne Angeles</span>
-                    <span class="logo-text-sub">Veterinary Clinic</span>
+                    <span class="logo-text-main">Vetsync</span>
                 </div>
             </a>
             <button class="mobile-menu-btn">
                 <span class="material-icons-sharp">menu</span>
             </button>
             <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
+                <a href="index.html" class="nav-link">Home</a>
                 <a href="services.html" class="nav-link">Services</a>
                 <a href="Product.html" class="nav-link">Products</a>
-                <a href="contact-us.html" class="nav-link">Contact Us</a>
+                <a href="contact-us.html" class="nav-link active">Contact Us</a>
                 <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="profile-menu">
-                    <button class="profile-trigger">
-                        <span class="material-icons-sharp">account_circle</span>
-                        <span>Account</span>
-                        <span class="material-icons-sharp">arrow_drop_down</span>
-                    </button>
-                    <div class="profile-menu-content">
-                        <a href="users_login.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">login</span>
-                            Sign In
-                        </a>
-                        <div class="profile-menu-divider"></div>
-                        <a href="users_register.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">person_add</span>
-                            Sign Up
-                        </a>
+                <div class="actions">
+                    <div class="profile-menu">
+                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                            <i class="circle user icon"></i>
+                            <span class="text">Account</span>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item">
+                                    <a href="../auth/index.html" class="link">
+                                        <span class="material-icons-sharp">login</span>
+                                        Sign In
+                                    </a>
+                                </div>
+                                <div class="item">
+                                    <a href="../auth/register.html" class="link">
+                                        <span class="material-icons-sharp">person_add</span>
+                                        Sign Up
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <button class="ui red large button">
+                        Book Now
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <section class="contact-section">
-        <div class="contact-container">
-            <div class="section-title">
-                <h1>Contact Us</h1>
-                <p>Get in touch with us for any inquiries or appointments</p>
-            </div>
-
-            <div class="contact-grid">
-                <div class="contact-info-card">
-                    <h2>Get In Touch</h2>
-                    <div class="contact-item">
-                        <span class="material-icons-sharp">location_on</span>
-                        <div>
-                            <h3>Location</h3>
-                            <p>123 Main Street, City Center</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <span class="material-icons-sharp">phone</span>
-                        <div>
-                            <h3>Phone</h3>
-                            <p>+63 912 345 6789</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <span class="material-icons-sharp">email</span>
-                        <div>
-                            <h3>Email</h3>
-                            <p>info@javetclinic.com</p>
-                        </div>
-                    </div>
-                    <a href="https://maps.app.goo.gl/ZkD3Ui9C2sfd3cCz5" target="_blank" class="location-card">
-                        <div class="location-preview">
-                            <span class="material-icons-sharp location-icon">map</span>
-                            <div class="location-text">
-                                <h3>Visit Our Clinic</h3>
-                                <p>Click to view on Google Maps</p>
+    <div class="container-body">
+        <div class="row">
+            <div class="col">
+                <main class="container-main">
+                    <!-- Contact Info Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper services-section">
+                            <div class="section-title">
+                                <h2>Contact Us</h2>
+                                <p>Get in touch with our veterinary team</p>
                             </div>
-                            <span class="material-icons-sharp">arrow_forward</span>
-                        </div>
-                    </a>
-                </div>
 
-                <div class="contact-form">
-                    <h2>Send us a Message</h2>
-                    <form class="ui form">
-                        <div class="field">
-                            <label>Name</label>
-                            <input type="text" placeholder="Your Name">
+                            <div class="info-container">
+                                <div class="info-grid">
+                                    <!-- Contact Card 1 -->
+                                    <div class="info-card">
+                                        <div class="info-content">
+                                            <h3 class="info-title">
+                                                <span class="material-icons-sharp">location_on</span>
+                                                Visit Us
+                                            </h3>
+                                            <p class="info-full">
+                                                123 Main Street<br>
+                                                City Center<br>
+                                                Your City, State ZIP
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Contact Card 2 -->
+                                    <div class="info-card">
+                                        <div class="info-content">
+                                            <h3 class="info-title">
+                                                <span class="material-icons-sharp">schedule</span>
+                                                Business Hours
+                                            </h3>
+                                            <p class="info-full">
+                                                Monday - Friday: 8:00 AM - 6:00 PM<br>
+                                                Saturday: 9:00 AM - 4:00 PM<br>
+                                                Sunday: Closed
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Contact Card 3 -->
+                                    <div class="info-card">
+                                        <div class="info-content">
+                                            <h3 class="info-title">
+                                                <span class="material-icons-sharp">phone</span>
+                                                Contact Information
+                                            </h3>
+                                            <p class="info-full">
+                                                Phone: (123) 456-7890<br>
+                                                Email: info@vetsync.com<br>
+                                                Emergency: (123) 456-7899
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Contact Form Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper">
+                            <div class="box">
+                                <h2 class="section-title">Send Us a Message</h2>
+                                <form class="contact-form">
+                                    <div class="field">
+                                        <label>Your Name</label>
+                                        <input type="text" placeholder="Enter your name" class="form-input">
+                                    </div>
+                                    <div class="field">
+                                        <label>Email Address</label>
+                                        <input type="email" placeholder="Enter your email" class="form-input">
+                                    </div>
+                                    <div class="field">
+                                        <label>Phone Number</label>
+                                        <input type="tel" placeholder="Enter your phone number" class="form-input">
+                                    </div>
+                                    <div class="field">
+                                        <label>Subject</label>
+                                        <input type="text" placeholder="Enter message subject" class="form-input">
+                                    </div>
+                                    <div class="field">
+                                        <label>Message</label>
+                                        <textarea rows="4" placeholder="Enter your message"
+                                            class="form-input"></textarea>
+                                    </div>
+                                    <button type="submit" class="send-message-btn">
+                                        Send Message
+                                    </button>
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Map Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper">
+                            <div class="box">
+                                <h2 class="section-title">Find Us</h2>
+                                <div style="width: 100%; height: 400px; background: #eee;">
+                                    <!-- Replace with actual map implementation -->
+                                    <p style="text-align: center; padding-top: 180px;">Map will be embedded here</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+
+                <!-- Footer -->
+                <footer class="footer-container">
+                    <div class="footer-section">
+                        <div class="ui inverted vertical footer segment pt-5 pb-5">
+                            <div class="ui container">
+                                <div class="ui stackable inverted divided equal height stackable grid">
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">About</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Sitemap</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                            <a href="#" class="item">Religious Ceremonies</a>
+                                            <a href="#" class="item">Gazebo Plans</a>
+                                        </div>
+                                    </div>
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">Services</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Banana Pre-Order</a>
+                                            <a href="#" class="item">DNA FAQ</a>
+                                            <a href="#" class="item">How To Access</a>
+                                            <a href="#" class="item">Favorite X-Men</a>
+                                        </div>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <h4 class="ui inverted header">Footer Header</h4>
+                                        <p>Extra space for a call to action inside the footer that could help re-engage
+                                            users.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="field">
-                            <label>Email</label>
-                            <input type="email" placeholder="Your Email">
-                        </div>
-                        <div class="field">
-                            <label>Subject</label>
-                            <input type="text" placeholder="Subject">
-                        </div>
-                        <div class="field">
-                            <label>Message</label>
-                            <textarea rows="5" placeholder="Your Message"></textarea>
-                        </div>
-                        <button class="ui fluid large teal submit button">Send Message</button>
-                    </form>
-                </div>
+                    </div>
+                </footer>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Scripts -->
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
@@ -239,38 +229,24 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script type="text/javascript">
-        // Handle navbar scroll effect
-        window.addEventListener('scroll', function () {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+        $(function () {
+            // Handle navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
-        // Handle mobile menu
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+            // Handle mobile menu
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
 
-        mobileMenuBtn.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
-        });
-
-        // Handle profile menu toggle
-        const profileTrigger = document.querySelector('.profile-trigger');
-        const profileMenu = document.querySelector('.profile-menu');
-
-        profileTrigger.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileMenu.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!profileMenu.contains(e.target)) {
-                profileMenu.classList.remove('active');
-            }
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
         });
     </script>
 </body>

@@ -570,3 +570,75 @@ nav .nav-links .actions .profile-menu .profile-menu-dd .menu .item .link {
 .ui.teal.button:hover {
     background-color: #6ab5a8 !important; /* Slightly darker teal for hover */
 }
+
+/*####### CONTACT FORM #######*/
+.contact-form {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-form .field {
+    margin-bottom: 1.5rem;
+}
+
+.contact-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--color-dark);
+    font-weight: 500;
+}
+
+.contact-form .form-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 8px;
+    background: var(--color-background);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-form .form-input:focus {
+    background: var(--color-white);
+    box-shadow: 0 0 0 2px rgba(126, 204, 191, 0.2);
+    border-color: #7eccbf !important;
+}
+
+.contact-form textarea.form-input {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/*---- CONTACT FORM (Button) ----*/
+.send-message-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #7eccbf;
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.send-message-btn:hover {
+    background: #6ab5a8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(126, 204, 191, 0.3);
+}
+
+/* Update background colors to match theme */
+.contact-form .form-input:focus {
+    border-color: #7fccbf !important; /* Match logo teal color */
+}
+
+.send-message-btn {
+    background: #7fccbf; /* Match logo teal color */
+}
+
+.send-message-btn:hover {
+    background: #6ab5a8; /* Slightly darker teal for hover */
+}

@@ -110,101 +110,238 @@
         <div></div>
         <div></div>
     </div>
-    <!-- Navbar -->
+    <!-- Top Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-logo">
-                <img src="/public/assets/img/logo.png" alt="Logo">
+                <img src="../../../public/assets/img/logo.png" alt="Logo">
                 <div class="logo-text">
-                    <span class="logo-text-main">Josephine Anne Angeles</span>
-                    <span class="logo-text-sub">Veterinary Clinic</span>
+                    <span class="logo-text-main">Vetsync</span>
                 </div>
             </a>
             <button class="mobile-menu-btn">
                 <span class="material-icons-sharp">menu</span>
             </button>
             <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
+                <a href="index.html" class="nav-link">Home</a>
                 <a href="services.html" class="nav-link">Services</a>
                 <a href="Product.html" class="nav-link">Products</a>
                 <a href="contact-us.html" class="nav-link">Contact Us</a>
-                <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="profile-menu">
-                    <button class="profile-trigger">
-                        <span class="material-icons-sharp">account_circle</span>
-                        <span>Account</span>
-                        <span class="material-icons-sharp">arrow_drop_down</span>
-                    </button>
-                    <div class="profile-menu-content">
-                        <a href="users_login.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">login</span>
-                            Sign In
-                        </a>
-                        <div class="profile-menu-divider"></div>
-                        <a href="users_register.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">person_add</span>
-                            Sign Up
-                        </a>
+                <a href="about-us.html" class="nav-link active">About Us</a>
+                <div class="actions">
+                    <div class="profile-menu">
+                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                            <i class="circle user icon"></i>
+                            <span class="text">Account</span>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item">
+                                    <a href="../auth/index.html" class="link">
+                                        <span class="material-icons-sharp">login</span>
+                                        Sign In
+                                    </a>
+                                </div>
+                                <div class="item">
+                                    <a href="../auth/register.html" class="link">
+                                        <span class="material-icons-sharp">person_add</span>
+                                        Sign Up
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <button class="ui red large button">
+                        Book Now
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- About Us Section -->
-    <section class="about-section">
-        <div class="about-container">
-            <div class="section-title">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, rem id at, vero quas itaque dicta
-                    sunt nemo voluptas velit explicabo! Quam facere sequi illum, consequatur nulla sed modi atque.
+    <div class="container-body">
+        <div class="row">
+            <div class="col">
+                <main class="container-main">
+                    <!-- About Us Hero Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper hero-section">
+                            <div class="hero-content">
+                                <div class="hero-text">
+                                    <h1 class="hero-title">Our Story</h1>
+                                    <p class="hero-description">
+                                        Welcome to Josephine Anne Angeles Veterinary Clinic, where passion for animal
+                                        care
+                                        meets professional excellence. Since our establishment, we've been dedicated to
+                                        providing the highest quality veterinary services to pets and their families.
+                                    </p>
+                                </div>
+                                <div class="hero-image">
+                                    <img src="../../../public/assets/img/contents/clinic-front.jpg"
+                                        alt="Clinic Front View">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
 
-                </p>
-                <h1>About Us</h1>
-                <p>Learn more about our clinic and our commitment to providing the best care for your beloved pets.</p>
-            </div>
-            <div class="about-grid">
-                <!-- Mission Card -->
-                <div class="about-card">
-                    <img src="/public/assets/images/mission.jpg" alt="Our Mission" class="about-image">
-                    <div class="about-content">
-                        <h3 class="about-title">Our Mission</h3>
-                        <p class="about-text">
-                            To provide exceptional veterinary care with compassion and dedication, ensuring the health
-                            and happiness of every pet we serve.
-                        </p>
-                    </div>
-                </div>
-                <!-- Vision Card -->
-                <div class="about-card">
-                    <img src="/public/assets/images/vision.jpg" alt="Our Vision" class="about-image">
-                    <div class="about-content">
-                        <h3 class="about-title">Our Vision</h3>
-                        <p class="about-text">
-                            To be the leading veterinary clinic known for excellence in pet healthcare,
-                            innovative
-                            treatments, and outstanding customer service.
-                        </p>
-                    </div>
-                </div>
+                    <!-- Our Mission Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper services-section">
+                            <div class="section-title">
+                                <h2>Our Mission & Values</h2>
+                                <p>Committed to excellence in veterinary care</p>
+                            </div>
 
-                <!-- Team Card -->
-                <div class="about-card">
-                    <img src="/public/assets/images/team.jpg" alt="Our Team" class="about-image">
-                    <div class="about-content">
-                        <h3 class="about-title">Our Team</h3>
-                        <p class="about-text">
-                            Our experienced team of veterinarians and staff are dedicated to providing the
-                            highest
-                            quality care for your pets with expertise and love.
-                        </p>
+                            <div class="info-container">
+                                <div class="info-grid">
+                                    <!-- Mission Card -->
+                                    <div class="info-card">
+                                        <div class="info-content">
+                                            <h3 class="info-title">
+                                                <span class="material-icons-sharp">pets</span>
+                                                Our Mission
+                                            </h3>
+                                            <p class="info-full">
+                                                To provide comprehensive, compassionate veterinary care while building
+                                                lasting
+                                                relationships with pets and their families. We strive to be the most
+                                                trusted
+                                                partner in your pet's healthcare journey.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vision Card -->
+                                    <div class="info-card">
+                                        <div class="info-content">
+                                            <h3 class="info-title">
+                                                <span class="material-icons-sharp">visibility</span>
+                                                Our Vision
+                                            </h3>
+                                            <p class="info-full">
+                                                To be the leading veterinary care provider, known for excellence,
+                                                innovation, and compassion. We envision a community where every pet
+                                                receives the highest standard of care.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Values Card -->
+                                    <div class="info-card">
+                                        <div class="info-content">
+                                            <h3 class="info-title">
+                                                <span class="material-icons-sharp">favorite</span>
+                                                Our Values
+                                            </h3>
+                                            <p class="info-full">
+                                                Compassion, Excellence, Integrity, and Innovation guide everything we
+                                                do.
+                                                We believe in treating every pet as if they were our own and providing
+                                                honest, transparent care.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                </div>
+
+                    <!-- Team Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper">
+                            <div class="section-title">
+                                <h2>Meet Our Team</h2>
+                                <p>Dedicated professionals committed to your pet's health</p>
+                            </div>
+
+                            <div class="info-container">
+                                <div class="info-grid">
+                                    <!-- Team Member 1 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/vet1.jpg" alt="Dr. Smith"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Dr. Sarah Smith</h3>
+                                            <p class="info-preview">Lead Veterinarian</p>
+                                            <p class="info-full">
+                                                Dr. Smith has over 15 years of experience in veterinary medicine,
+                                                specializing in small animal care and surgery. She is passionate about
+                                                providing the best possible care for your pets.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Team Member 2 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/vet2.jpg" alt="Dr. Johnson"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Dr. Mike Johnson</h3>
+                                            <p class="info-preview">Veterinary Surgeon</p>
+                                            <p class="info-full">
+                                                Dr. Johnson specializes in advanced surgical procedures and has been
+                                                practicing veterinary medicine for over a decade. He is committed to
+                                                providing exceptional surgical care.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Team Member 3 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/vet3.jpg" alt="Dr. Garcia"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Dr. Ana Garcia</h3>
+                                            <p class="info-preview">Veterinary Specialist</p>
+                                            <p class="info-full">
+                                                Dr. Garcia specializes in preventive care and internal medicine. Her
+                                                gentle approach and expertise make her a favorite among our pet patients
+                                                and their families.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+
+                <!-- Footer -->
+                <footer class="footer-container">
+                    <div class="footer-section">
+                        <div class="ui inverted vertical footer segment pt-5 pb-5">
+                            <div class="ui container">
+                                <div class="ui stackable inverted divided equal height stackable grid">
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">About</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Sitemap</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                            <a href="#" class="item">Religious Ceremonies</a>
+                                            <a href="#" class="item">Gazebo Plans</a>
+                                        </div>
+                                    </div>
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">Services</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Banana Pre-Order</a>
+                                            <a href="#" class="item">DNA FAQ</a>
+                                            <a href="#" class="item">How To Access</a>
+                                            <a href="#" class="item">Favorite X-Men</a>
+                                        </div>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <h4 class="ui inverted header">Footer Header</h4>
+                                        <p>Extra space for a call to action inside the footer that could help re-engage
+                                            users.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
-        </div>
-        </div>
-        </div>
-    </section>
+    </div>
 
     <!-- Scripts -->
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
@@ -216,41 +353,26 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script type="text/javascript">
-        // Handle navbar scroll effect
-        window.addEventListener('scroll', function () {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+        $(function () {
+            // Handle navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
-        // Handle mobile menu
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
+            // Handle mobile menu
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
 
-        mobileMenuBtn.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
-        });
-
-        // Handle profile menu toggle
-        const profileTrigger = document.querySelector('.profile-trigger');
-        const profileMenu = document.querySelector('.profile-menu');
-
-        profileTrigger.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileMenu.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!profileMenu.contains(e.target)) {
-                profileMenu.classList.remove('active');
-            }
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
         });
     </script>
-
 </body>
 
 </html>

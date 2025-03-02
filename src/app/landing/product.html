@@ -12,107 +12,6 @@
     <link rel="stylesheet" href="../../../public/assets/css/global.css" />
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
-    <style>
-        .products-section {
-            padding: 120px 0 80px;
-            background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .products-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .product-content {
-            padding: 20px;
-        }
-
-        .product-title {
-            font-size: 1.2rem;
-            color: var(--color-dark);
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            font-size: 1.5rem;
-            color: #4e54c8;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .product-description {
-            color: var(--color-dark-variant);
-            margin-bottom: 20px;
-        }
-
-        .add-to-cart {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background: #4e54c8;
-            color: white;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .add-to-cart:hover {
-            background: #3a3f9c;
-            transform: translateY(-2px);
-        }
-
-        .category-filter {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-
-        .category-button {
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .category-button.active,
-        .category-button:hover {
-            background: white;
-            color: #4e54c8;
-        }
-    </style>
 </head>
 
 <body>
@@ -121,79 +20,167 @@
         <div></div>
         <div></div>
     </div>
+
+    <!-- Top Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
             <a href="index.html" class="navbar-logo">
-                <img src="/public/assets/img/logo.png" alt="Logo">
+                <img src="../../../public/assets/img/logo.png" alt="Logo">
                 <div class="logo-text">
-                    <span class="logo-text-main">Josephine Anne Angeles</span>
-                    <span class="logo-text-sub">Veterinary Clinic</span>
+                    <span class="logo-text-main">Vetsync</span>
                 </div>
             </a>
             <button class="mobile-menu-btn">
                 <span class="material-icons-sharp">menu</span>
             </button>
             <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
+                <a href="index.html" class="nav-link">Home</a>
                 <a href="services.html" class="nav-link">Services</a>
-                <a href="Product.html" class="nav-link">Products</a>
+                <a href="Product.html" class="nav-link active">Products</a>
                 <a href="contact-us.html" class="nav-link">Contact Us</a>
                 <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="profile-menu">
-                    <button class="profile-trigger">
-                        <span class="material-icons-sharp">account_circle</span>
-                        <span>Account</span>
-                        <span class="material-icons-sharp">arrow_drop_down</span>
-                    </button>
-                    <div class="profile-menu-content">
-                        <a href="users_login.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">login</span>
-                            Sign In
-                        </a>
-                        <div class="profile-menu-divider"></div>
-                        <a href="users_register.html" class="profile-menu-item">
-                            <span class="material-icons-sharp">person_add</span>
-                            Sign Up
-                        </a>
+                <div class="actions">
+                    <div class="profile-menu">
+                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                            <i class="circle user icon"></i>
+                            <span class="text">Account</span>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item">
+                                    <a href="../auth/index.html" class="link">
+                                        <span class="material-icons-sharp">login</span>
+                                        Sign In
+                                    </a>
+
+
+                                </div>
+                                <div class="item">
+                                    <a href="../auth/register.html" class="link">
+                                        <span class="material-icons-sharp">person_add</span>
+                                        Sign Up
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <button class="ui red large button">
+                        Book Now
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <section class="products-section">
-        <div class="products-container">
-            <div class="section-title">
-                <h1>Our Products</h1>
-                <p>Quality pet care products for your beloved companions</p>
-            </div>
+    <div class="container-body">
+        <div class="row">
+            <div class="col">
+                <main class="container-main">
+                    <!-- Products Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper services-section">
+                            <div class="section-title">
+                                <h2>Our Products</h2>
+                                <p>Quality pet care products for your beloved companions</p>
+                            </div>
 
-            <div class="category-filter">
-                <button class="category-button active">All</button>
-                <button class="category-button">Food</button>
-                <button class="category-button">Medicine</button>
-                <button class="category-button">Accessories</button>
-            </div>
+                            <div class="info-container">
+                                <div class="info-grid">
+                                    <!-- Product Card 1 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/pet-food.jpg" alt="Pet Food"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Premium Pet Food</h3>
+                                            <p class="info-preview">
+                                                High-quality nutrition for your pets...
+                                            </p>
+                                            <p class="info-full">
+                                                Our selection of premium pet food provides balanced nutrition
+                                                for dogs and cats of all ages. Made with high-quality ingredients
+                                                to support your pet's health and vitality.
+                                            </p>
+                                            <div class="read-more-btn">Shop Now</div>
+                                        </div>
+                                    </div>
 
-            <div class="products-grid">
+                                    <!-- Product Card 2 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/supplements.jpg" alt="Supplements"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Pet Supplements</h3>
+                                            <p class="info-preview">
+                                                Essential supplements for optimal health...
+                                            </p>
+                                            <p class="info-full">
+                                                Support your pet's health with our range of veterinary-approved
+                                                supplements. From joint health to immune support, we have what
+                                                your pet needs.
+                                            </p>
+                                            <div class="read-more-btn">Shop Now</div>
+                                        </div>
+                                    </div>
 
-                <div class="product-card">
-                    <img src="/public/assets/images/pet-food-1.jpg" alt="Premium Pet Food" class="product-image">
-                    <div class="product-content">
-                        <h3 class="product-title">Premium Dog Food</h3>
-                        <div class="product-price">₱599.00</div>
-                        <p class="product-description">High-quality nutrition for adult dogs.</p>
-                        <button class="add-to-cart">
-                            <span class="material-icons-sharp">shopping_cart</span>
-                            Add to Cart
-                        </button>
+                                    <!-- Product Card 3 -->
+                                    <div class="info-card">
+                                        <img src="../../../public/assets/img/contents/accessories.jpg" alt="Accessories"
+                                            class="info-image">
+                                        <div class="info-content">
+                                            <h3 class="info-title">Pet Accessories</h3>
+                                            <p class="info-preview">
+                                                Quality accessories for your pets...
+                                            </p>
+                                            <p class="info-full">
+                                                Find everything your pet needs, from comfortable collars and
+                                                leashes to grooming supplies and toys. All products are selected
+                                                for quality and safety.
+                                            </p>
+                                            <div class="read-more-btn">Shop Now</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                </div>
+                </main>
 
-                <!-- Add more product cards here -->
+                <!-- Footer -->
+                <footer class="footer-container">
+                    <div class="footer-section">
+                        <div class="ui inverted vertical footer segment pt-5 pb-5">
+                            <div class="ui container">
+                                <div class="ui stackable inverted divided equal height stackable grid">
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">About</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Sitemap</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                            <a href="#" class="item">Religious Ceremonies</a>
+                                            <a href="#" class="item">Gazebo Plans</a>
+                                        </div>
+                                    </div>
+                                    <div class="three wide column">
+                                        <h4 class="ui inverted header">Services</h4>
+                                        <div class="ui inverted link list">
+                                            <a href="#" class="item">Banana Pre-Order</a>
+                                            <a href="#" class="item">DNA FAQ</a>
+                                            <a href="#" class="item">How To Access</a>
+                                            <a href="#" class="item">Favorite X-Men</a>
+                                        </div>
+                                    </div>
+                                    <div class="seven wide column">
+                                        <h4 class="ui inverted header">Footer Header</h4>
+                                        <p>Extra space for a call to action inside the footer that could help re-engage
+                                            users.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Scripts -->
     <script src="../../../public/lib/jquery/jquery.min.js"></script>
@@ -205,39 +192,24 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script type="text/javascript">
+        $(function () {
+            // Handle navbar scroll effect
+            window.addEventListener('scroll', function () {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
 
-        // Handle navbar scroll effect
-        window.addEventListener('scroll', function () {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
+            // Handle mobile menu
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
 
-        // Handle mobile menu
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const navLinks = document.querySelector('.nav-links');
-
-        mobileMenuBtn.addEventListener('click', function () {
-            navLinks.classList.toggle('active');
-        });
-
-        // Handle profile menu toggle
-        const profileTrigger = document.querySelector('.profile-trigger');
-        const profileMenu = document.querySelector('.profile-menu');
-
-        profileTrigger.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileMenu.classList.toggle('active');
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function (e) {
-            if (!profileMenu.contains(e.target)) {
-                profileMenu.classList.remove('active');
-            }
+            mobileMenuBtn.addEventListener('click', function () {
+                navLinks.classList.toggle('active');
+            });
         });
     </script>
 </body>
