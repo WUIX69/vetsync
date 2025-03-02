@@ -171,7 +171,7 @@ nav .nav-links .actions .profile-menu .profile-menu-dd .menu .item .link {
     transition: all 0.3s ease;
 }
 
-/*############## MAIN ##############*/
+/*############## MAIN #############*/
 main .section-container {
     padding: 0 !important;
     margin: 0 !important;
@@ -204,8 +204,8 @@ main .section-container section .section-title p {
     max-width: 600px;
 }
 
-/*####### MAIN (HERO) ########*/
-.hero-section {
+/*----------- MAIN (Hero) -----------*/
+main .section-container section.hero-section {
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -216,7 +216,7 @@ main .section-container section .section-title p {
     overflow: hidden;
 }
 
-.hero-section::after {
+main section.hero-section::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -228,7 +228,7 @@ main .section-container section .section-title p {
     z-index: 1;
 }
 
-.hero-content {
+main section.hero-section .hero-content {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
@@ -240,11 +240,11 @@ main .section-container section .section-title p {
     z-index: 2;
 }
 
-.hero-text {
+main section.hero-section .hero-text {
     color: white;
 }
 
-.hero-title {
+main section.hero-section .hero-title {
     font-size: 4rem;
     font-weight: 700;
     line-height: 1.2;
@@ -252,19 +252,19 @@ main .section-container section .section-title p {
     color: white;
 }
 
-.hero-description {
+main section.hero-section .hero-description {
     font-size: 1.1rem;
     margin-bottom: 40px;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.6;
 }
 
-.cta-buttons {
+main section.hero-section .cta-buttons {
     display: flex;
     gap: 20px;
 }
 
-.cta-button {
+main section.hero-section .cta-button {
     padding: 15px 30px;
     border-radius: 30px;
     font-weight: 600;
@@ -274,33 +274,33 @@ main .section-container section .section-title p {
     gap: 8px;
 }
 
-.cta-button.primary {
+main section.hero-section .cta-button.primary {
     background-color: white;
     color: #4e54c8;
 }
 
-.cta-button.secondary {
+main section.hero-section .cta-button.secondary {
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     backdrop-filter: blur(5px);
 }
 
-.cta-button:hover {
+main section.hero-section .cta-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.hero-image {
+main section.hero-section .hero-image {
     text-align: right;
 }
 
-.hero-image img {
+main section.hero-section .hero-image img {
     max-width: 100%;
     height: auto;
     animation: float 6s ease-in-out infinite;
 }
 
-@keyframes float {
+/* @keyframes float {
     0%,
     100% {
         transform: translateY(0);
@@ -309,9 +309,9 @@ main .section-container section .section-title p {
     50% {
         transform: translateY(-20px);
     }
-}
+} */
 
-/*###### MAIN (Features) ######*/
+/*----------- MAIN (Features) -----------*/
 main .section-container section.features-section {
     background: var(--color-background);
 }
@@ -353,8 +353,8 @@ main section.features-section .feature-description {
     line-height: 1.6;
 }
 
-/*###### MAIN (Info) #######*/
-main section.info-section {
+/*----------- MAIN (Services) -----------*/
+main .section-container section.info-section {
     background: var(--color-white);
 }
 
@@ -403,6 +403,7 @@ main section.info-section .info-text {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 4;
+    line-clamp: 4;
     -webkit-box-orient: vertical;
 }
 
@@ -416,19 +417,19 @@ main section.info-section .read-more-btn {
     transition: all 0.3s ease;
 }
 
-/* Updated styles for single location */
-.locations-section {
+/*----------- MAIN (Locations) -----------*/
+main .section-container section.locations-section {
     padding: 100px 0;
     background: var(--color-background);
 }
 
-.location-container {
+main section.locations-section .location-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
-.location-card {
+main section.locations-section .location-card {
     background: var(--color-white);
     border-radius: 15px;
     overflow: hidden;
@@ -438,27 +439,27 @@ main section.info-section .read-more-btn {
     margin: 0 auto;
 }
 
-.location-card:hover {
+main section.locations-section .location-card:hover {
     transform: translateY(-5px);
 }
 
-.location-image {
+main section.locations-section .location-image {
     width: 100%;
     height: 300px;
     object-fit: cover;
 }
 
-.location-content {
+main section.locations-section .location-content {
     padding: 30px;
 }
 
-.location-title {
+main section.locations-section .location-title {
     font-size: 2rem;
     margin-bottom: 15px;
     color: var(--color-dark);
 }
 
-.location-details {
+main section.locations-section .location-details {
     color: var(--color-dark-variant);
     margin-bottom: 20px;
     display: flex;
@@ -466,11 +467,11 @@ main section.info-section .read-more-btn {
     gap: 10px;
 }
 
-.location-details .material-icons-sharp {
+main section.locations-section .location-details .material-icons-sharp {
     color: #4e54c8;
 }
 
-.location-hours {
+main section.locations-section .location-hours {
     font-size: 1rem;
     color: var(--color-dark-variant);
     background: rgba(78, 84, 200, 0.1);
@@ -478,18 +479,18 @@ main section.info-section .read-more-btn {
     border-radius: 10px;
 }
 
-.location-hours p {
+main section.locations-section .location-hours p {
     margin-bottom: 8px;
 }
 
-.contact-info {
+main section.locations-section .contact-info {
     margin-top: 20px;
     padding-top: 20px;
     border-top: 1px solid rgba(78, 84, 200, 0.1);
     text-align: center;
 }
 
-.contact-button {
+main section.locations-section .contact-button {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -501,13 +502,13 @@ main section.info-section .read-more-btn {
     transition: all 0.3s ease;
 }
 
-.contact-button:hover {
+main section.locations-section .contact-button:hover {
     background-color: #3a3f9c;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
 }
 
-.contact-button .material-icons-sharp {
+main section.locations-section .contact-button .material-icons-sharp {
     font-size: 20px;
 }
 
