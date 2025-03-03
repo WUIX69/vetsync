@@ -51,6 +51,7 @@ body {
     background-color: var(--color-background) !important;
     margin: 0 !important;
     padding: 0 !important;
+    /* scroll-behavior: smooth !important; */
 }
 
 h1 {

@@ -15,28 +15,24 @@
     <link rel="stylesheet" href="../../../public/assets/css/responsive.css" />
     <style>
         /*----------- MAIN (Hero) -----------*/
+        main .section-container:has(section.hero-section) {
+            background-image: url('../../../public/assets/img/contents/hero.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* background-attachment: fixed; */
+        }
+
         main .section-container section.hero-section {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 80px 0 !important;
-            padding-top: 150px !important;
+            padding: 80px 0;
+            /* margin-top: -30px !important; */
             /* Adjust to account for navbar */
-            background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%);
+            /* background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%); */
             position: relative;
             overflow: hidden;
-        }
-
-        main section.hero-section::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: url("/public/assets/images/wave-bg.svg") no-repeat bottom right;
-            background-size: contain;
-            z-index: 1;
         }
 
         main section.hero-section .hero-content {
@@ -60,7 +56,17 @@
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 20px;
-            color: white;
+            color: var(--color-white);
+        }
+
+        main section.hero-section .hero-title .full-def {
+            font-size: 2rem;
+            position: relative;
+            top: -0.45rem;
+        }
+
+        main section.hero-section .hero-title .sub {
+            font-size: 4rem;
         }
 
         main section.hero-section .hero-description {
@@ -177,6 +183,7 @@
         main section.services-section .services-image {
             width: 100%;
             max-height: 230px;
+            min-height: 230px;
             object-fit: cover;
         }
 
@@ -315,62 +322,71 @@
 
 <body>
 
-    <div class="window-spinner-overlay"></div>
-    <div class="la-square-jelly-box window-spinner la-2x">
-        <div></div>
-        <div></div>
-    </div>
-
-    <!-- Top Navbar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-logo">
-                <img src="../../../public/assets/img/logo.png" alt="Logo">
-                <div class="logo-text">
-                    <span class="logo-text-main">Vetsync</span>
-                </div>
-            </a>
-            <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
-                <span class="material-icons-sharp">menu</span>
-            </button>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="services.html" class="nav-link">Services</a>
-                <a href="Product.html" class="nav-link">Products</a>
-                <a href="contact-us.html" class="nav-link">Contact Us</a>
-                <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="actions">
-                    <div class="profile-menu">
-                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
-                            <i class="circle user icon"></i>
-                            <span class="text">Account</span>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <div class="item">
-                                    <a href="../auth/index.html" class="link">
-                                        <span class="material-icons-sharp">login</span>
-                                        Sign In
-                                    </a>
-                                </div>
-                                <div class="item">
-                                    <a href="../auth/register.html" class="link">
-                                        <span class="material-icons-sharp">person_add</span>
-                                        Sign Up
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="ui red large button">
-                        Book Now
-                    </button>
-                </div>
-            </div>
+    <div class="shared-standalone-content">
+        <div class="window-spinner-overlay"></div>
+        <div class="la-square-jelly-box window-spinner la-2x">
+            <div></div>
+            <div></div>
         </div>
-    </nav>
+        <div class="top-redirect-button">
+            <button class="ui circular icon button">
+                <span class="material-icons-sharp">arrow_upward</span>
+            </button>
+        </div>
+    </div>
 
     <div class="container-body">
         <div class="row">
+            <div class="col">
+                <header class="site-header">
+                    <nav class="navbar">
+                        <div class="navbar-container">
+                            <a href="index.html" class="navbar-logo">
+                                <img src="../../../public/assets/img/logo.png" alt="Logo">
+                                <div class="logo-text">
+                                    <span class="logo-text-main">Vetsync</span>
+                                </div>
+                            </a>
+                            <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
+                                <span class="material-icons-sharp">menu</span>
+                            </button>
+                            <div class="nav-links">
+                                <a href="index.html" class="nav-link active">Home</a>
+                                <a href="services.html" class="nav-link">Services</a>
+                                <a href="Product.html" class="nav-link">Products</a>
+                                <a href="contact-us.html" class="nav-link">Contact Us</a>
+                                <a href="about-us.html" class="nav-link">About Us</a>
+                                <div class="actions">
+                                    <div class="profile-menu">
+                                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                                            <i class="circle user icon"></i>
+                                            <span class="text">Account</span>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                <div class="item">
+                                                    <a href="../auth/index.html" class="link">
+                                                        <span class="material-icons-sharp">login</span>
+                                                        Sign In
+                                                    </a>
+                                                </div>
+                                                <div class="item">
+                                                    <a href="../auth/register.html" class="link">
+                                                        <span class="material-icons-sharp">person_add</span>
+                                                        Sign Up
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui red large button">
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            </div>
             <div class="col">
                 <main class="container-main">
                     <!-- Hero -->
@@ -378,12 +394,15 @@
                         <section class="section-wrapper hero-section">
                             <div class="hero-content">
                                 <div class="hero-text">
-                                    <h1 class="hero-title">Get The Latest App<br>From App Stores</h1>
-                                    <p class="hero-description">Chain App Dev is an app landing page HTML5 template
-                                        based on
-                                        Bootstrap
-                                        v5.1.3 CSS layout provided by TemplateMo, a great website to download free CSS
-                                        templates.</p>
+                                    <div class="hero-title">
+                                        J.A.A <span class="full-def">(Josephine Ann Angeles)</span><br>
+                                        <div class="sub">Veterinary <span class="ui text yellow">Clinic</span></div>
+                                    </div>
+                                    <p class="hero-description">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa nam sequi officia
+                                        officiis deleniti! Est commodi impedit laborum adipisci quos quod id, atque
+                                        exercitationem voluptas excepturi, aliquid sit ad magni quidem illo.
+                                    </p>
                                     <div class="cta-buttons">
                                         <a href="#" class="cta-button primary">
                                             <span class="material-icons-sharp">apple</span>
@@ -481,8 +500,8 @@
                                 <div class="services-grid">
                                     <!-- Info Card 1 -->
                                     <div class="services-card box">
-                                        <img src="../../../public/assets/img/contents/dog.jpg" alt="Mobile Development"
-                                            class="services-image">
+                                        <img src="../../../public/assets/img/contents/services/grooming.jpg"
+                                            alt="Mobile Development" class="services-image">
                                         <div class="services-content">
                                             <h3 class="services-title">Grooming</h3>
                                             <p class="services-text">
@@ -496,7 +515,7 @@
 
                                     <!-- Info Card 2 -->
                                     <div class="services-card box">
-                                        <img src="../../../public/assets/img/placeholders/image.png"
+                                        <img src="../../../public/assets/img/contents/services/vaccination.jpg"
                                             alt="Cloud Solutions" class="services-image">
                                         <div class="services-content">
                                             <h3 class="services-title">Vaccination</h3>
@@ -511,7 +530,7 @@
 
                                     <!-- Info Card 3 -->
                                     <div class="services-card box">
-                                        <img src="../../../public/assets/img/placeholders/image.png"
+                                        <img src="../../../public/assets/img/contents/services/surgery.jpg"
                                             alt="AI Integration" class="services-image">
                                         <div class="services-content">
                                             <h3 class="services-title">Surgery</h3>
@@ -530,7 +549,10 @@
                         </section>
                     </div>
 
-                    <!-- TODO: Make this a testimonials instead not Visit location -->
+                    <div class="seperator"></div>
+
+                    <!-- TODO: ADD TESTIMONIALS HERE -->
+
                     <div class="section-container">
                         <section class="section-wrapper locations-section">
                             <div class="section-title">
@@ -540,7 +562,7 @@
                                     your pets.</p>
                             </div>
                             <div class="location-container">
-                                <div class="location-card">
+                                <!-- <div class="location-card">
                                     <img src="../../../public/assets/img/placeholders/image.png" alt="Our Clinic"
                                         class="location-image">
                                     <div class="location-content">
@@ -562,6 +584,32 @@
                                             </a>
                                         </div>
                                     </div>
+                                </div> -->
+                                <div class="location-branches d-flex flex-row gap-3">
+                                    <div class="location-branches-card">
+                                        <p class="location-details">
+                                            <span class="material-icons-sharp">location_on</span>
+                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
+                                        </p>
+                                    </div>
+                                    <div class="location-branches-card">
+                                        <p class="location-details">
+                                            <span class="material-icons-sharp">location_on</span>
+                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
+                                        </p>
+                                    </div>
+                                    <div class="location-branches-card">
+                                        <p class="location-details">
+                                            <span class="material-icons-sharp">location_on</span>
+                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="location-google-map pt-3">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
+                                        width="100%" height="300" style="border:0;" allowfullscreen=""
+                                        loading="lazy"></iframe>
                                 </div>
                             </div>
                         </section>
@@ -569,34 +617,32 @@
                 </main>
             </div>
             <div class="col">
-                <footer class="footer-container">
-                    <div class="footer-section">
-                        <div class="ui inverted vertical footer segment pt-5 pb-5">
-                            <div class="ui container">
-                                <div class="ui stackable inverted divided equal height stackable grid">
-                                    <div class="three wide column">
-                                        <h4 class="ui inverted header">About</h4>
-                                        <div class="ui inverted link list">
-                                            <a href="#" class="item">Sitemap</a>
-                                            <a href="#" class="item">Contact Us</a>
-                                            <a href="#" class="item">Religious Ceremonies</a>
-                                            <a href="#" class="item">Gazebo Plans</a>
-                                        </div>
+                <footer class="site-footer">
+                    <div class="ui vertical footer segment pt-5 pb-5">
+                        <div class="ui container">
+                            <div class="ui stackable inverted divided equal height stackable grid">
+                                <div class="three wide column">
+                                    <h4 class="ui inverted header">About</h4>
+                                    <div class="ui inverted link list">
+                                        <a href="#" class="item">Sitemap</a>
+                                        <a href="#" class="item">Contact Us</a>
+                                        <a href="#" class="item">Religious Ceremonies</a>
+                                        <a href="#" class="item">Gazebo Plans</a>
                                     </div>
-                                    <div class="three wide column">
-                                        <h4 class="ui inverted header">Services</h4>
-                                        <div class="ui inverted link list">
-                                            <a href="#" class="item">Banana Pre-Order</a>
-                                            <a href="#" class="item">DNA FAQ</a>
-                                            <a href="#" class="item">How To Access</a>
-                                            <a href="#" class="item">Favorite X-Men</a>
-                                        </div>
+                                </div>
+                                <div class="three wide column">
+                                    <h4 class="ui inverted header">Services</h4>
+                                    <div class="ui inverted link list">
+                                        <a href="#" class="item">Banana Pre-Order</a>
+                                        <a href="#" class="item">DNA FAQ</a>
+                                        <a href="#" class="item">How To Access</a>
+                                        <a href="#" class="item">Favorite X-Men</a>
                                     </div>
-                                    <div class="seven wide column">
-                                        <h4 class="ui inverted header">Footer Header</h4>
-                                        <p>Extra space for a call to action inside the footer that could help re-engage
-                                            users.</p>
-                                    </div>
+                                </div>
+                                <div class="seven wide column">
+                                    <h4 class="ui inverted header">Footer Header</h4>
+                                    <p>Extra space for a call to action inside the footer that could help re-engage
+                                        users.</p>
                                 </div>
                             </div>
                         </div>

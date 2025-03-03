@@ -1,11 +1,10 @@
 @media (max-width: 768px) {
     /******* NAVBAR *******/
-    nav.scrolled .navbar-container {
-        /* padding: 2rem; */
-        padding-top: 2.8rem;
+    header.site-header nav {
+        position: relative;
     }
 
-    nav .nav-links {
+    header nav .nav-links {
         display: none;
         position: absolute;
         top: 100%;
@@ -18,36 +17,36 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
-    nav .nav-links.active {
+    header nav .nav-links.active {
         display: flex;
     }
 
-    nav .nav-link {
+    header nav .nav-link {
         color: var(--color-dark);
     }
 
-    nav .nav-link:hover {
+    header nav .nav-link:hover {
         color: #4e54c8;
     }
 
-    nav .navbar-logo .logo-text-main {
+    header nav .navbar-logo .logo-text-main {
         font-size: 1.2rem;
     }
 
-    nav .navbar-logo .logo-text-sub {
+    header nav .navbar-logo .logo-text-sub {
         font-size: 1rem;
     }
 
-    nav .navbar-logo img {
+    header nav .navbar-logo img {
         height: 45px;
         width: 45px;
     }
 
-    nav .mobile-menu-btn {
+    header nav .mobile-menu-btn {
         display: block;
     }
 
-    nav .signup-btn {
+    header nav .signup-btn {
         margin-top: 10px;
         width: 200px;
         text-align: center;

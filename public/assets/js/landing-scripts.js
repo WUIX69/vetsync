@@ -1,18 +1,24 @@
+const $body = $("html, body");
+
 $(function () {
-    // Handle navbar scroll effect
+    // Handle body scroll effect
     $(window).on("scroll", function () {
-        const $navbar = $(".navbar");
         if ($(window).scrollTop() > 50) {
-            $navbar.addClass("scrolled");
+            $body.addClass("scrolled");
         } else {
-            $navbar.removeClass("scrolled");
+            $body.removeClass("scrolled");
         }
+    });
+
+    // Handle top redirect button
+    const $topRedirectButton = $(".top-redirect-button button");
+    $topRedirectButton.on("click", function () {
+        $body.animate({ scrollTop: 0 }, "slow");
     });
 
     // Handle mobile menu
     const $mobileMenuBtn = $(".mobile-menu-btn");
-    const $navLinks = $(".nav-links");
-
+    const $navLinks = $body.find("header nav .nav-links");
     $mobileMenuBtn.on("click", function () {
         $navLinks.toggleClass("active");
     });
