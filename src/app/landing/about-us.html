@@ -13,6 +13,44 @@
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
     <style>
+        main .section-container:has(section.hero-section) {
+            background-image: url('../../../public/assets/img/contents/cat.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            /* background-attachment: fixed; */
+        }
+
+        main section.info-section .info-grid {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        main section.info-section .info-grid .info-card .info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-dark);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        main section.info-section .info-grid .info-card .info-title span {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        main section.info-section .info-grid .info-card .info-title .title-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
         /* About Us Section styles */
         .about-section {
             padding: 120px 0 80px;
@@ -105,61 +143,72 @@
 </head>
 
 <body>
-    <div class="window-spinner-overlay"></div>
-    <div class="la-square-jelly-box window-spinner la-2x">
-        <div></div>
-        <div></div>
-    </div>
-    <!-- Top Navbar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-logo">
-                <img src="../../../public/assets/img/logo.png" alt="Logo">
-                <div class="logo-text">
-                    <span class="logo-text-main">Vetsync</span>
-                </div>
-            </a>
-            <button class="mobile-menu-btn">
-                <span class="material-icons-sharp">menu</span>
-            </button>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="services.html" class="nav-link">Services</a>
-                <a href="Product.html" class="nav-link">Products</a>
-                <a href="contact-us.html" class="nav-link">Contact Us</a>
-                <a href="about-us.html" class="nav-link active">About Us</a>
-                <div class="actions">
-                    <div class="profile-menu">
-                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
-                            <i class="circle user icon"></i>
-                            <span class="text">Account</span>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <div class="item">
-                                    <a href="../auth/index.html" class="link">
-                                        <span class="material-icons-sharp">login</span>
-                                        Sign In
-                                    </a>
-                                </div>
-                                <div class="item">
-                                    <a href="../auth/register.html" class="link">
-                                        <span class="material-icons-sharp">person_add</span>
-                                        Sign Up
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="ui red large button">
-                        Book Now
-                    </button>
-                </div>
-            </div>
+
+    <div class="shared-standalone-content">
+        <div class="window-spinner-overlay"></div>
+        <div class="la-square-jelly-box window-spinner la-2x">
+            <div></div>
+            <div></div>
         </div>
-    </nav>
+        <div class="top-redirect-button">
+            <button class="ui circular icon button">
+                <span class="material-icons-sharp">arrow_upward</span>
+            </button>
+        </div>
+    </div>
 
     <div class="container-body">
         <div class="row">
+            <div class="col">
+                <header class="site-header">
+                    <nav class="navbar">
+                        <div class="navbar-container">
+                            <a href="index.html" class="navbar-logo">
+                                <img src="../../../public/assets/img/logo.png" alt="Logo">
+                                <div class="logo-text">
+                                    <span class="logo-text-main">Vetsync</span>
+                                </div>
+                            </a>
+                            <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
+                                <span class="material-icons-sharp">menu</span>
+                            </button>
+                            <div class="nav-links">
+                                <a href="index.html" class="nav-link active">Home</a>
+                                <a href="services.html" class="nav-link">Services</a>
+                                <a href="Product.html" class="nav-link">Products</a>
+                                <a href="contact-us.html" class="nav-link">Contact Us</a>
+                                <a href="about-us.html" class="nav-link">About Us</a>
+                                <div class="actions">
+                                    <div class="profile-menu">
+                                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
+                                            <i class="circle user icon"></i>
+                                            <span class="text">Account</span>
+                                            <i class="dropdown icon"></i>
+                                            <div class="menu">
+                                                <div class="item">
+                                                    <a href="../auth/index.html" class="link">
+                                                        <span class="material-icons-sharp">login</span>
+                                                        Sign In
+                                                    </a>
+                                                </div>
+                                                <div class="item">
+                                                    <a href="../auth/register.html" class="link">
+                                                        <span class="material-icons-sharp">person_add</span>
+                                                        Sign Up
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="ui red large button">
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            </div>
             <div class="col">
                 <main class="container-main">
                     <!-- About Us Hero Section -->
@@ -175,17 +224,17 @@
                                         providing the highest quality veterinary services to pets and their families.
                                     </p>
                                 </div>
-                                <div class="hero-image">
+                                <!-- <div class="hero-image">
                                     <img src="../../../public/assets/img/contents/clinic-front.jpg"
                                         alt="Clinic Front View">
-                                </div>
+                                </div> -->
                             </div>
                         </section>
                     </div>
 
                     <!-- Our Mission Section -->
                     <div class="section-container">
-                        <section class="section-wrapper services-section">
+                        <section class="section-wrapper info-section">
                             <div class="section-title">
                                 <h2>Our Mission & Values</h2>
                                 <p>Committed to excellence in veterinary care</p>
@@ -194,12 +243,12 @@
                             <div class="info-container">
                                 <div class="info-grid">
                                     <!-- Mission Card -->
-                                    <div class="info-card">
+                                    <div class="info-card box">
                                         <div class="info-content">
-                                            <h3 class="info-title">
-                                                <span class="material-icons-sharp">pets</span>
-                                                Our Mission
-                                            </h3>
+                                            <div class="info-title">
+                                                <span class="material-icons-sharp">visibility</span>
+                                                <div class="title-text">Our Vision</div>
+                                            </div>
                                             <p class="info-full">
                                                 To provide comprehensive, compassionate veterinary care while building
                                                 lasting
@@ -211,12 +260,12 @@
                                     </div>
 
                                     <!-- Vision Card -->
-                                    <div class="info-card">
+                                    <div class="info-card box">
                                         <div class="info-content">
-                                            <h3 class="info-title">
+                                            <div class="info-title">
                                                 <span class="material-icons-sharp">visibility</span>
-                                                Our Vision
-                                            </h3>
+                                                <div class="title-text">Our Vision</div>
+                                            </div>
                                             <p class="info-full">
                                                 To be the leading veterinary care provider, known for excellence,
                                                 innovation, and compassion. We envision a community where every pet
@@ -226,12 +275,12 @@
                                     </div>
 
                                     <!-- Values Card -->
-                                    <div class="info-card">
+                                    <div class="info-card box">
                                         <div class="info-content">
-                                            <h3 class="info-title">
-                                                <span class="material-icons-sharp">favorite</span>
-                                                Our Values
-                                            </h3>
+                                            <div class="info-title">
+                                                <span class="material-icons-sharp">visibility</span>
+                                                <div class="title-text">Our Vision</div>
+                                            </div>
                                             <p class="info-full">
                                                 Compassion, Excellence, Integrity, and Innovation guide everything we
                                                 do.
@@ -304,36 +353,34 @@
                         </section>
                     </div>
                 </main>
-
-                <!-- Footer -->
-                <footer class="footer-container">
-                    <div class="footer-section">
-                        <div class="ui inverted vertical footer segment pt-5 pb-5">
-                            <div class="ui container">
-                                <div class="ui stackable inverted divided equal height stackable grid">
-                                    <div class="three wide column">
-                                        <h4 class="ui inverted header">About</h4>
-                                        <div class="ui inverted link list">
-                                            <a href="#" class="item">Sitemap</a>
-                                            <a href="#" class="item">Contact Us</a>
-                                            <a href="#" class="item">Religious Ceremonies</a>
-                                            <a href="#" class="item">Gazebo Plans</a>
-                                        </div>
+            </div>
+            <div class="col">
+                <footer class="site-footer">
+                    <div class="ui vertical footer segment pt-5 pb-5">
+                        <div class="ui container">
+                            <div class="ui stackable inverted divided equal height stackable grid">
+                                <div class="three wide column">
+                                    <h4 class="ui inverted header">About</h4>
+                                    <div class="ui inverted link list">
+                                        <a href="#" class="item">Sitemap</a>
+                                        <a href="#" class="item">Contact Us</a>
+                                        <a href="#" class="item">Religious Ceremonies</a>
+                                        <a href="#" class="item">Gazebo Plans</a>
                                     </div>
-                                    <div class="three wide column">
-                                        <h4 class="ui inverted header">Services</h4>
-                                        <div class="ui inverted link list">
-                                            <a href="#" class="item">Banana Pre-Order</a>
-                                            <a href="#" class="item">DNA FAQ</a>
-                                            <a href="#" class="item">How To Access</a>
-                                            <a href="#" class="item">Favorite X-Men</a>
-                                        </div>
+                                </div>
+                                <div class="three wide column">
+                                    <h4 class="ui inverted header">Services</h4>
+                                    <div class="ui inverted link list">
+                                        <a href="#" class="item">Banana Pre-Order</a>
+                                        <a href="#" class="item">DNA FAQ</a>
+                                        <a href="#" class="item">How To Access</a>
+                                        <a href="#" class="item">Favorite X-Men</a>
                                     </div>
-                                    <div class="seven wide column">
-                                        <h4 class="ui inverted header">Footer Header</h4>
-                                        <p>Extra space for a call to action inside the footer that could help re-engage
-                                            users.</p>
-                                    </div>
+                                </div>
+                                <div class="seven wide column">
+                                    <h4 class="ui inverted header">Footer Header</h4>
+                                    <p>Extra space for a call to action inside the footer that could help re-engage
+                                        users.</p>
                                 </div>
                             </div>
                         </div>
@@ -352,25 +399,10 @@
     <script src="../../../public/assets/js/spinner.js"></script>
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
+    <script src="../../../public/assets/js/landing-scripts.js"></script>
     <script type="text/javascript">
         $(function () {
-            // Handle navbar scroll effect
-            window.addEventListener('scroll', function () {
-                const navbar = document.querySelector('.navbar');
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-
-            // Handle mobile menu
-            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-            const navLinks = document.querySelector('.nav-links');
-
-            mobileMenuBtn.addEventListener('click', function () {
-                navLinks.classList.toggle('active');
-            });
+            // Custom js here..
         });
     </script>
 </body>
