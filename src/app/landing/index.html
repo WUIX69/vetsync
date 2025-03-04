@@ -24,27 +24,19 @@
         }
 
         main .section-container section.hero-section {
-            min-height: 100vh;
+            min-height: 90vh;
             display: flex;
             align-items: center;
-            padding: 80px 0;
-            /* margin-top: -30px !important; */
-            /* Adjust to account for navbar */
-            /* background: linear-gradient(135deg, #2c3e50 0%, #8fd3f4 100%); */
             position: relative;
             overflow: hidden;
         }
 
         main section.hero-section .hero-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
             align-items: center;
             position: relative;
-            z-index: 2;
         }
 
         main section.hero-section .hero-text {
@@ -117,17 +109,15 @@
         }
 
         /*----------- MAIN (Features) -----------*/
-        main .section-container section.features-section {
+        main .section-container:has(section.features-section) {
             background: var(--color-background);
         }
 
-        main section.features-section .features-grid {
+        main section.features-section .features-cont {
+            position: relative;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            gap: 2rem;
         }
 
         main section.features-section .feature-card {
@@ -141,32 +131,45 @@
             cursor: pointer;
         }
 
-        main section.features-section .feature-icon {
-            font-size: 2.5rem;
-            color: #6c9bcf;
-            margin-bottom: 20px;
+        main section.features-section .feature-header {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
-        main section.features-section .feature-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
+        main section.features-section .feature-header span {
+            font-size: 3.6rem;
+            color: #6c9bcf;
+        }
+
+        main section.features-section .feature-header .feature-title {
+            font-size: 1.6rem;
             color: var(--color-dark);
+            text-wrap: nowrap;
         }
 
         main section.features-section .feature-description {
             color: var(--color-dark-variant);
             line-height: 1.6;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            line-clamp: 4;
+            -webkit-box-orient: vertical;
+            text-align: center;
         }
 
         /*----------- MAIN (Services) -----------*/
-        main .section-container section.services-section {
+        main .section-container:has(section.services-section) {
             background: var(--color-background-variant);
         }
 
         main section.services-section .services-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            position: relative;
         }
 
         main section.services-section .services-card {
@@ -202,6 +205,8 @@
             font-size: 1.9rem;
             font-weight: 600;
             color: var(--color-white);
+            text-transform: capitalize;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         main section.services-section .hovered-content {
@@ -231,6 +236,7 @@
             font-weight: 600;
             color: var(--color-white);
             margin-bottom: -1rem;
+            text-transform: capitalize;
         }
 
         main section.services-section .hovered-content .paragraph {
@@ -261,7 +267,7 @@
         }
 
         /*----------- MAIN (Testimonials) -----------*/
-        main section.testimonials-section {
+        main .section-container:has(section.testimonials-section) {
             background: var(--color-background);
         }
 
@@ -269,9 +275,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            padding: 0 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         main section.testimonials-section .testimonial-card {
@@ -338,98 +341,36 @@
         }
 
         /*----------- MAIN (Locations) -----------*/
-        main .section-container section.locations-section {
-            padding: 100px 0;
+        main .section-container:has(section.locations-section) {
             background: var(--color-background);
         }
 
         main section.locations-section .location-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        main section.locations-section .location-card {
-            background: var(--color-white);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: var(--box-shadow);
-            transition: all 0.3s ease;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        main section.locations-section .location-card:hover {
-            transform: translateY(-5px);
-        }
-
-        main section.locations-section .location-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        main section.locations-section .location-content {
-            padding: 30px;
-        }
-
-        main section.locations-section .location-title {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            color: var(--color-dark);
+            position: relative;
         }
 
         main section.locations-section .location-details {
-            color: var(--color-dark-variant);
-            margin-bottom: 20px;
             display: flex;
-            align-items: start;
-            gap: 10px;
-        }
-
-        main section.locations-section .location-details .material-icons-sharp {
-            color: #4e54c8;
-        }
-
-        main section.locations-section .location-hours {
-            font-size: 1rem;
-            color: var(--color-dark-variant);
-            background: rgba(78, 84, 200, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        main section.locations-section .location-hours p {
-            margin-bottom: 8px;
-        }
-
-        main section.locations-section .contact-info {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(78, 84, 200, 0.1);
-            text-align: center;
-        }
-
-        main section.locations-section .contact-button {
-            display: inline-flex;
+            justify-content: start;
             align-items: center;
-            gap: 8px;
-            padding: 12px 30px;
-            background-color: #4e54c8;
-            color: white;
-            border-radius: 5px;
+            gap: 0.2rem;
+        }
+
+        main section.locations-section .location-details span {
+            position: relative;
+            font-size: 2rem;
+            top: -0.2rem;
+            color: #ea4335;
+        }
+
+        main section.locations-section .location-details .location-info {
+            font-size: 1.3rem;
             font-weight: 600;
-            transition: all 0.3s ease;
         }
 
-        main section.locations-section .contact-button:hover {
-            background-color: #3a3f9c;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(78, 84, 200, 0.3);
-        }
-
-        main section.locations-section .contact-button .material-icons-sharp {
-            font-size: 20px;
+        main section.locations-section .location-google-map {
+            position: relative;
+            margin-top: 1rem;
         }
     </style>
 </head>
@@ -451,7 +392,7 @@
 
     <div class="container-body">
         <div class="row">
-            <div class="col">
+            <div class="col-12">
                 <header class="site-header">
                     <nav class="navbar">
                         <div class="navbar-container">
@@ -501,7 +442,7 @@
                     </nav>
                 </header>
             </div>
-            <div class="col">
+            <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
                     <div class="section-container">
@@ -543,62 +484,37 @@
                                 <h2>Why Choose Us</h2>
                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
                             </div>
-                            <div class="features-grid">
+                            <div class="features-cont">
                                 <div class="feature-card box">
-                                    <div class="feature-icon">
-                                        <span class="material-icons-sharp">rocket_launch</span>
+                                    <div class="feature-header">
+                                        <img src="../../../public/assets/img/icons/fast.png" alt="">
+                                        <h2 class="feature-title">Quick Setup</h2>
                                     </div>
-                                    <h2 class="feature-title">Quick Setup</h2>
-                                    <p class="feature-description">Get started in minutes with our intuitive setup
-                                        process
-                                        and user-friendly
-                                        interface.</p>
+                                    <p class="feature-description">Lorem ipsum dolor sit amet consectetur adipisicing
+                                        elit. Obcaecati amet illum facilis ut nihil ullam rerum consequuntur, dolorum et
+                                        itaque.</p>
                                 </div>
                                 <div class="feature-card box">
-                                    <div class="feature-icon">
-                                        <span class="material-icons-sharp">security</span>
+                                    <div class="feature-header">
+                                        <img src="../../../public/assets/img/icons/24hr.png" alt="">
+                                        <h2 class="feature-title">24/hr Open</h2>
                                     </div>
-                                    <h2 class="feature-title">Secure Platform</h2>
-                                    <p class="feature-description">Your data is protected with enterprise-grade security
-                                        and
-                                        encryption.</p>
+                                    <p class="feature-description">Lorem ipsum dolor sit amet consectetur
+                                        adipisicing
+                                        elit. Dolorem dolorum eveniet tempore? Dignissimos ipsam, rerum eum
+                                        repudiandae
+                                        doloribus molestiae aliquam.</p>
                                 </div>
                                 <div class="feature-card box">
-                                    <div class="feature-icon">
-                                        <span class="material-icons-sharp">insights</span>
+                                    <div class="feature-header">
+                                        <img src="../../../public/assets/img/icons/support.png" alt="">
+                                        <h2 class="feature-title">Support</h2>
                                     </div>
-                                    <h2 class="feature-title">Analytics</h2>
-                                    <p class="feature-description">Make data-driven decisions with our powerful
-                                        analytics
-                                        tools.</p>
-                                </div>
-                                <div class="feature-card box">
-                                    <div class="feature-icon">
-                                        <span class="material-icons-sharp">rocket_launch</span>
-                                    </div>
-                                    <h2 class="feature-title">Quick Setup</h2>
-                                    <p class="feature-description">Get started in minutes with our intuitive setup
-                                        process
-                                        and user-friendly
-                                        interface.</p>
-                                </div>
-                                <div class="feature-card box">
-                                    <div class="feature-icon">
-                                        <span class="material-icons-sharp">security</span>
-                                    </div>
-                                    <h2 class="feature-title">Secure Platform</h2>
-                                    <p class="feature-description">Your data is protected with enterprise-grade security
-                                        and
-                                        encryption.</p>
-                                </div>
-                                <div class="feature-card box">
-                                    <div class="feature-icon">
-                                        <span class="material-icons-sharp">insights</span>
-                                    </div>
-                                    <h2 class="feature-title">Analytics</h2>
-                                    <p class="feature-description">Make data-driven decisions with our powerful
-                                        analytics
-                                        tools.</p>
+                                    <p class="feature-description">Lorem ipsum, dolor sit amet consectetur
+                                        adipisicing
+                                        elit. Sunt saepe quia autem nostrum! Harum, illum cumque quod numquam
+                                        quasi
+                                        veritatis.</p>
                                 </div>
                             </div>
                         </section>
@@ -621,7 +537,7 @@
                                             <img src="../../../public/assets/img/contents/services/grooming.jpg"
                                                 alt="Mobile Development" class="services-image">
                                             <div class="visible-content">
-                                                <div class="ui label red"><i class="fire alternate icon"></i>Hot</div>
+                                                <div class="ui tag label red">Hot</div>
                                                 <div class="title">Grooming</div>
                                             </div>
                                             <div class="hovered-content">
@@ -642,7 +558,7 @@
                                             <img src="../../../public/assets/img/contents/services/vaccination.jpg"
                                                 alt="Cloud Solutions" class="services-image">
                                             <div class="visible-content">
-                                                <div class="ui label teal"><i class="star icon"></i>Popular</div>
+                                                <div class="ui tag label teal">Popular</div>
                                                 <div class="title">Vaccination</div>
                                             </div>
                                             <div class="hovered-content">
@@ -659,7 +575,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <!-- Info Card 3 -->
                                         <div class="services-card box">
                                             <img src="../../../public/assets/img/contents/services/surgery.jpg"
@@ -683,17 +599,41 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <!-- Info Card 3 -->
                                         <div class="services-card box">
                                             <img src="../../../public/assets/img/contents/services/foods.jpg"
                                                 alt="AI Integration" class="services-image">
                                             <div class="visible-content">
-                                                <div class="ui tag label">Upcoming</div>
+                                                <div class="ui tag blue label">Featured</div>
                                                 <div class="title">Foods</div>
                                             </div>
                                             <div class="hovered-content">
                                                 <h3 class="title">Foods</h3>
+                                                <p class="paragraph">
+                                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
+                                                    similique accusantium non ea provident, labore itaque a animi,
+                                                    temporibus quo repellendus debitis totam dolore modi tenetur fugit.
+                                                    Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente
+                                                    sed
+                                                    nihil obcaecati delectus!
+                                                </p>
+                                                <div class="read-more-btn">Read More</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <!-- Info Card 3 -->
+                                        <div class="services-card box">
+                                            <img src="../../../public/assets/img/contents/services/accessories.jpg"
+                                                alt="AI Integration" class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label">Upcoming</div>
+                                                <div class="title">accessories</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">accessories</h3>
                                                 <p class="paragraph">
                                                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
                                                     similique accusantium non ea provident, labore itaque a animi,
@@ -881,38 +821,11 @@
                                     your pets.</p>
                             </div>
                             <div class="location-container">
-                                <!-- <div class="location-card">
-                                    <img src="../../../public/assets/img/placeholders/image.png" alt="Our Clinic"
-                                        class="location-image">
-                                    <div class="location-content">
-                                        <h3 class="location-title">Main Clinic</h3>
-                                        <p class="location-details">
-                                            <span class="material-icons-sharp">location_on</span>
-                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
-                                        </p>
-                                        <div class="location-hours">
-                                            <p><strong>Operating Hours:</strong></p>
-                                            <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
-                                            <p>Saturday: 9:00 AM - 4:00 PM</p>
-                                            <p>Sunday: Closed</p>
-                                        </div>
-                                        <div class="contact-info">
-                                            <a href="contact-us.html" class="contact-button">
-                                                <span class="material-icons-sharp">contact_support</span>
-                                                Contact Us
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <div class="location-branches d-flex flex-row gap-3">
-                                    <div class="location-branches-card">
-                                        <p class="location-details">
-                                            <span class="material-icons-sharp">location_on</span>
-                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
-                                        </p>
-                                    </div>
+                                <div class="location-details">
+                                    <span class="material-icons-sharp">location_on</span>
+                                    <div class="location-info">121 Einstein Loop N, Bronx, NY 10475, USA</div>
                                 </div>
-                                <div class="location-google-map pt-3">
+                                <div class="location-google-map">
                                     <iframe
                                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
                                         width="100%" height="300" style="border:0;" allowfullscreen=""
@@ -923,7 +836,7 @@
                     </div>
                 </main>
             </div>
-            <div class="col">
+            <div class="col-12">
                 <footer class="site-footer">
                     <div class="ui vertical footer segment pt-5 pb-5">
                         <div class="ui container">

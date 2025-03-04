@@ -52,6 +52,11 @@
         text-align: center;
     }
 
+    /*##### MAIN #####*/
+    main section.section-wrapper {
+        padding: 6rem 1.5rem !important; /*Add LR padding for small screen*/
+    }
+
     /****** MAIN (HERO) *******/
     main section.hero-section {
         padding: 2rem;

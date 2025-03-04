@@ -169,8 +169,8 @@ header nav .nav-links .actions .profile-menu .profile-menu-dd .link {
     transition: all 0.3s ease;
 }
 
-/*---- Mobile view support a.k.a (Hamburger) ----*/
 header nav .mobile-menu-btn {
+    /*---- Mobile view support a.k.a (Hamburger) ----*/
     display: none;
     background: none;
     border: none;
@@ -187,8 +187,9 @@ main .section-container {
 }
 
 main .section-container section.section-wrapper {
-    margin: 0;
+    margin: 0 auto;
     padding: 6rem 0;
+    max-width: 1200px;
 }
 
 main .section-container section .section-title {
@@ -246,7 +247,7 @@ footer.site-footer {
 */
 
 /* Update background colors to match logo */
-.about-section,
+/* .about-section,
 .services-section,
 .products-section,
 .contact-section {
@@ -255,10 +256,10 @@ footer.site-footer {
         135deg,
         #2c3e50 0%,
         #7fccbf 100%
-    ); /* Updated gradient */
+    );
     min-height: 100vh;
     position: relative;
-}
+} */
 
 /* Update hover effects to match theme */
 .book-button,
