@@ -160,13 +160,10 @@
 
         /*----------- MAIN (Services) -----------*/
         main .section-container section.services-section {
-            background: var(--color-white);
+            background: var(--color-background-variant);
         }
 
-        main section.services-section .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        main section.services-section .services-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
@@ -174,53 +171,170 @@
 
         main section.services-section .services-card {
             background: var(--color-white);
-        }
+            position: relative !important;
+            overflow: hidden;
+            height: 400px;
+            cursor: pointer;
 
-        main section.services-section .services-card {
+            border-radius: 0.8rem !important;
             padding: 0 !important;
+            margin: 0 !important;
         }
 
         main section.services-section .services-image {
             width: 100%;
-            max-height: 230px;
-            min-height: 230px;
+            height: 100%;
             object-fit: cover;
         }
 
-        main section.services-section .services-content {
+        main section.services-section .visible-content {
+            position: absolute;
+            left: 1.7rem;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        main section.services-section .visible-content .title {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: var(--color-white);
+        }
+
+        main section.services-section .hovered-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            border-left: 3px solid var(--color-white) !important;
             padding: 1.7rem;
             display: flex;
             flex-direction: column;
             align-items: start;
             justify-content: center;
             gap: 1.5rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
         }
 
-        main section.services-section .services-title {
+        main section.services-section .services-card:hover .hovered-content {
+            transform: translateX(0);
+        }
+
+        main section.services-section .hovered-content .title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: var(--color-dark);
+            color: var(--color-white);
+            margin-bottom: -1rem;
         }
 
-        main section.services-section .services-text {
-            color: var(--color-dark-variant);
+        main section.services-section .hovered-content .paragraph {
+            color: var(--color-white);
             line-height: 1.6;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 4;
-            line-clamp: 4;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
             -webkit-box-orient: vertical;
         }
 
-        main section.services-section .read-more-btn {
+        main section.services-section .hovered-content .read-more-btn {
             display: inline-block;
             padding: 8px 20px;
-            background: #4e54c8;
-            color: white;
+            background: var(--color-white);
+            color: var(--color-dark);
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        main section.services-section .hovered-content .read-more-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /*----------- MAIN (Testimonials) -----------*/
+        main section.testimonials-section {
+            background: var(--color-background);
+        }
+
+        main section.testimonials-section .testimonials-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        main section.testimonials-section .testimonial-card {
+            position: relative;
+        }
+
+        main section.testimonials-section .testimonial-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        main section.testimonials-section .testimonial-text {
+            position: relative;
+            color: var(--color-dark-variant);
+            line-height: 1.6;
+        }
+
+        main section.testimonials-section .testimonial-text .quote {
+            color: var(--color-dark);
+            font-size: 2rem;
+            position: absolute;
+            top: -10px;
+            left: -10px;
+        }
+
+        main section.testimonials-section .testimonial-text p {
+            text-indent: 1.7rem;
+            margin-top: 1.1rem;
+        }
+
+        main section.testimonials-section .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: -0.3rem;
+        }
+
+        main section.testimonials-section .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border: var(--img-border) !important;
+        }
+
+        main section.testimonials-section .testimonial-author .author-info {
+            flex: 1;
+        }
+
+        main section.testimonials-section .testimonial-author .author-info h4 {
+            color: var(--color-dark);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            text-wrap: nowrap;
+        }
+
+        main section.testimonials-section .testimonial-author .author-info p {
+            color: var(--color-dark-variant);
+            font-size: 0.9rem;
+        }
+
+        main section.testimonials-section .testimonial-author span {
+            font-size: 3rem;
+            color: #4e54c8;
         }
 
         /*----------- MAIN (Locations) -----------*/
@@ -425,7 +539,8 @@
                     <div class="section-container">
                         <section class="section-wrapper features-section">
                             <div class="section-title">
-                                <h2>Features</h2>
+                                <span class="sub-title">Features</span>
+                                <h2>Why Choose Us</h2>
                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
                             </div>
                             <div class="features-grid">
@@ -493,55 +608,102 @@
                     <div class="section-container">
                         <section class="section-wrapper services-section">
                             <div class="section-title">
-                                <h2>Our Services</h2>
+                                <span class="sub-title">Services</span>
+                                <h2>What We Offer</h2>
                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
                             </div>
                             <div class="services-container">
-                                <div class="services-grid">
-                                    <!-- Info Card 1 -->
-                                    <div class="services-card box">
-                                        <img src="../../../public/assets/img/contents/services/grooming.jpg"
-                                            alt="Mobile Development" class="services-image">
-                                        <div class="services-content">
-                                            <h3 class="services-title">Grooming</h3>
-                                            <p class="services-text">
-                                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore
-                                                quibusdam soluta ipsa eum facilis quaerat odio assumenda voluptatum
-                                                fugit quod.
-                                            </p>
-                                            <div class="read-more-btn">Read More</div>
+                                <div class="row g-4">
+
+                                    <div class="col-md-6">
+                                        <!-- Info Card 1 -->
+                                        <div class="services-card box">
+                                            <img src="../../../public/assets/img/contents/services/grooming.jpg"
+                                                alt="Mobile Development" class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui label red"><i class="fire alternate icon"></i>Hot</div>
+                                                <div class="title">Grooming</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Grooming</h3>
+                                                <p class="paragraph">
+                                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore
+                                                    quibusdam soluta ipsa eum facilis quaerat odio assumenda voluptatum
+                                                    fugit quod.
+                                                </p>
+                                                <div class="read-more-btn">Read More</div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <!-- Info Card 2 -->
-                                    <div class="services-card box">
-                                        <img src="../../../public/assets/img/contents/services/vaccination.jpg"
-                                            alt="Cloud Solutions" class="services-image">
-                                        <div class="services-content">
-                                            <h3 class="services-title">Vaccination</h3>
-                                            <p class="services-text">
-                                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et pariatur,
-                                                libero veritatis quasi in fugiat, itaque temporibus ab, ipsa cum
-                                                architecto vitae ut. Deleniti ipsam eligendi fugit quibusdam labore nam!
-                                            </p>
-                                            <div class="read-more-btn">Read More</div>
+                                    <div class="col-md-6">
+                                        <!-- Info Card 2 -->
+                                        <div class="services-card box">
+                                            <img src="../../../public/assets/img/contents/services/vaccination.jpg"
+                                                alt="Cloud Solutions" class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui label teal"><i class="star icon"></i>Popular</div>
+                                                <div class="title">Vaccination</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Vaccination</h3>
+                                                <p class="paragraph">
+                                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et
+                                                    pariatur,
+                                                    libero veritatis quasi in fugiat, itaque temporibus ab, ipsa cum
+                                                    architecto vitae ut. Deleniti ipsam eligendi fugit quibusdam labore
+                                                    nam!
+                                                </p>
+                                                <div class="read-more-btn">Read More</div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <!-- Info Card 3 -->
-                                    <div class="services-card box">
-                                        <img src="../../../public/assets/img/contents/services/surgery.jpg"
-                                            alt="AI Integration" class="services-image">
-                                        <div class="services-content">
-                                            <h3 class="services-title">Surgery</h3>
-                                            <p class="services-text">
-                                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
-                                                similique accusantium non ea provident, labore itaque a animi,
-                                                temporibus quo repellendus debitis totam dolore modi tenetur fugit.
-                                                Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente sed
-                                                nihil obcaecati delectus!
-                                            </p>
-                                            <div class="read-more-btn">Read More</div>
+                                    <div class="col-md-6">
+                                        <!-- Info Card 3 -->
+                                        <div class="services-card box">
+                                            <img src="../../../public/assets/img/contents/services/surgery.jpg"
+                                                alt="AI Integration" class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label blue">Featured</div>
+                                                <div class="title">Surgery</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Surgery</h3>
+                                                <p class="paragraph">
+                                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
+                                                    similique accusantium non ea provident, labore itaque a animi,
+                                                    temporibus quo repellendus debitis totam dolore modi tenetur fugit.
+                                                    Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente
+                                                    sed
+                                                    nihil obcaecati delectus!
+                                                </p>
+                                                <div class="read-more-btn">Read More</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <!-- Info Card 3 -->
+                                        <div class="services-card box">
+                                            <img src="../../../public/assets/img/contents/services/foods.jpg"
+                                                alt="AI Integration" class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label">Upcoming</div>
+                                                <div class="title">Foods</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Foods</h3>
+                                                <p class="paragraph">
+                                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
+                                                    similique accusantium non ea provident, labore itaque a animi,
+                                                    temporibus quo repellendus debitis totam dolore modi tenetur fugit.
+                                                    Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente
+                                                    sed
+                                                    nihil obcaecati delectus!
+                                                </p>
+                                                <div class="read-more-btn">Read More</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -549,14 +711,171 @@
                         </section>
                     </div>
 
-                    <div class="seperator"></div>
+                    <!-- Testimonials -->
+                    <div class="section-container">
+                        <section class="section-wrapper testimonials-section">
+                            <div class="section-title">
+                                <span class="sub-title">Testimonials</span>
+                                <h2>What Our Clients Say</h2>
+                                <p>Read what pet owners have to say about their experience with our veterinary services.
+                                </p>
+                            </div>
+                            <div class="testimonials-container">
+                                <div class="testimonial-card box">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-text">
+                                            <span class="material-icons-sharp quote">format_quote</span>
+                                            <p>"The staff at Vetsync are amazing! They took such great care of my dog
+                                                Max during his surgery. The follow-up care and attention to detail was
+                                                outstanding."</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img class="rounded-circle"
+                                                src="../../../public/assets/img/avatars/chris.jpg" alt="Sarah Johnson">
+                                            <div class="author-info">
+                                                <h4>Sarah Johnson</h4>
+                                                <p>Dog Owner</p>
+                                            </div>
+                                            <div class="author-social">
+                                                <button class="ui circular facebook icon button">
+                                                    <i class="facebook icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <!-- TODO: ADD TESTIMONIALS HERE -->
+                                <div class="testimonial-card box">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-text">
+                                            <span class="material-icons-sharp quote">format_quote</span>
+                                            <p>"I've been bringing my cats here for years. The veterinarians are
+                                                knowledgeable and caring. They always take time to explain everything
+                                                thoroughly."</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img class="rounded-circle"
+                                                src="../../../public/assets/img/avatars/stevie.jpg" alt="Michael Chen">
+                                            <div class="author-info">
+                                                <h4>Michael Chen</h4>
+                                                <p>Cat Owner</p>
+                                            </div>
+                                            <div class="author-social">
+                                                <button class="ui circular twitter icon button">
+                                                    <i class="twitter icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="testimonial-card box">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-text">
+                                            <span class="material-icons-sharp quote">format_quote</span>
+                                            <p>"The grooming services are excellent! My pet always comes back looking
+                                                and smelling wonderful. The groomers are gentle and professional."</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img class="rounded-circle"
+                                                src="../../../public/assets/img/avatars/elliot.jpg"
+                                                alt="Emily Rodriguez">
+                                            <div class="author-info">
+                                                <h4>Emily Rodriguez</h4>
+                                                <p>Pet Parent</p>
+                                            </div>
+                                            <div class="author-social">
+                                                <button class="ui circular instagram icon button">
+                                                    <i class="instagram icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="testimonial-card box">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-text">
+                                            <span class="material-icons-sharp quote">format_quote</span>
+                                            <p>"The staff at Vetsync are amazing! They took such great care of my dog
+                                                Max during his surgery. The follow-up care and attention to detail was
+                                                outstanding."</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img class="rounded-circle"
+                                                src="../../../public/assets/img/avatars/chris.jpg" alt="Sarah Johnson">
+                                            <div class="author-info">
+                                                <h4>Sarah Johnson</h4>
+                                                <p>Dog Owner</p>
+                                            </div>
+                                            <div class="author-social">
+                                                <button class="ui circular facebook icon button">
+                                                    <i class="facebook icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="testimonial-card box">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-text">
+                                            <span class="material-icons-sharp quote">format_quote</span>
+                                            <p>"I've been bringing my cats here for years. The veterinarians are
+                                                knowledgeable and caring. They always take time to explain everything
+                                                thoroughly."</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img class="rounded-circle"
+                                                src="../../../public/assets/img/avatars/stevie.jpg" alt="Michael Chen">
+                                            <div class="author-info">
+                                                <h4>Michael Chen</h4>
+                                                <p>Cat Owner</p>
+                                            </div>
+                                            <div class="author-social">
+                                                <button class="ui circular twitter icon button">
+                                                    <i class="twitter icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="testimonial-card box">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-text">
+                                            <span class="material-icons-sharp quote">format_quote</span>
+                                            <p>"The grooming services are excellent! My pet always comes back looking
+                                                and smelling wonderful. The groomers are gentle and professional."</p>
+                                        </div>
+                                        <div class="testimonial-author">
+                                            <img class="rounded-circle"
+                                                src="../../../public/assets/img/avatars/elliot.jpg"
+                                                alt="Emily Rodriguez">
+                                            <div class="author-info">
+                                                <h4>Emily Rodriguez</h4>
+                                                <p>Pet Parent</p>
+                                            </div>
+                                            <div class="author-social">
+                                                <button class="ui circular instagram icon button">
+                                                    <i class="instagram icon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="section-seperator"></div>
+
+                    <!-- Locations -->
                     <div class="section-container">
                         <section class="section-wrapper locations-section">
                             <div class="section-title">
-                                <h2>Visit Our Clinic</h2>
+                                <span class="sub-title">Locations</span>
+                                <h2>Visit Our Clinic's</h2>
                                 <p>Our state-of-the-art facility is equipped with the latest technology to provide the
                                     best care for
                                     your pets.</p>
@@ -586,18 +905,6 @@
                                     </div>
                                 </div> -->
                                 <div class="location-branches d-flex flex-row gap-3">
-                                    <div class="location-branches-card">
-                                        <p class="location-details">
-                                            <span class="material-icons-sharp">location_on</span>
-                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
-                                        </p>
-                                    </div>
-                                    <div class="location-branches-card">
-                                        <p class="location-details">
-                                            <span class="material-icons-sharp">location_on</span>
-                                            <span>123 Main Street, City Center<br>Your City, State ZIP</span>
-                                        </p>
-                                    </div>
                                     <div class="location-branches-card">
                                         <p class="location-details">
                                             <span class="material-icons-sharp">location_on</span>

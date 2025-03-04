@@ -15,6 +15,7 @@
 
 :root {
     --color-background: #f6f6f9;
+    --color-background-variant: #efeff5;
     --color-white: #fff;
     --color-dark: #363949;
     --color-dark-variant: #677483;
@@ -26,17 +27,12 @@
 /* Dark mode color scheme that gets applied when .dark-mode-variables class is added to body */
 /* Inverts the light theme colors to create a dark appearance */
 .dark-mode-variables {
-    /* Dark background color for main surfaces */
     --color-background: #181a1e;
-    /* Slightly lighter background for cards/containers */
+    --color-background-variant: #3e454c;
     --color-white: #202528;
-    /* Light text color for dark backgrounds */
     --color-dark: #edeffd;
-    /* Muted light text for secondary content */
     --color-dark-variant: #a3bdcc;
-    /* Semi-transparent black background-color for overlays */
     --color-light: rgba(0, 0, 0, 0.4);
-    /* Dark mode shadow with more opacity */
     --box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.4);
 }
 
