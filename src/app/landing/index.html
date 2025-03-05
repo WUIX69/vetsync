@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
     <link rel="stylesheet" href="../../../public/assets/css/responsive.css" />
+    <link rel="stylesheet" href="../../../public/lib/swiper/swiper-bundle.min.css" /><!-- Link Swiper's CSS -->
     <style>
         /*----------- MAIN (Hero) -----------*/
         main .section-container:has(section.hero-section) {
@@ -32,15 +33,23 @@
         }
 
         main section.hero-section .hero-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
             position: relative;
+            margin: 0;
+            padding: 0;
+        }
+
+        main section.hero-section .row {
+            justify-content: center;
+            align-items: center;
         }
 
         main section.hero-section .hero-text {
-            color: white;
+            color: var(--color-white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: start;
+            gap: 1rem;
         }
 
         main section.hero-section .hero-title {
@@ -349,28 +358,126 @@
             position: relative;
         }
 
-        main section.locations-section .location-details {
+        main section.locations-section .location-map-cont .header,
+        main section.locations-section .location-gallery-cont .header {
             display: flex;
             justify-content: start;
             align-items: center;
             gap: 0.2rem;
         }
 
-        main section.locations-section .location-details span {
+        main section.locations-section .location-map-cont .header span,
+        main section.locations-section .location-gallery-cont .header span {
             position: relative;
-            font-size: 2rem;
-            top: -0.2rem;
+            font-size: 3rem;
+            /* top: -0.2rem; */
+            animation: upDown 1.5s infinite;
+        }
+
+        main section.locations-section .location-map-cont .header .title,
+        main section.locations-section .location-gallery-cont .header .title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        /*----------- MAIN (Locations)[Map] -----------*/
+        main section.locations-section .location-map-cont .header span {
             color: #ea4335;
         }
 
-        main section.locations-section .location-details .location-info {
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-
-        main section.locations-section .location-google-map {
+        main section.locations-section .location-map-cont .google-map {
             position: relative;
             margin-top: 1rem;
+            width: 100%;
+            height: 100%;
+        }
+
+        main section.locations-section .location-map-cont .google-map iframe {
+            width: 100%;
+            height: 71vh;
+            border: 0;
+            border-radius: 0.8rem !important;
+            box-shadow: var(--box-shadow);
+        }
+
+        /*----------- MAIN (Locations)[Gallery] -----------*/
+        main section.locations-section .location-gallery-cont {
+            position: relative;
+        }
+
+        main section.locations-section .location-gallery-cont .header {
+            gap: 1rem;
+            align-items: center;
+        }
+
+        main section.locations-section .location-gallery-cont .header span {
+            color: #5985E1;
+        }
+
+        main section.locations-section .location-gallery-cont .swiper-clinic-gallery {
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        /*----------- MAIN (Locations)[Gallery] Main View -----------*/
+        main section.locations-section .swiper-clinic-gallery .swiper-main-view {
+            width: 100%;
+            height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            --swiper-navigation-color: var(--color-white);
+            --swiper-pagination-color: var(--color-white);
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-main-view .swiper-slide {
+            background-size: cover;
+            background-position: center;
+
+            border-radius: 0.8rem !important;
+            overflow: hidden;
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-main-view .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /*----------- MAIN (Locations)[Gallery] Thumb View -----------*/
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view {
+            width: 100%;
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 0.8rem !important;
+            overflow: hidden;
+
+            width: 25%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide-thumb-active {
+            opacity: 1;
         }
     </style>
 </head>
@@ -448,29 +555,39 @@
                     <div class="section-container">
                         <section class="section-wrapper hero-section">
                             <div class="hero-content">
-                                <div class="hero-text">
-                                    <div class="hero-title">
-                                        J.A.A <span class="full-def">(Josephine Ann Angeles)</span><br>
-                                        <div class="sub">Veterinary <span class="ui text yellow">Clinic</span></div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="hero-text">
+                                            <div class="hero-title">
+                                                J.A.A <span class="full-def">(Josephine Ann Angeles)</span><br>
+                                                <div class="sub">Veterinary <span class="ui text yellow">Clinic</span>
+                                                </div>
+                                            </div>
+                                            <p class="hero-description">
+                                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa nam sequi
+                                                officia
+                                                officiis deleniti! Est commodi impedit laborum adipisci quos quod id,
+                                                atque
+                                                exercitationem voluptas excepturi, aliquid sit ad magni quidem illo.
+                                            </p>
+                                            <div class="cta-buttons">
+                                                <a href="#" class="cta-button primary">
+                                                    <span class="material-icons-sharp">apple</span>
+                                                    App Store
+                                                </a>
+                                                <a href="#" class="cta-button secondary">
+                                                    <span class="material-icons-sharp">android</span>
+                                                    Play Store
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p class="hero-description">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa nam sequi officia
-                                        officiis deleniti! Est commodi impedit laborum adipisci quos quod id, atque
-                                        exercitationem voluptas excepturi, aliquid sit ad magni quidem illo.
-                                    </p>
-                                    <div class="cta-buttons">
-                                        <a href="#" class="cta-button primary">
-                                            <span class="material-icons-sharp">apple</span>
-                                            App Store
-                                        </a>
-                                        <a href="#" class="cta-button secondary">
-                                            <span class="material-icons-sharp">android</span>
-                                            Play Store
-                                        </a>
+                                    <div class="col-md-6">
+                                        <div class="hero-image">
+                                            <img src="../../../public/assets/img/placeholders/image.png"
+                                                alt="App Interface">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="hero-image">
-                                    <img src="../../../public/assets/img/placeholders/image.png" alt="App Interface">
                                 </div>
                             </div>
                         </section>
@@ -815,21 +932,114 @@
                         <section class="section-wrapper locations-section">
                             <div class="section-title">
                                 <span class="sub-title">Locations</span>
-                                <h2>Visit Our Clinic's</h2>
+                                <h2>Visit Our Clinic</h2>
                                 <p>Our state-of-the-art facility is equipped with the latest technology to provide the
                                     best care for
                                     your pets.</p>
                             </div>
                             <div class="location-container">
-                                <div class="location-details">
-                                    <span class="material-icons-sharp">location_on</span>
-                                    <div class="location-info">121 Einstein Loop N, Bronx, NY 10475, USA</div>
-                                </div>
-                                <div class="location-google-map">
-                                    <iframe
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
-                                        width="100%" height="300" style="border:0;" allowfullscreen=""
-                                        loading="lazy"></iframe>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="location-gallery-cont">
+                                            <div class="header">
+                                                <span class="material-icons-sharp">photo_library</span>
+                                                <div class="title">
+                                                    Clinic's Gallery
+                                                </div>
+                                            </div>
+                                            <div class="swiper-clinic-gallery">
+                                                <div class="swiper swiper-main-view">
+                                                    <div class="swiper-wrapper">
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="https://swiperjs.com/demos/images/nature-10.jpg" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="swiper-button-next"></div>
+                                                    <div class="swiper-button-prev"></div>
+                                                    <div class="swiper-pagination"></div>
+                                                </div>
+                                                <div thumbsSlider="" class="swiper swiper-thumb-view">
+                                                    <div class="swiper-wrapper">
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="https://swiperjs.com/demos/images/nature-10.jpg" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="location-map-cont">
+                                            <div class="header">
+                                                <span class="material-icons-sharp">location_on</span>
+                                                <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
+                                                </div>
+                                            </div>
+                                            <div class="google-map">
+                                                <iframe
+                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
+                                                    allowfullscreen="" loading="lazy"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -881,9 +1091,36 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script src="../../../public/assets/js/landing-scripts.js"></script>
+    <script src="../../../public/lib/swiper/swiper-bundle.min.js"></script><!-- Swiper JS -->
     <script type="text/javascript">
         $(function () {
-            // Custom js here...
+            let swiperThumbView = new Swiper(".swiper-thumb-view", {
+                loop: true,
+                spaceBetween: 10,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+            });
+
+            let swiperMainView = new Swiper(".swiper-main-view", {
+                loop: true,
+                spaceBetween: 10,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    dynamicBullets: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                thumbs: {
+                    swiper: swiperThumbView, // Use swiperThumbView as its thumbs
+                },
+            });
         });
     </script>
 </body>
