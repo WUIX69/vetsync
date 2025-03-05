@@ -223,12 +223,13 @@ main .section-container section .section-title p {
 }
 
 main .section-seperator {
-    background-image: url("../img/contents/clinic-view.jpg");
+    background-image: url("../img/contents/clinic-view.jpg") !important;
+    display: block !important;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    height: 60vh;
+    height: 60vh !important;
 }
 
 /*############ FOOTER ############*/
@@ -238,52 +239,4 @@ footer.site-footer {
     background-position: top center;
     background-repeat: no-repeat;
     color: var(--color-dark) !important;
-}
-
-/*
-*****************************************************
-** TODO: Seperate this concern for their own pages **
-*****************************************************
-*/
-
-/* Update background colors to match logo */
-/* .about-section,
-.services-section,
-.products-section,
-.contact-section {
-    padding: 120px 0 80px;
-    background: linear-gradient(
-        135deg,
-        #2c3e50 0%,
-        #7fccbf 100%
-    );
-    min-height: 100vh;
-    position: relative;
-} */
-
-/* Update hover effects to match theme */
-.book-button,
-.add-to-cart {
-    background: #7fccbf; /* Match logo teal color */
-}
-
-.book-button:hover,
-.add-to-cart:hover {
-    background: #6ab5a8; /* Slightly darker teal for hover */
-}
-
-/* Update active states */
-.category-button.active,
-.category-button:hover {
-    background: white;
-    color: #7fccbf; /* Match logo teal color */
-}
-
-/* Update form button colors */
-.ui.teal.button {
-    background-color: #7fccbf !important; /* Match logo teal color */
-}
-
-.ui.teal.button:hover {
-    background-color: #6ab5a8 !important; /* Slightly darker teal for hover */
 }

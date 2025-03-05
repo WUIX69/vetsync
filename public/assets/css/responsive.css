@@ -52,6 +52,18 @@
     }
 
     /*--- MAIN (Hero) ---*/
+    main .section-container:has(section.hero-section) .section-bg-video {
+        height: 115vh !important;
+    }
+
+    main section.hero-section .hero-content {
+        padding: 0 !important;
+    }
+
+    main section.hero-section .hero-content .hero-text {
+        gap: 0 !important;
+    }
+
     main section.hero-section .hero-title:not(span.full-def) {
         font-size: 3.4rem !important;
     }
