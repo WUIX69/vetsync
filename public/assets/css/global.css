@@ -21,6 +21,7 @@
     --color-dark-variant: #677483;
     --color-light: rgba(132, 139, 200, 0.18);
     --box-shadow: 0 2rem 3rem rgba(132, 139, 200, 0.18);
+    --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     --img-border: 2px solid #eeeeee;
 }
 
