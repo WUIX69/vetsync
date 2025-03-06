@@ -266,5 +266,57 @@ footer.site-footer {
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
-    color: var(--color-dark) !important;
+    padding: 4rem 0;
+}
+
+footer * {
+    color: var(--color-white) !important;
+}
+
+footer .header {
+    margin-bottom: 2.3rem !important;
+    font-size: 1.3rem !important;
+}
+
+footer .social-links {
+    margin-top: 2rem;
+}
+
+footer .social-links .button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    margin-right: 0.5rem;
+}
+
+footer .list .item {
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 0.8rem 0 !important;
+}
+
+footer .list .item:hover {
+    color: var(--color-white) !important;
+}
+
+/*------ Footer (Description Column) ------*/
+footer .desc-col span {
+    color: #00b5ad !important;
+}
+
+footer .desc-col .footer-description {
+    margin: 1.7rem 0;
+    line-height: 1.6;
+}
+
+/*------ Footer (Contact Information Column) ------*/
+footer .contact-col .item i.icon {
+    font-size: 1.2rem;
+}
+
+/*------ Footer (Bottom Column) ------*/
+footer .bot-col {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+footer .bot-col p {
+    margin: 0;
 }

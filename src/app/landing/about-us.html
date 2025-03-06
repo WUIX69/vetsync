@@ -14,11 +14,10 @@
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
     <style>
         main .section-container:has(section.hero-section) {
-            background-image: url('../../../public/assets/img/contents/cat.png');
+            background-image: url('../../../public/assets/img/contents/hero/about-us.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            /* background-attachment: fixed; */
         }
 
         main section.info-section .info-grid {
@@ -139,6 +138,11 @@
             opacity: 0.1;
             pointer-events: none;
         }
+
+        /* Override Reserve Section styles for its image only */
+        main .section-container:has(section.reserve-section) {
+            background-image: url('../../../public/assets/img/contents/reserves/reserve-2.jpg');
+        }
     </style>
 </head>
 
@@ -173,11 +177,11 @@
                                 <span class="material-icons-sharp">menu</span>
                             </button>
                             <div class="nav-links">
-                                <a href="index.html" class="nav-link active">Home</a>
+                                <a href="index.html" class="nav-link">Home</a>
                                 <a href="services.html" class="nav-link">Services</a>
                                 <a href="Product.html" class="nav-link">Products</a>
                                 <a href="contact-us.html" class="nav-link">Contact Us</a>
-                                <a href="about-us.html" class="nav-link">About Us</a>
+                                <a href="about-us.html" class="nav-link active">About Us</a>
                                 <div class="actions">
                                     <div class="profile-menu">
                                         <div class="ui floating pointing selection icon dropdown profile-menu-dd">
@@ -347,6 +351,19 @@
                                                 and their families.
                                             </p>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <!-- Reserve -->
+                    <div class="section-container">
+                        <section class="section-wrapper reserve-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="header">
+                                        <h2>Do You Want To Earn With Us? <br> So Don't Be Late.</h2>
+                                        <div class="ui large blue button">Book Now</div>
                                     </div>
                                 </div>
                             </div>
