@@ -18,7 +18,7 @@
         /*----------- MAIN (Hero) -----------*/
         main .section-container:has(section.hero-section) .section-bg-video {
             width: 100%;
-            height: 90vh;
+            height: 100vh;
             overflow: hidden !important;
         }
 
@@ -32,6 +32,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            padding-top: 10rem !important;
 
             position: absolute;
             top: 0;
@@ -120,6 +121,8 @@
 
         main section.hero-section .hero-image {
             text-align: right;
+            border-radius: 0.8rem !important;
+            overflow: hidden;
         }
 
         main section.hero-section .hero-image img {
@@ -505,60 +508,58 @@
                 <span class="material-icons-sharp">arrow_upward</span>
             </button>
         </div>
-    </div>
-
-    <div class="container-body">
-        <div class="row">
-            <div class="col-12">
-                <header class="site-header">
-                    <nav class="navbar">
-                        <div class="navbar-container">
-                            <a href="index.html" class="navbar-logo">
-                                <img src="../../../public/assets/img/logo.png" alt="Logo">
-                                <div class="logo-text">
-                                    <span class="logo-text-main">Vetsync</span>
-                                </div>
-                            </a>
-                            <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
-                                <span class="material-icons-sharp">menu</span>
-                            </button>
+        <header class="site-header">
+            <nav class="navbar">
+                <div class="navbar-container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="logo-cont">
+                                <a href="index.html" class="navbar-logo">
+                                    <!-- <img src="../../../public/assets/img/logo.png" alt="Logo"> -->
+                                    <div class="logo-text">
+                                        <h3 class="logo-text-main">VET<span class="ui teal text">SYNC</span></h3>
+                                    </div>
+                                </a>
+                                <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
+                                    <span class="material-icons-sharp">menu</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
                             <div class="nav-links">
                                 <a href="index.html" class="nav-link active">Home</a>
                                 <a href="services.html" class="nav-link">Services</a>
                                 <a href="Product.html" class="nav-link">Products</a>
                                 <a href="contact-us.html" class="nav-link">Contact Us</a>
                                 <a href="about-us.html" class="nav-link">About Us</a>
-                                <div class="actions">
-                                    <div class="profile-menu">
-                                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
-                                            <i class="circle user icon"></i>
-                                            <span class="text">Account</span>
-                                            <i class="dropdown icon"></i>
-                                            <div class="menu">
-                                                <div class="item">
-                                                    <a href="../auth/index.html" class="link">
-                                                        <span class="material-icons-sharp">login</span>
-                                                        Sign In
-                                                    </a>
-                                                </div>
-                                                <div class="item">
-                                                    <a href="../auth/register.html" class="link">
-                                                        <span class="material-icons-sharp">person_add</span>
-                                                        Sign Up
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="ui red large button">
+                                <div class="actions d-none"><!-- Only show for mobile view -->
+                                    <a href="../auth/index.html" class="ui basic teal button login-btn">
+                                        Log In
+                                    </a>
+                                    <button class="ui blue large button book-now-btn">
                                         Book Now
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </nav>
-                </header>
-            </div>
+                        <div class="col-lg-4">
+                            <div class="actions">
+                                <a href="../auth/index.html" class="ui basic teal button login-btn">
+                                    Log In
+                                </a>
+                                <button class="ui blue large button book-now-btn">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </div>
+
+    <div class="container-body">
+        <div class="row">
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
@@ -597,7 +598,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="hero-image">
-                                            <img src="../../../public/assets/img/placeholders/image.png"
+                                            <img src="../../../public/assets/img/contents/app-ss/vetsync-1.png"
                                                 alt="App Interface">
                                         </div>
                                     </div>
