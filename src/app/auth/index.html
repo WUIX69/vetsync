@@ -11,47 +11,41 @@
 	<link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
 	<link rel="stylesheet" href="../../../public/assets/css/global.css" />
 	<link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
-	<style>
-		/*-- Unique styles for this page only --*/
-		main .section-container {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		main .section-container .section-wrapper {
-			display: flex;
-			flex-direction: column;
-		}
-	</style>
+	<link rel="stylesheet" href="../../../public/assets/css/auth.css" />
 </head>
 
 <body>
 
-	<div class="window-spinner-overlay"></div>
-	<div class="la-square-jelly-box window-spinner la-2x">
-		<div></div>
-		<div></div>
+	<div class="shared-standalone-content">
+		<div class="window-spinner-overlay"></div>
+		<div class="la-square-jelly-box window-spinner la-2x">
+			<div></div>
+			<div></div>
+		</div>
 	</div>
 
 	<div class="container-body">
 		<div class="row">
-
-			<!-- Main Content -->
-			<div class="col">
+			<div class="col-12">
 				<main class="container-main">
-
 					<!-- Login Form -->
 					<div class="section-container">
-						<div class="section-wrapper box column">
-							<h2 class="ui teal image header">
-								<img src="../../../public/assets/img/logo.png" class="rounded-circle image">
-								<div class="content">
-									Log-in to your account
+						<div class="section-wrapper auth-section">
+							<div class="section-out-header">
+								<a href="../landing/index.html">
+									<div class="ui image header">
+										<img src="../../../public/assets/img/logo.jpg" class="rounded-circle image">
+										<div class="content">
+											VET<span class="ui teal text">SYNC</span>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="auth-wrapper box column">
+								<div class="ui teal header section-in-header">
+									Login
 								</div>
-							</h2>
-							<form class="ui large form">
-								<div class="ui stacked segment">
+								<form class="ui large form">
 									<div class="field">
 										<div class="ui left icon input">
 											<i class="user icon"></i>
@@ -64,19 +58,26 @@
 											<input type="password" name="password" placeholder="Password">
 										</div>
 									</div>
-									<div class="ui fluid large teal submit button">Login</div>
+									<div class="clearing">
+										<div class="ui checkbox remember-me">
+											<input type="checkbox" name="remember-me">
+											<label>Remember me</label>
+										</div>
+										<div class="ui text forgot-password">
+											<a href="#">Forgot Password?</a>
+										</div>
+									</div>
+									<div class="ui fluid large teal submit button">Continue</div>
+									<div class="ui error message"></div>
+								</form>
+								<div class="ui text text-center">
+									Don't have an account? <a href="register.html">Sign Up</a>
 								</div>
-								<div class="ui error message"></div>
-							</form>
-							<div class="ui message">
-								New to us? <a href="register.html">Sign Up</a>
 							</div>
 						</div>
 					</div>
-
 				</main>
 			</div>
-
 		</div>
 	</div>
 
