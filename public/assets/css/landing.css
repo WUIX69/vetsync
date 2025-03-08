@@ -197,6 +197,32 @@ main .section-container section .section-title p {
     max-width: 600px;
 }
 
+main .section-container:has(section.hero-section)::before,
+main .section-container:has(section.reserve-section)::before,
+footer.site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/*------ Main (Hero section) ------*/
+main .section-container:has(section.hero-section) {
+    background-image: url("../img/contents/hero/landing.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
 /*------ Main (Section Seperator) ------*/
 main .section-seperator {
     background-image: url("../img/contents/clinic-view.jpg");
@@ -213,6 +239,10 @@ main .section-container:has(section.reserve-section) {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
 }
 
 main section.reserve-section .row {
@@ -237,11 +267,20 @@ main section.reserve-section .row .header h2 {
 
 /*############ FOOTER ############*/
 footer.site-footer {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    isolation: isolate;
+
     background-image: url("../img/contents/footer.jpg");
     background-size: cover;
-    background-position: top center;
+    background-position: center;
     background-repeat: no-repeat;
     padding: 4rem 0;
+}
+
+footer.site-footer::before {
+    background: rgba(0, 0, 0, 0.6);
 }
 
 footer * {
@@ -271,7 +310,7 @@ footer .list .item:hover {
     color: var(--color-white) !important;
 }
 
-/*------ Footer (Description Column) ------*/
+/*------ FOOTER (Description Column) ------*/
 footer .desc-col span {
     color: #00b5ad !important;
 }
@@ -281,12 +320,12 @@ footer .desc-col .footer-description {
     line-height: 1.6;
 }
 
-/*------ Footer (Contact Information Column) ------*/
+/*------ FOOTER (Contact Information Column) ------*/
 footer .contact-col .item i.icon {
     font-size: 1.2rem;
 }
 
-/*------ Footer (Bottom Column) ------*/
+/*------ FOOTER (Bottom Column) ------*/
 footer .bot-col {
     margin-top: 1rem;
     text-align: center;

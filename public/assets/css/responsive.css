@@ -79,12 +79,12 @@
     }
 
     /*--- MAIN (Hero) ---*/
-    main .section-container:has(section.hero-section) .section-bg-video {
-        height: 115vh !important;
+    main .section-container:has(section.hero-section):has(.section-bg-video) {
+        height: 110vh;
     }
 
     main section.hero-section {
-        padding-top: 0 !important;
+        padding-top: 7.5rem !important;
     }
 
     main section.hero-section .hero-content {
