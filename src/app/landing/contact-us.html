@@ -13,102 +13,324 @@
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
     <style>
-        /* Specific styles here... */
+        /*----------- MAIN (Hero) -----------*/
+        main .section-container:has(section.hero-section) {
+            background-image: url("../../../public/assets/img/contents/hero/services.jpg");
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+            height: 75vh !important;
+        }
+
+        main section.hero-section .hero-content {
+            position: absolute;
+            bottom: 3rem;
+            color: var(--color-white);
+            text-shadow: var(--text-shadow) !important;
+
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        main section.hero-section .hero-content * {
+            color: var(--color-white);
+            text-shadow: var(--text-shadow) !important;
+        }
+
+        main section.hero-section .hero-content .hero-breadcrumb {
+            font-size: 1rem;
+        }
+
+        main section.hero-section .hero-content .hero-breadcrumb .section.active {
+            color: teal !important;
+        }
+
+        main section.hero-section .hero-content .hero-header {
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        /*----------- MAIN (Services) -----------*/
+        main .section-container:has(section.services-section) {
+            background: var(--color-background-variant);
+        }
+
+        main section.services-section .services-card {
+            background: var(--color-white);
+            position: relative !important;
+            overflow: hidden;
+            height: 400px;
+            cursor: pointer;
+
+            border-radius: 0.8rem !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        main section.services-section .services-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        main section.services-section .visible-content {
+            position: absolute;
+            left: 1.7rem;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        main section.services-section .visible-content .title {
+            font-size: 1.9rem;
+            font-weight: 600;
+            color: var(--color-white);
+            text-transform: capitalize;
+            text-shadow: var(--text-shadow);
+        }
+
+        main section.services-section .hovered-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            border-left: 3px solid var(--color-white) !important;
+            padding: 1.7rem;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: center;
+            gap: 1.5rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        main section.services-section .services-card:hover .hovered-content {
+            transform: translateX(0);
+        }
+
+        main section.services-section .hovered-content .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-white);
+            margin-bottom: -1rem;
+            text-transform: capitalize;
+        }
+
+        main section.services-section .hovered-content .paragraph {
+            color: var(--color-white);
+            line-height: 1.6;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        main section.services-section .hovered-content .read-more-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--color-white);
+            color: var(--color-dark);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        main section.services-section .hovered-content .read-more-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /*----------- MAIN (Appointment Form) -----------*/
+        main section.appointment-section .appointment-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+
+        main section.appointment-section .form-title {
+            color: var(--color-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        main section.appointment-section .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /*----------- MAIN (Reserve) -----------*/
+        main .section-container:has(section.reserve-section) {
+            background-image: url("../../../public/assets/img/contents/reserves/reserve-2.jpg");
+        }
+
+        /* social media */
+        main .section.social-media-section .ui.horizontal.list:hover {
+            background: rgba(46, 9, 255, 0.7);
+            /* diko mapagana tong part na to want ko sna maging blue kapag na hover ung social media  icons*/
+        }
     </style>
 </head>
 
 <body>
-    <div class="window-spinner-overlay"></div>
-    <div class="la-square-jelly-box window-spinner la-2x">
-        <div></div>
-        <div></div>
-    </div>
 
-    <!-- Top Navbar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="index.html" class="navbar-logo">
-                <img src="../../../public/assets/img/logo.png" alt="Logo">
-                <div class="logo-text">
-                    <span class="logo-text-main">Vetsync</span>
-                </div>
-            </a>
-            <button class="mobile-menu-btn">
-                <span class="material-icons-sharp">menu</span>
+    <div class="shared-standalone-content">
+        <div class="window-spinner-overlay"></div>
+        <div class="la-square-jelly-box window-spinner la-2x">
+            <div></div>
+            <div></div>
+        </div>
+        <div class="top-redirect-button">
+            <button class="ui circular icon button">
+                <span class="material-icons-sharp">arrow_upward</span>
             </button>
-            <div class="nav-links">
-                <a href="index.html" class="nav-link">Home</a>
-                <a href="services.html" class="nav-link">Services</a>
-                <a href="Product.html" class="nav-link">Products</a>
-                <a href="contact-us.html" class="nav-link active">Contact Us</a>
-                <a href="about-us.html" class="nav-link">About Us</a>
-                <div class="actions">
-                    <div class="profile-menu">
-                        <div class="ui floating pointing selection icon dropdown profile-menu-dd">
-                            <i class="circle user icon"></i>
-                            <span class="text">Account</span>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <div class="item">
-                                    <a href="../auth/index.html" class="link">
-                                        <span class="material-icons-sharp">login</span>
-                                        Sign In
+        </div>
+        <header class="site-header">
+            <nav class="navbar">
+                <div class="navbar-container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="logo-cont">
+                                <a href="index.html" class="navbar-logo">
+                                    <!-- <img src="../../../public/assets/img/logo.png" alt="Logo"> -->
+                                    <div class="logo-text">
+                                        <h3 class="logo-text-main">VET<span class="ui teal text">SYNC</span></h3>
+                                    </div>
+                                </a>
+                                <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
+                                    <span class="material-icons-sharp">menu</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="nav-links">
+                                <a href="index.html" class="nav-link">Home</a>
+                                <a href="services.html" class="nav-link ">Services</a>
+                                <a href="Product.html" class="nav-link">Products</a>
+                                <a href="contact-us.html" class="nav-link active">Contact Us</a>
+                                <a href="about-us.html" class="nav-link">About Us</a>
+                                <div class="actions d-none"><!-- Only show for mobile view -->
+                                    <a href="../auth/index.html" class="ui basic teal button login-btn">
+                                        Log In
                                     </a>
-                                </div>
-                                <div class="item">
-                                    <a href="../auth/register.html" class="link">
-                                        <span class="material-icons-sharp">person_add</span>
-                                        Sign Up
-                                    </a>
+                                    <button class="ui blue large button book-now-btn">
+                                        Book Now
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-4">
+                            <div class="actions">
+                                <a href="../auth/index.html" class="ui basic teal button login-btn">
+                                    Log In
+                                </a>
+                                <button class="ui blue large button book-now-btn">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <button class="ui red large button">
-                        Book Now
-                    </button>
                 </div>
-            </div>
-        </div>
-    </nav>
+            </nav>
+        </header>
+    </div>
 
     <div class="container-body">
         <div class="row">
-            <div class="col">
+            <div class="col-12">
                 <main class="container-main">
-                    <!-- Contact Info Section -->
-                    <div class="section-container">
-                        <section class="section-wrapper services-section">
-                            <div class="section-title">
-                                <h2>Contact Us</h2>
-                                <p>Get in touch with our veterinary team</p>
-                            </div>
 
-                            <div class="info-container">
-                                <div class="info-grid">
-                                    <!-- Contact Card 1 -->
-                                    <div class="info-card">
-                                        <div class="info-content">
-                                            <h3 class="info-title">
-                                                <span class="material-icons-sharp">location_on</span>
-                                                Visit Us
-                                            </h3>
-                                            <p class="info-full">
-                                                123 Main Street<br>
-                                                City Center<br>
-                                                Your City, State ZIP
-                                            </p>
+                    <!-- Hero -->
+                    <div class="section-container">
+                        <section class="section-wrapper hero-section">
+                            <div class="hero-content">
+                                <div class="hero-breadcrumb">
+                                    <div class="ui breadcrumb">
+                                        <a class="section">Home</a>
+                                        <i class="right angle icon divider"></i>
+                                        <a class="section active">Contact Us</a>
+                                    </div>
+                                </div>
+                                <div class="hero-header">
+                                    Contact Us
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Services Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper contact-section">
+                            <div class="section-title">
+                                <span class="sub-title">Contact Us</span>
+                                <h2>Get In Touch</h2>
+                                <p>We're here to help and answer any questions you might have</p>
+                            </div>
+                            <div class="contact-container">
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <!-- Contact Card 1 -->
+                                        <div class="contact-card box">
+                                            <div class="location-map-cont">
+                                                <div class="header">
+                                                    <span class="material-icons-sharp">location_on</span>
+                                                    <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
+                                                    </div>
+                                                </div>
+                                                <div class="google-map">
+                                                    <iframe
+                                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
+                                                        allowfullscreen="" loading="lazy"></iframe>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <!-- Contact Card 2 -->
-                                    <div class="info-card">
-                                        <div class="info-content">
-                                            <h3 class="info-title">
-                                                <span class="material-icons-sharp">schedule</span>
-                                                Business Hours
-                                            </h3>
-                                            <p class="info-full">
+                                    <div class="col-md-4">
+                                        <!-- Contact Card 2 -->
+                                        <div class="contact-card box">
+                                            <div class="icon">
+                                                <i class="huge phone icon blue"></i>
+                                            </div>
+                                            <h3>Call Us</h3>
+                                            <p>Phone: +2 392 3929 210<br>Mobile: +63 912 345 6789</p>
+                                            <a href="tel:+2392392910" class="ui basic blue button">Call Now</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <!-- Contact Card 3 -->
+                                        <div class="contact-card box">
+                                            <div class="icon">
+                                                <i class="huge envelope icon red"></i>
+                                            </div>
+                                            <h3>Email Us</h3>
+                                            <p>info@vetsync.com<br>support@vetsync.com</p>
+                                            <a href="mailto:info@vetsync.com" class="ui basic red button">Send Email</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <!-- Contact Card 4 -->
+                                        <div class="contact-card box">
+                                            <div class="icon">
+                                                <i class="huge clock icon green"></i>
+                                            </div>
+                                            <h3>Business Hours</h3>
+                                            <p>
                                                 Monday - Friday: 8:00 AM - 6:00 PM<br>
                                                 Saturday: 9:00 AM - 4:00 PM<br>
                                                 Sunday: Closed
@@ -116,102 +338,124 @@
                                         </div>
                                     </div>
 
-                                    <!-- Contact Card 3 -->
-                                    <div class="info-card">
-                                        <div class="info-content">
-                                            <h3 class="info-title">
-                                                <span class="material-icons-sharp">phone</span>
-                                                Contact Information
-                                            </h3>
-                                            <p class="info-full">
-                                                Phone: (123) 456-7890<br>
-                                                Email: info@vetsync.com<br>
-                                                Emergency: (123) 456-7899
-                                            </p>
+                                    <div class="col-md-6">
+                                        <!-- Contact Card 5 -->
+                                        <div class="contact-card box">
+                                            <div class="icon">
+                                                <i class="huge users icon purple"></i>
+                                            </div>
+                                            <h3>Social Media</h3>
+                                            <div class="section-social-media">
+                                                <div class="ui horizontal list">
+                                                    <a class="item" href="#"><i class="facebook large icon "></i></a>
+                                                    <a class="item" href="#"><i class="twitter large icon "></i></a>
+                                                    <a class="item" href="#"><i class="instagram large icon "></i></a>
+                                                    <a class="item" href="#"><i class="linkedin large icon "></i></a>
+                                                </div>
+                                            </div>
+                                            <p>Follow us on social media for updates and pet care tips</p>
+
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </section>
                     </div>
 
-                    <!-- Contact Form Section -->
-                    <div class="section-container">
-                        <section class="section-wrapper">
-                            <div class="box">
-                                <h2 class="section-title">Send Us a Message</h2>
-                                <form class="contact-form">
-                                    <div class="field">
-                                        <label>Your Name</label>
-                                        <input type="text" placeholder="Enter your name" class="form-input">
-                                    </div>
-                                    <div class="field">
-                                        <label>Email Address</label>
-                                        <input type="email" placeholder="Enter your email" class="form-input">
-                                    </div>
-                                    <div class="field">
-                                        <label>Phone Number</label>
-                                        <input type="tel" placeholder="Enter your phone number" class="form-input">
-                                    </div>
-                                    <div class="field">
-                                        <label>Subject</label>
-                                        <input type="text" placeholder="Enter message subject" class="form-input">
-                                    </div>
-                                    <div class="field">
-                                        <label>Message</label>
-                                        <textarea rows="4" placeholder="Enter your message"
-                                            class="form-input"></textarea>
-                                    </div>
-                                    <button type="submit" class="send-message-btn">
-                                        Send Message
-                                    </button>
-                                </form>
-                            </div>
-                        </section>
-                    </div>
 
-                    <!-- Map Section -->
+
+                    <!-- Reserve -->
                     <div class="section-container">
-                        <section class="section-wrapper">
-                            <div class="box">
-                                <h2 class="section-title">Find Us</h2>
-                                <div style="width: 100%; height: 400px; background: #eee;">
-                                    <!-- Replace with actual map implementation -->
-                                    <p style="text-align: center; padding-top: 180px;">Map will be embedded here</p>
+                        <section class="section-wrapper reserve-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="header">
+                                        <h2>Do You Want To Earn With Us? <br> So Don't Be Late.</h2>
+                                        <div class="ui large blue button">Book Now</div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
                     </div>
                 </main>
-
+            </div>
+            <div class="col-12">
                 <!-- Footer -->
-                <footer class="footer-container">
-                    <div class="footer-section">
-                        <div class="ui inverted vertical footer segment pt-5 pb-5">
-                            <div class="ui container">
-                                <div class="ui stackable inverted divided equal height stackable grid">
-                                    <div class="three wide column">
-                                        <h4 class="ui inverted header">About</h4>
-                                        <div class="ui inverted link list">
-                                            <a href="#" class="item">Sitemap</a>
+                <footer class="site-footer">
+                    <div class="ui vertical footer segment">
+                        <div class="ui container">
+                            <div class="ui stackable grid">
+                                <!-- Logo and Description Column -->
+                                <div class="four wide column">
+                                    <div class="desc-col">
+                                        <h3 class="ui header">VET<span>SYNC</span></h3>
+                                        <p class="footer-description">
+                                            Discover a paradisematic country where your dream car awaits, ready to
+                                            elevate
+                                            your journey.
+                                        </p>
+                                        <div class="social-links">
+                                            <a href="#" class="ui circular icon button"><i class="twitter icon"></i></a>
+                                            <a href="#" class="ui circular icon button"><i
+                                                    class="facebook f icon"></i></a>
+                                            <a href="#" class="ui circular icon button"><i
+                                                    class="instagram icon"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Information Column -->
+                                <div class="four wide column">
+                                    <div class="info-col">
+                                        <h4 class="ui header">Information</h4>
+                                        <div class="ui link list">
+                                            <a href="#" class="item">About</a>
+                                            <a href="#" class="item">Services</a>
+                                            <a href="#" class="item">Term and Conditions</a>
+                                            <a href="#" class="item">Best Price Guarantee</a>
+                                            <a href="#" class="item">Privacy & Cookies Policy</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Support Column -->
+                                <div class="four wide column">
+                                    <div class="supp-col">
+                                        <h4 class="ui header">Customer Support</h4>
+                                        <div class="ui link list">
+                                            <a href="#" class="item">FAQ</a>
+                                            <a href="#" class="item">Payment Option</a>
+                                            <a href="#" class="item">Booking Tips</a>
+                                            <a href="#" class="item">How it works</a>
                                             <a href="#" class="item">Contact Us</a>
-                                            <a href="#" class="item">Religious Ceremonies</a>
-                                            <a href="#" class="item">Gazebo Plans</a>
                                         </div>
                                     </div>
-                                    <div class="three wide column">
-                                        <h4 class="ui inverted header">Services</h4>
-                                        <div class="ui inverted link list">
-                                            <a href="#" class="item">Banana Pre-Order</a>
-                                            <a href="#" class="item">DNA FAQ</a>
-                                            <a href="#" class="item">How To Access</a>
-                                            <a href="#" class="item">Favorite X-Men</a>
+                                </div>
+
+                                <!-- Contact Information Column -->
+                                <div class="four wide column">
+                                    <div class="contact-col">
+                                        <h4 class="ui header">Have a Questions ?</h4>
+                                        <div class="ui list">
+                                            <div class="item">
+                                                <i class="marker icon"></i>
+                                                <div class="content">San Vicente Homes, Sta. Maria Bulacan</div>
+                                            </div>
+                                            <div class="item">
+                                                <i class="phone icon"></i>
+                                                <div class="content">+2 392 3929 210</div>
+                                            </div>
+                                            <div class="item">
+                                                <i class="mail icon"></i>
+                                                <div class="content">wuix69.github.io</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="seven wide column">
-                                        <h4 class="ui inverted header">Footer Header</h4>
-                                        <p>Extra space for a call to action inside the footer that could help re-engage
-                                            users.</p>
+                                </div>
+
+                                <!-- Footer Bottom Column -->
+                                <div class="sixteen wide column">
+                                    <div class="bot-col">
+                                        <p>Copyright © 2025 All rights reserved | ❤️ by Vet : Sync</p>
                                     </div>
                                 </div>
                             </div>
@@ -231,27 +475,7 @@
     <script src="../../../public/assets/js/spinner.js"></script>
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
-    <script type="text/javascript">
-        $(function () {
-            // Handle navbar scroll effect
-            window.addEventListener('scroll', function () {
-                const navbar = document.querySelector('.navbar');
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-
-            // Handle mobile menu
-            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-            const navLinks = document.querySelector('.nav-links');
-
-            mobileMenuBtn.addEventListener('click', function () {
-                navLinks.classList.toggle('active');
-            });
-        });
-    </script>
+    <script src="../../../public/assets/js/landing-scripts.js"></script>
 </body>
 
 </html>
