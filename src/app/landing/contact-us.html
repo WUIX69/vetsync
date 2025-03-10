@@ -53,134 +53,238 @@
             font-weight: 600;
         }
 
-        /*----------- MAIN (Services) -----------*/
-        main .section-container:has(section.services-section) {
-            background: var(--color-background-variant);
+        /* Contact Section Styles */
+        main .section-container:has(section.contact-section) {
+            padding: 5rem 0;
+            background: var(--color-white);
         }
 
-        main section.services-section .services-card {
+        main section.contact-section .contact-info {
+            padding-right: 3rem;
+        }
+
+        main section.contact-section .sub-title {
+            color: var(--color-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        main section.contact-section h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--color-dark);
+        }
+
+        main section.contact-section p {
+            color: var(--color-text);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        main section.contact-section .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--color-background-variant);
+            border-radius: 0.5rem;
+        }
+
+        main section.contact-section .contact-card .icon {
+            color: var(--color-primary);
+        }
+
+        main section.contact-section .contact-card .content h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--color-dark);
+        }
+
+        main section.contact-section .contact-card .content p {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 0.9rem;
+        }
+
+        main section.contact-section .contact-form {
+            background: var(--color-background-variant);
+            padding: 2rem;
+            border-radius: 0.8rem;
+        }
+
+        main section.contact-section .contact-form .field {
+            margin-bottom: 1.5rem;
+        }
+
+        main section.contact-section .contact-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+            font-weight: 500;
+        }
+
+        main section.contact-section .contact-form input,
+        main section.contact-section .contact-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 0.5rem;
             background: var(--color-white);
-            position: relative !important;
-            overflow: hidden;
+        }
+
+        main section.contact-section .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        main section.contact-section .contact-form button {
+            width: auto;
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            background: var(--color-dark);
+            color: var(--color-white);
+            font-weight: 500;
+        }
+
+        main section.contact-section .contact-form button:hover {
+            opacity: 0.9;
+        }
+
+        /*----------- MAIN (Locations) -----------*/
+        main .section-container:has(section.locations-section) {
+            background: var(--color-background);
+        }
+
+        main section.locations-section .location-container {
+            position: relative;
+        }
+
+        main section.locations-section .location-map-cont .header,
+        main section.locations-section .location-gallery-cont .header {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        main section.locations-section .location-map-cont .header span,
+        main section.locations-section .location-gallery-cont .header span {
+            position: relative;
+            font-size: 3rem;
+            /* top: -0.2rem; */
+            animation: upDown 1.5s infinite;
+        }
+
+        main section.locations-section .location-map-cont .header .title,
+        main section.locations-section .location-gallery-cont .header .title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        /*----------- MAIN (Locations)[Map] -----------*/
+        main section.locations-section .location-map-cont .header span {
+            color: #ea4335;
+        }
+
+        main section.locations-section .location-map-cont .google-map {
+            position: relative;
+            margin-top: 1rem;
+            width: 100%;
+            height: 100%;
+        }
+
+        main section.locations-section .location-map-cont .google-map iframe {
+            width: 100%;
+            height: 71vh;
+            border: 0;
+            border-radius: 0.8rem !important;
+            box-shadow: var(--box-shadow);
+        }
+
+        /*----------- MAIN (Locations)[Gallery] -----------*/
+        main section.locations-section .location-gallery-cont {
+            position: relative;
+        }
+
+        main section.locations-section .location-gallery-cont .header {
+            gap: 1rem;
+            align-items: center;
+        }
+
+        main section.locations-section .location-gallery-cont .header span {
+            color: #5985E1;
+        }
+
+        main section.locations-section .location-gallery-cont .swiper-clinic-gallery {
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        /*----------- MAIN (Locations)[Gallery] Main View -----------*/
+        main section.locations-section .swiper-clinic-gallery .swiper-main-view {
+            width: 100%;
             height: 400px;
-            cursor: pointer;
+            margin-left: auto;
+            margin-right: auto;
+            --swiper-navigation-color: var(--color-white);
+            --swiper-pagination-color: var(--color-white);
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-main-view .swiper-slide {
+            background-size: cover;
+            background-position: center;
 
             border-radius: 0.8rem !important;
-            padding: 0 !important;
-            margin: 0 !important;
+            overflow: hidden;
         }
 
-        main section.services-section .services-image {
+        main section.locations-section .swiper-clinic-gallery .swiper-main-view .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /*----------- MAIN (Locations)[Gallery] Thumb View -----------*/
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view {
+            width: 100%;
+            height: 20%;
+            box-sizing: border-box;
+            padding: 10px 0;
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide {
+            text-align: center;
+            font-size: 18px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 0.8rem !important;
+            overflow: hidden;
+
+            width: 25%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide img {
+            display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        main section.services-section .visible-content {
-            position: absolute;
-            left: 1.7rem;
-            bottom: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        main section.services-section .visible-content .title {
-            font-size: 1.9rem;
-            font-weight: 600;
-            color: var(--color-white);
-            text-transform: capitalize;
-            text-shadow: var(--text-shadow);
-        }
-
-        main section.services-section .hovered-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            border-left: 3px solid var(--color-white) !important;
-            padding: 1.7rem;
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            justify-content: center;
-            gap: 1.5rem;
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        main section.services-section .services-card:hover .hovered-content {
-            transform: translateX(0);
-        }
-
-        main section.services-section .hovered-content .title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-white);
-            margin-bottom: -1rem;
-            text-transform: capitalize;
-        }
-
-        main section.services-section .hovered-content .paragraph {
-            color: var(--color-white);
-            line-height: 1.6;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-
-        main section.services-section .hovered-content .read-more-btn {
-            display: inline-block;
-            padding: 8px 20px;
-            background: var(--color-white);
-            color: var(--color-dark);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        main section.services-section .hovered-content .read-more-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-        }
-
-        /*----------- MAIN (Appointment Form) -----------*/
-        main section.appointment-section .appointment-form {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 50px;
-        }
-
-        main section.appointment-section .form-title {
-            color: var(--color-dark);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        main section.appointment-section .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        /*----------- MAIN (Reserve) -----------*/
-        main .section-container:has(section.reserve-section) {
-            background-image: url("../../../public/assets/img/contents/reserves/reserve-2.jpg");
-        }
-
-        /* social media */
-        main .section.social-media-section .ui.horizontal.list:hover {
-            background: rgba(46, 9, 255, 0.7);
-            /* diko mapagana tong part na to want ko sna maging blue kapag na hover ung social media  icons*/
+        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide-thumb-active {
+            opacity: 1;
         }
     </style>
 </head>
@@ -253,6 +357,8 @@
             <div class="col-12">
                 <main class="container-main">
 
+
+
                     <!-- Hero -->
                     <div class="section-container">
                         <section class="section-wrapper hero-section">
@@ -271,97 +377,191 @@
                         </section>
                     </div>
 
-                    <!-- Services Section -->
+                    <!--    contact us Section -->
                     <div class="section-container">
                         <section class="section-wrapper contact-section">
-                            <div class="section-title">
-                                <span class="sub-title">Contact Us</span>
-                                <h2>Get In Touch</h2>
-                                <p>We're here to help and answer any questions you might have</p>
-                            </div>
-                            <div class="contact-container">
-                                <div class="row g-4">
-                                    <div class="col-md-4">
-                                        <!-- Contact Card 1 -->
-                                        <div class="contact-card box">
-                                            <div class="location-map-cont">
-                                                <div class="header">
-                                                    <span class="material-icons-sharp">location_on</span>
-                                                    <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
-                                                    </div>
-                                                </div>
-                                                <div class="google-map">
-                                                    <iframe
-                                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
-                                                        allowfullscreen="" loading="lazy"></iframe>
-                                                </div>
+                            <div class="row">
+                                <!-- Left Side - Contact Info -->
+                                <div class="col-lg-6">
+                                    <div class="contact-info">
+                                        <span class="sub-title">CONTACT US</span>
+                                        <h2>Get In Touch<br>With Our Agents</h2>
+                                        <p>When you really need to download free CSS templates, please remember our
+                                            website TemplateMo. Also, tell your friends about our website. Thank you for
+                                            visiting. There is a variety of Bootstrap HTML CSS templates on our website.
+                                            If you need more information, please contact us.</p>
+
+                                        <!-- Phone Info -->
+                                        <div class="contact-card">
+                                            <div class="icon">
+                                                <i class="huge phone icon orange"></i>
+                                            </div>
+                                            <div class="content">
+                                                <h3>010-020-0340</h3>
+                                                <p>Phone Number</p>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-4">
-                                        <!-- Contact Card 2 -->
-                                        <div class="contact-card box">
+                                        <!-- Email Info -->
+                                        <div class="contact-card">
                                             <div class="icon">
-                                                <i class="huge phone icon blue"></i>
+                                                <i class="huge envelope icon orange"></i>
                                             </div>
-                                            <h3>Call Us</h3>
-                                            <p>Phone: +2 392 3929 210<br>Mobile: +63 912 345 6789</p>
-                                            <a href="tel:+2392392910" class="ui basic blue button">Call Now</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <!-- Contact Card 3 -->
-                                        <div class="contact-card box">
-                                            <div class="icon">
-                                                <i class="huge envelope icon red"></i>
+                                            <div class="content">
+                                                <h3>info@villa.co</h3>
+                                                <p>Business Email</p>
                                             </div>
-                                            <h3>Email Us</h3>
-                                            <p>info@vetsync.com<br>support@vetsync.com</p>
-                                            <a href="mailto:info@vetsync.com" class="ui basic red button">Send Email</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <!-- Contact Card 4 -->
-                                        <div class="contact-card box">
-                                            <div class="icon">
-                                                <i class="huge clock icon green"></i>
-                                            </div>
-                                            <h3>Business Hours</h3>
-                                            <p>
-                                                Monday - Friday: 8:00 AM - 6:00 PM<br>
-                                                Saturday: 9:00 AM - 4:00 PM<br>
-                                                Sunday: Closed
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <!-- Contact Card 5 -->
-                                        <div class="contact-card box">
-                                            <div class="icon">
-                                                <i class="huge users icon purple"></i>
-                                            </div>
-                                            <h3>Social Media</h3>
-                                            <div class="section-social-media">
-                                                <div class="ui horizontal list">
-                                                    <a class="item" href="#"><i class="facebook large icon "></i></a>
-                                                    <a class="item" href="#"><i class="twitter large icon "></i></a>
-                                                    <a class="item" href="#"><i class="instagram large icon "></i></a>
-                                                    <a class="item" href="#"><i class="linkedin large icon "></i></a>
-                                                </div>
-                                            </div>
-                                            <p>Follow us on social media for updates and pet care tips</p>
-
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Right Side - Contact Form -->
+                                <div class="col-lg-6">
+                                    <div class="contact-form">
+                                        <form class="ui form">
+                                            <div class="field">
+                                                <label>Full Name</label>
+                                                <input type="text" placeholder="Your Name...">
+                                            </div>
+                                            <div class="field">
+                                                <label>Email Address</label>
+                                                <input type="email" placeholder="Your E-mail...">
+                                            </div>
+                                            <div class="field">
+                                                <label>Subject</label>
+                                                <input type="text" placeholder="Subject...">
+                                            </div>
+                                            <div class="field">
+                                                <label>Message</label>
+                                                <textarea placeholder="Your Message"></textarea>
+                                            </div>
+                                            <button class="ui black button" type="submit">Send Message</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </section>
                     </div>
 
+                    <div class="section-seperator"></div>
 
+                    <!-- Locations -->
+                    <div class="section-container">
+                        <section class="section-wrapper locations-section">
+                            <div class="section-title">
+                                <span class="sub-title">Locations</span>
+                                <h2>Visit Our Clinic</h2>
+                                <p>Our state-of-the-art facility is equipped with the latest technology to provide the
+                                    best care for
+                                    your pets.</p>
+                            </div>
+                            <div class="location-container">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="location-gallery-cont">
+                                            <div class="header">
+                                                <span class="material-icons-sharp">photo_library</span>
+                                                <div class="title">
+                                                    Clinic's Gallery
+                                                </div>
+                                            </div>
+                                            <div class="swiper-clinic-gallery">
+                                                <div class="swiper swiper-main-view">
+                                                    <div class="swiper-wrapper">
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="https://swiperjs.com/demos/images/nature-10.jpg" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="swiper-button-next"></div>
+                                                    <div class="swiper-button-prev"></div>
+                                                    <div class="swiper-pagination"></div>
+                                                </div>
+                                                <div thumbsSlider="" class="swiper swiper-thumb-view">
+                                                    <div class="swiper-wrapper">
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
+                                                        </div>
+                                                        <div class="swiper-slide">
+                                                            <img
+                                                                src="https://swiperjs.com/demos/images/nature-10.jpg" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="location-map-cont">
+                                            <div class="header">
+                                                <span class="material-icons-sharp">location_on</span>
+                                                <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
+                                                </div>
+                                            </div>
+                                            <div class="google-map">
+                                                <iframe
+                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
+                                                    allowfullscreen="" loading="lazy"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
 
                     <!-- Reserve -->
                     <div class="section-container">
@@ -476,6 +676,38 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script src="../../../public/assets/js/landing-scripts.js"></script>
+    <script src="../../../public/lib/swiper/swiper-bundle.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            let swiperThumbView = new Swiper(".swiper-thumb-view", {
+                loop: true,
+                spaceBetween: 10,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+            });
+
+            let swiperMainView = new Swiper(".swiper-main-view", {
+                loop: true,
+                spaceBetween: 10,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    dynamicBullets: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                thumbs: {
+                    swiper: swiperThumbView, // Use swiperThumbView as its thumbs
+                },
+            });
+        });
+    </script>
 </body>
 
 </html>
