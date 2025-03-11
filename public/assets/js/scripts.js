@@ -296,4 +296,18 @@ $(function () {
             return false;
         }
     });
+
+    // Handle body scroll effect
+    $(window).on("scroll", function () {
+        if ($(window).scrollTop() > 50) {
+            $("body").addClass("scrolled");
+        } else {
+            $("body").removeClass("scrolled");
+        }
+    });
+
+    // Handle top redirect button
+    $("body").on("click", ".top-redirect-button button", function () {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    });
 });
