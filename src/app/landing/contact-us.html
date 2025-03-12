@@ -206,102 +206,28 @@
             border-radius: 0.8rem !important;
             box-shadow: var(--box-shadow);
         }
-
-        /*----------- MAIN (Locations)[Gallery] -----------*/
-        main section.locations-section .location-gallery-cont {
-            position: relative;
-        }
-
-        main section.locations-section .location-gallery-cont .header {
-            gap: 1rem;
-            align-items: center;
-        }
-
-        main section.locations-section .location-gallery-cont .header span {
-            color: #5985E1;
-        }
-
-        main section.locations-section .location-gallery-cont .swiper-clinic-gallery {
-            position: relative;
-            margin-top: 1rem;
-        }
-
-        /*----------- MAIN (Locations)[Gallery] Main View -----------*/
-        main section.locations-section .swiper-clinic-gallery .swiper-main-view {
-            width: 100%;
-            height: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            --swiper-navigation-color: var(--color-white);
-            --swiper-pagination-color: var(--color-white);
-        }
-
-        main section.locations-section .swiper-clinic-gallery .swiper-main-view .swiper-slide {
-            background-size: cover;
-            background-position: center;
-
-            border-radius: 0.8rem !important;
-            overflow: hidden;
-        }
-
-        main section.locations-section .swiper-clinic-gallery .swiper-main-view .swiper-slide img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-        /*----------- MAIN (Locations)[Gallery] Thumb View -----------*/
-        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view {
-            width: 100%;
-            height: 20%;
-            box-sizing: border-box;
-            padding: 10px 0;
-        }
-
-        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide {
-            text-align: center;
-            font-size: 18px;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            border-radius: 0.8rem !important;
-            overflow: hidden;
-
-            width: 25%;
-            height: 100%;
-            opacity: 0.4;
-        }
-
-        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide-thumb-active {
-            opacity: 1;
-        }
     </style>
 </head>
 
 <body>
 
     <div class="shared-standalone-content">
+
+        <!-- Window Spinner -->
         <div class="window-spinner-overlay"></div>
         <div class="la-square-jelly-box window-spinner la-2x">
             <div></div>
             <div></div>
         </div>
+
+        <!-- top-redirect-button -->
         <div class="top-redirect-button">
             <button class="ui circular icon button">
                 <span class="material-icons-sharp">arrow_upward</span>
             </button>
         </div>
+
+        <!--Navbar header -->
         <header class="site-header">
             <nav class="navbar">
                 <div class="navbar-container">
@@ -330,7 +256,7 @@
                                     <a href="../auth/index.html" class="ui basic teal button login-btn">
                                         Log In
                                     </a>
-                                    <button class="ui blue large button book-now-btn">
+                                    <button class="ui blue large button booknow-btn" data-open-modal="#bookNowModal">
                                         Book Now
                                     </button>
                                 </div>
@@ -341,7 +267,7 @@
                                 <a href="../auth/index.html" class="ui basic teal button login-btn">
                                     Log In
                                 </a>
-                                <button class="ui blue large button book-now-btn">
+                                <button class="ui blue large button booknow-btn" data-open-modal="#bookNowModal">
                                     Book Now
                                 </button>
                             </div>
@@ -350,15 +276,89 @@
                 </div>
             </nav>
         </header>
+
+        <!-- Book Now Modal -->
+        <div class="ui large modal" id="bookNowModal">
+            <div class="header">Add Time Entry</div>
+            <div class="content">
+                <form class="ui form" id="bookNowForm">
+                    <div class="field">
+                        <label for="employee">Employee</label>
+                        <div class="ui fluid floating dropdown">
+                            <input type="hidden" name="employee" />
+                            <div class="default text">Select employee</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="ui icon search input">
+                                    <i class="search icon"></i>
+                                    <input type="text" name="employee_search" placeholder="Search employee...">
+                                </div>
+                                <div class="divider"></div>
+                                <div class="header">
+                                    <i class="tags icon"></i>
+                                    Tag Label
+                                </div>
+                                <div class="scrolling menu">
+                                    <div class="item" data-value="1">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/jenny.jpg" />
+                                        John Smith
+                                    </div>
+                                    <div class="item" data-value="2">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/elliot.jpg" />
+                                        Sarah Johnson
+                                    </div>
+                                    <div class="item" data-value="3">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/stevie.jpg" />
+                                        Michael Williams
+                                    </div>
+                                    <div class="item" data-value="4">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/veronika.jpg" />
+                                        Emily Brown
+                                    </div>
+                                    <div class="item" data-value="1">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/jenny.jpg" />
+                                        John Smith
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="eight wide field">
+                            <label for="date">Date</label>
+                            <input type="date" name="date" placeholder="Select Date" />
+                        </div>
+                        <div class="four wide field">
+                            <label for="timeIn">Time In</label>
+                            <input type="time" name="time_in" id="timeIn" />
+                        </div>
+                        <div class="four wide field">
+                            <label for="timeOut">Time Out</label>
+                            <input type="time" name="time_out" id="timeOut" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="memo">Memo</label>
+                        <textarea rows="4" name="memo" placeholder="What this time entry is for..."></textarea>
+                    </div>
+                    <div class="actions">
+                        <button class="ui cancel button" type="button">Cancel</button>
+                        <button class="ui positive button" type="submit">Save Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="container-body">
         <div class="row">
             <div class="col-12">
                 <main class="container-main">
-
-
-
                     <!-- Hero -->
                     <div class="section-container">
                         <section class="section-wrapper hero-section">
@@ -377,7 +377,7 @@
                         </section>
                     </div>
 
-                    <!--    contact us Section -->
+                    <!-- Contact us Section -->
                     <div class="section-container">
                         <section class="section-wrapper contact-section">
                             <div class="row">
@@ -456,107 +456,16 @@
                                     your pets.</p>
                             </div>
                             <div class="location-container">
-                                <div class="row g-4">
-                                    <div class="col-md-6">
-                                        <div class="location-gallery-cont">
-                                            <div class="header">
-                                                <span class="material-icons-sharp">photo_library</span>
-                                                <div class="title">
-                                                    Clinic's Gallery
-                                                </div>
-                                            </div>
-                                            <div class="swiper-clinic-gallery">
-                                                <div class="swiper swiper-main-view">
-                                                    <div class="swiper-wrapper">
-                                                        <div class="swiper-slide">
-                                                            <img
-                                                                src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img
-                                                                src="https://swiperjs.com/demos/images/nature-10.jpg" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="swiper-button-next"></div>
-                                                    <div class="swiper-button-prev"></div>
-                                                    <div class="swiper-pagination"></div>
-                                                </div>
-                                                <div thumbsSlider="" class="swiper swiper-thumb-view">
-                                                    <div class="swiper-wrapper">
-                                                        <div class="swiper-slide">
-                                                            <img
-                                                                src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-                                                        </div>
-                                                        <div class="swiper-slide">
-                                                            <img
-                                                                src="https://swiperjs.com/demos/images/nature-10.jpg" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <div class="location-map-cont">
+                                    <div class="header">
+                                        <span class="material-icons-sharp">location_on</span>
+                                        <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="location-map-cont">
-                                            <div class="header">
-                                                <span class="material-icons-sharp">location_on</span>
-                                                <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
-                                                </div>
-                                            </div>
-                                            <div class="google-map">
-                                                <iframe
-                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
-                                                    allowfullscreen="" loading="lazy"></iframe>
-                                            </div>
-                                        </div>
+                                    <div class="google-map">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
+                                            allowfullscreen="" loading="lazy"></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -676,36 +585,9 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script src="../../../public/assets/js/landing-scripts.js"></script>
-    <script src="../../../public/lib/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            let swiperThumbView = new Swiper(".swiper-thumb-view", {
-                loop: true,
-                spaceBetween: 10,
-                slidesPerView: 4,
-                freeMode: true,
-                watchSlidesProgress: true,
-            });
 
-            let swiperMainView = new Swiper(".swiper-main-view", {
-                loop: true,
-                spaceBetween: 10,
-                autoplay: {
-                    delay: 2500,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    dynamicBullets: true,
-                },
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-                thumbs: {
-                    swiper: swiperThumbView, // Use swiperThumbView as its thumbs
-                },
-            });
         });
     </script>
 </body>
