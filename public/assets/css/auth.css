@@ -11,7 +11,7 @@ main .section-container {
     overflow: hidden;
     margin: 0;
 
-    background-image: url("../../../public/assets/img/contents/clinic-view.jpg");
+    background-image: url("../../../public/assets/img/contents/bg_log.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -23,11 +23,10 @@ main .section-container .section-wrapper {
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin: 0;
+    margin-top: 8rem;
 }
 
 main .auth-section .section-out-header {
-    margin-bottom: 2rem;
     color: var(--color-white);
 }
 
@@ -77,5 +76,6 @@ main .auth-section .auth-wrapper .form .clearing * {
 }
 
 main .auth-section .auth-wrapper .form .clearing .remember-me label {
+    background-color: white;
     padding-left: 1.7rem;
 }
