@@ -11,91 +11,204 @@
     <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
     <link rel="stylesheet" href="../../../public/assets/css/global.css" />
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/auth.css" />
+    <link rel="stylesheet" href="../../../public/assets/js/auth/select_spinner.js" />
     <style>
-        /*-- Unique styles for this page only --*/
-        main .section-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        main .section-out-header .content {
+            margin: 0;
+            padding: 0.2rem !important;
+            border: 2px solid var(--color-white) !important;
+            background-color: transparent;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
-        main .section-container .section-wrapper {
-            display: flex;
-            flex-direction: column;
+        main .section-out-header .content .text {
+            color: aqua;
+        }
+
+        .container-body {
+            height: 100vh;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .auth-wrapper {
+            max-height: 80vh;
+            overflow-y: auto;
+
+        }
+
+        .auth-wrapper .Header {
+            padding-top: 130px;
+            padding-bottom: 0px !important;
+            margin-bottom: 0px !important;
+        }
+
+        .auth-wrapper::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .auth-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .auth-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 128, 128, 0.5);
+            border-radius: 4px;
+        }
+
+        .auth-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 128, 128, 0.7);
+        }
+
+        .auth-wrapper .field {
+            padding: 0px !important;
+        }
+
+        .admin-fields {
+            /* margin-top: 1px; */
+            padding: 1rem 0;
+        }
+
+        .ui.checkbox label {
+            color: white;
+        }
+
+        .ui.error.message {
+            margin-top: 1em;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="window-spinner-overlay"></div>
-    <div class="la-square-jelly-box window-spinner la-2x">
-        <div></div>
-        <div></div>
+    <div class="shared-standalone-content">
+        <div class="window-spinner-overlay"></div>
+        <div class="la-square-jelly-box window-spinner la-2x">
+            <div></div>
+            <div></div>
+        </div>
     </div>
 
     <div class="container-body">
         <div class="row">
-
-            <!-- Main Content -->
-            <div class="col">
+            <div class="col-12">
                 <main class="container-main">
-
-                    <!-- Login Form -->
+                    <!-- Registration Form -->
                     <div class="section-container">
-                        <div class="section-wrapper box column">
-                            <h2 class="ui teal image header">
-                                <img src="../../../public/assets/img/logo.png" class="rounded-circle image">
-                                <div class="content">
-                                    Create an account
+                        <div class="section-wrapper auth-section">
+                            <div class="section-out-header">
+                                <a href="../landing/index.html">
+                                    <div class="ui image header">
+                                        <img src="../../../public/assets/img/logo.jpg" class="rounded-circle image">
+                                        <div class="content">
+                                            <!-- added black border to text for visibility  -->
+                                            <span
+                                                style="text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">VET</span><span
+                                                class="text"
+                                                style="text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">SYNC</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="auth-wrapper box column">
+                                <div class=" Header ui teal header section-in-header">
+                                    <!-- added black border to text for visibility  -->
+                                    <span
+                                        style="text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">Create
+                                        an account</span>
                                 </div>
-                            </h2>
-                            <form class="ui large form">
-                                <div class="ui stacked segment">
+                                <form class="ui large form">
                                     <div class="field">
                                         <div class="ui left icon input">
                                             <i class="user icon"></i>
-                                            <input type="text" name="name" placeholder="Full Name">
+                                            <input type="text" name="name" placeholder="Full Name" required>
                                         </div>
                                     </div>
                                     <div class="field">
                                         <div class="ui left icon input">
                                             <i class="mail icon"></i>
-                                            <input type="email" name="email" placeholder="E-mail address">
+                                            <input type="email" name="email" placeholder="E-mail address" required>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui left icon input">
+                                            <i class="phone icon"></i>
+                                            <input type="tel" name="phone" placeholder="Phone Number" required>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui selection dropdown">
+                                            <input type="hidden" name="user_type">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">Select Account Type</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="user">Pet Owner</div>
+                                                <div class="item" data-value="admin">Veterinarian</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="admin-fields" style="display: none;">
+                                        <div class="field">
+                                            <div class="ui left icon input">
+                                                <i class="building icon"></i>
+                                                <input type="text" name="clinic_name" placeholder="Clinic Name">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui left icon input">
+                                                <i class="id card icon"></i>
+                                                <input type="text" name="license" placeholder="License Number">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui left icon input">
+                                                <i class="clock icon"></i>
+                                                <input type="text" name="clinic_hours" placeholder="Clinic Hours">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui left icon input">
+                                                <i class="stethoscope icon"></i>
+                                                <input type="text" name="specialization" placeholder="Specialization">
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="field">
                                         <div class="ui left icon input">
                                             <i class="lock icon"></i>
-                                            <input type="password" name="password" placeholder="Password">
+                                            <input type="password" name="password" placeholder="Password" required>
                                         </div>
                                     </div>
                                     <div class="field">
                                         <div class="ui left icon input">
                                             <i class="lock icon"></i>
-                                            <input type="password" name="confirmPassword"
-                                                placeholder="Confirm Password">
+                                            <input type="password" name="confirmPassword" placeholder="Confirm Password"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="field">
                                         <div class="ui checkbox">
-                                            <input type="checkbox" name="terms">
-                                            <label>&nbsp;&nbsp;I agree to the Terms and Conditions</label>
+                                            <input type="checkbox" name="terms" required>
+                                            <!-- changed white color of text for visibility  -->
+                                            <label style="color: white !important">&nbsp;&nbsp;I agree to the Terms and
+                                                Conditions</label>
                                         </div>
                                     </div>
                                     <div class="ui fluid large teal submit button">Register</div>
+                                    <div class="ui error message"></div>
+                                </form>
+                                <!-- changed white color to text for visibility  -->
+                                <div class="ui text text-center" style="color: white !important;">
+                                    Already have an account? <a href="index.html">Sign In</a>
                                 </div>
-                                <div class="ui error message"></div>
-                            </form>
-                            <div class="ui message">
-                                Already have an account? <a href="index.html">Sign In</a>
                             </div>
                         </div>
                     </div>
-
                 </main>
             </div>
-
         </div>
     </div>
 
@@ -108,6 +221,7 @@
     <script src="../../../public/assets/js/spinner.js"></script>
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
+    <script src="../../../public/assets/js/auth/select_spinner.js"></script>
     <script type="text/javascript">
         $(function () {
             // Custom js here...

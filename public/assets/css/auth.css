@@ -76,6 +76,5 @@ main .auth-section .auth-wrapper .form .clearing * {
 }
 
 main .auth-section .auth-wrapper .form .clearing .remember-me label {
-    background-color: white;
     padding-left: 1.7rem;
 }
