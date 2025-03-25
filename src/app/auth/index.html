@@ -12,20 +12,6 @@
 	<link rel="stylesheet" href="../../../public/assets/css/global.css" />
 	<link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
 	<link rel="stylesheet" href="../../../public/assets/css/auth.css" />
-	<style>
-		main .section-out-header .content {
-			margin: 0;
-			padding: 0.2rem !important;
-			/* border: 2px solid var(--color-white) !important; */
-			background-color: transparent;
-			backdrop-filter: blur(5px);
-			-webkit-backdrop-filter: blur(5px);
-		}
-
-		main .section-out-header .content .text {
-			color: aqua;
-		}
-	</style>
 </head>
 
 
@@ -40,66 +26,55 @@
 	</div>
 
 	<div class="container-body">
-		<div class="row">
-			<div class="col-12">
-				<main class="container-main">
-					<!-- Login Form -->
-					<div class="section-container">
-						<div class="section-wrapper auth-section">
-							<div class="section-out-header">
-								<a href="../landing/index.html">
-									<div class="ui image header">
-										<img src="../../../public/assets/img/logo.jpg" class="rounded-circle image">
-										<div class="content">
-											<!-- added black border to text for visibility  -->
-											<span
-												style="text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">VET</span><span
-												class="text"
-												style="text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">SYNC</span>
-										</div>
-									</div>
-								</a>
-							</div>
-							<div class="auth-wrapper box column">
-								<div class="ui teal header section-in-header">
-									Login
-								</div>
-								<form class="ui large form">
-									<div class="field">
-										<div class="ui left icon input">
-											<i class="user icon"></i>
-											<input type="text" name="email" placeholder="E-mail address">
-										</div>
-									</div>
-									<div class="field">
-										<div class="ui left icon input">
-											<i class="lock icon"></i>
-											<input type="password" name="password" placeholder="Password">
-										</div>
-									</div>
-									<div class="clearing">
-										<div class="ui checkbox remember-me">
-											<!-- changed white color to text for visibility  -->
-											<input type="checkbox" name="remember-me">
-											<label style="color: white !important;">Remember me</label>
-										</div>
-										<div class="ui text forgot-password">
-											<a href="#">Forgot Password?</a>
-										</div>
-									</div>
-									<div class="ui fluid large teal submit button">Continue</div>
-									<div class="ui error message"></div>
-								</form>
-								<!-- changed white color to text for visibility  -->
-								<div class="ui text text-center" style="color: white !important;">
-									Don't have an account? <a href="register.html">Sign Up</a>
+		<main class="container-main">
+			<div class="section-container">
+				<div class="section-wrapper auth-section">
+					<div class="section-out-header">
+						<a href="../landing/index.html">
+							<div class="ui image header">
+								<img src="../../../public/assets/img/logo.jpg" class="rounded-circle image">
+								<div class="content">
+									VET<span class="text">SYNC</span>
 								</div>
 							</div>
+						</a>
+					</div>
+					<div class="auth-wrapper box column">
+						<div class="ui teal header section-in-header">
+							Sign in
+						</div>
+						<form class="ui large form">
+							<div class="field">
+								<label for="email">Email</label>
+								<div class="ui input">
+									<input type="text" name="email" placeholder="E-mail address">
+								</div>
+							</div>
+							<div class="field">
+								<label for="password">Password</label>
+								<div class="ui input">
+									<input type="password" name="password" placeholder="Password">
+								</div>
+							</div>
+							<div class="field clearing">
+								<div class="ui checkbox remember-me">
+									<input type="checkbox" name="remember-me">
+									<label>Remember me</label>
+								</div>
+								<div class="ui text forgot-password">
+									<a href="#">Forgot Password?</a>
+								</div>
+							</div>
+							<button class="ui fluid large teal submit button" type="submit">Continue</button>
+							<div class="ui error message"></div>
+						</form>
+						<div class="ui text text-center">
+							Don't have an account? <a href="register.html">Sign Up</a>
 						</div>
 					</div>
-				</main>
+				</div>
 			</div>
-		</div>
+		</main>
 	</div>
 
 	<!-- Scripts -->

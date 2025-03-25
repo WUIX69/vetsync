@@ -195,14 +195,14 @@
 
 .window-spinner-overlay {
     display: none;
-    overflow: hidden !!important;
+    overflow: hidden !important;
     position: fixed;
     top: 0;
     left: 0;
     width: 100% !important;
     height: 100% !important;
     background: var(--color-background) !important;
-    z-index: 9998;
+    z-index: 9;
 }
 
 .window-spinner {
@@ -212,5 +212,5 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 9999;
+    z-index: 10;
 }
