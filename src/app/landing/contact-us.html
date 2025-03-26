@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Josephine Anne Angeles Veterinary Clinic</title>
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
+    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
+    <style>
+        /*----------- MAIN (Hero) -----------*/
+        main .section-container:has(section.hero-section) {
+            background-image: url("../../../public/assets/img/contents/hero/services.jpg");
+            background-size: cover;
+            background-position: top center;
+            background-repeat: no-repeat;
+            height: 75vh !important;
+        }
+
+        main section.hero-section .hero-content {
+            position: absolute;
+            bottom: 3rem;
+            color: var(--color-white);
+            text-shadow: var(--text-shadow) !important;
+
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        main section.hero-section .hero-content * {
+            color: var(--color-white);
+            text-shadow: var(--text-shadow) !important;
+        }
+
+        main section.hero-section .hero-content .hero-breadcrumb {
+            font-size: 1rem;
+        }
+
+        main section.hero-section .hero-content .hero-breadcrumb .section.active {
+            color: teal !important;
+        }
+
+        main section.hero-section .hero-content .hero-header {
+            font-size: 3rem;
+            font-weight: 600;
+        }
+
+        /* Contact Section Styles */
+        main .section-container:has(section.contact-section) {
+            padding: 5rem 0;
+            background: var(--color-white);
+        }
+
+        main section.contact-section .contact-info {
+            padding-right: 3rem;
+        }
+
+        main section.contact-section .sub-title {
+            color: var(--color-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        main section.contact-section h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--color-dark);
+        }
+
+        main section.contact-section p {
+            color: var(--color-text);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        main section.contact-section .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--color-background-variant);
+            border-radius: 0.5rem;
+        }
+
+        main section.contact-section .contact-card .icon {
+            color: var(--color-primary);
+        }
+
+        main section.contact-section .contact-card .content h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--color-dark);
+        }
+
+        main section.contact-section .contact-card .content p {
+            margin: 0;
+            color: var(--color-text);
+            font-size: 0.9rem;
+        }
+
+        main section.contact-section .contact-form {
+            background: var(--color-background-variant);
+            padding: 2rem;
+            border-radius: 0.8rem;
+        }
+
+        main section.contact-section .contact-form .field {
+            margin-bottom: 1.5rem;
+        }
+
+        main section.contact-section .contact-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+            font-weight: 500;
+        }
+
+        main section.contact-section .contact-form input,
+        main section.contact-section .contact-form textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 0.5rem;
+            background: var(--color-white);
+        }
+
+        main section.contact-section .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        main section.contact-section .contact-form button {
+            width: auto;
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            background: var(--color-dark);
+            color: var(--color-white);
+            font-weight: 500;
+        }
+
+        main section.contact-section .contact-form button:hover {
+            opacity: 0.9;
+        }
+
+        /*----------- MAIN (Locations) -----------*/
+        main .section-container:has(section.locations-section) {
+            background: var(--color-background);
+        }
+
+        main section.locations-section .location-container {
+            position: relative;
+        }
+
+        main section.locations-section .location-map-cont .header,
+        main section.locations-section .location-gallery-cont .header {
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        main section.locations-section .location-map-cont .header span,
+        main section.locations-section .location-gallery-cont .header span {
+            position: relative;
+            font-size: 3rem;
+            /* top: -0.2rem; */
+            animation: upDown 1.5s infinite;
+        }
+
+        main section.locations-section .location-map-cont .header .title,
+        main section.locations-section .location-gallery-cont .header .title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        /*----------- MAIN (Locations)[Map] -----------*/
+        main section.locations-section .location-map-cont .header span {
+            color: #ea4335;
+        }
+
+        main section.locations-section .location-map-cont .google-map {
+            position: relative;
+            margin-top: 1rem;
+            width: 100%;
+            height: 100%;
+        }
+
+        main section.locations-section .location-map-cont .google-map iframe {
+            width: 100%;
+            height: 71vh;
+            border: 0;
+            border-radius: 0.8rem !important;
+            box-shadow: var(--box-shadow);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="shared-standalone-content">
+
+        <!-- Window Spinner -->
+        <div class="window-spinner-overlay"></div>
+        <div class="la-square-jelly-box window-spinner la-2x">
+            <div></div>
+            <div></div>
+        </div>
+
+        <!-- top-redirect-button -->
+        <div class="top-redirect-button">
+            <button class="ui circular icon button">
+                <span class="material-icons-sharp">arrow_upward</span>
+            </button>
+        </div>
+
+        <!--Navbar header -->
+        <header class="site-header">
+            <nav class="navbar">
+                <div class="navbar-container">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="logo-cont">
+                                <a href="index.html" class="navbar-logo">
+                                    <!-- <img src="../../../public/assets/img/logo.png" alt="Logo"> -->
+                                    <div class="logo-text">
+                                        <h3 class="logo-text-main">VET<span class="ui teal text">SYNC</span></h3>
+                                    </div>
+                                </a>
+                                <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
+                                    <span class="material-icons-sharp">menu</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="nav-links">
+                                <a href="index.html" class="nav-link">Home</a>
+                                <a href="services.html" class="nav-link ">Services</a>
+                                <a href="Product.html" class="nav-link">Products</a>
+                                <a href="contact-us.html" class="nav-link active">Contact Us</a>
+                                <a href="about-us.html" class="nav-link">About Us</a>
+                                <div class="actions d-none"><!-- Only show for mobile view -->
+                                    <a href="../auth/index.html" class="ui basic teal button login-btn">
+                                        Log In
+                                    </a>
+                                    <button class="ui blue large button booknow-btn" data-open-modal="#bookNowModal">
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="actions">
+                                <a href="../auth/index.html" class="ui basic teal button login-btn">
+                                    Log In
+                                </a>
+                                <button class="ui blue large button booknow-btn" data-open-modal="#bookNowModal">
+                                    Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Book Now Modal -->
+        <div class="ui large modal" id="bookNowModal">
+            <div class="header">Add Time Entry</div>
+            <div class="content">
+                <form class="ui form" id="bookNowForm">
+                    <div class="field">
+                        <label for="employee">Employee</label>
+                        <div class="ui fluid floating dropdown">
+                            <input type="hidden" name="employee" />
+                            <div class="default text">Select employee</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="ui icon search input">
+                                    <i class="search icon"></i>
+                                    <input type="text" name="employee_search" placeholder="Search employee...">
+                                </div>
+                                <div class="divider"></div>
+                                <div class="header">
+                                    <i class="tags icon"></i>
+                                    Tag Label
+                                </div>
+                                <div class="scrolling menu">
+                                    <div class="item" data-value="1">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/jenny.jpg" />
+                                        John Smith
+                                    </div>
+                                    <div class="item" data-value="2">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/elliot.jpg" />
+                                        Sarah Johnson
+                                    </div>
+                                    <div class="item" data-value="3">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/stevie.jpg" />
+                                        Michael Williams
+                                    </div>
+                                    <div class="item" data-value="4">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/veronika.jpg" />
+                                        Emily Brown
+                                    </div>
+                                    <div class="item" data-value="1">
+                                        <img class="ui avatar image rounded-circle"
+                                            src="../../../public/assets/img/avatars/jenny.jpg" />
+                                        John Smith
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fields">
+                        <div class="eight wide field">
+                            <label for="date">Date</label>
+                            <input type="date" name="date" placeholder="Select Date" />
+                        </div>
+                        <div class="four wide field">
+                            <label for="timeIn">Time In</label>
+                            <input type="time" name="time_in" id="timeIn" />
+                        </div>
+                        <div class="four wide field">
+                            <label for="timeOut">Time Out</label>
+                            <input type="time" name="time_out" id="timeOut" />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="memo">Memo</label>
+                        <textarea rows="4" name="memo" placeholder="What this time entry is for..."></textarea>
+                    </div>
+                    <div class="actions">
+                        <button class="ui cancel button" type="button">Cancel</button>
+                        <button class="ui positive button" type="submit">Save Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-body">
+        <div class="row">
+            <div class="col-12">
+                <main class="container-main">
+                    <!-- Hero -->
+                    <div class="section-container">
+                        <section class="section-wrapper hero-section">
+                            <div class="hero-content">
+                                <div class="hero-breadcrumb">
+                                    <div class="ui breadcrumb">
+                                        <a class="section">Home</a>
+                                        <i class="right angle icon divider"></i>
+                                        <a class="section active">Contact Us</a>
+                                    </div>
+                                </div>
+                                <div class="hero-header">
+                                    Contact Us
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Contact us Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper contact-section">
+                            <div class="row">
+                                <!-- Left Side - Contact Info -->
+                                <div class="col-lg-6">
+                                    <div class="contact-info">
+                                        <span class="sub-title">CONTACT US</span>
+                                        <h2>Get In Touch<br>With Our Agents</h2>
+                                        <p>When you really need to download free CSS templates, please remember our
+                                            website TemplateMo. Also, tell your friends about our website. Thank you for
+                                            visiting. There is a variety of Bootstrap HTML CSS templates on our website.
+                                            If you need more information, please contact us.</p>
+
+                                        <!-- Phone Info -->
+                                        <div class="contact-card">
+                                            <div class="icon">
+                                                <i class="huge phone icon orange"></i>
+                                            </div>
+                                            <div class="content">
+                                                <h3>010-020-0340</h3>
+                                                <p>Phone Number</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Email Info -->
+                                        <div class="contact-card">
+                                            <div class="icon">
+                                                <i class="huge envelope icon orange"></i>
+                                            </div>
+                                            <div class="content">
+                                                <h3>info@villa.co</h3>
+                                                <p>Business Email</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Side - Contact Form -->
+                                <div class="col-lg-6">
+                                    <div class="contact-form">
+                                        <form class="ui form">
+                                            <div class="field">
+                                                <label>Full Name</label>
+                                                <input type="text" placeholder="Your Name...">
+                                            </div>
+                                            <div class="field">
+                                                <label>Email Address</label>
+                                                <input type="email" placeholder="Your E-mail...">
+                                            </div>
+                                            <div class="field">
+                                                <label>Subject</label>
+                                                <input type="text" placeholder="Subject...">
+                                            </div>
+                                            <div class="field">
+                                                <label>Message</label>
+                                                <textarea placeholder="Your Message"></textarea>
+                                            </div>
+                                            <button class="ui black button" type="submit">Send Message</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Locations -->
+                    <div class="section-container">
+                        <section class="section-wrapper locations-section">
+                            <div class="section-title">
+                                <span class="sub-title">Locations</span>
+                                <h2>Visit Our Clinic</h2>
+                                <p>Our state-of-the-art facility is equipped with the latest technology to provide the
+                                    best care for
+                                    your pets.</p>
+                            </div>
+                            <div class="location-container">
+                                <div class="location-map-cont">
+                                    <div class="header">
+                                        <span class="material-icons-sharp">location_on</span>
+                                        <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
+                                        </div>
+                                    </div>
+                                    <div class="google-map">
+                                        <iframe
+                                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
+                                            allowfullscreen="" loading="lazy"></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Reserve -->
+                    <div class="section-container">
+                        <section class="section-wrapper reserve-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="header">
+                                        <h2>Do You Want To Earn With Us? <br> So Don't Be Late.</h2>
+                                        <div class="ui large blue button">Book Now</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+            </div>
+            <!-- footer -->
+            <div class="col-12">
+                <!-- Footer -->
+                <footer class="site-footer">
+                    <div class="ui vertical footer segment">
+                        <div class="ui container">
+                            <div class="ui stackable grid">
+                                <!-- Logo and Description Column -->
+                                <div class="four wide column">
+                                    <div class="desc-col">
+                                        <h3 class="ui header">VET<span>SYNC</span></h3>
+                                        <p class="footer-description">
+                                            Discover a paradisematic country where your dream car awaits, ready to
+                                            elevate
+                                            your journey.
+                                        </p>
+                                        <div class="social-links">
+                                            <a href="#" class="ui circular icon button"><i class="twitter icon"></i></a>
+                                            <a href="#" class="ui circular icon button"><i
+                                                    class="facebook f icon"></i></a>
+                                            <a href="#" class="ui circular icon button"><i
+                                                    class="instagram icon"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Information Column -->
+                                <div class="four wide column">
+                                    <div class="info-col">
+                                        <h4 class="ui header">Information</h4>
+                                        <div class="ui link list">
+                                            <a href="#" class="item">About</a>
+                                            <a href="#" class="item">Services</a>
+                                            <a href="#" class="item">Term and Conditions</a>
+                                            <a href="#" class="item">Best Price Guarantee</a>
+                                            <a href="#" class="item">Privacy & Cookies Policy</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Support Column -->
+                                <div class="four wide column">
+                                    <div class="supp-col">
+                                        <h4 class="ui header">Customer Support</h4>
+                                        <div class="ui link list">
+                                            <a href="#" class="item">FAQ</a>
+                                            <a href="#" class="item">Payment Option</a>
+                                            <a href="#" class="item">Booking Tips</a>
+                                            <a href="#" class="item">How it works</a>
+                                            <a href="#" class="item">Contact Us</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Contact Information Column -->
+                                <div class="four wide column">
+                                    <div class="contact-col">
+                                        <h4 class="ui header">Have a Questions ?</h4>
+                                        <div class="ui list">
+                                            <div class="item">
+                                                <i class="marker icon"></i>
+                                                <div class="content">San Vicente Homes, Sta. Maria Bulacan</div>
+                                            </div>
+                                            <div class="item">
+                                                <i class="phone icon"></i>
+                                                <div class="content">+2 392 3929 210</div>
+                                            </div>
+                                            <div class="item">
+                                                <i class="mail icon"></i>
+                                                <div class="content">wuix69.github.io</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer Bottom Column -->
+                                <div class="sixteen wide column">
+                                    <div class="bot-col">
+                                        <p>Copyright © 2025 All rights reserved | ❤️ by Vet : Sync</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../../public/lib/jquery/jquery.min.js"></script>
+    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
+    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
+    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="../../../public/lib/lodash/lodash.min.js"></script>
+    <script src="../../../public/assets/js/spinner.js"></script>
+    <script src="../../../public/assets/js/darkmode.js"></script>
+    <script src="../../../public/assets/js/scripts.js"></script>
+    <script src="../../../public/assets/js/landing-scripts.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            // Code here...
+        });
+    </script>
+</body>
+
+</html>

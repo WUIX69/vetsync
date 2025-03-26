@@ -1,0 +1,118 @@
+@media (max-width: 768px) {
+    /*######## NAVBAR ########*/
+    header.site-header nav {
+        position: relative;
+    }
+
+    header.site-header nav:has(.nav-links.active) {
+        background: var(--color-background);
+    }
+
+    header.site-header nav .navbar-container {
+        padding: 1rem;
+        padding-bottom: 0;
+    }
+
+    header nav .navbar-container .row .logo-cont {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header nav .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--color-background);
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header nav .nav-links.active {
+        display: flex;
+    }
+
+    header nav .nav-links.active .actions {
+        display: flex !important;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+
+    header nav .actions:not(.nav-links .actions) {
+        display: none;
+    }
+
+    header nav .nav-link:not(.active) {
+        color: var(--color-dark-variant) !important;
+        text-shadow: none !important;
+    }
+
+    header nav .nav-link:hover {
+        color: #4e54c8;
+    }
+
+    header nav .navbar-logo .logo-text-main {
+        font-size: 1.2rem;
+    }
+
+    header nav .navbar-logo .logo-text-sub {
+        font-size: 1rem;
+    }
+
+    header nav .navbar-logo img {
+        height: 45px;
+        width: 45px;
+    }
+
+    header nav .mobile-menu-btn {
+        display: block;
+        color: var(--color-dark-variant);
+    }
+
+    /*######## MAIN ########*/
+    main section.section-wrapper {
+        padding: 6rem 1.5rem !important; /*Add LR padding for small screen*/
+    }
+
+    /*--- MAIN (Hero) ---*/
+    main .section-container:has(section.hero-section):has(.section-bg-video) {
+        height: 110vh;
+    }
+
+    main section.hero-section {
+        padding-top: 7.5rem !important;
+    }
+
+    main section.hero-section .hero-content {
+        padding: 0 !important;
+    }
+
+    main section.hero-section .hero-content .hero-text {
+        gap: 0 !important;
+    }
+
+    main section.hero-section .hero-title:not(span.full-def) {
+        font-size: 3.4rem !important;
+    }
+
+    main section.hero-section .hero-title span.full-def {
+        font-size: 1rem !important;
+        color: teal;
+        text-wrap: nowrap !important;
+    }
+
+    main section.hero-section .cta-buttons {
+        font-size: 0.7rem;
+        text-align: center;
+        text-wrap: nowrap;
+    }
+
+    main section.hero-section .hero-image {
+        text-align: center;
+        margin-top: 3.5rem;
+    }
+}

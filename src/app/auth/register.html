@@ -11,92 +11,92 @@
     <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
     <link rel="stylesheet" href="../../../public/assets/css/global.css" />
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
+    <link rel="stylesheet" href="../../../public/assets/css/auth.css" />
     <style>
-        /*-- Unique styles for this page only --*/
-        main .section-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
         main .section-container .section-wrapper {
-            display: flex;
-            flex-direction: column;
+            margin-top: 0;
+            /* Disables default margin-top for register page */
         }
     </style>
 </head>
 
 <body>
 
-    <div class="window-spinner-overlay"></div>
-    <div class="la-square-jelly-box window-spinner la-2x">
-        <div></div>
-        <div></div>
+    <div class="shared-standalone-content">
+        <div class="window-spinner-overlay"></div>
+        <div class="la-square-jelly-box window-spinner la-2x">
+            <div></div>
+            <div></div>
+        </div>
     </div>
 
     <div class="container-body">
-        <div class="row">
-
-            <!-- Main Content -->
-            <div class="col">
-                <main class="container-main">
-
-                    <!-- Login Form -->
-                    <div class="section-container">
-                        <div class="section-wrapper box column">
-                            <h2 class="ui teal image header">
-                                <img src="../../../public/assets/img/logo.jpg" class="image">
+        <main class="container-main">
+            <div class="section-container">
+                <div class="section-wrapper auth-section">
+                    <div class="section-out-header">
+                        <a href="../landing/index.html">
+                            <div class="ui image header">
+                                <img src="../../../public/assets/img/logo.jpg" class="rounded-circle image">
                                 <div class="content">
-                                    Create an account
+                                    VET<span class="text">SYNC</span>
                                 </div>
-                            </h2>
-                            <form class="ui large form">
-                                <div class="ui stacked segment">
-                                    <div class="field">
-                                        <div class="ui left icon input">
-                                            <i class="user icon"></i>
-                                            <input type="text" name="name" placeholder="Full Name">
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <div class="ui left icon input">
-                                            <i class="mail icon"></i>
-                                            <input type="email" name="email" placeholder="E-mail address">
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <div class="ui left icon input">
-                                            <i class="lock icon"></i>
-                                            <input type="password" name="password" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <div class="ui left icon input">
-                                            <i class="lock icon"></i>
-                                            <input type="password" name="confirmPassword"
-                                                placeholder="Confirm Password">
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <div class="ui checkbox">
-                                            <input type="checkbox" name="terms">
-                                            <label>&nbsp;&nbsp;I agree to the Terms and Conditions</label>
-                                        </div>
-                                    </div>
-                                    <div class="ui fluid large teal submit button">Register</div>
-                                </div>
-                                <div class="ui error message"></div>
-                            </form>
-                            <div class="ui message">
-                                Already have an account? <a href="index.html">Sign In</a>
                             </div>
+                        </a>
+                    </div>
+                    <div class="auth-wrapper box column">
+                        <div class="ui teal header section-in-header">
+                            Sign up
+                        </div>
+                        <form class="ui large form">
+                            <div class="two fields">
+                                <div class="field">
+                                    <label for="firstname">First name</label>
+                                    <div class="ui input">
+                                        <input type="text" name="firstname" placeholder="First Name">
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label for="lastname">Last name</label>
+                                    <div class="ui input">
+                                        <input type="text" name="lastname" placeholder="Last Name">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="email">E-mail address</label>
+                                <div class="ui input">
+                                    <input type="email" name="email" placeholder="E-mail address">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="password">Password</label>
+                                <div class="ui input">
+                                    <input type="password" name="password" placeholder="Password">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <label for="confirm_password">Confirm Password</label>
+                                <div class="ui input">
+                                    <input type="password" name="confirm_password" placeholder="Confirm Password">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui checkbox terms">
+                                    <input type="checkbox" name="terms">
+                                    <label for="terms">I agree to the Terms and Conditions</label>
+                                </div>
+                            </div>
+                            <button class="ui fluid large teal submit button" type="submit">Register</button>
+                            <div class="ui error message"></div>
+                        </form>
+                        <div class="ui text text-center">
+                            Already have an account? <a href="index.html">Login</a>
                         </div>
                     </div>
-
-                </main>
+                </div>
             </div>
-
-        </div>
+        </main>
     </div>
 
     <!-- Scripts -->
@@ -108,6 +108,7 @@
     <script src="../../../public/assets/js/spinner.js"></script>
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
+    <!-- <script src="../../../public/assets/js/auth/select_spinner.js"></script> -->
     <script type="text/javascript">
         $(function () {
             // Custom js here...
