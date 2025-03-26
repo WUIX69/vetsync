@@ -14,42 +14,8 @@
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
     <style>
         main .section-container:has(section.hero-section) {
-            background-image: url("../../../public/assets/img/contents/hero/services.jpg");
-            background-size: cover;
-            background-position: top center;
-            background-repeat: no-repeat;
-            height: 75vh !important;
-        }
-
-        main section.hero-section .hero-content {
-            position: absolute;
-            bottom: 3rem;
-            color: var(--color-white);
-            text-shadow: var(--text-shadow) !important;
-
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            justify-content: center;
-            gap: 2rem;
-        }
-
-        main section.hero-section .hero-content * {
-            color: var(--color-white);
-            text-shadow: var(--text-shadow) !important;
-        }
-
-        main section.hero-section .hero-content .hero-breadcrumb {
-            font-size: 1rem;
-        }
-
-        main section.hero-section .hero-content .hero-breadcrumb .section.active {
-            color: teal !important;
-        }
-
-        main section.hero-section .hero-content .hero-header {
-            font-size: 3rem;
-            font-weight: 600;
+            background-image: url("../../../public/assets/img/contents/hero/about.jpg");
+            background-position: center;
         }
 
         /*----------- MAIN (About Section) -----------*/
@@ -254,9 +220,9 @@
                             <div class="nav-links">
                                 <a href="index.html" class="nav-link">Home</a>
                                 <a href="services.html" class="nav-link ">Services</a>
-                                <a href="Product.html" class="nav-link">Products</a>
-                                <a href="contact-us.html" class="nav-link ">Contact Us</a>
-                                <a href="about-us.html" class="nav-link active">About Us</a>
+                                <a href="products.html" class="nav-link">Products</a>
+                                <a href="contact.html" class="nav-link ">Contact Us</a>
+                                <a href="about.html" class="nav-link active">About Us</a>
                                 <div class="actions d-none"><!-- Only show for mobile view -->
                                     <a href="../auth/index.html" class="ui basic teal button login-btn">
                                         Log In
@@ -359,130 +325,132 @@
         </div>
     </div>
 
-    <div class="col-12">
-        <main class="container-main">
-            <!-- Hero Section -->
-            <div class="section-container">
-                <section class="section-wrapper hero-section">
-                    <div class="hero-content">
-                        <div class="hero-breadcrumb">
-                            <div class="ui breadcrumb">
-                                <a class="section">Home</a>
-                                <i class="right angle icon divider"></i>
-                                <a class="section active">About Us</a>
-                            </div>
-                        </div>
-                        <div class="hero-header">
-                            About Us
-                        </div>
-                    </div>
-                </section>
-            </div>
-
-            <!-- Mission & Vision Section -->
-            <div class="section-container">
-                <section class="section-wrapper services-section">
-                    <div class="section-title">
-                        <span class="sub-title">Our Purpose</span>
-                        <h2>Mission & Vision</h2>
-                        <p>Committed to excellence in veterinary care and service</p>
-                    </div>
-                    <div class="services-container">
-                        <div class="row g-4">
-                            <div class="col-md-4">
-                                <div class="services-card box">
-                                    <img src="../../../public/assets/img/contents/mission.jpg" alt="Our Mission"
-                                        class="services-image">
-                                    <div class="visible-content">
-                                        <div class="ui tag label red">Core</div>
-                                        <div class="title">Our Mission</div>
+    <div class="container-body">
+        <div class="row">
+            <div class="col-12">
+                <main class="container-main">
+                    <!-- Hero Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper hero-section">
+                            <div class="hero-content">
+                                <div class="hero-breadcrumb">
+                                    <div class="ui breadcrumb">
+                                        <a class="section">Home</a>
+                                        <i class="right angle icon divider"></i>
+                                        <a class="section active">About Us</a>
                                     </div>
-                                    <div class="hovered-content">
-                                        <h3 class="title">Our Mission</h3>
-                                        <p class="paragraph">
-                                            To provide comprehensive, compassionate veterinary care while
-                                            building lasting
-                                            relationships with pets and their families. We strive to be the most
-                                            trusted
-                                            partner in your pet's healthcare journey.
-                                        </p>
+                                </div>
+                                <div class="hero-header">
+                                    About Us
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Mission & Vision Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper services-section">
+                            <div class="section-title">
+                                <span class="sub-title">Our Purpose</span>
+                                <h2>Mission & Vision</h2>
+                                <p>Committed to excellence in veterinary care and service</p>
+                            </div>
+                            <div class="services-container">
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <div class="services-card box">
+                                            <img src="../../../public/assets/img/contents/mission.jpg" alt="Our Mission"
+                                                class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label red">Core</div>
+                                                <div class="title">Our Mission</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Our Mission</h3>
+                                                <p class="paragraph">
+                                                    To provide comprehensive, compassionate veterinary care while
+                                                    building lasting
+                                                    relationships with pets and their families. We strive to be the most
+                                                    trusted
+                                                    partner in your pet's healthcare journey.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Add similar cards for Vision and Values -->
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Team Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper services-section">
+                            <div class="section-title">
+                                <span class="sub-title">Our Team</span>
+                                <h2>Meet Our Experts</h2>
+                                <p>Dedicated professionals committed to your pet's health</p>
+                            </div>
+                            <div class="services-container">
+                                <div class="row g-4">
+                                    <!-- Team member cards using services-card structure -->
+                                    <div class="col-md-4">
+                                    </div>
+                                </div>
+                        </section>
+                    </div>
+
+                    <!-- Reserve Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper reserve-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="header">
+                                        <h2>Ready to Experience Our Care? <br> Book an Appointment Today.</h2>
+                                        <div class="ui large blue button">Book Now</div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Add similar cards for Vision and Values -->
-                        </div>
+                        </section>
                     </div>
-                </section>
+                </main>
             </div>
-
-            <!-- Team Section -->
-            <div class="section-container">
-                <section class="section-wrapper services-section">
-                    <div class="section-title">
-                        <span class="sub-title">Our Team</span>
-                        <h2>Meet Our Experts</h2>
-                        <p>Dedicated professionals committed to your pet's health</p>
-                    </div>
-                    <div class="services-container">
-                        <div class="row g-4">
-                            <!-- Team member cards using services-card structure -->
-                            <div class="col-md-4">
+            <!-- footer -->
+            <div class="col-12">
+                <footer class="site-footer">
+                    <div class="ui vertical footer segment pt-5 pb-5">
+                        <div class="ui container">
+                            <div class="ui stackable inverted divided equal height stackable grid">
+                                <div class="three wide column">
+                                    <h4 class="ui inverted header">About</h4>
+                                    <div class="ui inverted link list">
+                                        <a href="#" class="item">Sitemap</a>
+                                        <a href="#" class="item">Contact Us</a>
+                                        <a href="#" class="item">Religious Ceremonies</a>
+                                        <a href="#" class="item">Gazebo Plans</a>
+                                    </div>
+                                </div>
+                                <div class="three wide column">
+                                    <h4 class="ui inverted header">Services</h4>
+                                    <div class="ui inverted link list">
+                                        <a href="#" class="item">Banana Pre-Order</a>
+                                        <a href="#" class="item">DNA FAQ</a>
+                                        <a href="#" class="item">How To Access</a>
+                                        <a href="#" class="item">Favorite X-Men</a>
+                                    </div>
+                                </div>
+                                <div class="seven wide column">
+                                    <h4 class="ui inverted header">Footer Header</h4>
+                                    <p>Extra space for a call to action inside the footer that could help re-engage
+                                        users.</p>
+                                </div>
                             </div>
                         </div>
-                </section>
-            </div>
-
-            <!-- Reserve Section -->
-            <div class="section-container">
-                <section class="section-wrapper reserve-section">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="header">
-                                <h2>Ready to Experience Our Care? <br> Book an Appointment Today.</h2>
-                                <div class="ui large blue button">Book Now</div>
-                            </div>
-                        </div>
                     </div>
-                </section>
+                </footer>
             </div>
-        </main>
-    </div>
-    <!-- footer -->
-    <div class="col">
-        <footer class="site-footer">
-            <div class="ui vertical footer segment pt-5 pb-5">
-                <div class="ui container">
-                    <div class="ui stackable inverted divided equal height stackable grid">
-                        <div class="three wide column">
-                            <h4 class="ui inverted header">About</h4>
-                            <div class="ui inverted link list">
-                                <a href="#" class="item">Sitemap</a>
-                                <a href="#" class="item">Contact Us</a>
-                                <a href="#" class="item">Religious Ceremonies</a>
-                                <a href="#" class="item">Gazebo Plans</a>
-                            </div>
-                        </div>
-                        <div class="three wide column">
-                            <h4 class="ui inverted header">Services</h4>
-                            <div class="ui inverted link list">
-                                <a href="#" class="item">Banana Pre-Order</a>
-                                <a href="#" class="item">DNA FAQ</a>
-                                <a href="#" class="item">How To Access</a>
-                                <a href="#" class="item">Favorite X-Men</a>
-                            </div>
-                        </div>
-                        <div class="seven wide column">
-                            <h4 class="ui inverted header">Footer Header</h4>
-                            <p>Extra space for a call to action inside the footer that could help re-engage
-                                users.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </div>
-    </div>
+        </div>
     </div>
 
     <!-- Scripts -->
