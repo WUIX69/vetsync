@@ -215,7 +215,7 @@ footer.site-footer::before {
 main .section-container:has(section.hero-section) {
     background-image: url("../img/contents/hero/landing.jpg");
     background-size: cover;
-    background-position: top center;
+    background-position: center;
     background-repeat: no-repeat;
     height: 75vh;
 
