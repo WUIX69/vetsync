@@ -59,6 +59,8 @@ function single(currentPageUrl, asType = "document") {
 }
 
 $(function () {
+    return false;
+
     const currentPage = getCurrentPageUrl();
     all(currentPage);
 });
