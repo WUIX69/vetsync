@@ -225,7 +225,7 @@ main .section-container:has(section.hero-section) {
 
 /*------ Main (Section Seperator) ------*/
 main .section-seperator {
-    background-image: url("../img/contents/clinic-view.jpg");
+    background-image: url("../img/sepe.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
