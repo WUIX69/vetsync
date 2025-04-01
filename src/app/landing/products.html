@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
     <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
     <link rel="stylesheet" href="../../../public/assets/css/responsive.css" />
-    <link rel="stylesheet" href="../../../public/lib/swiper/swiper-bundle.min.css" />
     <style>
         /*----------- MAIN (Hero) -----------*/
         main .section-container:has(section.hero-section) {
@@ -24,30 +23,6 @@
         main .section-container:has(section.product-section) {
             background: var(--color-background-variant);
             padding: 4rem 0;
-        }
-
-        main section.product-section .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        main section.product-section .section-title .sub-title {
-            color: var(--color-primary);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        main section.product-section .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--color-dark);
-            margin-bottom: 1rem;
-        }
-
-        main section.product-section .section-title p {
-            color: var(--color-dark-variant);
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         main section.product-section .product-card {
@@ -156,30 +131,6 @@
             padding: 4rem 0;
         }
 
-        main section.services-section .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        main section.services-section .section-title .sub-title {
-            color: var(--color-primary);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        main section.services-section .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--color-dark);
-            margin-bottom: 1rem;
-        }
-
-        main section.services-section .section-title p {
-            color: var(--color-dark-variant);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
         main section.services-section .product-card {
             background: var(--color-white);
             position: relative !important;
@@ -273,83 +224,10 @@
             transform: translateY(-2px);
         }
 
-        /*----------- MAIN (Testimonials) -----------*/
-        main .section-container:has(section.testimonials-section) {
-            background: var(--color-background);
-        }
-
-        main section.testimonials-section .testimonials-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        main section.testimonials-section .testimonial-card {
-            position: relative;
-        }
-
-        main section.testimonials-section .testimonial-content {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        main section.testimonials-section .testimonial-text {
-            position: relative;
-            color: var(--color-dark-variant);
-            line-height: 1.6;
-        }
-
-        main section.testimonials-section .testimonial-text .quote {
-            color: var(--color-dark);
-            font-size: 2rem;
-            position: absolute;
-            top: -10px;
-            left: -10px;
-        }
-
-        main section.testimonials-section .testimonial-text p {
-            text-indent: 1.7rem;
-            margin-top: 1.1rem;
-        }
-
-        main section.testimonials-section .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-top: -0.3rem;
-        }
-
-        main section.testimonials-section .testimonial-author img {
-            width: 50px;
-            height: 50px;
-            border: var(--img-border) !important;
-        }
-
-        main section.testimonials-section .testimonial-author .author-info {
-            flex: 1;
-        }
-
-        main section.testimonials-section .testimonial-author .author-info h4 {
-            color: var(--color-dark);
-            font-weight: 600;
-            margin-bottom: 0.2rem;
-            text-wrap: nowrap;
-        }
-
-        main section.testimonials-section .testimonial-author .author-info p {
-            color: var(--color-dark-variant);
-            font-size: 0.9rem;
-        }
-
-        main section.testimonials-section .testimonial-author span {
-            font-size: 3rem;
-            color: #4e54c8;
-        }
-
         /*----------- MAIN (Newsletter) -----------*/
         main .section-container:has(section.reserve-section) {
-            background-image: url("../../../public/assets/img/contents/reserves/reserve-2.jpg");
+            background-image: url("../../../public/assets/img/contents/reserves/reserve-4.jpg");
+            background-position: center;
         }
     </style>
 </head>
@@ -595,12 +473,59 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-4">
+                                        <div class="product-card box">
+                                            <img src="../../../public/assets/img/contents/products/petfood.jpg"
+                                                alt="Pet Food" class="services-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label red">Hot</div>
+                                                <div class="title">Pet Food</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Pet Food</h3>
+                                                <p class="paragraph">
+                                                    Premium quality pet food and
+                                                    nutrition products to
+                                                    keep your pets healthy and happy.
+                                                    Wide selection of
+                                                    brands and formulas available.
+                                                </p>
+                                                <div class="read-more-btn">Shop Now
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="product-card box">
+                                            <img src="../../../public/assets/img/contents/products/supplements.jpg"
+                                                alt="Supplements" class="product-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label teal">Popular
+                                                </div>
+                                                <div class="title">Supplements</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Supplements</h3>
+                                                <p class="paragraph">
+                                                    Essential vitamins and supplements
+                                                    to support your
+                                                    pet's health and wellbeing. Targeted
+                                                    formulas for
+                                                    different needs.
+                                                </p>
+                                                <div class="read-more-btn">Shop Now
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
                     </div>
 
-                    <!-- Appointment Form Section -->
+                    <!-- Featured Products Section -->
                     <div class="section-container">
                         <section class="section-wrapper services-section">
                             <div class="section-title">
@@ -681,6 +606,54 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-4">
+                                        <div class="product-card box">
+                                            <img src="../../../public/assets/img/contents/products/pdogfood.jpg"
+                                                alt="Premium Dog Food" class="product-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label red">Hot</div>
+                                                <div class="title">Premium Dog Food
+                                                </div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Premium Dog Food</h3>
+                                                <p class="paragraph">
+                                                    High-quality nutrition for your
+                                                    furry friend. Made
+                                                    with premium ingredients
+                                                    to support optimal health and
+                                                    vitality.
+                                                </p>
+                                                <div class="read-more-btn">Shop Now
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="product-card box">
+                                            <img src="../../../public/assets/img/contents//products/vitamins.jpg"
+                                                alt="Pet Vitamins" class="product-image">
+                                            <div class="visible-content">
+                                                <div class="ui tag label teal">Popular
+                                                </div>
+                                                <div class="title">Pet Vitamins</div>
+                                            </div>
+                                            <div class="hovered-content">
+                                                <h3 class="title">Pet Vitamins</h3>
+                                                <p class="paragraph">
+                                                    Essential supplements for optimal
+                                                    health. Specially
+                                                    formulated
+                                                    to support your pet's wellbeing and
+                                                    vitality.
+                                                </p>
+                                                <div class="read-more-btn">Shop Now
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -716,6 +689,34 @@
                                             elevate
                                             your journey.
                                         </p>
+                                        <div class="schedule">
+                                            <h5>Opening Hours</h5>
+                                            <div class="schedule-items">
+                                                <div class="item">
+                                                    <div class="wrapper">
+                                                        <div class="day">Monday - Friday:</div>
+                                                        <div class="line"></div>
+                                                        <div class="time">8:00 AM - 6:00 PM
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="wrapper">
+                                                        <div class="day">Saturday:</div>
+                                                        <div class="line"></div>
+                                                        <div class="time">9:00 AM - 4:00 PM
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="item">
+                                                    <div class="wrapper">
+                                                        <div class="day">Sunday:</div>
+                                                        <div class="line"></div>
+                                                        <div class="time">Closed</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="social-links">
                                             <a href="#" class="ui circular icon button"><i class="twitter icon"></i></a>
                                             <a href="#" class="ui circular icon button"><i
@@ -800,7 +801,6 @@
     <script src="../../../public/assets/js/darkmode.js"></script>
     <script src="../../../public/assets/js/scripts.js"></script>
     <script src="../../../public/assets/js/landing-scripts.js"></script>
-    <script src="../../../public/lib/swiper/swiper-bundle.min.js"></script>
 </body>
 
 </html>

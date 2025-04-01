@@ -352,6 +352,46 @@ footer .desc-col .footer-description {
     line-height: 1.6;
 }
 
+footer .desc-col .schedule {
+    margin-top: 1.5rem;
+}
+
+footer .desc-col .schedule h5 {
+    margin-bottom: 0.6rem !important;
+}
+
+footer .desc-col .schedule .schedule-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+footer .desc-col .schedule .schedule-items .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    text-wrap: nowrap;
+}
+
+footer .desc-col .schedule .schedule-items .wrapper .day {
+    font-weight: 600;
+    color: #00b5ad !important;
+}
+
+footer .desc-col .schedule .schedule-items .wrapper .line {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+footer .desc-col .schedule .schedule-items .wrapper .time {
+    font-weight: 400;
+    text-align: left;
+    width: 100%;
+}
+
 /*------ FOOTER (Contact Information Column) ------*/
 footer .contact-col .item i.icon {
     font-size: 1.2rem;
