@@ -20,22 +20,8 @@
         }
 
         /*----------- MAIN (Single Service) -----------*/
-        /* .single-service-section {
-            padding: 5rem 0;
-            background: var(--color-white);
-        } */
-
-        .service-breadcrumb {
-            padding: 1rem 0;
-            margin-bottom: 2rem;
-        }
-
-        .service-breadcrumb .breadcrumb {
-            font-size: 0.9rem;
-        }
-
         .service-title {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .service-title h1 {
@@ -101,14 +87,7 @@
             gap: 1.5rem;
         }
 
-        /* .service-benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        } */
-
         .benefit-icon {
-            /* width: 60px;
-            height: 60px; */
             margin: 0 auto 1rem;
             display: flex;
             align-items: center;
@@ -130,7 +109,6 @@
         }
 
         .benefit-description {
-            /* display: none; */
             color: var(--color-text-muted);
             font-size: 0.9rem;
             line-height: 1.5;
@@ -139,6 +117,18 @@
         /*----------- MAIN (About Section) -----------*/
         main .section-container:has(section.about-section) {
             background: var(--color-white);
+        }
+
+        .services-tag {
+            display: inline-block;
+            background: var(--color-dark-variant);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .service-details {
@@ -173,6 +163,7 @@
 
         .service-specs {
             background-color: var(--color-white);
+            border: 1px solid #f3f3f3 !important;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -203,7 +194,7 @@
             background-color: var(--color-white);
             border-radius: 12px;
             padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--box-shadow);
             border: 1px solid #f3f3f3;
         }
 
@@ -227,15 +218,15 @@
             border-radius: 10px;
         }
 
+        /*----------- MAIN (Related Services) -----------*/
         .related-services {
             padding: 4rem 0;
-            background-color: #f8f9fa;
             margin-bottom: 3rem;
         }
 
         .related-tag {
             display: inline-block;
-            background: var(--color-primary);
+            background: var(--color-dark-variant);
             color: white;
             padding: 0.5rem 1.5rem;
             border-radius: 5px;
@@ -262,11 +253,6 @@
             margin-bottom: 1.5rem;
         }
 
-        .related-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
         .related-card-image {
             height: 200px;
             overflow: hidden;
@@ -277,10 +263,6 @@
             height: 100%;
             object-fit: cover;
             transition: all 0.3s ease;
-        }
-
-        .related-card:hover .related-card-image img {
-            transform: scale(1.05);
         }
 
         .related-card-content {
@@ -318,39 +300,6 @@
             transition: all 0.3s ease;
         }
 
-        .related-card-link:hover {
-            background-color: var(--color-primary-dark);
-            color: white;
-        }
-
-        /* Book appointment button */
-        .book-appointment-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: var(--color-primary);
-            color: white;
-            border-radius: 50px;
-            padding: 0.8rem 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .book-appointment-btn i {
-            margin-right: 0.5rem;
-        }
-
-        .book-appointment-btn:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
-
         /* FAQs section */
         .faq-section {
             margin-bottom: 4rem;
@@ -379,7 +328,7 @@
             margin-bottom: 1rem;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--box-shadow);
         }
 
         .accordion-header {
@@ -569,7 +518,7 @@
 
                     <!-- Single Service Section (New Design) -->
                     <div class="section-container">
-                        <section class="section-wrapper single-service-section">
+                        <section class="section-wrapper service-section">
                             <div class="service-title">
                                 <!-- <div class="service-tag">Featured Service</div> -->
                                 <h1>Wellness Checkup</h1>
@@ -647,6 +596,7 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <div class="service-details">
+                                        <div class="services-tag">Featured</div>
                                         <h2>About Wellness Checkups</h2>
                                         <p>Regular wellness checkups are essential for maintaining your pet's health
                                             and detecting potential issues before they become serious. Our
@@ -683,7 +633,7 @@
 
                                     <div class="faq-section">
                                         <h2>Frequently Asked Questions</h2>
-                                        <div class="ui styled fluid accordion">
+                                        <div class="ui fluid accordion">
                                             <div class="accordion-item">
                                                 <div class="accordion-header">
                                                     How often should my pet have a wellness checkup?
@@ -762,54 +712,52 @@
                     <!-- Related Services Section -->
                     <div class="section-container">
                         <section class="section-wrapper related-services">
-                            <div class="container">
-                                <div class="related-tag">RELATED SERVICES</div>
-                                <h2 class="related-title">You May Also Be Interested In</h2>
+                            <div class="related-tag">RELATED SERVICES</div>
+                            <h2 class="related-title">You May Also Be Interested In</h2>
 
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="related-card">
-                                            <div class="related-card-image">
-                                                <img src="../../../../public/assets/img/contents/services/vaccination.jpg"
-                                                    alt="Vaccinations">
-                                            </div>
-                                            <div class="related-card-content">
-                                                <h3 class="related-card-title">Vaccinations</h3>
-                                                <p class="related-card-description">Protect your pet against common
-                                                    diseases with our comprehensive vaccination packages.</p>
-                                                <div class="related-card-price">From $35.00</div>
-                                                <a href="#" class="related-card-link">Learn More</a>
-                                            </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="related-card">
+                                        <div class="related-card-image">
+                                            <img src="../../../../public/assets/img/contents/services/vaccination.jpg"
+                                                alt="Vaccinations">
+                                        </div>
+                                        <div class="related-card-content">
+                                            <h3 class="related-card-title">Vaccinations</h3>
+                                            <p class="related-card-description">Protect your pet against common
+                                                diseases with our comprehensive vaccination packages.</p>
+                                            <div class="related-card-price">From $35.00</div>
+                                            <a href="#" class="related-card-link">Learn More</a>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="related-card">
-                                            <div class="related-card-image">
-                                                <img src="../../../../public/assets/img/contents/services/foods.jpg"
-                                                    alt="Nutritional Counseling">
-                                            </div>
-                                            <div class="related-card-content">
-                                                <h3 class="related-card-title">Nutritional Counseling</h3>
-                                                <p class="related-card-description">Personalized dietary plans to keep
-                                                    your pet at optimal health for every life stage.</p>
-                                                <div class="related-card-price">From $40.00</div>
-                                                <a href="#" class="related-card-link">Learn More</a>
-                                            </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="related-card">
+                                        <div class="related-card-image">
+                                            <img src="../../../../public/assets/img/contents/services/foods.jpg"
+                                                alt="Nutritional Counseling">
+                                        </div>
+                                        <div class="related-card-content">
+                                            <h3 class="related-card-title">Nutritional Counseling</h3>
+                                            <p class="related-card-description">Personalized dietary plans to keep
+                                                your pet at optimal health for every life stage.</p>
+                                            <div class="related-card-price">From $40.00</div>
+                                            <a href="#" class="related-card-link">Learn More</a>
                                         </div>
                                     </div>
-                                    <div class="col-lg-4 col-md-6">
-                                        <div class="related-card">
-                                            <div class="related-card-image">
-                                                <img src="../../../../public/assets/img/contents/services/accessories.jpg"
-                                                    alt="Dental Care">
-                                            </div>
-                                            <div class="related-card-content">
-                                                <h3 class="related-card-title">Dental Care</h3>
-                                                <p class="related-card-description">Comprehensive dental services to
-                                                    maintain your pet's oral health and prevent disease.</p>
-                                                <div class="related-card-price">From $75.00</div>
-                                                <a href="#" class="related-card-link">Learn More</a>
-                                            </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="related-card">
+                                        <div class="related-card-image">
+                                            <img src="../../../../public/assets/img/contents/services/accessories.jpg"
+                                                alt="Dental Care">
+                                        </div>
+                                        <div class="related-card-content">
+                                            <h3 class="related-card-title">Dental Care</h3>
+                                            <p class="related-card-description">Comprehensive dental services to
+                                                maintain your pet's oral health and prevent disease.</p>
+                                            <div class="related-card-price">From $75.00</div>
+                                            <a href="#" class="related-card-link">Learn More</a>
                                         </div>
                                     </div>
                                 </div>
