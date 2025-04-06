@@ -66,12 +66,6 @@ function statf($file)
     return srcfHelper('public', $file);
 }
 
-function app($link = '')
-{
-    $url = $link . (strpos($link, '/') === false ? '/' : '' . '.php');
-    return srcfHelper('src/app', $url);
-}
-
 function shared($file, $is_src = false)
 {
     // Early return if src base url
@@ -82,11 +76,17 @@ function shared($file, $is_src = false)
     sysfHelper('shared', $file);
 }
 
-function feature($path, $is_src = false)
+function featured($path, $is_src = false)
 {
     if ($is_src) {
         return srcfHelper('src/features', $path);
     }
 
     sysfHelper('features', $path);
+}
+
+function app($link = '')
+{
+    $url = $link . (strpos($link, '/') === false ? '/' : '' . '.php');
+    return srcfHelper('src/app', $url);
 }

@@ -1,21 +1,15 @@
+<?php include_once __DIR__ . '/../../utils/php/functions.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/auth.css" />
+    <?= shared('elements/meta') ?> <!-- rcs Meta Tags -->
+    <title>VetSync - Sign Up</title>
+    <?= shared('elements/styles'); ?> <!-- rcs Styles -->
     <style>
         main .section-container .section-wrapper {
-            margin-top: 0;
             /* Disables default margin-top for register page */
+            margin-top: 0;
         }
     </style>
 </head>
@@ -23,27 +17,14 @@
 <body>
 
     <div class="shared-standalone-content">
-        <div class="window-spinner-overlay"></div>
-        <div class="la-square-jelly-box window-spinner la-2x">
-            <div></div>
-            <div></div>
-        </div>
+        <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
     </div>
 
     <div class="container-body">
         <main class="container-main">
             <div class="section-container">
                 <div class="section-wrapper auth-section">
-                    <div class="section-out-header">
-                        <a href="../landing/index.html">
-                            <div class="ui image header">
-                                <img src="../../../public/assets/img/logo.jpg" class="rounded-circle image">
-                                <div class="content">
-                                    VET<span class="text">SYNC</span>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    <?= featured('auth/components/header') ?> <!-- Header -->
                     <div class="auth-wrapper box column">
                         <div class="ui teal header section-in-header">
                             Sign up
@@ -91,7 +72,7 @@
                             <div class="ui error message"></div>
                         </form>
                         <div class="ui text text-center">
-                            Already have an account? <a href="index.html">Login</a>
+                            Already have an account? <a href="index.php">Login</a>
                         </div>
                     </div>
                 </div>
@@ -100,20 +81,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../../../public/lib/jquery/jquery.min.js"></script>
-    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
-    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
-    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
-    <script src="../../../public/lib/lodash/lodash.min.js"></script>
-    <script src="../../../public/assets/js/spinner.js"></script>
-    <script src="../../../public/assets/js/darkmode.js"></script>
-    <script src="../../../public/assets/js/scripts.js"></script>
-    <!-- <script src="../../../public/assets/js/auth/select_spinner.js"></script> -->
-    <script type="text/javascript">
-        $(function () {
-            // Custom js here...
-        });
-    </script>
+    <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+    <?= featured('auth/register/scripts') ?> <!-- Register Scripts -->
 </body>
 
 </html>
