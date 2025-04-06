@@ -213,7 +213,7 @@ footer.site-footer::before {
 
 /*------ Main (Hero section) ------*/
 main .section-container:has(section.hero-section) {
-    background-image: url("../img/contents/hero/landing.jpg");
+    background-image: url("../../img/contents/hero/landing.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -257,7 +257,7 @@ main section.hero-section .hero-content .hero-header {
 
 /*------ Main (Section Seperator) ------*/
 main .section-seperator {
-    background-image: url("../img/sepe.jpg");
+    background-image: url("../../img/sepe.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -267,7 +267,7 @@ main .section-seperator {
 
 /*------ Main (Reserve Section) ------*/
 main .section-container:has(section.reserve-section) {
-    background-image: url("../img/contents/reserves/reserve-1.jpg");
+    background-image: url("../../img/contents/reserves/reserve-1.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -304,7 +304,7 @@ footer.site-footer {
     overflow: hidden;
     isolation: isolate;
 
-    background-image: url("../img/contents/footer.jpg");
+    background-image: url("../../img/contents/footer.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

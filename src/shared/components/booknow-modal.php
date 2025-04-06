@@ -1,7 +1,7 @@
-<div class="ui tiny modal" id="reminderModal">
+<div class="ui large modal" id="bookNowModal">
     <div class="header">Add Time Entry</div>
     <div class="content">
-        <form class="ui form" id="reminderForm">
+        <form class="ui form" id="bookNowForm">
             <div class="field">
                 <label for="employee">Employee</label>
                 <div class="ui fluid floating dropdown">
@@ -20,23 +20,28 @@
                         </div>
                         <div class="scrolling menu">
                             <div class="item" data-value="1">
-                                <img class="ui avatar image rounded-circle" src="assets/img/avatars/jenny.jpg" />
+                                <img class="ui avatar image rounded-circle"
+                                    src="../../../public/assets/img/avatars/jenny.jpg" />
                                 John Smith
                             </div>
                             <div class="item" data-value="2">
-                                <img class="ui avatar image rounded-circle" src="assets/img/avatars/elliot.jpg" />
+                                <img class="ui avatar image rounded-circle"
+                                    src="../../../public/assets/img/avatars/elliot.jpg" />
                                 Sarah Johnson
                             </div>
                             <div class="item" data-value="3">
-                                <img class="ui avatar image rounded-circle" src="assets/img/avatars/stevie.jpg" />
+                                <img class="ui avatar image rounded-circle"
+                                    src="../../../public/assets/img/avatars/stevie.jpg" />
                                 Michael Williams
                             </div>
                             <div class="item" data-value="4">
-                                <img class="ui avatar image rounded-circle" src="assets/img/avatars/veronika.jpg" />
+                                <img class="ui avatar image rounded-circle"
+                                    src="../../../public/assets/img/avatars/veronika.jpg" />
                                 Emily Brown
                             </div>
                             <div class="item" data-value="1">
-                                <img class="ui avatar image rounded-circle" src="assets/img/avatars/jenny.jpg" />
+                                <img class="ui avatar image rounded-circle"
+                                    src="../../../public/assets/img/avatars/jenny.jpg" />
                                 John Smith
                             </div>
                         </div>
