@@ -5,228 +5,203 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Josephine Anne Angeles Veterinary Clinic</title>
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/landing.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/responsive.css" />
+    <link rel="stylesheet" href="../../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="../../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="../../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
+    <link rel="stylesheet" href="../../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <link rel="stylesheet" href="../../../../public/assets/css/global.css" />
+    <link rel="stylesheet" href="../../../../public/assets/css/spinner.css" />
+    <link rel="stylesheet" href="../../../../public/assets/css/landing.css" />
+    <link rel="stylesheet" href="../../../../public/assets/css/responsive.css" />
     <style>
         /*----------- MAIN (Hero) -----------*/
         main .section-container:has(section.hero-section) {
-            background-image: url("../../../public/assets/img/contents/hero/products.jpg");
+            background-image: url("../../../../public/assets/img/contents/hero/products.jpg");
         }
 
-        /*----------- MAIN (Product Categories) -----------*/
-        main .section-container:has(section.product-section) {
+        /*----------- MAIN (Products) -----------*/
+        main .section-container:has(section.products-section) {
             background: var(--color-background-variant);
             padding: 4rem 0;
         }
 
-        main section.product-section .product-card {
-            background: var(--color-white);
-            position: relative !important;
-            overflow: hidden;
-            height: 400px;
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-bar .filter-button {
+            padding: 0.8rem 1.5rem;
+            margin: 0 0.3rem;
+            border-radius: 0.3rem;
+            background-color: var(--color-white);
+            color: var(--color-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
             cursor: pointer;
-            border-radius: 0.8rem !important;
-            padding: 0 !important;
-            margin: 0 !important;
+        }
+
+        .filter-bar .filter-button:hover {
+            transform: translateY(-3px);
             box-shadow: var(--box-shadow);
+        }
+
+        .filter-bar .filter-button.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* Product Card */
+        .product-listing {
+            background: var(--color-white);
+            border-radius: 0.8rem;
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
             transition: all 0.3s ease;
         }
 
-        main section.product-section .product-card:hover {
+        .product-listing:hover {
             transform: translateY(-5px);
             box-shadow: var(--box-shadow-hover);
         }
 
-        main section.product-section .product-image {
+        .product-image-container {
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        main section.product-section .visible-content {
+        .product-listing:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .product-category {
             position: absolute;
-            left: 1.7rem;
-            bottom: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            justify-content: center;
-            gap: 1rem;
-        }
-
-        main section.product-section .visible-content .title {
-            font-size: 1.9rem;
+            top: 15px;
+            left: 15px;
+            padding: 5px 10px;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 3px;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: var(--color-white);
-            text-transform: capitalize;
-            text-shadow: var(--text-shadow);
+            text-transform: uppercase;
         }
 
-        main section.product-section .hovered-content {
+        .product-price {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            border-left: 3px solid var(--color-white) !important;
-            padding: 1.7rem;
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            justify-content: center;
-            gap: 1.5rem;
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
+            top: 15px;
+            right: 15px;
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 5px 10px;
+            border-radius: 3px;
         }
 
-        main section.product-section .product-card:hover .hovered-content {
-            transform: translateX(0);
+        .product-details {
+            padding: 1.5rem;
         }
 
-        main section.product-section .hovered-content .title {
-            font-size: 1.5rem;
+        .product-title {
+            font-size: 1.3rem;
             font-weight: 600;
-            color: var(--color-white);
-            margin-bottom: -1rem;
-            text-transform: capitalize;
-        }
-
-        main section.product-section .hovered-content .paragraph {
-            color: var(--color-white);
-            line-height: 1.6;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-
-        main section.product-section .hovered-content .read-more-btn {
-            display: inline-block;
-            padding: 8px 20px;
-            background: var(--color-white);
+            margin-bottom: 0.8rem;
             color: var(--color-dark);
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
         }
 
-        main section.product-section .hovered-content .read-more-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
+        .product-specs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            gap: 10px 20px;
+        }
+
+        .product-spec-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--color-text);
+        }
+
+        .product-spec-item i {
+            margin-right: 5px;
+            color: var(--color-primary);
+        }
+
+        .floor-info {
+            color: var(--color-text-light);
+            margin-bottom: 0.8rem;
+        }
+
+        .product-footer {
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .visit-btn {
+            padding: 0.6rem 1.5rem;
+            background-color: var(--color-primary);
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .visit-btn:hover {
+            background-color: var(--color-primary-dark);
             transform: translateY(-2px);
         }
 
-        /*----------- MAIN (Featured Products) -----------*/
-        main .section-container:has(section.services-section) {
-            background: var(--color-background);
-            padding: 4rem 0;
-        }
-
-        main section.services-section .product-card {
-            background: var(--color-white);
-            position: relative !important;
-            overflow: hidden;
-            height: 400px;
-            cursor: pointer;
-            border-radius: 0.8rem !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        main section.services-section .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        main section.services-section .visible-content {
-            position: absolute;
-            left: 1.7rem;
-            bottom: 2.5rem;
+        /* Pagination */
+        .pagination {
             display: flex;
-            flex-direction: column;
-            align-items: start;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.5rem;
+            margin-top: 3rem;
         }
 
-        main section.services-section .visible-content .title {
-            font-size: 1.9rem;
-            font-weight: 600;
-            color: var(--color-white);
-            text-transform: capitalize;
-            text-shadow: var(--text-shadow);
-        }
-
-        main section.services-section .hovered-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            border-left: 3px solid var(--color-white) !important;
-            padding: 1.7rem;
+        .pagination .page-item {
+            width: 40px;
+            height: 40px;
             display: flex;
-            flex-direction: column;
-            align-items: start;
+            align-items: center;
             justify-content: center;
-            gap: 1.5rem;
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        main section.services-section .product-card:hover .hovered-content {
-            transform: translateX(0);
-        }
-
-        main section.services-section .hovered-content .title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--color-white);
-            margin-bottom: -1rem;
-            text-transform: capitalize;
-        }
-
-        main section.services-section .hovered-content .paragraph {
-            color: var(--color-white);
-            line-height: 1.6;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-
-        main section.services-section .hovered-content .read-more-btn {
-            display: inline-block;
-            padding: 8px 20px;
-            background: var(--color-white);
-            color: var(--color-dark);
-            border-radius: 5px;
+            background-color: var(--color-white);
+            border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 600;
         }
 
-        main section.services-section .hovered-content .read-more-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
+        .pagination .page-item:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        .pagination .page-item.active {
+            background-color: var(--color-primary);
+            color: var(--color-white);
         }
 
         /*----------- MAIN (Newsletter) -----------*/
         main .section-container:has(section.reserve-section) {
-            background-image: url("../../../public/assets/img/contents/reserves/reserve-4.jpg");
+            background-image: url("../../../../public/assets/img/contents/reserves/reserve-4.jpg");
             background-position: center;
         }
     </style>
@@ -251,7 +226,7 @@
                         <div class="col-lg-4">
                             <div class="logo-cont">
                                 <a href="index.html" class="navbar-logo">
-                                    <!-- <img src="../../../public/assets/img/logo.png" alt="Logo"> -->
+                                    <!-- <img src="../../../../public/assets/img/logo.png" alt="Logo"> -->
                                     <div class="logo-text">
                                         <h3 class="logo-text-main">VET<span class="ui teal text">SYNC</span></h3>
                                     </div>
@@ -316,27 +291,27 @@
                                 <div class="scrolling menu">
                                     <div class="item" data-value="1">
                                         <img class="ui avatar image rounded-circle"
-                                            src="../../../public/assets/img/avatars/jenny.jpg" />
+                                            src="../../../../public/assets/img/avatars/jenny.jpg" />
                                         John Smith
                                     </div>
                                     <div class="item" data-value="2">
                                         <img class="ui avatar image rounded-circle"
-                                            src="../../../public/assets/img/avatars/elliot.jpg" />
+                                            src="../../../../public/assets/img/avatars/elliot.jpg" />
                                         Sarah Johnson
                                     </div>
                                     <div class="item" data-value="3">
                                         <img class="ui avatar image rounded-circle"
-                                            src="../../../public/assets/img/avatars/stevie.jpg" />
+                                            src="../../../../public/assets/img/avatars/stevie.jpg" />
                                         Michael Williams
                                     </div>
                                     <div class="item" data-value="4">
                                         <img class="ui avatar image rounded-circle"
-                                            src="../../../public/assets/img/avatars/veronika.jpg" />
+                                            src="../../../../public/assets/img/avatars/veronika.jpg" />
                                         Emily Brown
                                     </div>
                                     <div class="item" data-value="1">
                                         <img class="ui avatar image rounded-circle"
-                                            src="../../../public/assets/img/avatars/jenny.jpg" />
+                                            src="../../../../public/assets/img/avatars/jenny.jpg" />
                                         John Smith
                                     </div>
                                 </div>
@@ -392,267 +367,233 @@
                         </section>
                     </div>
 
-                    <!-- Services Section -->
-                    <div class="section-container" id="categories">
-                        <section class="section-wrapper product-section">
+                    <!-- Products Section -->
+                    <div class="section-container">
+                        <section class="section-wrapper products-section">
                             <div class="section-title">
-                                <span class="sub-title">Categories</span>
-                                <h2>Shop By Category</h2>
-                                <p>Find everything your pet needs in our comprehensive
-                                    collection</p>
+                                <span class="sub-title">Our Shop</span>
+                                <h2>Pet Products</h2>
+                                <p>Find everything your pet needs in our comprehensive collection</p>
                             </div>
-                            <div class="product-container">
-                                <div class="row g-4">
+
+                            <!-- Filter Bar -->
+                            <div class="filter-bar">
+                                <button class="filter-button active">Show All</button>
+                                <button class="filter-button">Dog Food</button>
+                                <button class="filter-button">Cat Food</button>
+                                <button class="filter-button">Supplements</button>
+                                <button class="filter-button">Accessories</button>
+                            </div>
+
+                            <!-- Products Grid -->
+                            <div class="container">
+                                <div class="row">
+                                    <!-- Product 1 -->
                                     <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/petfood.jpg"
-                                                alt="Pet Food" class="services-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label red">Hot</div>
-                                                <div class="title">Pet Food</div>
+                                        <div class="product-listing">
+                                            <div class="product-image-container">
+                                                <img src="../../../../public/assets/img/contents/products/pdogfood.jpg"
+                                                    alt="Premium Dog Food" class="product-image">
+                                                <div class="product-category">Dog Food</div>
+                                                <div class="product-price">$22.99</div>
                                             </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Pet Food</h3>
-                                                <p class="paragraph">
-                                                    Premium quality pet food and
-                                                    nutrition products to
-                                                    keep your pets healthy and happy.
-                                                    Wide selection of
-                                                    brands and formulas available.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
+                                            <div class="product-details">
+                                                <h3 class="product-title">Premium Dry Dog Food</h3>
+                                                <div class="product-specs">
+                                                    <div class="product-spec-item">
+                                                        <i class="weight icon"></i> Weight: 8 kg
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="heartbeat icon"></i> Life Stage: Adult
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="paw icon"></i> Breed: All
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="food icon"></i> Flavor: Chicken
+                                                    </div>
                                                 </div>
+                                                <div class="floor-info">Stock: 15 units</div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <a href="#" class="visit-btn">Add to Cart</a>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Product 2 -->
                                     <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/supplements.jpg"
-                                                alt="Supplements" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label teal">Popular
-                                                </div>
-                                                <div class="title">Supplements</div>
+                                        <div class="product-listing">
+                                            <div class="product-image-container">
+                                                <img src="../../../../public/assets/img/contents/products/vitamins.jpg"
+                                                    alt="Pet Vitamins" class="product-image">
+                                                <div class="product-category">Supplements</div>
+                                                <div class="product-price">$18.50</div>
                                             </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Supplements</h3>
-                                                <p class="paragraph">
-                                                    Essential vitamins and supplements
-                                                    to support your
-                                                    pet's health and wellbeing. Targeted
-                                                    formulas for
-                                                    different needs.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
+                                            <div class="product-details">
+                                                <h3 class="product-title">Joint Health Supplements</h3>
+                                                <div class="product-specs">
+                                                    <div class="product-spec-item">
+                                                        <i class="tablets icon"></i> Count: 60 tablets
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="heartbeat icon"></i> Life Stage: Senior
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="paw icon"></i> For: Dogs & Cats
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="certificate icon"></i> Organic: Yes
+                                                    </div>
                                                 </div>
+                                                <div class="floor-info">Stock: 8 units</div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <a href="#" class="visit-btn">Add to Cart</a>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Product 3 -->
                                     <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/pet-accessories.jpg"
-                                                alt="Accessories" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label blue">Featured
-                                                </div>
-                                                <div class="title">Accessories</div>
+                                        <div class="product-listing">
+                                            <div class="product-image-container">
+                                                <img src="../../../../public/assets/img/contents/products/petcollar.jpg"
+                                                    alt="Pet Collar" class="product-image">
+                                                <div class="product-category">Accessories</div>
+                                                <div class="product-price">$14.99</div>
                                             </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Accessories</h3>
-                                                <p class="paragraph">
-                                                    High-quality pet accessories
-                                                    including collars,
-                                                    leashes, toys, beds and grooming
-                                                    supplies for all
-                                                    your pet's needs.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
+                                            <div class="product-details">
+                                                <h3 class="product-title">Adjustable Comfort Collar</h3>
+                                                <div class="product-specs">
+                                                    <div class="product-spec-item">
+                                                        <i class="ruler icon"></i> Size: Medium
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="palette icon"></i> Colors: 4 options
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="paw icon"></i> For: Dogs
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="tag icon"></i> Material: Nylon
+                                                    </div>
                                                 </div>
+                                                <div class="floor-info">Stock: 12 units</div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <a href="#" class="visit-btn">Add to Cart</a>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Product 4 -->
                                     <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/petfood.jpg"
-                                                alt="Pet Food" class="services-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label red">Hot</div>
-                                                <div class="title">Pet Food</div>
+                                        <div class="product-listing">
+                                            <div class="product-image-container">
+                                                <img src="../../../../public/assets/img/contents/products/supplements.jpg"
+                                                    alt="Cat Food" class="product-image">
+                                                <div class="product-category">Cat Food</div>
+                                                <div class="product-price">$25.75</div>
                                             </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Pet Food</h3>
-                                                <p class="paragraph">
-                                                    Premium quality pet food and
-                                                    nutrition products to
-                                                    keep your pets healthy and happy.
-                                                    Wide selection of
-                                                    brands and formulas available.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
+                                            <div class="product-details">
+                                                <h3 class="product-title">Grain-Free Cat Food</h3>
+                                                <div class="product-specs">
+                                                    <div class="product-spec-item">
+                                                        <i class="weight icon"></i> Weight: 5 kg
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="heartbeat icon"></i> Life Stage: All Ages
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="paw icon"></i> Breed: All
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="food icon"></i> Flavor: Salmon
+                                                    </div>
                                                 </div>
+                                                <div class="floor-info">Stock: 10 units</div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <a href="#" class="visit-btn">Add to Cart</a>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Product 5 -->
                                     <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/supplements.jpg"
-                                                alt="Supplements" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label teal">Popular
-                                                </div>
-                                                <div class="title">Supplements</div>
+                                        <div class="product-listing">
+                                            <div class="product-image-container">
+                                                <img src="../../../../public/assets/img/contents/products/pet-accessories.jpg"
+                                                    alt="Pet Bed" class="product-image">
+                                                <div class="product-category">Accessories</div>
+                                                <div class="product-price">$49.99</div>
                                             </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Supplements</h3>
-                                                <p class="paragraph">
-                                                    Essential vitamins and supplements
-                                                    to support your
-                                                    pet's health and wellbeing. Targeted
-                                                    formulas for
-                                                    different needs.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
+                                            <div class="product-details">
+                                                <h3 class="product-title">Orthopedic Pet Bed</h3>
+                                                <div class="product-specs">
+                                                    <div class="product-spec-item">
+                                                        <i class="ruler icon"></i> Size: Large
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="palette icon"></i> Colors: Beige
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="paw icon"></i> For: Dogs & Cats
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="home icon"></i> Washable: Yes
+                                                    </div>
                                                 </div>
+                                                <div class="floor-info">Stock: 5 units</div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <a href="#" class="visit-btn">Add to Cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product 6 -->
+                                    <div class="col-md-4">
+                                        <div class="product-listing">
+                                            <div class="product-image-container">
+                                                <img src="../../../../public/assets/img/contents/products/petfood.jpg"
+                                                    alt="Puppy Food" class="product-image">
+                                                <div class="product-category">Dog Food</div>
+                                                <div class="product-price">$28.50</div>
+                                            </div>
+                                            <div class="product-details">
+                                                <h3 class="product-title">Puppy Growth Formula</h3>
+                                                <div class="product-specs">
+                                                    <div class="product-spec-item">
+                                                        <i class="weight icon"></i> Weight: 6 kg
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="heartbeat icon"></i> Life Stage: Puppy
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="paw icon"></i> Breed: Small/Medium
+                                                    </div>
+                                                    <div class="product-spec-item">
+                                                        <i class="food icon"></i> Flavor: Beef & Rice
+                                                    </div>
+                                                </div>
+                                                <div class="floor-info">Stock: 20 units</div>
+                                            </div>
+                                            <div class="product-footer">
+                                                <a href="#" class="visit-btn">Add to Cart</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </section>
-                    </div>
 
-                    <!-- Featured Products Section -->
-                    <div class="section-container">
-                        <section class="section-wrapper services-section">
-                            <div class="section-title">
-                                <span class="sub-title">Products</span>
-                                <h2>Featured Products</h2>
-                                <p>Top-rated products loved by pets and their owners</p>
-                            </div>
-                            <div class="product-container">
-                                <div class="row g-4">
-                                    <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/pdogfood.jpg"
-                                                alt="Premium Dog Food" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label red">Hot</div>
-                                                <div class="title">Premium Dog Food
-                                                </div>
-                                            </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Premium Dog Food</h3>
-                                                <p class="paragraph">
-                                                    High-quality nutrition for your
-                                                    furry friend. Made
-                                                    with premium ingredients
-                                                    to support optimal health and
-                                                    vitality.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents//products/vitamins.jpg"
-                                                alt="Pet Vitamins" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label teal">Popular
-                                                </div>
-                                                <div class="title">Pet Vitamins</div>
-                                            </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Pet Vitamins</h3>
-                                                <p class="paragraph">
-                                                    Essential supplements for optimal
-                                                    health. Specially
-                                                    formulated
-                                                    to support your pet's wellbeing and
-                                                    vitality.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents//products/petcollar.jpg"
-                                                alt="Comfort Collar" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label blue">Featured
-                                                </div>
-                                                <div class="title">Comfort Collar</div>
-                                            </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Comfort Collar</h3>
-                                                <p class="paragraph">
-                                                    Soft and adjustable pet collar
-                                                    designed for maximum
-                                                    comfort.
-                                                    Made with durable materials for
-                                                    long-lasting use.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents/products/pdogfood.jpg"
-                                                alt="Premium Dog Food" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label red">Hot</div>
-                                                <div class="title">Premium Dog Food
-                                                </div>
-                                            </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Premium Dog Food</h3>
-                                                <p class="paragraph">
-                                                    High-quality nutrition for your
-                                                    furry friend. Made
-                                                    with premium ingredients
-                                                    to support optimal health and
-                                                    vitality.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="product-card box">
-                                            <img src="../../../public/assets/img/contents//products/vitamins.jpg"
-                                                alt="Pet Vitamins" class="product-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label teal">Popular
-                                                </div>
-                                                <div class="title">Pet Vitamins</div>
-                                            </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Pet Vitamins</h3>
-                                                <p class="paragraph">
-                                                    Essential supplements for optimal
-                                                    health. Specially
-                                                    formulated
-                                                    to support your pet's wellbeing and
-                                                    vitality.
-                                                </p>
-                                                <div class="read-more-btn">Shop Now
-                                                </div>
-                                            </div>
-                                        </div>
+                                <!-- Pagination -->
+                                <div class="pagination">
+                                    <div class="page-item active">1</div>
+                                    <div class="page-item">2</div>
+                                    <div class="page-item">3</div>
+                                    <div class="page-item">
+                                        <i class="angle right icon"></i>
                                     </div>
                                 </div>
                             </div>
@@ -665,8 +606,8 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="header">
-                                        <h2>Do You Want To Earn With Us? <br> So Don't Be Late.</h2>
-                                        <div class="ui large blue button">Book Now</div>
+                                        <h2>Ready to get pet supplies? <br> Don't miss our deals!</h2>
+                                        <div class="ui large blue button">Shop Now</div>
                                     </div>
                                 </div>
                             </div>
@@ -784,15 +725,15 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../../../public/lib/jquery/jquery.min.js"></script>
-    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
-    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
-    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
-    <script src="../../../public/lib/lodash/lodash.min.js"></script>
-    <script src="../../../public/assets/js/spinner.js"></script>
-    <script src="../../../public/assets/js/darkmode.js"></script>
-    <script src="../../../public/assets/js/scripts.js"></script>
-    <script src="../../../public/assets/js/landing-scripts.js"></script>
+    <script src="../../../../public/lib/jquery/jquery.min.js"></script>
+    <script src="../../../../public/lib/jquery/jquery.validate.min.js"></script>
+    <script src="../../../../public/lib/jquery/additional-methods.min.js"></script>
+    <script src="../../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <script src="../../../../public/lib/lodash/lodash.min.js"></script>
+    <script src="../../../../public/assets/js/spinner.js"></script>
+    <script src="../../../../public/assets/js/darkmode.js"></script>
+    <script src="../../../../public/assets/js/scripts.js"></script>
+    <script src="../../../../public/assets/js/landing-scripts.js"></script>
 </body>
 
 </html>

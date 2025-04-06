@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services (single view) - Josephine Anne Angeles Veterinary Clinic</title>
+    <title>Product Details - Josephine Anne Angeles Veterinary Clinic</title>
     <link rel="stylesheet" href="../../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
     <link rel="stylesheet" href="../../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
     <link rel="stylesheet" href="../../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
@@ -16,177 +16,146 @@
     <style>
         /*----------- MAIN (Hero) -----------*/
         main .section-container:has(section.hero-section) {
-            background-image: url("../../../../public/assets/img/contents/hero/services.jpg");
+            background-image: url("../../../../public/assets/img/contents/hero/products.jpg");
         }
 
-        /*----------- MAIN (Single Service) -----------*/
-        /* .single-service-section {
-            padding: 5rem 0;
-            background: var(--color-white);
-        } */
-
-        .service-breadcrumb {
-            padding: 1rem 0;
-            margin-bottom: 2rem;
+        /*----------- MAIN (Product) -----------*/
+        .product-section {
+            padding: 3rem 0;
+            background-color: #fff;
         }
 
-        .service-breadcrumb .breadcrumb {
-            font-size: 0.9rem;
+        .product-title {
+            margin-bottom: 2.5rem;
         }
 
-        .service-title {
-            margin-bottom: 2rem;
-        }
-
-        .service-title h1 {
+        .product-title h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             color: var(--color-dark);
         }
 
-        .service-tag {
+        .product-category-tag {
             display: inline-block;
-            background: #f8f9fa;
-            padding: 0.5rem 1rem;
+            background: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
             border-radius: 30px;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 1rem;
-            color: var(--color-primary);
         }
 
-        .service-description {
-            color: var(--color-text-muted);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .service-image-main {
+        .product-image-main {
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-
-            width: 100%;
-            height: 456px;
+            height: 500px;
         }
 
-        .service-image-main img {
+        .product-image-main img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
         }
 
-        .service-benefits {
-            margin-bottom: 3rem;
+        .product-thumbnails {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .service-benefit-card {
-            background-color: var(--color-white);
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
             transition: all 0.3s ease;
+        }
+
+        .thumbnail.active {
+            border-color: var(--color-primary);
+        }
+
+        .thumbnail img {
+            width: 100%;
             height: 100%;
-            border: 1px solid #f3f3f3;
-
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
+            object-fit: cover;
         }
 
-        /* .service-benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        } */
-
-        .benefit-icon {
-            /* width: 60px;
-            height: 60px; */
-            margin: 0 auto 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: rgba(var(--color-primary-rgb), 0.1);
-            color: var(--color-primary);
-        }
-
-        .benefit-icon span {
-            font-size: 3.5rem;
-        }
-
-        .benefit-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--color-dark);
-        }
-
-        .benefit-description {
-            /* display: none; */
-            color: var(--color-text-muted);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /*----------- MAIN (About Section) -----------*/
-        main .section-container:has(section.about-section) {
-            background: var(--color-white);
-        }
-
-        .service-details {
-            margin-bottom: 3rem;
-        }
-
-        .service-details h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--color-dark);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .service-details h2:after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--color-primary);
-        }
-
-        .service-details p {
-            color: var(--color-text-muted);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-            font-size: 1.05rem;
-        }
-
-        .service-specs {
+        .product-info-card {
             background-color: var(--color-white);
             border-radius: 12px;
-            overflow: hidden;
+            padding: 2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f3f3f3;
         }
 
-        .service-specs-item {
-            padding: 1.5rem;
-            border-bottom: 1px solid #f3f3f3;
+        .product-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .stock-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .stock-status.in-stock {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .stock-status.out-stock {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quantity-selector label {
+            font-weight: 600;
+        }
+
+        .quantity-selector .ui.input {
+            width: 100px;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-actions .ui.button {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .product-specs {
+            margin-top: 2rem;
+        }
+
+        .spec-item {
             display: flex;
             justify-content: space-between;
-        }
-
-        .service-specs-item:last-child {
-            border-bottom: none;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
         }
 
         .spec-label {
@@ -199,43 +168,62 @@
             color: var(--color-dark);
         }
 
-        .service-cta {
-            background-color: var(--color-white);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            border: 1px solid #f3f3f3;
+        .product-description {
+            margin-top: 3rem;
         }
 
-        .service-cta h3 {
-            font-size: 1.5rem;
+        .product-description h2 {
+            font-size: 1.8rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--color-dark);
-        }
-
-        .service-cta p {
-            color: var(--color-text-muted);
             margin-bottom: 1.5rem;
+            color: var(--color-dark);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .product-description h2:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--color-primary);
+        }
+
+        .product-description p {
+            color: var(--color-text-muted);
             line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
 
-        .service-cta .ui.button {
-            width: 100%;
-            padding: 1rem;
-            font-weight: 500;
-            border-radius: 10px;
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
         }
 
-        .related-services {
+        .features-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-text-muted);
+        }
+
+        .features-list li i {
+            color: var(--color-primary);
+        }
+
+        /* Related Products Section */
+        .related-products {
             padding: 4rem 0;
-            background-color: #f8f9fa;
             margin-bottom: 3rem;
         }
 
         .related-tag {
             display: inline-block;
-            background: var(--color-primary);
+            background: var(--color-dark-variant);
             color: white;
             padding: 0.5rem 1.5rem;
             border-radius: 5px;
@@ -262,11 +250,6 @@
             margin-bottom: 1.5rem;
         }
 
-        .related-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
         .related-card-image {
             height: 200px;
             overflow: hidden;
@@ -277,10 +260,6 @@
             height: 100%;
             object-fit: cover;
             transition: all 0.3s ease;
-        }
-
-        .related-card:hover .related-card-image img {
-            transform: scale(1.05);
         }
 
         .related-card-content {
@@ -317,454 +296,150 @@
             text-decoration: none;
             transition: all 0.3s ease;
         }
-
-        .related-card-link:hover {
-            background-color: var(--color-primary-dark);
-            color: white;
-        }
-
-        /* Book appointment button */
-        .book-appointment-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background-color: var(--color-primary);
-            color: white;
-            border-radius: 50px;
-            padding: 0.8rem 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-        }
-
-        .book-appointment-btn i {
-            margin-right: 0.5rem;
-        }
-
-        .book-appointment-btn:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
-
-        /* FAQs section */
-        .faq-section {
-            margin-bottom: 4rem;
-        }
-
-        .faq-section h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: var(--color-dark);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .faq-section h2:after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--color-primary);
-        }
-
-        .accordion-item {
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .accordion-header {
-            background-color: var(--color-white);
-            padding: 1.2rem 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            color: var(--color-dark);
-            border-bottom: 1px solid #f3f3f3;
-        }
-
-        .accordion-content {
-            padding: 1.5rem;
-            background-color: var(--color-white);
-            color: var(--color-text-muted);
-            line-height: 1.6;
-        }
     </style>
 </head>
 
 <body>
-
-    <div class="shared-standalone-content">
-        <div class="window-spinner-overlay"></div>
-        <div class="la-square-jelly-box window-spinner la-2x">
-            <div></div>
-            <div></div>
-        </div>
-        <div class="top-redirect-button">
-            <button class="ui circular icon button">
-                <span class="material-icons-sharp">arrow_upward</span>
-            </button>
-        </div>
-        <header class="site-header">
-            <nav class="navbar">
-                <div class="navbar-container">
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <div class="logo-cont">
-                                <a href="index.html" class="navbar-logo">
-                                    <!-- <img src="../../../../public/assets/img/logo.png" alt="Logo"> -->
-                                    <div class="logo-text">
-                                        <h3 class="logo-text-main">VET<span class="ui teal text">SYNC</span></h3>
-                                    </div>
-                                </a>
-                                <button class="mobile-menu-btn"><!-- For mobile view support (Hamburger) -->
-                                    <span class="material-icons-sharp">menu</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="nav-links">
-                                <a href="index.html" class="nav-link">Home</a>
-                                <a href="services/index.html" class="nav-link active">Services</a>
-                                <a href="products.html" class="nav-link">Products</a>
-                                <a href="contact.html" class="nav-link">Contact Us</a>
-                                <a href="about.html" class="nav-link">About Us</a>
-                                <div class="actions d-none"><!-- Only show for mobile view -->
-                                    <a href="../auth/index.html" class="ui basic teal button login-btn">
-                                        Log In
-                                    </a>
-                                    <button class="ui blue large button book-now-btn">
-                                        Book Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="actions">
-                                <a href="../auth/index.html" class="ui basic teal button login-btn">
-                                    Log In
-                                </a>
-                                <button class="ui blue large button book-now-btn" data-open-modal="#bookNowModal">
-                                    Book Now
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-        </header>
-        <!-- Book Now Modal -->
-        <div class="ui large modal" id="bookNowModal">
-            <div class="header">Add Time Entry</div>
-            <div class="content">
-                <form class="ui form" id="bookNowForm">
-                    <div class="field">
-                        <label for="employee">Employee</label>
-                        <div class="ui fluid floating dropdown">
-                            <input type="hidden" name="employee" />
-                            <div class="default text">Select employee</div>
-                            <i class="dropdown icon"></i>
-                            <div class="menu">
-                                <div class="ui icon search input">
-                                    <i class="search icon"></i>
-                                    <input type="text" name="employee_search" placeholder="Search employee...">
-                                </div>
-                                <div class="divider"></div>
-                                <div class="header">
-                                    <i class="tags icon"></i>
-                                    Tag Label
-                                </div>
-                                <div class="scrolling menu">
-                                    <div class="item" data-value="1">
-                                        <img class="ui avatar image rounded-circle"
-                                            src="../../../../public/assets/img/avatars/jenny.jpg" />
-                                        John Smith
-                                    </div>
-                                    <div class="item" data-value="2">
-                                        <img class="ui avatar image rounded-circle"
-                                            src="../../../../public/assets/img/avatars/elliot.jpg" />
-                                        Sarah Johnson
-                                    </div>
-                                    <div class="item" data-value="3">
-                                        <img class="ui avatar image rounded-circle"
-                                            src="../../../../public/assets/img/avatars/stevie.jpg" />
-                                        Michael Williams
-                                    </div>
-                                    <div class="item" data-value="4">
-                                        <img class="ui avatar image rounded-circle"
-                                            src="../../../../public/assets/img/avatars/veronika.jpg" />
-                                        Emily Brown
-                                    </div>
-                                    <div class="item" data-value="1">
-                                        <img class="ui avatar image rounded-circle"
-                                            src="../../../../public/assets/img/avatars/jenny.jpg" />
-                                        John Smith
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fields">
-                        <div class="eight wide field">
-                            <label for="date">Date</label>
-                            <input type="date" name="date" placeholder="Select Date" />
-                        </div>
-                        <div class="four wide field">
-                            <label for="timeIn">Time In</label>
-                            <input type="time" name="time_in" id="timeIn" />
-                        </div>
-                        <div class="four wide field">
-                            <label for="timeOut">Time Out</label>
-                            <input type="time" name="time_out" id="timeOut" />
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label for="memo">Memo</label>
-                        <textarea rows="4" name="memo" placeholder="What this time entry is for..."></textarea>
-                    </div>
-                    <div class="actions">
-                        <button class="ui cancel button" type="button">Cancel</button>
-                        <button class="ui positive button" type="submit">Save Entry</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="container-body">
         <div class="row">
             <div class="col-12">
                 <main class="container-main">
-
                     <!-- Hero -->
                     <div class="section-container">
                         <section class="section-wrapper hero-section">
                             <div class="hero-content">
                                 <div class="hero-breadcrumb">
                                     <div class="ui breadcrumb">
-                                        <a class="section">Home</a>
+                                        <a class="section">HOME</a>
                                         <i class="right angle icon divider"></i>
-                                        <a class="section">Services</a>
+                                        <a class="section">PRODUCTS</a>
                                         <i class="right angle icon divider"></i>
-                                        <a class="section active">Wellness Checkup</a>
+                                        <a class="section active">PREMIUM ADULT DOG FOOD</a>
                                     </div>
                                 </div>
                                 <div class="hero-header">
-                                    VETERINARY SERVICES
+                                    PRODUCT DETAILS
                                 </div>
                             </div>
                         </section>
                     </div>
 
-                    <!-- Single Service Section (New Design) -->
+                    <!-- Product Section -->
                     <div class="section-container">
-                        <section class="section-wrapper single-service-section">
-                            <div class="service-title">
-                                <!-- <div class="service-tag">Featured Service</div> -->
-                                <h1>Wellness Checkup</h1>
-                                <div class="service-description">Comprehensive health assessment for your beloved
-                                    pets to ensure they stay happy and healthy.</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <div class="service-image-main">
-                                        <img src="../../../../public/assets/img/contents/services/grooming.jpg"
-                                            alt="Wellness Checkup">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="service-benefits">
-                                        <div class="row gap-2">
-                                            <div class="col-12">
-                                                <div class="service-benefit-card">
-                                                    <div class="benefit-icon">
-                                                        <span class="emoji">🩺</span>
-                                                    </div>
-                                                    <div class="benefit-content">
-                                                        <h4 class="benefit-title">Complete Examination</h4>
-                                                        <p class="benefit-description">Thorough physical assessment by
-                                                            our experienced veterinarians</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="service-benefit-card">
-                                                    <div class="benefit-icon">
-                                                        <span class="emoji">💉</span>
-                                                    </div>
-                                                    <div class="benefit-content">
-                                                        <h4 class="benefit-title">Vaccinations</h4>
-                                                        <p class="benefit-description">Up-to-date immunizations to
-                                                            protect against common diseases</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="service-benefit-card">
-                                                    <div class="benefit-icon">
-                                                        <span class="emoji">🐛</span>
-                                                    </div>
-                                                    <div class="benefit-content">
-                                                        <h4 class="benefit-title">Parasite Control</h4>
-                                                        <p class="benefit-description">Preventive treatments for fleas,
-                                                            ticks, and intestinal parasites</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="service-benefit-card">
-                                                    <div class="benefit-icon">
-                                                        <span class="emoji">🍽️</span>
-                                                    </div>
-                                                    <div class="benefit-content">
-                                                        <h4 class="benefit-title">Nutritional Advice</h4>
-                                                        <p class="benefit-description">Personalized dietary
-                                                            recommendations for optimal health</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <!-- About Section -->
-                    <div class="section-container">
-                        <section class="section-wrapper about-section">
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <div class="service-details">
-                                        <h2>About Wellness Checkups</h2>
-                                        <p>Regular wellness checkups are essential for maintaining your pet's health
-                                            and detecting potential issues before they become serious. Our
-                                            comprehensive wellness examinations include a thorough physical
-                                            assessment, preventive care, and personalized recommendations tailored
-                                            to your pet's specific needs.</p>
-
-                                        <p>During your pet's wellness visit, our experienced veterinarians will
-                                            examine all body systems, including eyes, ears, mouth, skin, heart,
-                                            lungs, abdomen, and musculoskeletal system. We'll also discuss your
-                                            pet's lifestyle, behavior, and any concerns you may have.</p>
-
-                                        <h2 class="mt-4">What to Expect</h2>
-                                        <p>Your pet's wellness checkup will typically include:</p>
-                                        <ul>
-                                            <li>Comprehensive physical examination</li>
-                                            <li>Weight and body condition assessment</li>
-                                            <li>Vaccinations based on lifestyle and risk factors</li>
-                                            <li>Parasite prevention recommendations</li>
-                                            <li>Nutritional counseling</li>
-                                            <li>Dental health evaluation</li>
-                                            <li>Behavioral assessment</li>
-                                            <li>Age-appropriate screening tests</li>
-                                        </ul>
-
-                                        <h2 class="mt-4">Why Regular Checkups Matter</h2>
-                                        <p>Preventive care is the foundation of good health for your pets. Regular
-                                            wellness examinations allow us to establish a baseline for your pet's
-                                            health, monitor changes over time, and catch potential issues early when
-                                            they're most treatable. For younger pets, we focus on proper growth and
-                                            development, while senior pets benefit from more frequent monitoring of
-                                            age-related conditions.</p>
-                                    </div>
-
-                                    <div class="faq-section">
-                                        <h2>Frequently Asked Questions</h2>
-                                        <div class="ui styled fluid accordion">
-                                            <div class="accordion-item">
-                                                <div class="accordion-header">
-                                                    How often should my pet have a wellness checkup?
-                                                    <i class="dropdown icon"></i>
-                                                </div>
-                                                <div class="accordion-content">
-                                                    <p>We recommend annual wellness examinations for adult pets in
-                                                        good health. Puppies and kittens may need more frequent
-                                                        visits during their first year, and senior pets (typically
-                                                        those over 7 years old) benefit from semi-annual checkups as
-                                                        they are more prone to developing health issues.</p>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-item">
-                                                <div class="accordion-header">
-                                                    What vaccinations will my pet need?
-                                                    <i class="dropdown icon"></i>
-                                                </div>
-                                                <div class="accordion-content">
-                                                    <p>Vaccination recommendations are tailored to your pet's age,
-                                                        lifestyle, and risk factors. Core vaccines for dogs
-                                                        typically include rabies, distemper, parvovirus, and
-                                                        adenovirus. For cats, core vaccines include rabies,
-                                                        panleukopenia, calicivirus, and herpesvirus. Additional
-                                                        vaccines may be recommended based on exposure risk.</p>
-                                                </div>
-                                            </div>
-                                            <div class="accordion-item">
-                                                <div class="accordion-header">
-                                                    Should I bring anything to my pet's appointment?
-                                                    <i class="dropdown icon"></i>
-                                                </div>
-                                                <div class="accordion-content">
-                                                    <p>Please bring any medical records if you're a new client, a
-                                                        list of current medications or supplements, a recent stool
-                                                        sample if possible, and any questions or concerns you'd like
-                                                        to discuss. For cats, it's best to bring them in a secure
-                                                        carrier, and dogs should be on a leash.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="service-cta">
-                                        <h3>Schedule a Wellness Checkup</h3>
-                                        <p>Give your pet the gift of preventive care with a comprehensive wellness
-                                            examination. Our experienced veterinary team is ready to provide
-                                            personalized care for your beloved companion.</p>
-                                        <div class="service-specs mb-4">
-                                            <div class="service-specs-item">
-                                                <div class="spec-label">Duration</div>
-                                                <div class="spec-value">30-45 minutes</div>
-                                            </div>
-                                            <div class="service-specs-item">
-                                                <div class="spec-label">Price</div>
-                                                <div class="spec-value">From $50.00</div>
-                                            </div>
-                                            <div class="service-specs-item">
-                                                <div class="spec-label">Availability</div>
-                                                <div class="spec-value">Mon-Sat</div>
-                                            </div>
-                                            <div class="service-specs-item">
-                                                <div class="spec-label">Booking Required</div>
-                                                <div class="spec-value">Yes</div>
-                                            </div>
-                                        </div>
-                                        <a href="#" class="ui blue button" data-open-modal="#bookNowModal">Book
-                                            Appointment</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <!-- Related Services Section -->
-                    <div class="section-container">
-                        <section class="section-wrapper related-services">
+                        <section class="section-wrapper product-section">
                             <div class="container">
-                                <div class="related-tag">RELATED SERVICES</div>
-                                <h2 class="related-title">You May Also Be Interested In</h2>
+                                <div class="row">
+                                    <!-- Product Images -->
+                                    <div class="col-lg-7">
+                                        <div class="product-image-main">
+                                            <img src="../../../../public/assets/img/contents/products/pdogfood.jpg"
+                                                alt="Premium Dog Food">
+                                        </div>
+                                        <div class="product-thumbnails">
+                                            <div class="thumbnail active">
+                                                <img src="../../../../public/assets/img/contents/products/pdogfood.jpg"
+                                                    alt="Thumbnail 1">
+                                            </div>
+                                            <div class="thumbnail">
+                                                <img src="../../../../public/assets/img/contents/products/pdogfood-2.jpg"
+                                                    alt="Thumbnail 2">
+                                            </div>
+                                            <div class="thumbnail">
+                                                <img src="../../../../public/assets/img/contents/products/pdogfood-3.jpg"
+                                                    alt="Thumbnail 3">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Info -->
+                                    <div class="col-lg-5">
+                                        <div class="product-info-card">
+                                            <div class="product-category-tag">Pet Food</div>
+                                            <h1>Premium Adult Dog Food</h1>
+                                            <div class="product-price">$54.99</div>
+                                            <div class="stock-status in-stock">
+                                                <i class="check circle icon"></i> In Stock
+                                            </div>
+
+                                            <div class="quantity-selector">
+                                                <label>Quantity:</label>
+                                                <div class="ui input">
+                                                    <input type="number" value="1" min="1">
+                                                </div>
+                                            </div>
+
+                                            <div class="product-actions">
+                                                <button class="ui primary button">
+                                                    <i class="shopping cart icon"></i>
+                                                    Add to Cart
+                                                </button>
+                                                <button class="ui basic button">
+                                                    <i class="heart outline icon"></i>
+                                                    Wishlist
+                                                </button>
+                                            </div>
+
+                                            <div class="product-specs">
+                                                <div class="spec-item">
+                                                    <div class="spec-label">Weight</div>
+                                                    <div class="spec-value">15 lbs</div>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <div class="spec-label">Life Stage</div>
+                                                    <div class="spec-value">Adult</div>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <div class="spec-label">Brand</div>
+                                                    <div class="spec-value">PetCare Premium</div>
+                                                </div>
+                                                <div class="spec-item">
+                                                    <div class="spec-label">SKU</div>
+                                                    <div class="spec-value">DOG-FOOD-001</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Description -->
+                                    <div class="col-12">
+                                        <div class="product-description">
+                                            <h2>Product Description</h2>
+                                            <p>Premium Adult Dog Food is specially formulated to meet the nutritional
+                                                needs of adult dogs, providing a complete and balanced diet that
+                                                supports overall health and wellbeing. Made with high-quality proteins,
+                                                essential vitamins, and minerals, this premium dog food helps maintain
+                                                optimal health for your beloved pet.</p>
+
+                                            <h3>Key Features</h3>
+                                            <ul class="features-list">
+                                                <li><i class="check circle icon"></i> High-quality protein for muscle
+                                                    maintenance</li>
+                                                <li><i class="check circle icon"></i> Omega-3 and 6 fatty acids for
+                                                    healthy skin and coat</li>
+                                                <li><i class="check circle icon"></i> Added vitamins and minerals for
+                                                    immune system support</li>
+                                                <li><i class="check circle icon"></i> Natural fiber for digestive health
+                                                </li>
+                                                <li><i class="check circle icon"></i> No artificial colors or
+                                                    preservatives</li>
+                                            </ul>
+
+                                            <h3>Feeding Guidelines</h3>
+                                            <p>Feed according to your dog's weight and activity level. Always provide
+                                                fresh, clean water. Store in a cool, dry place.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Related Products -->
+                    <div class="section-container">
+                        <section class="section-wrapper related-products">
+                            <div class="container">
+                                <div class="related-tag">RELATED PRODUCTS</div>
+                                <h2 class="related-title">You May Also Like</h2>
 
                                 <div class="row">
                                     <div class="col-lg-4 col-md-6">
@@ -818,112 +493,6 @@
                     </div>
                 </main>
             </div>
-            <div class="col-12">
-                <footer class="site-footer">
-                    <div class="ui vertical footer segment">
-                        <div class="ui container">
-                            <div class="ui stackable grid">
-                                <!-- Logo and Description Column -->
-                                <div class="four wide column">
-                                    <div class="desc-col">
-                                        <h3 class="ui header">VET<span>SYNC</span></h3>
-                                        <p class="footer-description">
-                                            Discover a paradisematic country where your dream car awaits, ready to
-                                            elevate
-                                            your journey.
-                                        </p>
-                                        <div class="schedule">
-                                            <h5>Opening Hours</h5>
-                                            <div class="schedule-items">
-                                                <div class="item">
-                                                    <div class="wrapper">
-                                                        <div class="day">Monday - Friday:</div>
-                                                        <div class="line"></div>
-                                                        <div class="time">8:00 AM - 5:00 PM
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="item">
-                                                    <div class="wrapper">
-                                                        <div class="day">Saturday - Sunday:</div>
-                                                        <div class="line"></div>
-                                                        <div class="time">8:00 AM - 5:00 PM
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="social-links">
-                                            <a href="#" class="ui circular icon button"><i class="twitter icon"></i></a>
-                                            <a href="#" class="ui circular icon button"><i
-                                                    class="facebook f icon"></i></a>
-                                            <a href="#" class="ui circular icon button"><i
-                                                    class="instagram icon"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Information Column -->
-                                <div class="four wide column">
-                                    <div class="info-col">
-                                        <h4 class="ui header">Information</h4>
-                                        <div class="ui link list">
-                                            <a href="#" class="item">About</a>
-                                            <a href="#" class="item">Services</a>
-                                            <a href="#" class="item">Term and Conditions</a>
-                                            <a href="#" class="item">Best Price Guarantee</a>
-                                            <a href="#" class="item">Privacy & Cookies Policy</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Customer Support Column -->
-                                <div class="four wide column">
-                                    <div class="supp-col">
-                                        <h4 class="ui header">Customer Support</h4>
-                                        <div class="ui link list">
-                                            <a href="#" class="item">FAQ</a>
-                                            <a href="#" class="item">Payment Option</a>
-                                            <a href="#" class="item">Booking Tips</a>
-                                            <a href="#" class="item">How it works</a>
-                                            <a href="#" class="item">Contact Us</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Contact Information Column -->
-                                <div class="four wide column">
-                                    <div class="contact-col">
-                                        <h4 class="ui header">Have a Questions ?</h4>
-                                        <div class="ui list">
-                                            <div class="item">
-                                                <i class="marker icon"></i>
-                                                <div class="content">003 DR Zone III Brgy. Graceville, San Jose Del
-                                                    Monte Bulacan</div>
-                                            </div>
-                                            <div class="item">
-                                                <i class="phone icon"></i>
-                                                <div class="content">+63 927-8870-270</div>
-                                            </div>
-                                            <div class="item">
-                                                <i class="mail icon"></i>
-                                                <div class="content">wuix69.github.io</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Footer Bottom Column -->
-                                <div class="sixteen wide column">
-                                    <div class="bot-col">
-                                        <p>Copyright © 2025 All rights reserved | ❤️ by Vet : Sync</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
         </div>
     </div>
 
@@ -940,8 +509,17 @@
     <script src="../../../../public/assets/js/landing/prefetch.js"></script>
     <script src="../../../../public/assets/js/landing-scripts.js"></script>
     <script>
-        // Initialize accordion
-        $('.ui.accordion').accordion();
+        // Thumbnail switching functionality
+        $(document).ready(function () {
+            $('.thumbnail').click(function () {
+                $('.thumbnail').removeClass('active');
+                $(this).addClass('active');
+
+                // Update main image
+                const newImageSrc = $(this).find('img').attr('src');
+                $('.product-image-main img').attr('src', newImageSrc);
+            });
+        });
     </script>
 </body>
 
