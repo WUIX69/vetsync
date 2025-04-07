@@ -6,12 +6,6 @@
     <?= shared('elements/meta') ?> <!-- rcs Meta Tags -->
     <title>VetSync - Sign Up</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
-    <style>
-        main .section-container .section-wrapper {
-            /* Disables default margin-top for register page */
-            margin-top: 0;
-        }
-    </style>
 </head>
 
 <body>
@@ -23,12 +17,10 @@
     <div class="container-body">
         <main class="container-main">
             <div class="section-container">
-                <div class="section-wrapper auth-section">
-                    <?= featured('auth/components/header') ?> <!-- Header -->
+                <div class="section-wrapper mt-0 auth-section">
+                    <?= featured('auth/shared/components/header') ?> <!-- Header -->
                     <div class="auth-wrapper box column">
-                        <div class="ui teal header section-in-header">
-                            Sign up
-                        </div>
+                        <?= featured('auth/shared/components/header-in') ?> <!-- Section in header -->
                         <form class="ui large form">
                             <div class="two fields">
                                 <div class="field">
@@ -68,7 +60,9 @@
                                     <label for="terms">I agree to the Terms and Conditions</label>
                                 </div>
                             </div>
-                            <button class="ui fluid large teal submit button" type="submit">Register</button>
+                            <div class="actions">
+                                <?= featured('auth/shared/components/ui/continue-btn'); ?>
+                            </div>
                             <div class="ui error message"></div>
                         </form>
                         <div class="ui text text-center">

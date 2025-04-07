@@ -18,11 +18,9 @@
 		<main class="container-main">
 			<div class="section-container">
 				<div class="section-wrapper auth-section">
-					<?= featured('auth/components/header') ?> <!-- Header -->
+					<?= featured('auth/shared/components/header') ?> <!-- Header -->
 					<div class="auth-wrapper box column">
-						<div class="ui teal header section-in-header">
-							Sign in
-						</div>
+						<?= featured('auth/shared/components/header-in') ?> <!-- Section in header -->
 						<form class="ui large form">
 							<div class="field">
 								<label for="email">Email</label>
@@ -45,7 +43,9 @@
 									<a href="#">Forgot Password?</a>
 								</div>
 							</div>
-							<button class="ui fluid large teal submit button" type="submit">Continue</button>
+							<div class="actions">
+								<?= featured('auth/shared/components/ui/continue-btn'); ?>
+							</div>
 							<div class="ui error message"></div>
 						</form>
 						<div class="ui text text-center">

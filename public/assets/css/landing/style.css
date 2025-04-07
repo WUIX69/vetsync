@@ -267,7 +267,7 @@ main .section-seperator {
 
 /*------ Main (Reserve Section) ------*/
 main .section-container:has(section.reserve-section) {
-    background-image: url("../../img/contents/reserves/reserve-1.jpg");
+    background-image: url("../../img/contents/reserves/1.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

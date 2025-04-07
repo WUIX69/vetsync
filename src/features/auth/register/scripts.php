@@ -1,1 +1,1 @@
-<script src="<?= featured('auth/register/scripts/main.js', true) ?>"></script>
+<script src="<?= featured('auth/register/js/main.js', true) ?>"></script>

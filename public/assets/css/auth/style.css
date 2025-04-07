@@ -68,12 +68,16 @@ main .auth-section .auth-wrapper .section-in-header {
 
 main .auth-section .auth-wrapper label {
     font-size: 0.9rem !important;
-    margin-bottom: -0.01rem !important;
+    margin-bottom: 0.1rem !important;
 }
 
 main .auth-section .auth-wrapper label,
 main .auth-section .auth-wrapper .ui.text {
     color: var(--bs-gray-200) !important;
+}
+
+main .auth-section .auth-wrapper .form .field input {
+    font-size: 0.86rem;
 }
 
 main .auth-section .auth-wrapper .form .field input:focus,
@@ -102,10 +106,4 @@ main .auth-section .auth-wrapper .form .clearing .remember-me label {
 
 main .auth-section .auth-wrapper .form button[type="submit"] {
     margin-top: 2rem;
-}
-
-@media only screen and (max-width: 767px) {
-    main .auth-section .auth-wrapper {
-        min-width: 300px;
-    }
 }
