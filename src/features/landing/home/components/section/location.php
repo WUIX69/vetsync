@@ -123,7 +123,9 @@
         display: block;
         width: 100%;
         height: 100%;
+        min-height: 140px;
         object-fit: cover;
+        object-position: center;
     }
 
     main section.locations-section .swiper-clinic-gallery .swiper-thumb-view .swiper-slide-thumb-active {
@@ -153,16 +155,16 @@
                             <div class="swiper swiper-main-view">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <img src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-front.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-worms.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-near.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-in.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
                                         <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
@@ -190,16 +192,16 @@
                             <div thumbsSlider="" class="swiper swiper-thumb-view">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <img src="../../../public/assets/img/contents/locations/jaa-worms.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-front.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-worms.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-near.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
+                                        <img src="<?= statf('assets/img/gallery/jaa-in.jpg'); ?>" />
                                     </div>
                                     <div class="swiper-slide">
                                         <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
