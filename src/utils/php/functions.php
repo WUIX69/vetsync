@@ -4,7 +4,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-ini_set('error_log', dirname(dirname(dirname(__DIR__))) . '/logs/error.log');
+ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/logs/error.log');
 
 function tryCatch($callback, $errorMessage = "Error: ")
 {
@@ -12,7 +12,6 @@ function tryCatch($callback, $errorMessage = "Error: ")
         return $callback();
     } catch (Throwable $t) {
         error_log($errorMessage . $t->getMessage());
-        // echo $errorMessage . $t->getMessage();
         return false;
     }
 }
@@ -38,10 +37,14 @@ function baseURL($path = '')
     return $baseUrl . ltrim($path, '/');
 }
 
-function sysfHelper($dir, $file)
+function includeFileHelper($dir, $file)
 {
     // Define the directory where your files are located
     $dir_path = dirname(dirname(__DIR__)) . '/' . $dir . '/';
+
+    // error_log('dirname: ' . dirname(dirname(__DIR__)));
+    // error_log('dir_path: ' . $_SERVER['DOCUMENT_ROOT'] . '/src/');
+
     // Construct the full path to the file
     $file_path = $dir_path . $file . '.php';
 
@@ -53,40 +56,36 @@ function sysfHelper($dir, $file)
     }, "$dir file Error, ");
 }
 
-function srcfHelper($dir, $file)
+function urlFileHelper($dir, $file, $is_public = false)
 {
     // Define the directory where your source files are located
-    $web_path = $dir . '/' . ltrim($file, '/');
+    $dir_path = $is_public ? 'public' : "src/$dir";
+    $url = $dir_path . '/' . ltrim($file, '/');
     // Return the URL of the source file
-    return baseURL($web_path);
+    return baseURL($url);
 }
 
 function statf($file)
 {
-    return srcfHelper('public', $file);
+    return urlFileHelper('public', $file, true);
 }
 
-function shared($file, $is_src = false)
+function shared($file, $is_url = false)
 {
-    // Early return if src base url
-    if ($is_src) {
-        return srcfHelper('src/shared', $file);
-    }
-    // system file base url
-    sysfHelper('shared', $file);
+    if ($is_url)
+        return urlFileHelper('shared', $file);
+    includeFileHelper('shared', $file);
 }
 
-function featured($path, $is_src = false)
+function featured($path, $is_url = false)
 {
-    if ($is_src) {
-        return srcfHelper('src/features', $path);
-    }
-
-    sysfHelper('features', $path);
+    if ($is_url)
+        return urlFileHelper('features', $path);
+    includeFileHelper('features', $path);
 }
 
 function app($link = '')
 {
     $url = $link . (strpos($link, '/') === false ? '/' : '' . '.php');
-    return srcfHelper('src/app', $url);
+    return urlFileHelper('app', $url);
 }
