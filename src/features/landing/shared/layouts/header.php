@@ -33,23 +33,15 @@ $activeLink = str_replace('.php', '', $pageName);
                         <a href="about.php" class="nav-link <?= $activeLink === 'about' ? 'active' : '' ?>">About
                             Us</a>
                         <div class="actions d-none"><!-- Only show for mobile view -->
-                            <a href="<?= app('auth') ?>" class="ui basic teal button login-btn">
-                                Log In
-                            </a>
-                            <button class="ui blue large button book-now-btn" data-open-modal="#bookNowModal">
-                                Book Now
-                            </button>
+                            <?= featured('landing/shared/components/ui/login-btn') ?>
+                            <?= featured('landing/shared/components/ui/booknow-btn') ?>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="actions">
-                        <a href="<?= app('auth') ?>" class="ui basic teal button login-btn">
-                            Log In
-                        </a>
-                        <button class="ui blue large button book-now-btn" data-open-modal="#bookNowModal">
-                            Book Now
-                        </button>
+                        <?= featured('landing/shared/components/ui/login-btn') ?>
+                        <?= featured('landing/shared/components/ui/booknow-btn') ?>
                     </div>
                 </div>
             </div>
