@@ -26,7 +26,7 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/contact/components/section/hero'); ?>
+                    <?= featured('landing/shared/components/section/hero'); ?>
 
                     <!-- Contact -->
                     <?= featured('landing/contact/components/section/contact'); ?>
