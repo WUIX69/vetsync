@@ -27,7 +27,6 @@
                     <!-- Features -->
                     <?= featured('landing/about/components/section/team-section'); ?>
 
-
                 </main>
             </div>
             <div class="col-12">
