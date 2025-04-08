@@ -1,10 +1,10 @@
-<?php include_once __DIR__ . '/../../utils/php/functions.php'; ?>
+<?php include_once __DIR__ . '/../../../utils/php/functions.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
-    <title>Landing Page</title>
+    <title>Services (View) - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
 </head>
 
@@ -22,24 +22,26 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/about/components/section/hero'); ?>
+                    <?= featured('landing/shared/components/section/hero'); ?>
 
-                    <!-- Features -->
-                    <?= featured('landing/about/components/section/team-section'); ?>
+                    <!-- Highlights -->
+                    <?= featured('landing/services/components/section/highlights'); ?>
 
-                    <!-- Testimonials -->
-                    <?= featured('landing/shared/components/section/testimonials'); ?>
+                    <!-- About -->
+                    <?= featured('landing/services/components/section/about'); ?>
+
+                    <!-- Related Services -->
+                    <?= featured('landing/services/components/section/related'); ?>
                 </main>
             </div>
             <div class="col-12">
-                <?= featured('landing/shared/layouts/footer'); ?><!-- Footer -->
+                <?= featured('landing/shared/layouts/footer'); ?> <!-- Footer -->
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <?= shared('elements/scripts'); ?>
-    <?= featured('landing/contact/scripts'); ?>
+    <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
 </body>
 
 </html>
