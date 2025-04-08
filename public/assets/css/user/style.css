@@ -1,7 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-@import url("https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css");
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
-/* * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -37,7 +36,7 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 20px 20px 14px;
-    border-bottom: 2px solid #1e293b;
+    border-bottom: 2px solid #1e293b !important;
 }
 
 .top-container .nav .logo {
@@ -87,7 +86,7 @@ body {
     display: flex;
     align-items: center;
     background: #1e293b;
-    padding: 0 10px;
+    padding: 5px 10px;
     border-radius: 50px;
     gap: 10px;
 }
@@ -102,15 +101,16 @@ body {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 1px solid #f1f3f2;
+    border: 1px solid #f1f3f2 !important;
 }
 
 .top-container .nav .right-section .profile .info a {
     font-size: 13px;
+    font-weight: 600;
 }
 
 .top-container .nav .right-section .profile .info p {
-    font-size: 13px;
+    font-size: 11px;
     color: #ccc;
 }
 
@@ -134,6 +134,7 @@ body {
 .top-container .status .header h4 {
     color: #f1f3f2;
     font-weight: 500;
+    margin: 0;
 }
 
 .top-container .status .header h4#big {
@@ -407,7 +408,7 @@ body {
     border: none;
     color: #fff;
     background: #031224;
-    padding: 6px 14px;
+    padding: 8.45px 14px;
     border-radius: 10px;
     display: flex;
     align-items: center;

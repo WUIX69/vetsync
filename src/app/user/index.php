@@ -33,7 +33,7 @@
                 <div class="profile">
                     <div class="info">
                         <img src="<?= statf('assets/img/profiles/profile.jpg'); ?>">
-                        <div>
+                        <div class="d-flex flex-column">
                             <a href="#">Alex Johnson</a>
                             <p>Data Scientist</p>
                         </div>
@@ -136,7 +136,7 @@
                 <a href="#"># Data</a>
             </div>
 
-            <img src="<?= statf('assets/img/profiles/profile.jpg'); ?>">
+            <img src="<?= statf('assets/img/placeholders/image.png'); ?>">
             <div class="audio">
                 <i class='bx bx-podcast'></i>
                 <a href="#">Poedcast: Mastering Data Visualization</a>
