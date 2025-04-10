@@ -1,0 +1,36 @@
+/*----------- MAIN (Services Section) -----------*/
+main section.team-section .services-overview {
+    padding: 60px 0;
+    background: var(--color-background-variant);
+}
+
+main section.team-section .service-item {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+main section.team-section .service-item i {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin-bottom: 20px;
+}
+
+main section.team-section .service-item p {
+    color: var(--color-dark-variant);
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+main section.team-section .ui.teal.button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 12px 25px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+main section.team-section .ui.teal.button:hover {
+    background-color: var(--color-primary-variant);
+}

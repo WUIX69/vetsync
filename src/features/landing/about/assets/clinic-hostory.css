@@ -1,0 +1,25 @@
+/*----------- MAIN (Clinic History) -----------*/
+main section.team-section .clinic-history {
+    padding: 80px 0;
+    background: var(--color-white);
+}
+
+main section.team-section .history-image {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+}
+
+main section.team-section .clinic-history h2 {
+    color: var(--color-dark);
+    font-size: 2rem;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+main section.team-section .clinic-history p {
+    color: var(--color-dark-variant);
+    line-height: 1.8;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
