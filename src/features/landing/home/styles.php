@@ -3,4 +3,3 @@
 <link rel="stylesheet" href="<?= featured('landing/home/assets/css/features.css', true) ?>">
 <link rel="stylesheet" href="<?= featured('landing/home/assets/css/services.css', true) ?>">
 <link rel="stylesheet" href="<?= featured('landing/home/assets/css/location.css', true) ?>">
-<link rel="stylesheet" href="<?= featured('landing/home/assets/css/reserve.css', true) ?>">
