@@ -6,7 +6,7 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>Landing - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
-    <?= featured('landing/home/scripts') ?>
+    <?= featured('landing/home/styles') ?>
 </head>
 
 <body>
