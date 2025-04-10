@@ -6,7 +6,7 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>Landing - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
-    <link rel="stylesheet" href="<?= statf('lib/swiper/swiper-bundle.min.css'); ?>" /><!-- Link Swiper's CSS -->
+    <?= featured('landing/home/scripts') ?>
 </head>
 
 <body>
@@ -52,7 +52,6 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-    <script src="<?= statf('lib/swiper/swiper-bundle.min.js'); ?>"></script><!-- Swiper JS -->
     <?= featured('landing/home/scripts'); ?> <!-- Home Scripts -->
 </body>
 
