@@ -1,6 +1,12 @@
 <?php
+// TODO: move all the global logic in /config dir
 $urlPath = $_SERVER['REQUEST_URI'] ?? null;
-$pageName = explode('/', trim($urlPath, '/'))[3] ?? '';
+
+global $urlParts;
+$urlParts = explode('/', trim($urlPath, '/')) ?? '';
+$pageName = $urlParts[3] ?? '';
+
+global $activeLink;
 $activeLink = str_replace('.php', '', $pageName);
 ?>
 
