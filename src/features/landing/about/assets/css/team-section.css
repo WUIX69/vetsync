@@ -1,31 +1,14 @@
 /*----------- MAIN (Team Section) -----------*/
-main .section-container:has(section.team-section) {
-    background: var(--color-white);
-    padding: 8rem 0;
-    width: 100%;
-}
-
-main section.team-section {
-    width: 100%;
-}
-
-main section.team-section .team-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
 
 /* Team Grid Layout */
 main section.team-section .row {
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 30px;
+    align-items: center;
 }
 
 /* Team Member Cards */
 main section.team-section .member-card {
-    width: 350px; /* Fixed width for each card */
     background: var(--color-white);
     border-radius: 10px;
     overflow: hidden;

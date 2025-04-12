@@ -23,13 +23,13 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/home/components/section/hero'); ?>
+                    <?= featured('landing/home/components/hero'); ?>
 
                     <!-- Features -->
-                    <?= featured('landing/home/components/section/features'); ?>
+                    <?= featured('landing/home/components/features'); ?>
 
                     <!-- Services -->
-                    <?= featured('landing/home/components/section/services'); ?>
+                    <?= featured('landing/home/components/services'); ?>
 
                     <!-- Testimonials -->
                     <?= featured('landing/shared/components/section/testimonials'); ?>
@@ -38,7 +38,7 @@
                     <?= featured('landing/shared/components/section/separator'); ?>
 
                     <!-- Locations -->
-                    <?= featured('landing/home/components/section/location'); ?>
+                    <?= featured('landing/home/components/location'); ?>
 
                     <!-- Reserve -->
                     <?= featured('landing/shared/components/section/reserve'); ?>

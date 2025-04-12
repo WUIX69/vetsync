@@ -23,10 +23,16 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/about/components/section/hero'); ?>
+                    <?= featured('landing/shared/components/section/hero'); ?>
 
-                    <!-- Features -->
-                    <?= featured('landing/about/components/section/team-section'); ?>
+                    <!-- Teams -->
+                    <?= featured('landing/about/components/team'); ?>
+
+                    <!-- Services -->
+                    <?= featured('landing/about/components/services-overview'); ?>
+
+                    <!-- Clinic history -->
+                    <?= featured('landing/about/components/clinic-history'); ?>
 
                     <!-- Testimonials -->
                     <?= featured('landing/shared/components/section/testimonials'); ?>
