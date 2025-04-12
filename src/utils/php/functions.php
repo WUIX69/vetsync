@@ -86,6 +86,35 @@ function featured($path, $is_url = false)
 
 function app($link = '')
 {
-    $url = $link . (strpos($link, '/') === false ? '/' : '' . '.php');
+    // Handle empty link case
+    if (empty($link)) {
+        return urlFileHelper('app', 'landing');
+    }
+
+    // Check if the link ends with a trailing slash (indicating a directory)
+    if (substr($link, -1) === '/') {
+        $url = $link . 'index.php';
+    }
+    // Check if the link has no slashes (just a directory name)
+    elseif (strpos($link, '/') === false) {
+        $url = $link . '/index.php';
+    }
+    // Handle paths with subdirectories
+    else {
+        // Check if the path contains a file extension
+        if (preg_match('/\.[a-zA-Z0-9]+$/', $link)) {
+            // If it already has an extension, use it as is
+            $url = $link;
+        } else {
+            // No extension, so add .php
+            $url = $link . '.php';
+        }
+    }
+
+    // Ensure we have the .php extension
+    if (substr($url, -4) !== '.php') {
+        $url .= '.php';
+    }
+
     return urlFileHelper('app', $url);
 }
