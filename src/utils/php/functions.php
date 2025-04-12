@@ -84,6 +84,13 @@ function featured($path, $is_url = false)
     includeFileHelper('features', $path);
 }
 
+function utils($file, $is_url = false)
+{
+    if ($is_url)
+        return urlFileHelper('utils', $file);
+    includeFileHelper('utils', $file);
+}
+
 function app($link = '')
 {
     // Handle empty link case
