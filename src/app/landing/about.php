@@ -36,6 +36,9 @@
 
                     <!-- Testimonials -->
                     <?= featured('landing/shared/components/testimonials'); ?>
+
+                    <!-- Reserve -->
+                    <?= featured('landing/shared/components/reserve'); ?>
                 </main>
             </div>
             <div class="col-12">
