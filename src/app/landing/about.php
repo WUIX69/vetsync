@@ -23,7 +23,7 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/shared/components/section/hero'); ?>
+                    <?= featured('landing/shared/components/hero'); ?>
 
                     <!-- Teams -->
                     <?= featured('landing/about/components/team'); ?>
@@ -35,7 +35,7 @@
                     <?= featured('landing/about/components/clinic-history'); ?>
 
                     <!-- Testimonials -->
-                    <?= featured('landing/shared/components/section/testimonials'); ?>
+                    <?= featured('landing/shared/components/testimonials'); ?>
                 </main>
             </div>
             <div class="col-12">

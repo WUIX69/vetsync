@@ -22,16 +22,16 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/shared/components/section/hero'); ?>
+                    <?= featured('landing/shared/components/hero'); ?>
 
                     <!-- Highlights -->
-                    <?= featured('landing/services/components/section/highlights'); ?>
+                    <?= featured('landing/services/components/highlights'); ?>
 
                     <!-- About -->
-                    <?= featured('landing/services/components/section/about'); ?>
+                    <?= featured('landing/services/components/about'); ?>
 
                     <!-- Related Services -->
-                    <?= featured('landing/services/components/section/related'); ?>
+                    <?= featured('landing/services/components/related'); ?>
                 </main>
             </div>
             <div class="col-12">

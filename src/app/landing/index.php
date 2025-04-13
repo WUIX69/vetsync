@@ -32,16 +32,16 @@
                     <?= featured('landing/home/components/services'); ?>
 
                     <!-- Testimonials -->
-                    <?= featured('landing/shared/components/section/testimonials'); ?>
+                    <?= featured('landing/shared/components/testimonials'); ?>
 
                     <!-- Separator -->
-                    <?= featured('landing/shared/components/section/separator'); ?>
+                    <?= featured('landing/shared/components/separator'); ?>
 
                     <!-- Locations -->
                     <?= featured('landing/home/components/location'); ?>
 
                     <!-- Reserve -->
-                    <?= featured('landing/shared/components/section/reserve'); ?>
+                    <?= featured('landing/shared/components/reserve'); ?>
                 </main>
             </div>
             <div class="col-12">

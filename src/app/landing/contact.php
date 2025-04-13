@@ -26,16 +26,16 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/shared/components/section/hero'); ?>
+                    <?= featured('landing/shared/components/hero'); ?>
 
                     <!-- Contact -->
-                    <?= featured('landing/contact/components/section/contact'); ?>
+                    <?= featured('landing/contact/components/contact'); ?>
 
                     <!-- Locations -->
-                    <?= featured('landing/contact/components/section/location'); ?>
+                    <?= featured('landing/contact/components/location'); ?>
 
                     <!-- Reserve -->
-                    <?= featured('landing/shared/components/section/reserve'); ?>
+                    <?= featured('landing/shared/components/reserve'); ?>
                 </main>
             </div>
             <!-- footer -->
