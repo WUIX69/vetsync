@@ -1,19 +1,15 @@
+<?php include_once '../../../src/utils/php/functions.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Users Management</title>
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-grid.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-utilities.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/bootstrap/dist/css/bootstrap-reboot.min.css" />
-    <link rel="stylesheet" href="../../../public/vendor/fomantic-ui/dist/semantic.min.css" />
+    <?= shared('elements/meta') ?>
+    <title>Users Management - Admin</title>
+    <?= shared('elements/styles') ?>
+
     <link rel="stylesheet" href="../../../public/lib/DataTables/datatables.min.css" />
     <link rel="stylesheet" href="../../../public/lib/DataTables/dataTables.semanticui.min.css" />
     <link rel="stylesheet" href="../../../public/lib/DataTables/responsive.semanticui.min.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/spinner.css" />
-    <link rel="stylesheet" href="../../../public/assets/css/global.css" />
     <style>
         .user-details {
             display: flex;
@@ -36,6 +32,7 @@
             color: var(--color-dark) !important;
         }
     </style>
+
 </head>
 
 <body>
@@ -576,18 +573,13 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../../../public/lib/jquery/jquery.min.js"></script>
-    <script src="../../../public/lib/jquery/jquery.validate.min.js"></script>
-    <script src="../../../public/lib/jquery/additional-methods.min.js"></script>
-    <script src="../../../public/vendor/fomantic-ui/dist/semantic.min.js"></script>
+    <?= shared('elements/scripts') ?>
     <script src="../../../public/lib/DataTables/datatables.min.js"></script>
     <script src="../../../public/lib/DataTables/dataTables.semanticui.min.js"></script>
     <script src="../../../public/lib/DataTables/dataTables.responsive.min.js"></script>
     <script src="../../../public/lib/DataTables/responsive.semanticui.min.js"></script>
-    <script src="../../../public/lib/lodash/lodash.min.js"></script>
-    <script src="../../../public/assets/js/spinner.js"></script>
-    <script src="../../../public/assets/js/darkmode.js"></script>
-    <script src="../../../public/assets/js/scripts.js"></script>
+    <script src="<?= utils('js/formatters.js', true) ?>"></script>
+    <script src="<?= shared('assets/js/tableListFilters.js', true) ?>"></script>
     <script type="text/javascript">
         // Cache DOM elements
         const $userModal = $("#userModal");
