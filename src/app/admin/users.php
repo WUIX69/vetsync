@@ -13,7 +13,7 @@
 
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
-        <?= featured('admin/users/components/add-edit-usermodal') ?> <!-- add-edit-usermodal -->
+        <?= featured('admin/users/components/user-modal') ?> <!-- User Modal -->
     </div>
 
     <div class="container-body pusher">
@@ -27,13 +27,13 @@
             <div class="col">
                 <main class="container-main">
                     <h1>Users Management</h1>
-                    <!-- user-stats -->
+                    <!-- User Stats -->
                     <?= featured('admin/users/components/user-stats') ?>
 
-                    <!-- new-user-->
+                    <!-- New Users -->
                     <?= featured('admin/users/components/new-users') ?>
 
-                    <!-- user-list -->
+                    <!-- User List -->
                     <?= featured('admin/users/components/user-list') ?>
                 </main>
             </div>
