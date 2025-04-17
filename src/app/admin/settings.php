@@ -4,7 +4,7 @@
 
 <head>
     <?= shared('elements/meta') ?>
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - setiing</title>
     <?= shared('elements/styles') ?>
     <?= featured('admin/dashboard/styles') ?>
 </head>
@@ -28,16 +28,12 @@
             <!-- Main Content -->
             <div class="col">
                 <main class="container-main">
-                    <h1>Dashboard</h1>
+                    <h1>Setting</h1>
 
-                    <!-- Stats Cards -->
-                    <?= featured('admin/dashboard/components/stats-cards') ?>
+                    <!-- account-setting -->
+                    <?= featured('admin/settings/components/account-setting') ?>
 
-                    <!-- New Users -->
-                    <?= featured('admin/dashboard/components/new-users') ?>
 
-                    <!-- Recent Orders -->
-                    <?= featured('admin/dashboard/components/recent-orders') ?>
                 </main>
             </div>
 
