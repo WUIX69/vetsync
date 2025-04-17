@@ -28,12 +28,9 @@
             <!-- Main Content -->
             <div class="col">
                 <main class="container-main">
-                    <h1>Setting</h1>
-
-                    <!-- account-setting -->
-                    <?= featured('admin/settings/components/account-setting') ?>
-
-
+                    <h1>Manage Settings</h1>
+                    <!-- Settings -->
+                    <?= featured('admin/settings/components/settings') ?>
                 </main>
             </div>
 

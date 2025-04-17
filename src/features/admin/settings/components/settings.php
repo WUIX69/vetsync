@@ -1,9 +1,9 @@
 <style>
-    main .account-settings .section-wrapper {
+    main .settings .section-wrapper {
         margin-top: 1.3rem !important;
     }
 
-    main .account-settings .section-wrapper .section-informative-header {
+    main .settings .section-wrapper .section-informative-header {
         display: flex;
         align-items: flex-start;
         justify-content: center;
@@ -11,25 +11,25 @@
         gap: 0.4rem;
     }
 
-    main .account-settings .section-wrapper .section-divider {
+    main .settings .section-wrapper .section-divider {
         height: 2px;
         background-color: var(--color-background);
         margin-top: 1.2rem;
         margin-bottom: 1.3rem;
     }
 
-    main .account-settings .section-wrapper .section-informative-header .title {
+    main .settings .section-wrapper .section-informative-header .title {
         font-size: 1.45rem;
         font-weight: 600;
     }
 
-    main .account-settings .section-wrapper .section-informative-header .description {
+    main .settings .section-wrapper .section-informative-header .description {
         color: var(--color-dark-variant) !important;
         font-size: 0.9rem;
         font-weight: 500;
     }
 
-    .ui.form .field .add-url-btn {
+    main .settings .ui.form .field .add-url-btn {
         background: var(--color-background) !important;
         color: var(--color-dark-variant) !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
@@ -39,7 +39,7 @@
     }
 </style>
 <!-- Account Settings -->
-<div class="section-container account-settings">
+<div class="section-container settings">
     <div class="section-wrapper box">
         <div class="section-informative-header">
             <div class="title">Profile</div>
@@ -77,7 +77,7 @@
             </div>
             <div class="field">
                 <label>URLs</label>
-                <div class="description">Add links to your website, blog, or social media profiles.
+                <div class="description">Add links to your website, blog, or social media settings.
                 </div>
                 <div class="url-inputs">
                     <input class="ui input" type="text" placeholder="Enter your URLs">
