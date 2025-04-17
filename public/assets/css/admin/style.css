@@ -431,6 +431,10 @@ main .section-container .table-list .table-container .table .ui.dropdown .icon {
 }
 
 /* DataTables Custom Styles (.dt-container) */
+main .section-container:has(.table-list .table-container .dt-container) {
+    width: fit-content !important;
+}
+
 main .section-container .table-list .table-container .dt-container th {
     padding-top: 0.8rem !important;
 }
