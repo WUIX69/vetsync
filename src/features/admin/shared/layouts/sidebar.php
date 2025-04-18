@@ -1,6 +1,6 @@
 <div class="sidebar">
     <div class="sidebar-logo">
-        <img class="rounded-circle" src="../../../public/assets/img/logo.jpg">
+        <img class="rounded-circle" src="<?= asset('img/logo.jpg'); ?>">
         <h2>Admin<span class="text-danger">Panel</span></h2>
     </div>
     <div class="sidebar-menu">

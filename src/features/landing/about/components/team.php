@@ -5,7 +5,7 @@
                 <!-- Team Member 1 -->
                 <div class="col-md-4">
                     <div class="member-card">
-                        <img src="<?= statf('assets/img/teams/team1.jpg') ?>" alt="Dr. Josephine Anne Angeles">
+                        <img src="<?= asset('img/teams/team1.jpg') ?>" alt="Dr. Josephine Anne Angeles">
                         <div class="member-info">
                             <h3>Dr. Josephine Anne Angeles</h3>
                             <p class="member-title">Lead Veterinarian & Clinic Director</p>
@@ -23,7 +23,7 @@
                 <!-- Team Member 2 -->
                 <div class="col-md-4">
                     <div class="member-card">
-                        <img src="<?= statf('assets/img/teams/team2.jpg') ?>" alt="Dr. Maria Santos">
+                        <img src="<?= asset('img/teams/team2.jpg') ?>" alt="Dr. Maria Santos">
                         <div class="member-info">
                             <h3>Dr. Maria Santos</h3>
                             <p class="member-title">Associate Veterinarian</p>
@@ -40,7 +40,7 @@
                 <!-- Team Member 3 -->
                 <div class="col-md-4">
                     <div class="member-card">
-                        <img src="<?= statf('assets/img/teams/team3.jpg') ?>" alt="Dr. Santos">
+                        <img src="<?= asset('img/teams/team3.jpg') ?>" alt="Dr. Santos">
                         <div class="member-info">
                             <h3>Dr. Santos</h3>
                             <p class="member-title">Associate Veterinarian</p>

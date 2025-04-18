@@ -1,6 +1,6 @@
 <div class="section-container">
     <div class="section-bg-video">
-        <video src="<?= statf('assets/vids/montage.mp4'); ?>" autoplay muted loop></video>
+        <video src="<?= asset('vids/montage.mp4'); ?>" autoplay muted loop></video>
     </div>
     <section class="section-wrapper hero-section">
         <div class="hero-content">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="hero-image">
-                        <img src="<?= statf('assets/img/contents/app-ss/vetsync-1.png'); ?>" alt="App Interface">
+                        <img src="<?= asset('img/contents/app-ss/vetsync-1.png'); ?>" alt="App Interface">
                     </div>
                 </div>
             </div>

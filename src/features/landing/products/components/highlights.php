@@ -155,17 +155,17 @@
                 <!-- Product Images -->
                 <div class="col-lg-7">
                     <div class="product-image-main">
-                        <img src="../../../../public/assets/img/contents/products/pdogfood.jpg" alt="Premium Dog Food">
+                        <img src="<?= asset('img/contents/products/pdogfood.jpg'); ?>" alt="Premium Dog Food">
                     </div>
                     <div class="product-thumbnails">
                         <div class="thumbnail active">
-                            <img src="../../../../public/assets/img/contents/products/pdogfood.jpg" alt="Thumbnail 1">
+                            <img src="<?= asset('img/contents/products/pdogfood.jpg'); ?>" alt="Thumbnail 1">
                         </div>
                         <div class="thumbnail">
-                            <img src="../../../../public/assets/img/contents/products/pdogfood-2.jpg" alt="Thumbnail 2">
+                            <img src="<?= asset('img/contents/products/pdogfood-2.jpg'); ?>" alt="Thumbnail 2">
                         </div>
                         <div class="thumbnail">
-                            <img src="../../../../public/assets/img/contents/products/pdogfood-3.jpg" alt="Thumbnail 3">
+                            <img src="<?= asset('img/contents/products/pdogfood-3.jpg'); ?>" alt="Thumbnail 3">
                         </div>
                     </div>
                 </div>
@@ -218,3 +218,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+</div>

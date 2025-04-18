@@ -65,7 +65,7 @@ function urlFileHelper($dir, $file, $is_public = false)
     return baseURL($url);
 }
 
-function statf($file)
+function asset($file)
 {
     return urlFileHelper('public', $file, true);
 }

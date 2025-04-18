@@ -8,14 +8,14 @@ $scripts = [
     'lib/jquery/jquery.min.js',
     'vendor/fomantic-ui/dist/semantic.min.js',
     'lib/lodash/lodash.min.js',
-    'assets/js/loader/window.js',
-    'assets/js/darkmode.js',
-    'assets/js/' . $appDirName . '/script.js',
-    'assets/js/' . $appDirName . '/prefetch.js',
-    'assets/js/scripts.js',
+    'js/loader/window.js',
+    'js/darkmode.js',
+    'js/' . $appDirName . '/script.js',
+    'js/' . $appDirName . '/prefetch.js',
+    'js/scripts.js',
 ];
 foreach ($scripts as $script) {
-    echo '<script src="' . statf($script) . '"></script>';
+    echo '<script src="' . asset($script) . '"></script>';
 }
 
 // Required utils that can be used in any page

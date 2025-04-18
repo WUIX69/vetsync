@@ -177,8 +177,7 @@
                                     <form class="ui form">
                                         <!-- Profile Picture -->
                                         <div class="avatar-upload">
-                                            <img src="<?= statf('assets/img/profiles/profile.jpg'); ?>"
-                                                alt="Profile Picture">
+                                            <img src="<?= asset('img/profiles/profile.jpg'); ?>" alt="Profile Picture">
                                             <div class="upload-button">
                                                 <i class="camera icon"></i>
                                             </div>

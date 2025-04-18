@@ -15,7 +15,7 @@
                 <small class="text-muted">Admin</small>
             </div>
             <div class="profile-photo">
-                <img class="rounded-circle" width="37" src="../../../public/assets/img/profiles/profile.jpg" />
+                <img class="rounded-circle" width="37" src="<?= asset('img/profiles/profile.jpg'); ?>" />
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@
 
     <div class="system-info box">
         <div class="logo">
-            <img class="rounded-circle" width="140" src="../../../public/assets/img/logo.jpg" />
+            <img class="rounded-circle" width="140" src="<?= asset('img/logo.jpg'); ?>" />
         </div>
         <div class="info">
             <h2>Lorem</h2>

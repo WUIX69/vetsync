@@ -198,7 +198,7 @@
                 <!-- Product 1 -->
                 <div class="col-md-4">
                     <div class="product-listing box">
-                        <img src="../../../../public/assets/img/contents/products/pdogfood.jpg" alt="Premium Dog Food"
+                        <img src="<?= asset('img/contents/products/pdogfood.jpg'); ?>" alt="Premium Dog Food"
                             class="product-image">
                         <div class="visible-content">
                             <div class="ui tag label red">Hot</div>
@@ -234,7 +234,7 @@
                 <!-- Product 2 -->
                 <div class="col-md-4">
                     <div class="product-listing box">
-                        <img src="../../../../public/assets/img/contents/products/vitamins.jpg" alt="Pet Vitamins"
+                        <img src="<?= asset('img/contents/products/vitamins.jpg'); ?>" alt="Pet Vitamins"
                             class="product-image">
                         <div class="visible-content">
                             <div class="ui tag label teal">Popular</div>
@@ -270,7 +270,7 @@
                 <!-- Product 3 -->
                 <div class="col-md-4">
                     <div class="product-listing box">
-                        <img src="../../../../public/assets/img/contents/products/petcollar.jpg" alt="Pet Collar"
+                        <img src="<?= asset('img/contents/products/petcollar.jpg'); ?>" alt="Pet Collar"
                             class="product-image">
                         <div class="visible-content">
                             <div class="ui tag blue label">Featured</div>
@@ -306,7 +306,7 @@
                 <!-- Product 4 -->
                 <div class="col-md-4">
                     <div class="product-listing box">
-                        <img src="../../../../public/assets/img/contents/products/supplements.jpg" alt="Cat Food"
+                        <img src="<?= asset('img/contents/products/supplements.jpg'); ?>" alt="Cat Food"
                             class="product-image">
                         <div class="visible-content">
                             <div class="ui tag label">New</div>
@@ -342,7 +342,7 @@
                 <!-- Product 5 -->
                 <div class="col-md-4">
                     <div class="product-listing box">
-                        <img src="../../../../public/assets/img/contents/products/pet-accessories.jpg" alt="Pet Bed"
+                        <img src="<?= asset('img/contents/products/pet-accessories.jpg'); ?>" alt="Pet Bed"
                             class="product-image">
                         <div class="visible-content">
                             <div class="ui tag label orange">Limited</div>
@@ -378,7 +378,7 @@
                 <!-- Product 6 -->
                 <div class="col-md-4">
                     <div class="product-listing box">
-                        <img src="../../../../public/assets/img/contents/products/petfood.jpg" alt="Puppy Food"
+                        <img src="<?= asset('img/contents/products/petfood.jpg'); ?>" alt="Puppy Food"
                             class="product-image">
                         <div class="visible-content">
                             <div class="ui tag label teal">Popular</div>

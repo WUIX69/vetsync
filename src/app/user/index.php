@@ -485,7 +485,7 @@
                                 <h4>Popular</h4>
                                 <a href="#"># Data</a>
                             </div>
-                            <img src="<?= statf('assets/img/placeholders/image.png'); ?>">
+                            <img src="<?= asset('img/placeholders/image.png'); ?>">
                             <div class="audio">
                                 <i class='bx bx-podcast'></i>
                                 <a href="#">Podcast: Mastering Data Visualization</a>
@@ -493,7 +493,7 @@
                             <p>Learn to create compelling visualizations with data.</p>
                             <div class="listen">
                                 <div class="author">
-                                    <img src="<?= statf('assets/img/profiles/profile.jpg'); ?>">
+                                    <img src="<?= asset('img/profiles/profile.jpg'); ?>">
                                     <div>
                                         <a href="#">Alex Costa</a>
                                         <p>Data Analyst</p>

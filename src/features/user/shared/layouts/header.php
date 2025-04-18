@@ -36,7 +36,7 @@ $activeLink = str_replace('.php', '', $pageName);
                     <!-- <i class="dropdown icon"></i> -->
                     <div class="text">
                         <div class="info">
-                            <img src="<?= statf('assets/img/profiles/profile.jpg'); ?>">
+                            <img src="<?= asset('img/profiles/profile.jpg'); ?>">
                             <div class="d-flex flex-column">
                                 <a href="#">Alex Johnson</a>
                                 <p>Data Scientist</p>

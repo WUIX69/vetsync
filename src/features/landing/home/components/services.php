@@ -11,7 +11,7 @@
                 <div class="col-md-6">
                     <!-- Info Card 1 -->
                     <div class="services-card box">
-                        <img src="../../../public/assets/img/contents/services/grooming.jpg" alt="Mobile Development"
+                        <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Mobile Development"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label red">Hot</div>
@@ -32,7 +32,7 @@
                 <div class="col-md-6">
                     <!-- Info Card 2 -->
                     <div class="services-card box">
-                        <img src="../../../public/assets/img/contents/services/vaccination.jpg" alt="Cloud Solutions"
+                        <img src="<?= asset('img/contents/services/vaccination.jpg'); ?>" alt="Cloud Solutions"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label teal">Popular</div>
@@ -52,34 +52,10 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-md-4">
-                                        Info Card 3 -->
-                <!-- <div class="services-card box">
-                                            <img src="../../../public/assets/img/contents/services/surgery.jpg"
-                                                alt="AI Integration" class="services-image">
-                                            <div class="visible-content">
-                                                <div class="ui tag label blue">Featured</div>
-                                                <div class="title">Surgery</div>
-                                            </div>
-                                            <div class="hovered-content">
-                                                <h3 class="title">Surgery</h3>
-                                                <p class="paragraph">
-                                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
-                                                    similique accusantium non ea provident, labore itaque a animi,
-                                                    temporibus quo repellendus debitis totam dolore modi tenetur fugit.
-                                                    Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente
-                                                    sed
-                                                    nihil obcaecati delectus!
-                                                </p>
-                                                <div class="read-more-btn">Read More</div>
-                                            </div>
-                                        </div> 
-                                    </div> -->
-
                 <div class="col-md-4">
                     <!-- Info Card 3 -->
                     <div class="services-card box">
-                        <img src="../../../public/assets/img/contents/services/foods.jpg" alt="AI Integration"
+                        <img src="<?= asset('img/contents/services/foods.jpg'); ?>" alt="AI Integration"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag blue label">Featured</div>
@@ -103,7 +79,7 @@
                 <div class="col-md-4">
                     <!-- Info Card 3 -->
                     <div class="services-card box">
-                        <img src="../../../public/assets/img/contents/services/accessories.jpg" alt="AI Integration"
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="AI Integration"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label">Upcoming</div>

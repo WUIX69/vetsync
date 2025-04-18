@@ -17,7 +17,7 @@ $activeLink = str_replace('.php', '', $pageName);
                 <div class="col-lg-4">
                     <div class="logo-cont">
                         <a href="<?= app('landing') ?>" class="navbar-logo">
-                            <!-- <img src="../../../public/assets/img/logo.png" alt="Logo"> -->
+                            <!-- <img src="<?= asset('img/logo.png'); ?>" alt="Logo"> -->
                             <div class="logo-text">
                                 <h3 class="logo-text-main">VET<span class="ui teal text">SYNC</span></h3>
                             </div>

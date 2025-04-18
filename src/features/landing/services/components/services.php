@@ -111,7 +111,7 @@
                 <div class="col-md-4">
                     <!-- Service Card 1 -->
                     <div class="services-card box">
-                        <img src="<?= statf('assets/img/contents/services/grooming.jpg'); ?>" alt="Wellness Checkup"
+                        <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Wellness Checkup"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label red">Hot</div>
@@ -134,7 +134,7 @@
                 <div class="col-md-4">
                     <!-- Service Card 2 -->
                     <div class="services-card box">
-                        <img src="<?= statf('assets/img/contents/services/vaccination.jpg'); ?>" alt="Vaccination"
+                        <img src="<?= asset('img/contents/services/vaccination.jpg'); ?>" alt="Vaccination"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label teal">Popular</div>
@@ -152,32 +152,10 @@
                     </div>
                 </div>
 
-                <!-- <div class="col-md-4">
-                            Service Card 3 
-                        <div class="services-card box">
-                            <img src="../../../../public/assets/img/contents/services/surgery.jpg"
-                                alt="Surgery" class="services-image">
-                            <div class="visible-content">
-                                <div class="ui tag label blue">Featured</div>
-                                <div class="title">Surgery</div>
-                            </div>
-                            <div class="hovered-content">
-                                <h3 class="title">Surgery</h3>
-                                <p class="paragraph">
-                                    Our experienced veterinary surgeons perform both routine and complex
-                                    procedures in our modern surgical suite, ensuring the highest
-                                    standards
-                                    of care and safety for your pets.
-                                </p>
-                                <div class="read-more-btn">Book Now</div>
-                            </div>
-                        </div>
-                    </div> -->
-
                 <div class="col-md-4">
                     <!-- Service Card 4 -->
                     <div class="services-card box">
-                        <img src="<?= statf('assets/img/contents/services/foods.jpg'); ?>" alt="Pet Foods"
+                        <img src="<?= asset('img/contents/services/foods.jpg'); ?>" alt="Pet Foods"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag blue label">Featured</div>
@@ -199,7 +177,7 @@
                 <div class="col-md-4">
                     <!-- Service Card 5 -->
                     <div class="services-card box">
-                        <img src="<?= statf('assets/img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label">Upcoming</div>

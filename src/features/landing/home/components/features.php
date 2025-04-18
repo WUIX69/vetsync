@@ -8,7 +8,7 @@
         <div class="features-cont">
             <div class="feature-card box">
                 <div class="feature-header">
-                    <img src="../../../public/assets/img/icons/fast.png" alt="">
+                    <img src="<?= asset('img/icons/fast.png'); ?>" alt="">
                     <h2 class="feature-title">Quick Setup</h2>
                 </div>
                 <p class="feature-description">Lorem ipsum dolor sit amet consectetur adipisicing
@@ -17,7 +17,7 @@
             </div>
             <div class="feature-card box">
                 <div class="feature-header">
-                    <img src="../../../public/assets/img/icons/24hr.png" alt="">
+                    <img src="<?= asset('img/icons/24hr.png'); ?>" alt="">
                     <h2 class="feature-title">24/hr Open</h2>
                 </div>
                 <p class="feature-description">Lorem ipsum dolor sit amet consectetur
@@ -28,7 +28,7 @@
             </div>
             <div class="feature-card box">
                 <div class="feature-header">
-                    <img src="../../../public/assets/img/icons/support.png" alt="">
+                    <img src="<?= asset('img/icons/support.png'); ?>" alt="">
                     <h2 class="feature-title">Support</h2>
                 </div>
                 <p class="feature-description">Lorem ipsum, dolor sit amet consectetur

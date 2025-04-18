@@ -12,7 +12,7 @@
                 <small class="text-muted">Admin</small>
             </div>
             <div class="profile-photo">
-                <img class="rounded-circle" width="37" src="../../../public/assets/img/profiles/profile.jpg" />
+                <img class="rounded-circle" width="37" src="<?= asset('img/profiles/profile.jpg'); ?>" />
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
             <div class="ui feed mt-4" id="userActivityFeed">
                 <div class="event">
                     <div class="label">
-                        <img src="../../../public/assets/img/avatars/elliot.jpg" class="ui avatar image" />
+                        <img src="<?= asset('img/avatars/elliot.jpg'); ?>" class="ui avatar image" />
                     </div>
                     <div class="content">
                         <div class="summary">
@@ -44,7 +44,7 @@
                 </div>
                 <div class="event">
                     <div class="label">
-                        <img src="../../../public/assets/img/avatars/helen.jpg" class="ui avatar image" />
+                        <img src="<?= asset('img/avatars/helen.jpg'); ?>" class="ui avatar image" />
                     </div>
                     <div class="content">
                         <div class="summary">
@@ -55,8 +55,8 @@
                             </div>
                         </div>
                         <div class="extra images">
-                            <a><img src="../../../public/assets/img/placeholders/image.png" /></a>
-                            <a><img src="../../../public/assets/img/placeholders/image.png" /></a>
+                            <a><img src="<?= asset('img/placeholders/image.png'); ?>" /></a>
+                            <a><img src="<?= asset('img/placeholders/image.png'); ?>" /></a>
                         </div>
                         <div class="meta">
                             <a class="like">
@@ -68,7 +68,7 @@
                 </div>
                 <div class="event">
                     <div class="label">
-                        <img src="../../../public/assets/img/avatars/jenny.jpg" class="ui avatar image" />
+                        <img src="<?= asset('img/avatars/jenny.jpg'); ?>" class="ui avatar image" />
                     </div>
                     <div class="content">
                         <div class="summary">
@@ -88,7 +88,7 @@
                 </div>
                 <div class="event">
                     <div class="label">
-                        <img src="../../../public/assets/img/avatars/joe.jpg" class="ui avatar image" />
+                        <img src="<?= asset('img/avatars/joe.jpg'); ?>" class="ui avatar image" />
                     </div>
                     <div class="content">
                         <div class="summary">
@@ -118,7 +118,7 @@
                 </div>
                 <div class="event">
                     <div class="label">
-                        <img src="../../../public/assets/img/avatars/justen.jpg" class="ui avatar image" />
+                        <img src="<?= asset('img/avatars/justen.jpg'); ?>" class="ui avatar image" />
                     </div>
                     <div class="content">
                         <div class="summary">
@@ -129,8 +129,8 @@
                             </div>
                         </div>
                         <div class="extra images">
-                            <a><img src="../../../public/assets/img/placeholders/image.png" /></a>
-                            <a><img src="../../../public/assets/img/placeholders/image.png" /></a>
+                            <a><img src="<?= asset('img/placeholders/image.png'); ?>" /></a>
+                            <a><img src="<?= asset('img/placeholders/image.png'); ?>" /></a>
                         </div>
                         <div class="meta">
                             <a class="like">

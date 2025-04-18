@@ -105,7 +105,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="service-image-main">
-                    <img src="../../../../public/assets/img/contents/services/grooming.jpg" alt="Wellness Checkup">
+                    <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Wellness Checkup">
                 </div>
             </div>
             <div class="col-lg-4">

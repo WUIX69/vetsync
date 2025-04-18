@@ -4,7 +4,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="/public/assets/img/contents/bg_log.jpg" alt="VetSync Clinic" class="history-image">
+                    <img src="<?= asset('img/contents/bg_log.jpg'); ?>" alt="VetSync Clinic" class="history-image">
                 </div>
                 <div class="col-md-6">
                     <h2>Our Journey</h2>
