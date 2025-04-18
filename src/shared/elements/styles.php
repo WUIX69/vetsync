@@ -7,6 +7,7 @@ $styles = [
     'vendor/bootstrap/dist/css/bootstrap-grid.min.css',
     'vendor/bootstrap/dist/css/bootstrap-utilities.min.css',
     'vendor/bootstrap/dist/css/bootstrap-reboot.min.css',
+    // 'vendor/bootstrap/dist/css/bootstrap.min.css',
     'vendor/fomantic-ui/dist/semantic.min.css',
     'assets/css/global.css',
     'assets/css/loader/window.css',
