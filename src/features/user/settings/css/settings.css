@@ -27,3 +27,12 @@ main section.settings .ui.form .field textarea,
 main section.settings .ui.form .field .ui.dropdown .text {
     font-size: 0.85rem;
 }
+
+main section.settings .tab-header h3,
+main section.settings .ui.form .field label {
+    color: var(--color-dark) !important;
+}
+
+main section.settings .tab-header p {
+    color: var(--color-dark-variant);
+}

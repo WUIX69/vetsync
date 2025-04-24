@@ -75,7 +75,17 @@ small {
     font-size: 0.67rem;
 }
 
-.small {
+h1,
+h2,
+h3,
+h4,
+h5,
+small,
+label {
+    color: var(--color-dark);
+}
+
+.ui.small {
     font-size: 0.82rem;
     color: var(--color-dark-variant) !important;
 }
