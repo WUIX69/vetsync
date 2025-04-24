@@ -103,7 +103,8 @@ p {
     top: -2px;
 }
 
-.box {
+.box,
+.card {
     border-radius: 1.75rem;
     background: var(--color-white);
     border: none;
@@ -113,7 +114,13 @@ p {
     overflow: hidden;
 }
 
-.box:hover {
+.card-body {
+    padding: 0;
+    margin: 0;
+}
+
+.box:hover,
+.card:hover {
     box-shadow: none;
 }
 

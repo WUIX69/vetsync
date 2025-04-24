@@ -3,28 +3,35 @@
 $appUrlPath = $_SERVER['REQUEST_URI'] ?? null;
 $appDirName = explode('/', trim($appUrlPath, '/'))[2] ?? '';
 
-// All resources required scripts
+// All scripts needed by the application
 $scripts = [
-    'lib/jquery/jquery.min.js',
-    'vendor/fomantic-ui/dist/semantic.min.js',
-    'lib/lodash/lodash.min.js',
-    'js/loader/window.js',
-    'js/darkmode.js',
-    'js/' . $appDirName . '/script.js',
-    'js/' . $appDirName . '/prefetch.js',
-    'js/scripts.js',
-];
-foreach ($scripts as $script) {
-    echo '<script src="' . asset($script) . '"></script>';
-}
+    // Regular scripts
+    ['src' => 'lib/jquery/jquery.min.js', 'module' => false, 'utility' => false],
+    ['src' => 'vendor/fomantic-ui/dist/semantic.min.js', 'module' => false, 'utility' => false],
 
-// Required utils that can be used in any page
-$utils = [
-    'js/validateHandler.js',
-    'js/middleware.js',
+    // Bootstrap modules (loaded as ES modules)
+    ['src' => 'vendor/bootstrap/js/src/base-component.js', 'module' => true, 'utility' => false],
+    ['src' => 'vendor/bootstrap/js/src/button.js', 'module' => true, 'utility' => false],
+    ['src' => 'vendor/bootstrap/js/src/collapse.js', 'module' => true, 'utility' => false],
+    ['src' => 'vendor/bootstrap/js/src/tab.js', 'module' => true, 'utility' => false],
+
+    // Regular scripts
+    ['src' => 'lib/lodash/lodash.min.js', 'module' => false, 'utility' => false],
+    ['src' => 'js/loader/window.js', 'module' => false, 'utility' => false],
+    ['src' => 'js/darkmode.js', 'module' => false, 'utility' => false],
+    ['src' => 'js/' . $appDirName . '/script.js', 'module' => false, 'utility' => false],
+    ['src' => 'js/' . $appDirName . '/prefetch.js', 'module' => false, 'utility' => false],
+    ['src' => 'js/scripts.js', 'module' => false, 'utility' => false],
+
+    // Utils
+    ['src' => 'js/validateHandler.js', 'module' => false, 'utility' => true],
+    ['src' => 'js/middleware.js', 'module' => false, 'utility' => true],
 ];
-foreach ($utils as $util) {
-    echo '<script src="' . utils($util, true) . '"></script>';
+
+foreach ($scripts as $script) {
+    $moduleAttr = $script['module'] ? ' type="module"' : '';
+    $srcRef = $script['utility'] ? utils($script['src'], true) : asset($script['src']);
+    echo '<script' . $moduleAttr . ' src="' . $srcRef . '"></script>';
 }
 
 ?>

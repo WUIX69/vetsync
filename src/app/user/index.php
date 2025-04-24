@@ -595,7 +595,6 @@
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <?= featured('user/dashboard/scripts'); ?>
 
 </body>
 
