@@ -8,57 +8,87 @@
     <title>Services - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
     <style>
-        main section.services-header {
-            padding: 20px 20px 20px;
-            background: #031224;
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 30px;
-        }
-
-        main section.services-header .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        main section.services-header .header h4 {
-            color: #f1f3f2;
-            font-weight: 500;
+        main section.services {
+            position: relative;
+            padding-top: 0.3rem;
+            padding-bottom: 3rem;
             margin: 0;
         }
 
-        main section.services-content {
-            padding: 20px;
-        }
-
-        .service-card {
-            background: #fefefe;
-            padding: 25px;
-            border-radius: 24px;
-            margin-bottom: 20px;
+        main section.services .service-card {
+            background: var(--color-white);
+            padding: 0 !important;
+            border-radius: 0.6rem;
+            border: 1px solid var(--bs-card-border-color) !important;
             transition: all 0.3s ease;
+            height: 100%;
         }
 
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        main section.services .service-card .card-img {
+            position: relative;
+            overflow: hidden;
+            min-height: 278px;
+            border-radius: 0;
         }
 
-        .service-card .service-header {
+        main section.services .service-card .card-img .service-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        main section.services .service-card .card-img .service-status span {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 60px;
+            background: var(--bs-primary);
+            color: var(--bs-white);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        main section.services .service-card .card-img .service-status span i {
+            font-size: 1rem;
+        }
+
+        main section.services .service-card .card-img .service-tag {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+        }
+
+        main section.services .service-card .card-img .service-tag span {
+            font-size: 0.8rem;
+        }
+
+        main section.services .service-card .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        main section.services .service-card .card-body {
+            padding: 1.6rem;
+        }
+
+        main section.services .service-card .card-body .service-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
         }
 
-        .service-card .service-header h4 {
-            font-weight: 600;
+        main section.services .service-card .card-body .service-header h4 {
+            font-weight: bold;
             margin: 0;
+            font-size: 1.4rem;
         }
 
-        .service-card .service-header i {
+        main section.services .service-card .card-body .service-header i {
             font-size: 24px;
             background: #eff6ff;
             padding: 10px;
@@ -66,18 +96,18 @@
             color: #031224;
         }
 
-        .service-card .service-details {
+        main section.services .service-card .card-body .service-details {
             margin-bottom: 20px;
         }
 
-        .service-card .service-details p {
+        main section.services .service-card .card-body .service-details p {
             color: #666;
             font-size: 14px;
             line-height: 1.6;
             margin-bottom: 15px;
         }
 
-        .service-card .service-meta {
+        main section.services .service-card .card-body .service-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -85,13 +115,13 @@
             border-top: 1px solid #f3f3f3;
         }
 
-        .service-card .service-meta .price {
+        main section.services .service-card .card-body .service-meta .price {
             font-weight: 600;
             font-size: 18px;
             color: #031224;
         }
 
-        .service-card .service-meta button {
+        main section.services .service-card .card-body .service-meta button {
             border: none;
             color: #fff;
             background: #031224;
@@ -104,27 +134,44 @@
             transition: all 0.3s ease;
         }
 
-        .service-card .service-meta button:hover {
+        main section.services .service-card .card-body .service-meta button:hover {
             background: #062451;
         }
 
-        .service-status {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 500;
+        /* Pagination START */
+        main section.services .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 3rem;
         }
 
-        .status-available {
-            background: #dcfce7;
-            color: #166534;
+        main section.services .pagination .page-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-white);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .status-busy {
-            background: #fee2e2;
-            color: #991b1b;
+        main section.services .pagination .page-item i {
+            margin: 0;
         }
+
+        main section.services .pagination .page-item:hover {
+            background-color: var(--color-primary-light);
+        }
+
+        main section.services .pagination .page-item.active {
+            background-color: var(--color-dark);
+            color: var(--color-white);
+        }
+
+        /* Pagination END */
     </style>
 </head>
 
@@ -134,120 +181,194 @@
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
     </div>
 
-    <div class="container-body">
+    <div class="site-cont">
         <!-- Site Header -->
         <?= featured('user/shared/layouts/header'); ?>
 
         <main class="site-main">
-            <section class="services-header">
-                <div class="header">
-                    <h4>Available Services</h4>
-                    <div class="service-status status-available">
-                        Currently Available
-                    </div>
+            <!-- Header -->
+            <section class="header py-5">
+                <div class="container-xl">
+                    <h1>Services <span class="emoji">🏥</span></h1>
+                    <p>Find the right service for your pet, and manage your services.</p>
                 </div>
             </section>
 
-            <section class="services-content">
-                <div class="row">
-                    <!-- Vaccination Service -->
-                    <div class="col-lg-4">
-                        <div class="service-card box">
-                            <img src="<?= asset('img/contents/services/vaccination.jpg'); ?>"
-                                alt="Vaccination Services">
-                            <div class="service-header">
-                                <h4>Vaccination</h4>
-                                <i class='bx bx-injection'></i>
+            <!-- Services -->
+            <section class="services">
+                <div class="container-xl">
+                    <div class="row g-4">
+                        <!-- Vaccination Service -->
+                        <div class="col-lg-4">
+                            <div class="service-card card">
+                                <div class="card-img">
+                                    <div class="service-status">
+                                        <span class="ui green label status-avail available">
+                                            <i class='bx bx-check-circle'></i> Available</span>
+                                    </div>
+                                    <img src="<?= asset('img/contents/services/vaccination.jpg'); ?>"
+                                        alt="Vaccination Services">
+                                    <div class="service-tag">
+                                        <span class="ui primary tag label">Featured</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="service-header">
+                                        <h4>Vaccination</h4>
+                                        <i class='bx bx-injection'></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <p>Essential vaccinations to protect your pet against common diseases. Includes
+                                            consultation and vaccine administration.</p>
+                                        <p>Duration: 20-30 minutes</p>
+                                    </div>
+                                    <div class="service-meta">
+                                        <span class="price">$75.00</span>
+                                        <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="service-details">
-                                <p>Essential vaccinations to protect your pet against common diseases. Includes
-                                    consultation and vaccine administration.</p>
-                                <p>Duration: 20-30 minutes</p>
+                        </div>
+
+                        <!-- Surgery Service -->
+                        <div class="col-lg-4">
+                            <div class="service-card card">
+                                <div class="card-img">
+                                    <div class="service-status">
+                                        <span class="ui red label status-avail unavailable">
+                                            <i class='bx bx-x-circle'></i> Unavailable</span>
+                                    </div>
+                                    <img src="<?= asset('img/contents/services/surgery.jpg'); ?>"
+                                        alt="Surgery Services">
+                                    <div class="service-tag">
+                                        <span class="ui primary tag label">Featured</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="service-header">
+                                        <h4>Surgery</h4>
+                                        <i class='bx bx-plus-medical'></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <p>Professional surgical procedures performed by experienced veterinarians in a
+                                            state-of-the-art facility.</p>
+                                        <p>Duration: Varies by procedure</p>
+                                    </div>
+                                    <div class="service-meta">
+                                        <span class="price">From $200.00</span>
+                                        <button>Consult Now <i class='bx bx-right-arrow-alt'></i></button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="service-meta">
-                                <span class="price">$75.00</span>
-                                <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
+                        </div>
+
+                        <!-- Grooming Service -->
+                        <div class="col-lg-4">
+                            <div class="service-card card">
+                                <div class="card-img">
+                                    <div class="service-status">
+                                        <span class="ui yellow label status-avail busy">
+                                            <i class='bx bx-time'></i> Busy</span>
+                                    </div>
+                                    <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Pet Grooming">
+                                    <div class="service-tag">
+                                        <span class="ui primary tag label">Featured</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="service-header">
+                                        <h4>Grooming</h4>
+                                        <i class='bx bx-cut'></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <p>Professional grooming services including bath, haircut, nail trimming, and
+                                            ear
+                                            cleaning. Lorem, ipsum dolor.</p>
+                                        <p>Duration: 60-120 minutes</p>
+                                    </div>
+                                    <div class="service-meta">
+                                        <span class="price">From $65.00</span>
+                                        <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pet Foods & Accessories Service -->
+                        <div class="col-lg-4">
+                            <div class="service-card card">
+                                <div class="card-img">
+                                    <div class="service-status">
+                                        <span class="ui blue label status-avail available">
+                                            <i class='bx bx-check-circle'></i> Available</span>
+                                    </div>
+                                    <img src="<?= asset('img/contents/services/accessories.jpg'); ?>"
+                                        alt="Pet Foods & Accessories">
+                                    <div class="service-tag">
+                                        <span class="ui primary tag label">Featured</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="service-header">
+                                        <h4>Foods & Accessories</h4>
+                                        <i class='bx bx-store'></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <p>Premium quality pet foods, nutritional supplements, and a wide range of
+                                            accessories including collars, leashes, beds, toys, and care products.</p>
+                                        <p>In-store & Online Shopping Available</p>
+                                    </div>
+                                    <div class="service-meta">
+                                        <span class="price">Varies</span>
+                                        <button>Shop Now <i class='bx bx-cart'></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pet boarding Service -->
+                        <div class="col-lg-4">
+                            <div class="service-card card">
+                                <div class="card-img">
+                                    <div class="service-status">
+                                        <span class="ui teal label status-avail coming-soon">
+                                            <i class='bx bx-time-five'></i> Coming Soon</span>
+                                    </div>
+                                    <img src="<?= asset('img/contents/services/boarding.jpg'); ?>"
+                                        alt="Coming Soon Service">
+                                    <div class="service-tag">
+                                        <span class="ui primary tag label">New</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="service-header">
+                                        <h4>Boarding</h4>
+                                        <i class='bx bx-home-heart'></i>
+                                    </div>
+                                    <div class="service-details">
+                                        <p>Safe and comfortable boarding facilities for your pets while you're away.
+                                            Includes feeding, daily exercise, and medical monitoring if needed.</p>
+                                        <p>Coming in September 2023</p>
+                                    </div>
+                                    <div class="service-meta">
+                                        <span class="price">From $45.00/night</span>
+                                        <button>Notify Me <i class='bx bx-bell'></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Surgery Service -->
-                    <div class="col-lg-4">
-                        <div class="service-card box">
-                            <img src="<?= asset('img/contents/services/surgery.jpg'); ?>" alt="Surgery Services">
-                            <div class="service-header">
-                                <h4>Surgery</h4>
-                                <i class='bx bx-plus-medical'></i>
-                            </div>
-                            <div class="service-details">
-                                <p>Professional surgical procedures performed by experienced veterinarians in a
-                                    state-of-the-art facility.</p>
-                                <p>Duration: Varies by procedure</p>
-                            </div>
-                            <div class="service-meta">
-                                <span class="price">From $200.00</span>
-                                <button>Consult Now <i class='bx bx-right-arrow-alt'></i></button>
-                            </div>
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <div class="page-item">
+                            <i class="angle left icon"></i>
                         </div>
-                    </div>
-
-                    <!-- Grooming Service -->
-                    <div class="col-lg-4">
-                        <div class="service-card box">
-                            <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Pet Grooming">
-                            <div class="service-header">
-                                <h4>Pet Grooming</h4>
-                                <i class='bx bx-cut'></i>
-                            </div>
-                            <div class="service-details">
-                                <p>Professional grooming services including bath, haircut, nail trimming, and ear
-                                    cleaning.</p>
-                                <p>Duration: 60-120 minutes</p>
-                            </div>
-                            <div class="service-meta">
-                                <span class="price">From $65.00</span>
-                                <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pet Foods Service -->
-                    <div class="col-lg-4">
-                        <div class="service-card box">
-                            <img src="<?= asset('img/contents/services/foods.jpg'); ?>" alt="Pet Foods">
-                            <div class="service-header">
-                                <h4>Pet Foods</h4>
-                                <i class='bx bx-bowl-hot'></i>
-                            </div>
-                            <div class="service-details">
-                                <p>Premium quality pet foods and nutritional supplements. Prescription diets and
-                                    specialized food plans available.</p>
-                                <p>Consultation Available</p>
-                            </div>
-                            <div class="service-meta">
-                                <span class="price">Varies</span>
-                                <button>Shop Now <i class='bx bx-cart'></i></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pet Accessories -->
-                    <div class="col-lg-4">
-                        <div class="service-card">
-                            <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories">
-                            <div class="service-header">
-                                <h4>Pet Accessories</h4>
-                                <i class='bx bx-store'></i>
-                            </div>
-                            <div class="service-details">
-                                <p>Wide range of quality pet accessories including collars, leashes, beds, toys,
-                                    and care products.</p>
-                                <p>In-store & Online</p>
-                            </div>
-                            <div class="service-meta">
-                                <span class="price">From $10.00</span>
-                                <button>Shop Now <i class='bx bx-cart'></i></button>
-                            </div>
+                        <div class="page-item active">1</div>
+                        <div class="page-item">2</div>
+                        <div class="page-item">3</div>
+                        <div class="page-item">
+                            <i class="angle right icon"></i>
                         </div>
                     </div>
                 </div>
@@ -256,7 +377,6 @@
     </div>
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-    <?= featured('user/services/scripts'); ?>
 </body>
 
 </html>

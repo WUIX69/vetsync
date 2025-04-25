@@ -16,6 +16,13 @@
         flex-wrap: nowrap;
     }
 
+    @media screen and (max-width: 768px) {
+        main section.products .header {
+            /* flex-wrap: wrap; */
+            flex-direction: column;
+        }
+    }
+
     /* Header - Filter Bar */
     main section.products .header .filter-bar {
         display: flex;
@@ -24,6 +31,18 @@
         padding: 0;
         margin: 0;
         flex: 1;
+    }
+
+    @media screen and (max-width: 768px) {
+        main section.products .header .filter-bar {
+            padding: 0;
+            margin: 0;
+
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.6rem;
+        }
     }
 
     main section.products .header .filter-bar button {
@@ -36,6 +55,7 @@
         transition: all 0.3s ease;
         border: none;
         cursor: pointer;
+        text-wrap: nowrap;
     }
 
     main section.products .header .filter-bar button:hover {

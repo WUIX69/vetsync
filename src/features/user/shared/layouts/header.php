@@ -14,7 +14,7 @@ $activeLink = str_replace('.php', '', $pageName);
     <div class="nav">
         <div class="logo">
             <i class='bx bxl-codepen'></i>
-            <a href="<?= app('user/dashboard') ?>">VetSync</a>
+            <a href="<?= app('user') ?>">VetSync</a>
         </div>
         <div class="nav-links">
             <a class="nav-link <?= ($activeLink === 'index' || $activeLink === '') ? 'active' : '' ?>"
