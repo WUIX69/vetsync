@@ -1,3 +1,107 @@
+<style>
+    /*----------- MAIN (Services) -----------*/
+    main .section-container:has(section.services-section) {
+        background: var(--color-background-variant);
+    }
+
+    main section.services-section .services-container {
+        position: relative;
+    }
+
+    main section.services-section .services-card {
+        background: var(--color-white);
+        position: relative !important;
+        overflow: hidden;
+        height: 400px;
+        cursor: pointer;
+
+        border-radius: 0.8rem !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    main section.services-section .services-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    main section.services-section .visible-content {
+        position: absolute;
+        left: 1.7rem;
+        bottom: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    main section.services-section .visible-content .title {
+        font-size: 1.9rem;
+        font-weight: 600;
+        color: var(--color-white);
+        text-transform: capitalize;
+        text-shadow: var(--text-shadow);
+    }
+
+    main section.services-section .hovered-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        border-left: 3px solid var(--color-white) !important;
+        padding: 1.7rem;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: center;
+        gap: 1.5rem;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    main section.services-section .services-card:hover .hovered-content {
+        transform: translateX(0);
+    }
+
+    main section.services-section .hovered-content .title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-white);
+        margin-bottom: -1rem;
+        text-transform: capitalize;
+    }
+
+    main section.services-section .hovered-content .paragraph {
+        color: var(--color-white);
+        line-height: 1.6;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+
+    main section.services-section .hovered-content .read-more-btn {
+        display: inline-block;
+        padding: 8px 20px;
+        background: var(--color-white);
+        color: var(--color-dark);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+
+    main section.services-section .hovered-content .read-more-btn:hover {
+        background: rgba(255, 255, 255, 0.9);
+        transform: translateY(-2px);
+    }
+</style>
 <div class="section-container">
     <section class="section-wrapper services-section">
         <div class="section-title">
