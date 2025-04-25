@@ -26,7 +26,7 @@
         flex: 1;
     }
 
-    main section.products .header .filter-bar .filter-button {
+    main section.products .header .filter-bar button {
         padding: 0.8rem 1.5rem;
         margin: 0 0.3rem;
         border-radius: 0.3rem;
@@ -38,12 +38,12 @@
         cursor: pointer;
     }
 
-    main section.products .header .filter-bar .filter-button:hover {
+    main section.products .header .filter-bar button:hover {
         transform: translateY(-3px);
         box-shadow: var(--box-shadow);
     }
 
-    main section.products .header .filter-bar .filter-button.active {
+    main section.products .header .filter-bar button.active {
         background-color: var(--color-dark);
         color: var(--color-white);
     }
@@ -90,7 +90,7 @@
     }
 
     main section.products .product-listing .content-1:hover img {
-        transform: scale(1.6);
+        transform: scale(1.1);
     }
 
     main section.products .product-listing .content-1 .product-tag {
@@ -154,6 +154,10 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px 20px;
+        line-height: 1.4;
+
+        border-bottom: 1px solid var(--bs-card-border-color) !important;
+        padding-bottom: 1.6rem;
     }
 
     main section.products .product-listing .content-2 .product-spec-item {
@@ -233,11 +237,11 @@
         <div class="header">
             <!-- Filter Bar -->
             <div class="filter-bar">
-                <button class="filter-button active">Show All</button>
-                <button class="filter-button">Dog Food</button>
-                <button class="filter-button">Cat Food</button>
-                <button class="filter-button">Supplements</button>
-                <button class="filter-button">Accessories</button>
+                <button class="ui mini button active">Show All</button>
+                <button class="ui mini button">Dog Food</button>
+                <button class="ui mini button">Cat Food</button>
+                <button class="ui mini button">Supplements</button>
+                <button class="ui mini button">Accessories</button>
             </div>
 
             <!-- Sort -->
