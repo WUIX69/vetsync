@@ -1,9 +1,3 @@
-main section.header h1 {
-    font-size: 2.5rem !important;
-    margin: 0;
-    margin-bottom: 0.3rem;
-}
-
 main section.settings .tab-header {
     border-bottom: 1px solid rgba(34, 36, 38, 0.15);
     margin-bottom: 1.5rem;
