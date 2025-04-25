@@ -134,7 +134,7 @@
         gap: 0.5rem;
         background-color: rgba(255, 255, 255, 0.85);
         border-radius: 3px;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
     }
@@ -145,8 +145,8 @@
     }
 
     main section.products .product-listing .content-2 .product-title {
-        font-size: 1.3rem;
-        font-weight: 600;
+        font-size: 1.4rem;
+        font-weight: bold;
         color: var(--color-dark);
     }
 
@@ -154,7 +154,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 10px 20px;
-        line-height: 1.4;
+        line-height: 1.3;
 
         border-bottom: 1px solid var(--bs-card-border-color) !important;
         padding-bottom: 1.6rem;
