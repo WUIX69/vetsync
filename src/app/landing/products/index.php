@@ -40,6 +40,11 @@
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?>
     <?= featured('landing/services/scripts'); ?>
+    <script type="text/javascript">
+        $(function () {
+            $('.ui.rating').rating();
+        });
+    </script>
 </body>
 
 </html>
