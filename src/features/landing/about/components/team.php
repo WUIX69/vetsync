@@ -1,5 +1,12 @@
 <div class="section-container">
     <section class="section-wrapper team-section">
+        <div class="section-title">
+            <span class="sub-title">Our Team</span>
+            <h2>Meet Our Veterinary Professionals</h2>
+            <p>Dedicated experts committed to the health and wellbeing of your pets. Lorem ipsum dolor sit amet
+                consectetur adipisicing elit. Itaque, provident.</p>
+        </div>
+
         <div class="team-grid">
             <div class="row">
                 <!-- Team Member 1 -->
