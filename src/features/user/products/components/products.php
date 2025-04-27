@@ -170,6 +170,10 @@
         color: var(--color-dark);
     }
 
+    main section.products .product-listing .content-2 .paragraph {
+        font-size: 0.95rem;
+    }
+
     main section.products .product-listing .content-2 .product-specs {
         display: flex;
         flex-wrap: wrap;
@@ -214,41 +218,6 @@
     }
 
     /* Product Card - Content 2 END */
-
-    /* Pagination START */
-    main section.products .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 3rem;
-    }
-
-    main section.products .pagination .page-item {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--color-white);
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    main section.products .pagination .page-item i {
-        margin: 0;
-    }
-
-    main section.products .pagination .page-item:hover {
-        background-color: var(--color-primary-light);
-    }
-
-    main section.products .pagination .page-item.active {
-        background-color: var(--color-dark);
-        color: var(--color-white);
-    }
-
-    /* Pagination END */
 </style>
 
 <!-- Products Section -->
@@ -266,16 +235,28 @@
 
             <!-- Sort -->
             <div class="sort-container">
-                <div class="ui tiny floating selection compact dropdown sort-dropdown">
+                <div class="ui tiny floating selection compact clearable dropdown sort-dropdown">
                     <input type="hidden" name="sort">
                     <i class="dropdown icon"></i>
                     <div class="default text">Sort By</div>
                     <div class="menu">
-                        <div class="item" data-value="newest">Newest</div>
-                        <div class="item" data-value="price-low">Price: Low to High</div>
-                        <div class="item" data-value="price-high">Price: High to Low</div>
-                        <div class="item" data-value="popular">Most Popular</div>
-                        <div class="item" data-value="rating">Highest Rated</div>
+                        <div class="item" data-value="newest">
+                            <i class="calendar alternate outline icon"></i>Newest
+                        </div>
+                        <div class="item" data-value="price-low">
+                            <i class="sort amount down icon"></i>Price: Low to
+                            High
+                        </div>
+                        <div class="item" data-value="price-high">
+                            <i class="sort amount up icon"></i>Price: High to
+                            Low
+                        </div>
+                        <div class="item" data-value="popular">
+                            <i class="fire icon"></i>Most Popular
+                        </div>
+                        <div class="item" data-value="rating">
+                            <i class="star icon"></i>Highest Rated
+                        </div>
                     </div>
                 </div>
             </div>
@@ -283,7 +264,7 @@
             <!-- Search -->
             <div class="ui tiny search">
                 <div class="ui icon input">
-                    <input class="prompt" type="text" placeholder="Github Repositories...">
+                    <input class="prompt" type="text" placeholder="Search for products...">
                     <i class="search icon"></i>
                 </div>
                 <div class="results"></div>

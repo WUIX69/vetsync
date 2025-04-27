@@ -51,10 +51,12 @@ header nav .navbar-logo .logo-text-main {
     text-transform: capitalize;
     transition: all 0.3s ease;
     font-weight: 700;
+
+    color: var(--color-white);
 }
 
 header nav .navbar-logo .logo-text-main:hover {
-    color: #00b5ad;
+    color: #00b5ad !important;
 }
 
 /*------ NAVBAR (Links & Actions) ------*/

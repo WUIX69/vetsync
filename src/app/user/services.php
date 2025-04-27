@@ -10,156 +10,165 @@
     <style>
         main section.services {
             position: relative;
-            padding-top: 0.3rem;
+            /* padding-top: 0.3rem; */
             padding-bottom: 3rem;
             margin: 0;
         }
 
+        /* Header */
+        main section.services .header {
+            display: flex;
+            justify-content: end;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 2.3rem;
+            flex-wrap: nowrap;
+        }
+
+        @media screen and (max-width: 768px) {
+            main section.services .header {
+                /* flex-wrap: wrap; */
+                flex-direction: column;
+            }
+        }
+
+        main section.services .header .ui.dropdown {
+            background: var(--color-white) !important;
+        }
+
+        main section.services .header .ui.search input {
+            background: var(--color-white) !important;
+        }
+
+        /* Header END */
+
         main section.services .service-card {
             background: var(--color-white);
-            border-radius: 0.8rem;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 0 !important;
+            border-radius: 0.6rem;
+            border: 1px solid var(--bs-card-border-color) !important;
+            transition: all 0.3s ease;
             height: 100%;
-            transition: all 0.3s;
-            border: 1px solid #e5e7eb;
         }
 
-        main section.services .service-card:hover {
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
-            transform: translateY(-4px);
-        }
-
-        main section.services .card-img {
+        main section.services .service-card .card-img {
             position: relative;
-            height: 180px;
             overflow: hidden;
+            height: 260px;
+            border-radius: 0;
         }
 
-        main section.services .card-img img {
+        main section.services .service-card .card-img .service-status {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        main section.services .service-card .card-img .service-status span {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 60px;
+            background: var(--bs-primary);
+            color: var(--bs-white);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        main section.services .service-card .card-img .service-status span i {
+            font-size: 1rem;
+        }
+
+        main section.services .service-card .card-img .service-tag {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+        }
+
+        main section.services .service-card .card-img .service-tag span {
+            font-size: 0.8rem;
+        }
+
+        main section.services .service-card .card-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
         }
 
-        main section.services .service-status {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 2;
-        }
+        main section.services .service-card .card-body {
+            padding: 1.6rem;
+            font-size: 0.95rem;
 
-        main section.services .service-status span {
             display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            color: white;
+            flex-direction: column;
         }
 
-        .status-avail.available {
-            background: #16a34a;
-        }
-
-        .status-avail.unavailable {
-            background: #dc2626;
-        }
-
-        .status-avail.busy {
-            background: #f59e0b;
-        }
-
-        .status-avail.coming-soon {
-            background: #0ea5e9;
-        }
-
-        main section.services .service-tag {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-        }
-
-        main section.services .service-tag span {
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            background: #3b82f6;
-            color: white;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-
-        main section.services .card-body {
-            padding: 1.5rem;
-        }
-
-        main section.services .service-header {
+        main section.services .service-card .card-body .service-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
         }
 
-        main section.services .service-header h4 {
-            font-size: 1.25rem;
-            font-weight: 600;
+        main section.services .service-card .card-body .service-header h4 {
+            font-weight: bold;
             margin: 0;
-            color: #111827;
+            font-size: 1.4rem;
         }
 
-        main section.services .service-header i {
-            font-size: 1.25rem;
-            background: #f3f4f6;
+        main section.services .service-card .card-body .service-header i {
+            font-size: 24px;
+            background: #eff6ff;
+            padding: 10px;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #374151;
+            color: #031224;
         }
 
-        main section.services .service-details p {
-            color: #6b7280;
-            font-size: 0.95rem;
+        main section.services .service-card .card-body .service-details {
+            margin-bottom: 20px;
+        }
+
+        main section.services .service-card .card-body .service-details p {
+            color: #667;
+            /* font-size: 14px; */
             line-height: 1.5;
-            margin-bottom: 0.5rem;
+            margin-bottom: 15px;
         }
 
-        main section.services .service-meta {
+        main section.services .service-card .card-body .service-meta {
+            flex: 1;
+
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 1.25rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e5e7eb;
+            padding-top: 15px;
+            border-top: 1px solid #f3f3f3;
         }
 
-        main section.services .price {
+        main section.services .service-card .card-body .service-meta .price {
             font-weight: 600;
-            font-size: 1.125rem;
-            color: #111827;
+            font-size: 18px;
+            color: #031224;
         }
 
-        main section.services button {
-            background: #111827;
-            color: white;
+        main section.services .service-card .card-body .service-meta button {
             border: none;
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.95rem;
-            font-weight: 500;
+            color: #fff;
+            background: #031224;
+            padding: 10px 20px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 8px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
 
-        main section.services button:hover {
-            background: #1f2937;
+        main section.services .service-card .card-body .service-meta button:hover {
+            background: #062451;
         }
     </style>
 </head>
@@ -186,6 +195,68 @@
             <!-- Services -->
             <section class="services">
                 <div class="container-xl">
+                    <!-- Header -->
+                    <div class="header">
+                        <!-- Status -->
+                        <div class="sort-container">
+                            <div class="ui tiny floating selection compact clearable dropdown status-dropdown">
+                                <input type="hidden" name="filter">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Status By</div>
+                                <div class="menu">
+                                    <div class="item" data-value="available">
+                                        <i class="check circle icon"></i>Available
+                                    </div>
+                                    <div class="item" data-value="unavailable">
+                                        <i class="times circle icon"></i>Unavailable
+                                    </div>
+                                    <div class="item" data-value="busy">
+                                        <i class="clock icon"></i>Busy
+                                    </div>
+                                    <div class="item" data-value="soon">
+                                        <i class="calendar plus icon"></i>Coming Soon
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="sort-container">
+                            <div class="ui tiny floating selection compact clearable dropdown sort-dropdown">
+                                <input type="hidden" name="sort">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Sort By</div>
+                                <div class="menu">
+                                    <div class="item" data-value="newest">
+                                        <i class="calendar alternate outline icon"></i>Newest
+                                    </div>
+                                    <div class="item" data-value="price-low">
+                                        <i class="sort amount down icon"></i>Price: Low to High
+                                    </div>
+                                    <div class="item" data-value="price-high">
+                                        <i class="sort amount up icon"></i>Price: High to Low
+                                    </div>
+                                    <div class="item" data-value="popular">
+                                        <i class="fire icon"></i>Most Popular
+                                    </div>
+                                    <div class="item" data-value="rating">
+                                        <i class="star icon"></i>Highest Rated
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Search -->
+                        <div class="ui tiny search">
+                            <div class="ui icon input">
+                                <input class="prompt" type="text" placeholder="Search for services...">
+                                <i class="search icon"></i>
+                            </div>
+                            <div class="results"></div>
+                        </div>
+                    </div>
+
+                    <!-- Services -->
                     <div class="row g-4">
                         <!-- Vaccination Service -->
                         <div class="col-lg-4">
@@ -240,7 +311,8 @@
                                     </div>
                                     <div class="service-details">
                                         <p>Professional surgical procedures performed by experienced veterinarians in a
-                                            state-of-the-art facility.</p>
+                                            state-of-the-art facility. Lorem ipsum dolor sit amet consectetur
+                                            adipisicing elit.</p>
                                         <p>Duration: Varies by procedure</p>
                                     </div>
                                     <div class="service-meta">
@@ -272,7 +344,7 @@
                                     <div class="service-details">
                                         <p>Professional grooming services including bath, haircut, nail trimming, and
                                             ear
-                                            cleaning. Lorem, ipsum dolor.</p>
+                                            cleaning. Lorem, ipsum dolor. Lorem ipsum dolor sit amet.</p>
                                         <p>Duration: 60-120 minutes</p>
                                     </div>
                                     <div class="service-meta">

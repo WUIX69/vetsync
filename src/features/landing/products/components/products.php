@@ -170,6 +170,11 @@
         color: var(--color-dark);
     }
 
+    main section.products .product-listing .content-2 .paragraph {
+        font-size: 0.95rem;
+        color: var(--color-dark);
+    }
+
     main section.products .product-listing .content-2 .product-specs {
         display: flex;
         flex-wrap: wrap;
@@ -260,6 +265,7 @@
             <p>Comprehensive pet Supply for your beloved pets</p>
         </div>
         <div class="container-xl">
+            <!-- Header -->
             <div class="header">
                 <!-- Filter Bar -->
                 <div class="filter-bar">
@@ -272,16 +278,28 @@
 
                 <!-- Sort -->
                 <div class="sort-container">
-                    <div class="ui tiny floating selection compact dropdown sort-dropdown">
+                    <div class="ui tiny floating selection compact clearable dropdown sort-dropdown">
                         <input type="hidden" name="sort">
                         <i class="dropdown icon"></i>
                         <div class="default text">Sort By</div>
                         <div class="menu">
-                            <div class="item" data-value="newest">Newest</div>
-                            <div class="item" data-value="price-low">Price: Low to High</div>
-                            <div class="item" data-value="price-high">Price: High to Low</div>
-                            <div class="item" data-value="popular">Most Popular</div>
-                            <div class="item" data-value="rating">Highest Rated</div>
+                            <div class="item" data-value="newest">
+                                <i class="calendar alternate outline icon"></i>Newest
+                            </div>
+                            <div class="item" data-value="price-low">
+                                <i class="sort amount down icon"></i>Price: Low to
+                                High
+                            </div>
+                            <div class="item" data-value="price-high">
+                                <i class="sort amount up icon"></i>Price: High to
+                                Low
+                            </div>
+                            <div class="item" data-value="popular">
+                                <i class="fire icon"></i>Most Popular
+                            </div>
+                            <div class="item" data-value="rating">
+                                <i class="star icon"></i>Highest Rated
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -289,7 +307,7 @@
                 <!-- Search -->
                 <div class="ui tiny search">
                     <div class="ui icon input">
-                        <input class="prompt" type="text" placeholder="Github Repositories...">
+                        <input class="prompt" type="text" placeholder="Search for products...">
                         <i class="search icon"></i>
                     </div>
                     <div class="results"></div>
@@ -724,12 +742,10 @@
                     </div>
                 </div>
 
-                <!-- Pagination -->
                 <!-- Pagination START -->
                 <?= shared('components/pagination'); ?>
                 <!-- Pagination END -->
             </div>
         </div>
-
     </section>
 </div>

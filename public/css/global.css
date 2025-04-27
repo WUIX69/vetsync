@@ -227,6 +227,10 @@ body.scrolled .shared-standalone-content .top-redirect-button {
     box-shadow: none !important;
 }
 
+.ui.dropdown.compact.clearable {
+    padding-right: 1.6rem;
+}
+
 .ui.dropdown.compact.visible .text,
 .ui.dropdown.compact.visible i.icon:not(.menu i) {
     color: var(--color-dark-variant) !important;
