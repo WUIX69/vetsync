@@ -217,39 +217,6 @@
         }
 
         /* Appointment Nav END */
-
-        /* Pagination */
-        main section.appointments .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 3rem;
-        }
-
-        main section.appointments .pagination .page-item {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--color-white);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        main section.appointments .pagination .page-item i {
-            margin: 0;
-        }
-
-        main section.appointments .pagination .page-item:hover {
-            background-color: var(--color-primary-light);
-        }
-
-        main section.appointments .pagination .page-item.active {
-            background-color: var(--color-dark);
-            color: var(--color-white);
-        }
     </style>
 </head>
 
@@ -576,18 +543,9 @@
                             </div>
                         </div>
 
-                        <!-- Pagination -->
-                        <div class="pagination">
-                            <div class="page-item">
-                                <i class="angle left icon"></i>
-                            </div>
-                            <div class="page-item active">1</div>
-                            <div class="page-item">2</div>
-                            <div class="page-item">3</div>
-                            <div class="page-item">
-                                <i class="angle right icon"></i>
-                            </div>
-                        </div>
+                        <!-- Pagination START -->
+                        <?= shared('components/pagination'); ?>
+                        <!-- Pagination END -->
                     </div>
                 </div>
             </section>
@@ -595,104 +553,6 @@
     </div>
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-    <script type="text/javascript">
-        // $(document).ready(function () {
-        //     // Initialize filter buttons
-        //     $('.filter-bar button').click(function () {
-        //         $('.filter-bar button').removeClass('active');
-        //         $(this).addClass('active');
-
-        //         const filterType = $(this).text().toLowerCase();
-        //         filterAppointments(filterType);
-        //     });
-
-        //     function filterAppointments(type) {
-        //         if (type === 'all appointments') {
-        //             $('.appointment-listing').show();
-        //         } else {
-        //             $('.appointment-listing').each(function () {
-        //                 const status = $(this).find('.appointment-status').text().toLowerCase();
-        //                 if (status === type) {
-        //                     $(this).show();
-        //                 } else {
-        //                     $(this).hide();
-        //                 }
-        //             });
-        //         }
-        //     }
-
-        //     // Initialize action buttons
-        //     $('.appointment-actions button').click(function () {
-        //         const action = $(this).text().trim().toLowerCase();
-        //         const appointmentCard = $(this).closest('.appointment-listing');
-
-        //         switch (action) {
-        //             case 'reschedule':
-        //                 handleReschedule(appointmentCard);
-        //                 break;
-        //             case 'cancel':
-        //                 handleCancel(appointmentCard);
-        //                 break;
-        //             case 'view report':
-        //                 handleViewReport(appointmentCard);
-        //                 break;
-        //             case 'book follow-up':
-        //                 handleBookFollowUp(appointmentCard);
-        //                 break;
-        //         }
-        //     });
-
-        //     // Action handler functions
-        //     function handleReschedule(appointmentCard) {
-        //         // Show reschedule modal or redirect to reschedule page
-        //         console.log('Reschedule appointment');
-        //     }
-
-        //     function handleCancel(appointmentCard) {
-        //         if (confirm('Are you sure you want to cancel this appointment?')) {
-        //             appointmentCard.find('.appointment-status')
-        //                 .removeClass('status-upcoming')
-        //                 .addClass('status-cancelled')
-        //                 .text('Cancelled');
-        //         }
-        //     }
-
-        //     function handleViewReport(appointmentCard) {
-        //         console.log('View appointment report');
-        //     }
-
-        //     function handleBookFollowUp(appointmentCard) {
-        //         console.log('Book follow-up appointment');
-        //     }
-
-        //     // Initialize pagination
-        //     $('.pagination .page-item').click(function () {
-        //         if (!$(this).hasClass('active')) {
-        //             $('.pagination .page-item').removeClass('active');
-        //             $(this).addClass('active');
-        //             loadAppointmentPage($(this).text());
-        //         }
-        //     });
-
-        //     function loadAppointmentPage(pageNumber) {
-        //         console.log(`Loading page ${pageNumber}`);
-        //     }
-
-        //     // Add responsive handling
-        //     function handleResponsive() {
-        //         if (window.innerWidth < 768) {
-        //             $('.appointment-details').css('grid-template-columns', '1fr');
-        //             $('.appointment-actions').css('flex-direction', 'column');
-        //         } else {
-        //             $('.appointment-details').css('grid-template-columns', 'repeat(2, 1fr)');
-        //             $('.appointment-actions').css('flex-direction', 'row');
-        //         }
-        //     }
-
-        //     handleResponsive();
-        //     $(window).resize(handleResponsive);
-        // });
-    </script>
 </body>
 
 </html>

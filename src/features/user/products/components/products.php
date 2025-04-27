@@ -715,18 +715,9 @@
                 </div>
             </div>
 
-            <!-- Pagination -->
-            <div class="pagination">
-                <div class="page-item">
-                    <i class="angle left icon"></i>
-                </div>
-                <div class="page-item active">1</div>
-                <div class="page-item">2</div>
-                <div class="page-item">3</div>
-                <div class="page-item">
-                    <i class="angle right icon"></i>
-                </div>
-            </div>
+            <!-- Pagination START -->
+            <?= shared('components/pagination'); ?>
+            <!-- Pagination END -->
         </div>
     </div>
 </section>
