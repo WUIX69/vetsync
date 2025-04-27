@@ -17,125 +17,149 @@
 
         main section.services .service-card {
             background: var(--color-white);
-            padding: 0 !important;
-            border-radius: 0.6rem;
-            border: 1px solid var(--bs-card-border-color) !important;
-            transition: all 0.3s ease;
-            height: 100%;
-        }
-
-        main section.services .service-card .card-img {
-            position: relative;
+            border-radius: 0.8rem;
             overflow: hidden;
-            min-height: 278px;
-            border-radius: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            transition: all 0.3s;
+            border: 1px solid #e5e7eb;
         }
 
-        main section.services .service-card .card-img .service-status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+        main section.services .service-card:hover {
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.10);
+            transform: translateY(-4px);
         }
 
-        main section.services .service-card .card-img .service-status span {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 60px;
-            background: var(--bs-primary);
-            color: var(--bs-white);
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.3rem;
+        main section.services .card-img {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
         }
 
-        main section.services .service-card .card-img .service-status span i {
-            font-size: 1rem;
-        }
-
-        main section.services .service-card .card-img .service-tag {
-            position: absolute;
-            bottom: 1rem;
-            left: 1rem;
-        }
-
-        main section.services .service-card .card-img .service-tag span {
-            font-size: 0.8rem;
-        }
-
-        main section.services .service-card .card-img img {
+        main section.services .card-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
         }
 
-        main section.services .service-card .card-body {
-            padding: 1.6rem;
+        main section.services .service-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 2;
         }
 
-        main section.services .service-card .card-body .service-header {
+        main section.services .service-status span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: white;
+        }
+
+        .status-avail.available {
+            background: #16a34a;
+        }
+
+        .status-avail.unavailable {
+            background: #dc2626;
+        }
+
+        .status-avail.busy {
+            background: #f59e0b;
+        }
+
+        .status-avail.coming-soon {
+            background: #0ea5e9;
+        }
+
+        main section.services .service-tag {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+        }
+
+        main section.services .service-tag span {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        main section.services .card-body {
+            padding: 1.5rem;
+        }
+
+        main section.services .service-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
         }
 
-        main section.services .service-card .card-body .service-header h4 {
-            font-weight: bold;
-            margin: 0;
-            font-size: 1.4rem;
-        }
-
-        main section.services .service-card .card-body .service-header i {
-            font-size: 24px;
-            background: #eff6ff;
-            padding: 10px;
-            border-radius: 50%;
-            color: #031224;
-        }
-
-        main section.services .service-card .card-body .service-details {
-            margin-bottom: 20px;
-        }
-
-        main section.services .service-card .card-body .service-details p {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        main section.services .service-card .card-body .service-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid #f3f3f3;
-        }
-
-        main section.services .service-card .card-body .service-meta .price {
+        main section.services .service-header h4 {
+            font-size: 1.25rem;
             font-weight: 600;
-            font-size: 18px;
-            color: #031224;
+            margin: 0;
+            color: #111827;
         }
 
-        main section.services .service-card .card-body .service-meta button {
-            border: none;
-            color: #fff;
-            background: #031224;
-            padding: 10px 20px;
-            border-radius: 10px;
+        main section.services .service-header i {
+            font-size: 1.25rem;
+            background: #f3f4f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            justify-content: center;
+            color: #374151;
         }
 
-        main section.services .service-card .card-body .service-meta button:hover {
-            background: #062451;
+        main section.services .service-details p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        main section.services .service-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        main section.services .price {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: #111827;
+        }
+
+        main section.services button {
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        main section.services button:hover {
+            background: #1f2937;
         }
     </style>
 </head>
