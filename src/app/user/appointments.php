@@ -334,11 +334,11 @@
                                                 <div class="appointment-details">
                                                     <div class="detail-item">
                                                         <i class="teal calendar icon"></i>
-                                                        <span>March 15, 2024</span>
+                                                        <span>Date: March 15, 2024</span>
                                                     </div>
                                                     <div class="detail-item">
                                                         <i class="blue clock icon"></i>
-                                                        <span>10:30 AM</span>
+                                                        <span>Time: 10:30 AM</span>
                                                     </div>
                                                     <div class="detail-item">
                                                         <i class="green user md icon"></i>
@@ -377,19 +377,19 @@
                                                 </div>
                                                 <div class="appointment-details">
                                                     <div class="detail-item">
-                                                        <i class="calendar icon"></i>
+                                                        <i class="teal calendar icon"></i>
                                                         <span>Date: March 10, 2024</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="clock icon"></i>
+                                                        <i class="blue clock icon"></i>
                                                         <span>Time: 2:00 PM</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="user md icon"></i>
+                                                        <i class="green user md icon"></i>
                                                         <span>Dr. Michael Chen</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="paw icon"></i>
+                                                        <i class="brown paw icon"></i>
                                                         <span>Pet: Luna (Persian Cat)</span>
                                                     </div>
                                                 </div>
@@ -421,19 +421,19 @@
                                                 </div>
                                                 <div class="appointment-details">
                                                     <div class="detail-item">
-                                                        <i class="calendar icon"></i>
+                                                        <i class="teal calendar icon"></i>
                                                         <span>Date: March 8, 2024</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="clock icon"></i>
+                                                        <i class="blue clock icon"></i>
                                                         <span>Time: 11:00 AM</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="user md icon"></i>
+                                                        <i class="green user md icon"></i>
                                                         <span>Dr. Emily Wilson</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="paw icon"></i>
+                                                        <i class="brown paw icon"></i>
                                                         <span>Pet: Charlie (Poodle)</span>
                                                     </div>
                                                 </div>
@@ -458,19 +458,19 @@
                                                 </div>
                                                 <div class="appointment-details">
                                                     <div class="detail-item">
-                                                        <i class="calendar icon"></i>
+                                                        <i class="teal calendar icon"></i>
                                                         <span>Date: March 15, 2024</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="clock icon"></i>
+                                                        <i class="blue clock icon"></i>
                                                         <span>Time: 10:30 AM</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="user md icon"></i>
+                                                        <i class="green user md icon"></i>
                                                         <span>Dr. Sarah Johnson</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="paw icon"></i>
+                                                        <i class="brown paw icon"></i>
                                                         <span>Pet: Max (Golden Retriever)</span>
                                                     </div>
                                                 </div>
@@ -500,19 +500,19 @@
                                                 </div>
                                                 <div class="appointment-details">
                                                     <div class="detail-item">
-                                                        <i class="calendar icon"></i>
+                                                        <i class="teal calendar icon"></i>
                                                         <span>Date: March 15, 2024</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="clock icon"></i>
+                                                        <i class="blue clock icon"></i>
                                                         <span>Time: 10:30 AM</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="user md icon"></i>
+                                                        <i class="green user md icon"></i>
                                                         <span>Dr. Sarah Johnson</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="paw icon"></i>
+                                                        <i class="brown paw icon"></i>
                                                         <span>Pet: Max (Golden Retriever)</span>
                                                     </div>
                                                 </div>
@@ -542,19 +542,19 @@
                                                 </div>
                                                 <div class="appointment-details">
                                                     <div class="detail-item">
-                                                        <i class="calendar icon"></i>
+                                                        <i class="teal calendar icon"></i>
                                                         <span>Date: March 15, 2024</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="clock icon"></i>
+                                                        <i class="blue clock icon"></i>
                                                         <span>Time: 10:30 AM</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="user md icon"></i>
+                                                        <i class="green user md icon"></i>
                                                         <span>Dr. Sarah Johnson</span>
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="paw icon"></i>
+                                                        <i class="brown paw icon"></i>
                                                         <span>Pet: Max (Golden Retriever)</span>
                                                     </div>
                                                 </div>

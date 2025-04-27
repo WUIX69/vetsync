@@ -115,10 +115,10 @@
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label red">Hot</div>
-                            <div class="title">Wellness Checkup</div>
+                            <div class="title">Consultation</div>
                         </div>
                         <div class="hovered-content">
-                            <h3 class="title">Wellness Checkup</h3>
+                            <h3 class="title">Consultation</h3>
                             <p class="paragraph">
                                 Our comprehensive wellness checkups include thorough physical
                                 examinations,
@@ -153,13 +153,13 @@
                 </div>
 
                 <div class="col-md-4">
-                    <!-- Service Card 4 -->
+                    <!-- Service Card 3 -->
                     <div class="services-card box">
                         <img src="<?= asset('img/contents/services/foods.jpg'); ?>" alt="Pet Foods"
                             class="services-image">
                         <div class="visible-content">
-                            <div class="ui tag blue label">Featured</div>
-                            <div class="title">Pet Foods</div>
+                            <div class="ui tag blue label">Boarding</div>
+                            <div class="title">Boarding</div>
                         </div>
                         <div class="hovered-content">
                             <h3 class="title">Pet Foods</h3>
@@ -175,20 +175,125 @@
                 </div>
 
                 <div class="col-md-4">
+                    <!-- Service Card 4 -->
+                    <div class="services-card box">
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
+                            class="services-image">
+                        <div class="visible-content">
+                            <div class="ui tag label">Upcoming</div>
+                            <div class="title">Medication</div>
+                        </div>
+                        <div class="hovered-content">
+                            <h3 class="title">Medication</h3>
+                            <p class="paragraph">
+                                Browse our selection of high-quality pet accessories, including
+                                collars,
+                                leashes, toys, and grooming supplies for your furry friends.
+                            </p>
+                            <?= featured('landing/services/components/ui/servicesact-btn'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
                     <!-- Service Card 5 -->
                     <div class="services-card box">
                         <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
                             class="services-image">
                         <div class="visible-content">
                             <div class="ui tag label">Upcoming</div>
-                            <div class="title">Pet Accessories</div>
+                            <div class="title">Laboratory</div>
                         </div>
                         <div class="hovered-content">
-                            <h3 class="title">Pet Accessories</h3>
+                            <h3 class="title">Laboratory</h3>
                             <p class="paragraph">
-                                Browse our selection of high-quality pet accessories, including
-                                collars,
-                                leashes, toys, and grooming supplies for your furry friends.
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos ipsum iusto fugiat sit
+                                voluptatum iste minus tempore cum qui. Esse explicabo aliquid incidunt odio repellat rem
+                                quis eos quaerat soluta!
+                            </p>
+                            <?= featured('landing/services/components/ui/servicesact-btn'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Service Card 6 -->
+                    <div class="services-card box">
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
+                            class="services-image">
+                        <div class="visible-content">
+                            <div class="ui tag label">Upcoming</div>
+                            <div class="title">Deworming</div>
+                        </div>
+                        <div class="hovered-content">
+                            <h3 class="title">Deworming</h3>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laboriosam optio at aspernatur
+                                qui nisi esse provident dolorum? Omnis porro in rem officia quo reiciendis fugit sequi.
+                                Veritatis repellat facilis eos!
+                            </p>
+                            <?= featured('landing/services/components/ui/servicesact-btn'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Service Card 7 -->
+                    <div class="services-card box">
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
+                            class="services-image">
+                        <div class="visible-content">
+                            <div class="ui tag label">Upcoming</div>
+                            <div class="title">Home Service</div>
+                        </div>
+                        <div class="hovered-content">
+                            <h3 class="title">Home Service</h3>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi rerum sunt dicta
+                                ratione accusamus, beatae architecto vel tempore. Veniam dolore dignissimos et. Harum
+                                soluta quo culpa earum! Alias, repudiandae fugit!
+                            </p>
+                            <?= featured('landing/services/components/ui/servicesact-btn'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Service Card 8 -->
+                    <div class="services-card box">
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
+                            class="services-image">
+                        <div class="visible-content">
+                            <div class="ui tag label">Upcoming</div>
+                            <div class="title">Whelping</div>
+                        </div>
+                        <div class="hovered-content">
+                            <h3 class="title">Whelping</h3>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos inventore facere,
+                                consectetur est voluptatem pariatur laudantium corrupti facilis quam reprehenderit hic
+                                enim fuga quae ipsa velit at molestiae iusto reiciendis.
+                            </p>
+                            <?= featured('landing/services/components/ui/servicesact-btn'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Service Card 9 -->
+                    <div class="services-card box">
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Pet Accessories"
+                            class="services-image">
+                        <div class="visible-content">
+                            <div class="ui tag label">Upcoming</div>
+                            <div class="title">Pet Supply</div>
+                        </div>
+                        <div class="hovered-content">
+                            <h3 class="title">Pet Supply</h3>
+                            <p class="paragraph">
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, repellat ipsum. Corporis
+                                unde modi excepturi assumenda similique beatae. Nesciunt libero minus enim expedita
+                                placeat consequatur sunt vero perspiciatis ab dolor.
                             </p>
                             <?= featured('landing/services/components/ui/servicesact-btn'); ?>
                         </div>
