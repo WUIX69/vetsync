@@ -262,7 +262,7 @@
                             <div class="card">
                                 <div class="nav flex-column nav-pills card-body appointments-nav" role="tablist">
                                     <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#all">
-                                        <i class="bx bx-user-circle"></i>All Appointments
+                                        <i class="bx bx-user-circle"></i>All
                                     </button>
                                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#upcoming">
                                         <i class="bx bx-shield-alt"></i>Upcoming
