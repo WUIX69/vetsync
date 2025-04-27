@@ -28,9 +28,6 @@
                     <!-- Teams -->
                     <?= featured('landing/about/components/team'); ?>
 
-                    <!-- Services -->
-                    <?= featured('landing/about/components/services-overview'); ?>
-
                     <!-- Clinic history -->
                     <?= featured('landing/about/components/clinic-history'); ?>
 
