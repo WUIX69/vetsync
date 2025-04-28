@@ -360,7 +360,7 @@
                             <div class="service-card card">
                                 <div class="card-img">
                                     <div class="service-status">
-                                        <span class="ui blue label status-avail available">
+                                        <span class="ui green label status-avail available">
                                             <i class='bx bx-check-circle'></i> Available</span>
                                     </div>
                                     <img src="<?= asset('img/contents/services/accessories.jpg'); ?>"
