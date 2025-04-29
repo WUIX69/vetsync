@@ -493,7 +493,7 @@
                             <p>Learn to create compelling visualizations with data.</p>
                             <div class="listen">
                                 <div class="author">
-                                    <img src="<?= asset('img/profiles/profile.jpg'); ?>">
+                                    <img src="<?= asset('img/profiles/user-1.jpg'); ?>">
                                     <div>
                                         <a href="#">Alex Costa</a>
                                         <p>Data Analyst</p>
