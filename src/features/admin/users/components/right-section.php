@@ -12,7 +12,7 @@
                 <small class="text-muted">Admin</small>
             </div>
             <div class="profile-photo">
-                <img class="rounded-circle" width="37" src="<?= asset('img/profiles/profile.jpg'); ?>" />
+                <img class="rounded-circle" width="37" src="<?= asset('img/profiles/user-1.jpg'); ?>" />
             </div>
         </div>
     </div>

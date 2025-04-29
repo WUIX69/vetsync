@@ -63,7 +63,7 @@
     <form class="ui form">
         <!-- Profile Picture -->
         <div class="avatar-upload">
-            <img src="<?= asset('img/profiles/profile.jpg'); ?>" alt="Profile Picture">
+            <img src="<?= asset('img/profiles/user-1.jpg'); ?>" alt="Profile Picture">
             <div class="upload-button">
                 <i class="camera icon"></i>
             </div>

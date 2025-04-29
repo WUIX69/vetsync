@@ -155,7 +155,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="hero-image">
-                        <img src="<?= asset('img/contents/app-ss/vetsync-1.png'); ?>" alt="App Interface">
+                        <img src="<?= asset('img/gallery/jaa-near.jpg'); ?>" alt="App Interface">
                     </div>
                 </div>
             </div>

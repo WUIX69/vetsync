@@ -203,6 +203,25 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <!-- Info Card 4 -->
+                    <div class="services-card box">
+                        <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="AI Integration"
+                            class="services-image">
+                        <div class="visible-content">
+                            <div class="ui tag label">See more</div>
+                            <div class="title">Services</div>
+                        </div>
+                        <div class="hovered-content">
+                            <h3 class="title">Services</h3>
+                            <p class="paragraph">
+                                Click here to see more Services offered!
+                            </p>
+                            <a class="read-more-btn" href="/src/app/landing/services/index.php">See More</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
