@@ -4,7 +4,7 @@
 
 <head>
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
-    <title>Services (View) - VetSync</title>
+    <title>Products (View) - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
 </head>
 
