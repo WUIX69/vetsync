@@ -1,0 +1,56 @@
+<?php
+// TODO: move all the global logic in /config dir
+$urlPath = $_SERVER['REQUEST_URI'] ?? null;
+
+global $urlParts;
+$urlParts = explode('/', trim($urlPath, '/')) ?? '';
+$pageName = $urlParts[3] ?? '';
+
+global $activeLink;
+$activeLink = str_replace('.php', '', $pageName);
+?>
+<!-- Site Header -->
+<header class="site-header">
+    <div class="nav">
+        <div class="logo">
+            <i class='bx bxl-codepen'></i>
+            <a href="<?= app('user') ?>">VetSync</a>
+        </div>
+        <div class="nav-links">
+            <a class="nav-link <?= ($activeLink === 'index' || $activeLink === '') ? 'active' : '' ?>"
+                href="<?= app('user') ?>">Dashboard</a>
+            <a class="nav-link <?= $activeLink === 'services' ? 'active' : '' ?>"
+                href="<?= app('user/services') ?>">Services</a>
+            <a class="nav-link <?= $activeLink === 'products' ? 'active' : '' ?>"
+                href="<?= app('user/products') ?>">Products</a>
+            <a class="nav-link <?= $activeLink === 'appointments' ? 'active' : '' ?>"
+                href="<?= app('user/appointments') ?>">Appointments</a>
+            <a class="nav-link <?= $activeLink === 'settings' ? 'active' : '' ?>"
+                href="<?= app('user/settings') ?>">Settings</a>
+        </div>
+        <div class="right-section">
+            <i class='bx bx-bell'></i>
+            <i class='bx bx-search'></i>
+            <div class="profile">
+                <div class="ui floating compact selection dropdown profile-menu-dropdown">
+                    <!-- <i class="dropdown icon"></i> -->
+                    <div class="text">
+                        <div class="info">
+                            <img src="<?= asset('img/profiles/user-1.jpg'); ?>">
+                            <div class="d-flex flex-column">
+                                <a href="#">Alex Johnson</a>
+                                <p>Data Scientist</p>
+                            </div>
+                            <i class='bx bx-chevron-down'></i>
+                        </div>
+                    </div>
+                    <div class="menu inverted">
+                        <a class="item" href="<?= app('user') ?>">Dashboard</a>
+                        <a class="item" href="<?= app('user/settings') ?>">Settings</a>
+                        <a class="item" href="<?= app('landing') ?>">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

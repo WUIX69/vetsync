@@ -1,0 +1,373 @@
+/*#### GLOBAL.css small overrides ####*/
+.container-body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/*############ HEADER (NAVBAR) ############*/
+header.site-header nav.navbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+header nav .navbar-container {
+    margin: 0;
+    padding: 2rem 4rem;
+
+    text-transform: capitalize !important;
+    text-wrap: nowrap !important;
+    width: 100%;
+}
+
+header nav .navbar-container .row {
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+}
+
+header nav .navbar-logo .logo-text {
+    display: flex;
+    flex-direction: column;
+    color: var(--color-white);
+    text-shadow: var(--text-shadow);
+}
+
+header nav .navbar-logo .logo-text-main {
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+    font-weight: 700;
+
+    color: var(--color-white);
+}
+
+header nav .navbar-logo .logo-text-main:hover {
+    color: #00b5ad !important;
+}
+
+/*------ NAVBAR (Links & Actions) ------*/
+header nav .nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+header nav .nav-links .nav-link {
+    color: var(--color-white);
+    font-size: 1.1rem;
+    font-weight: 400;
+    opacity: 1;
+    transition: all 0.3s ease;
+    text-shadow: var(--text-shadow);
+}
+
+header nav .nav-links .nav-link:hover {
+    opacity: 0.8;
+    color: teal;
+}
+
+header nav .nav-links .nav-link.active {
+    font-weight: 600;
+    color: teal;
+    text-shadow: none;
+}
+
+header nav .actions {
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    gap: 1rem;
+    width: 100%;
+    position: relative;
+    right: -0.7rem;
+}
+
+header nav .actions .button {
+    height: inherit;
+    width: fit-content;
+    margin: 0;
+}
+
+header nav .actions .login-btn.button {
+    border-radius: 60px;
+    border: 1px solid !important;
+    font-weight: 500;
+}
+
+header nav .mobile-menu-btn {
+    /*---- Mobile view support a.k.a (Hamburger) ----*/
+    display: none;
+    background: none;
+    border: none;
+    color: var(--color-dark);
+    cursor: pointer;
+    padding: 5px;
+}
+
+/*############## MAIN #############*/
+main .section-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    position: relative;
+}
+
+main .section-container section.section-wrapper {
+    margin: 0 auto;
+    padding: 6rem 0;
+    max-width: 1200px;
+}
+
+main .section-container section .section-title {
+    padding-bottom: 6rem;
+    text-align: center;
+    color: var(--color-dark);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+main .section-container section .section-title .sub-title {
+    margin-bottom: -0.8rem;
+    color: #fbbd08;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+main .section-container section .section-title h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+main .section-container section .section-title p {
+    color: var(--color-dark-variant);
+    max-width: 600px;
+}
+
+main .section-container:has(section.hero-section)::before,
+main .section-container:has(section.reserve-section)::before,
+footer.site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/*------ Main (Hero section) ------*/
+main .section-container:has(section.hero-section) {
+    background-image: url("../../img/contents/hero/default.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 75vh;
+
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+main section.hero-section .hero-content {
+    position: absolute;
+    bottom: 3rem;
+    color: var(--color-white);
+    text-shadow: var(--text-shadow) !important;
+
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 2rem;
+}
+
+main section.hero-section .hero-content * {
+    color: var(--color-white);
+    text-shadow: var(--text-shadow) !important;
+}
+
+main section.hero-section .hero-content .hero-breadcrumb {
+    font-size: 1rem;
+}
+
+main section.hero-section .hero-content .hero-breadcrumb .section.active {
+    color: teal !important;
+}
+
+main section.hero-section .hero-content .hero-header {
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+/*------ Main (Section Seperator) ------*/
+main .section-seperator {
+    background-image: url("../../img/sepe.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 60vh !important;
+}
+
+/*------ Main (Reserve Section) ------*/
+main .section-container:has(section.reserve-section) {
+    background-image: url("../../img/contents/reserves/1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+main section.reserve-section .row {
+    justify-content: end;
+    position: relative;
+}
+
+main section.reserve-section .row .header {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    gap: 1rem;
+}
+
+main section.reserve-section .row .header h2 {
+    color: var(--color-white);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: var(--text-shadow);
+}
+
+/*############ FOOTER ############*/
+footer.site-footer {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    isolation: isolate;
+
+    background-image: url("../../img/contents/footer.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 4rem 0;
+}
+
+footer.site-footer::before {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+footer * {
+    color: var(--color-white) !important;
+}
+
+footer .header {
+    margin-bottom: 2.3rem !important;
+    font-size: 1.3rem !important;
+}
+
+footer .social-links {
+    margin-top: 2rem;
+}
+
+footer .social-links .button {
+    background: rgba(255, 255, 255, 0.1) !important;
+    margin-right: 0.5rem;
+}
+
+footer .list .item {
+    color: rgba(255, 255, 255, 0.7) !important;
+    padding: 0.8rem 0 !important;
+}
+
+footer .list .item:hover {
+    color: var(--color-white) !important;
+}
+
+/*------ FOOTER (Description Column) ------*/
+footer .desc-col span {
+    color: #00b5ad !important;
+}
+
+footer .desc-col .footer-description {
+    margin: 1.7rem 0;
+    line-height: 1.6;
+}
+
+footer .desc-col .schedule {
+    margin-top: 1.5rem;
+}
+
+footer .desc-col .schedule h5 {
+    margin-bottom: 0.6rem !important;
+}
+
+footer .desc-col .schedule .schedule-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+footer .desc-col .schedule .schedule-items .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    text-wrap: nowrap;
+}
+
+footer .desc-col .schedule .schedule-items .wrapper .day {
+    font-weight: 600;
+    color: #00b5ad !important;
+}
+
+footer .desc-col .schedule .schedule-items .wrapper .line {
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+footer .desc-col .schedule .schedule-items .wrapper .time {
+    font-weight: 400;
+    text-align: left;
+    width: 100%;
+}
+
+/*------ FOOTER (Contact Information Column) ------*/
+footer .contact-col .item i.icon {
+    font-size: 1.2rem;
+}
+
+/*------ FOOTER (Bottom Column) ------*/
+footer .bot-col {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+footer .bot-col p {
+    margin: 0;
+}

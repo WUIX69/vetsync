@@ -90,7 +90,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="related-card">
                     <div class="related-card-image">
-                        <img src="../../../../public/assets/img/contents/services/vaccination.jpg" alt="Vaccinations">
+                        <img src="<?= asset('img/contents/services/vaccination.jpg'); ?>" alt="Vaccinations">
                     </div>
                     <div class="related-card-content">
                         <h3 class="related-card-title">Vaccinations</h3>
@@ -104,8 +104,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="related-card">
                     <div class="related-card-image">
-                        <img src="../../../../public/assets/img/contents/services/foods.jpg"
-                            alt="Nutritional Counseling">
+                        <img src="<?= asset('img/contents/services/foods.jpg'); ?>" alt="Nutritional Counseling">
                     </div>
                     <div class="related-card-content">
                         <h3 class="related-card-title">Nutritional Counseling</h3>
@@ -119,7 +118,7 @@
             <div class="col-lg-4 col-md-6">
                 <div class="related-card">
                     <div class="related-card-image">
-                        <img src="../../../../public/assets/img/contents/services/accessories.jpg" alt="Dental Care">
+                        <img src="<?= asset('img/contents/services/accessories.jpg'); ?>" alt="Dental Care">
                     </div>
                     <div class="related-card-content">
                         <h3 class="related-card-title">Dental Care</h3>

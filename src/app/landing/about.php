@@ -6,7 +6,6 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>Landing Page</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
-    <?= featured('landing/about/styles') ?>
 </head>
 
 <body>
@@ -27,9 +26,6 @@
 
                     <!-- Teams -->
                     <?= featured('landing/about/components/team'); ?>
-
-                    <!-- Services -->
-                    <?= featured('landing/about/components/services-overview'); ?>
 
                     <!-- Clinic history -->
                     <?= featured('landing/about/components/clinic-history'); ?>

@@ -6,7 +6,7 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>Landing - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
-    <?= featured('landing/home/styles') ?>
+    <link rel="stylesheet" href="<?= asset('lib/swiper/swiper-bundle.min.css'); ?>" /><!-- Link Swiper's CSS -->
 </head>
 
 <body>

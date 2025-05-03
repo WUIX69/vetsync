@@ -2,7 +2,7 @@
 // TODO: move all the global logic in /config dir
 
 global $activeLink; // Get the active link from the header
-$heroImage = statf('assets/img/contents/hero/' . $activeLink . '.jpg');
+$heroImage = asset('img/contents/hero/' . $activeLink . '.jpg');
 $heroTitles = [
     'services' => 'Our Services',
     'products' => 'Our Products',

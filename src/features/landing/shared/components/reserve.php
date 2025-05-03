@@ -1,6 +1,6 @@
 <?php
 // Define the path to reserve images directory
-$reservesPath = statf('assets/img/contents/reserves/');
+$reservesPath = asset('img/contents/reserves/');
 $fullPath = $_SERVER['DOCUMENT_ROOT'] . parse_url($reservesPath, PHP_URL_PATH);
 
 // Get all jpg images from the reserves directory

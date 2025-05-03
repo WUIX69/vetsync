@@ -91,8 +91,7 @@
                             outstanding."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img class="rounded-circle" src="../../../public/assets/img/avatars/chris.jpg"
-                            alt="Sarah Johnson">
+                        <img class="rounded-circle" src="<?= asset('img/avatars/chris.jpg'); ?>" alt="Sarah Johnson">
                         <div class="author-info">
                             <h4>Sarah Johnson</h4>
                             <p>Dog Owner</p>
@@ -115,8 +114,7 @@
                             thoroughly."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img class="rounded-circle" src="../../../public/assets/img/avatars/stevie.jpg"
-                            alt="Michael Chen">
+                        <img class="rounded-circle" src="<?= asset('img/avatars/stevie.jpg'); ?>" alt="Michael Chen">
                         <div class="author-info">
                             <h4>Michael Chen</h4>
                             <p>Cat Owner</p>
@@ -138,8 +136,7 @@
                             and smelling wonderful. The groomers are gentle and professional."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img class="rounded-circle" src="../../../public/assets/img/avatars/elliot.jpg"
-                            alt="Emily Rodriguez">
+                        <img class="rounded-circle" src="<?= asset('img/avatars/elliot.jpg'); ?>" alt="Emily Rodriguez">
                         <div class="author-info">
                             <h4>Emily Rodriguez</h4>
                             <p>Pet Parent</p>
@@ -162,8 +159,7 @@
                             outstanding."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img class="rounded-circle" src="../../../public/assets/img/avatars/chris.jpg"
-                            alt="Sarah Johnson">
+                        <img class="rounded-circle" src="<?= asset('img/avatars/chris.jpg'); ?>" alt="Sarah Johnson">
                         <div class="author-info">
                             <h4>Sarah Johnson</h4>
                             <p>Dog Owner</p>
@@ -186,8 +182,7 @@
                             thoroughly."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img class="rounded-circle" src="../../../public/assets/img/avatars/stevie.jpg"
-                            alt="Michael Chen">
+                        <img class="rounded-circle" src="<?= asset('img/avatars/stevie.jpg'); ?>" alt="Michael Chen">
                         <div class="author-info">
                             <h4>Michael Chen</h4>
                             <p>Cat Owner</p>
@@ -209,8 +204,7 @@
                             and smelling wonderful. The groomers are gentle and professional."</p>
                     </div>
                     <div class="testimonial-author">
-                        <img class="rounded-circle" src="../../../public/assets/img/avatars/elliot.jpg"
-                            alt="Emily Rodriguez">
+                        <img class="rounded-circle" src="<?= asset('img/avatars/elliot.jpg'); ?>" alt="Emily Rodriguez">
                         <div class="author-info">
                             <h4>Emily Rodriguez</h4>
                             <p>Pet Parent</p>

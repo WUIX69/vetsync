@@ -1,12 +1,12 @@
-<div class="sidebar">
+<aside class="sidebar">
     <div class="sidebar-logo">
-        <img class="rounded-circle" src="../../../public/assets/img/logo.jpg">
+        <img class="rounded-circle" src="<?= asset('img/logo.jpg'); ?>">
         <h2>Admin<span class="text-danger">Panel</span></h2>
     </div>
     <div class="sidebar-menu">
         <ul class="nav navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="index.php">
                     <div class="nav-content">
                         <span class="material-icons-sharp">dashboard</span>
                         <h3>Dashboard</h3>
@@ -14,7 +14,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="users.html">
+                <a class="nav-link" href="users.php">
                     <div class="nav-content">
                         <span class="material-icons-sharp">person_outline</span>
                         <h3>Users</h3>
@@ -30,7 +30,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="analytics.html">
+                <a class="nav-link" href="analytics.php">
                     <div class="nav-content">
                         <span class="material-icons-sharp">analytics</span>
                         <h3>Analytics</h3>
@@ -74,7 +74,7 @@
                                 <div class="transition hidden">
                                     <ul class="menu-nav navbar-nav">
                                         <li class="menu-nav-item">
-                                            <a class="menu-nav-link" href="settings.html#profile">
+                                            <a class="menu-nav-link" href="settings.php#profile">
                                                 <div class="menu-nav-content">
                                                     <span class="material-icons-sharp">person_outline</span>
                                                     <h3>Profile</h3>
@@ -82,7 +82,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-nav-item">
-                                            <a class="menu-nav-link" href="settings.html#password">
+                                            <a class="menu-nav-link" href="settings.php#password">
                                                 <div class="menu-nav-content">
                                                     <span class="material-icons-sharp">password</span>
                                                     <h3>Password</h3>
@@ -90,7 +90,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-nav-item">
-                                            <a class="menu-nav-link" href="settings.html#urls">
+                                            <a class="menu-nav-link" href="settings.php#urls">
                                                 <div class="menu-nav-content">
                                                     <span class="material-icons-sharp">language</span>
                                                     <h3>URLs</h3>
@@ -98,7 +98,7 @@
                                             </a>
                                         </li>
                                         <li class="menu-nav-item">
-                                            <a class="menu-nav-link" href="settings.html#deactivate">
+                                            <a class="menu-nav-link" href="settings.php#deactivate">
                                                 <div class="menu-nav-content">
                                                     <span class="material-icons-sharp">person_off</span>
                                                     <h3>Deactivate</h3>
@@ -122,4 +122,4 @@
             </li>
         </ul>
     </div>
-</div>
+</aside>
