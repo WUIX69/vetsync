@@ -18,39 +18,42 @@
     </div>
 
     <div class="container-body pusher">
-        <div class="row">
+        <!-- Sidebar -->
+        <?= featured('admin/shared/layouts/sidebar') ?> <!-- Sidebar -->
 
-            <!-- Sidebar -->
-            <div class="col-auto">
-                <?= featured('admin/shared/layouts/sidebar') ?> <!-- Sidebar -->
-            </div>
+        <!-- Main Content -->
+        <main class="container-main">
+            <!-- Header -->
+            <?= featured('admin/dashboard/components/header') ?>
 
-            <!-- Main Content -->
-            <div class="col">
-                <main class="container-main">
-                    <h1>Dashboard</h1>
-
+            <div class="row">
+                <div class="col-lg-9">
                     <!-- Stats Cards -->
-                    <?= featured('admin/dashboard/components/stats-cards') ?>
+                    <?= featured('admin/dashboard/components/stats') ?>
 
                     <!-- New Users -->
                     <?= featured('admin/dashboard/components/new-users') ?>
 
                     <!-- Recent Orders -->
                     <?= featured('admin/dashboard/components/recent-orders') ?>
-                </main>
-            </div>
+                </div>
 
-            <!-- Right Section -->
-            <div class="col-lg-3">
-                <?= featured('admin/shared/components/right-section') ?>
+                <!-- Right Section -->
+                <div class="col-lg-3">
+                    <!-- System Info -->
+                    <?= featured('admin/dashboard/components/sys-info') ?>
+
+                    <!-- Reminders -->
+                    <?= featured('admin/dashboard/components/reminders') ?>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <?= featured('admin/dashboard/scripts') ?>
+    <script src="<?= featured('admin/dashboard/js/main.js', true) ?>"></script>
+    <script src="<?= featured('admin/dashboard/js/recentOrders.js', true) ?>"></script>
 </body>
 
 </html>

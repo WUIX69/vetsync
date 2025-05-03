@@ -4,9 +4,9 @@
 
 <head>
     <?= shared('elements/meta') ?>
-    <title>Admin Dashboard - setiing</title>
+    <title>Admin Dashboard - Settings</title>
     <?= shared('elements/styles') ?>
-    <?= featured('admin/dashboard/styles') ?>
+    <link rel="stylesheet" href="<?= featured('admin/settings/css/settings.css', true) ?>">
 </head>
 
 <body>
@@ -18,32 +18,43 @@
     </div>
 
     <div class="container-body pusher">
-        <div class="row">
+        <!-- Sidebar -->
+        <?= featured('admin/shared/layouts/sidebar') ?>
 
-            <!-- Sidebar -->
-            <div class="col-auto">
-                <?= featured('admin/shared/layouts/sidebar') ?> <!-- Sidebar -->
-            </div>
+        <!-- Main Content -->
+        <main class="container-main">
+            <!-- Header -->
+            <?= featured('admin/settings/components/header') ?>
 
-            <!-- Main Content -->
-            <div class="col">
-                <main class="container-main">
-                    <h1>Manage Settings</h1>
+            <div class="row">
+                <div class="col-lg-9">
                     <!-- Settings -->
-                    <?= featured('admin/settings/components/settings') ?>
-                </main>
-            </div>
+                    <section class="settings">
+                        <div class="tab-content container box">
+                            <!-- Profile Tab -->
+                            <?= featured('admin/settings/components/tab/profile') ?>
 
-            <!-- Right Section -->
-            <div class="col-lg-3">
-                <?= featured('admin/shared/components/right-section') ?>
+                            <!-- Account Tab -->
+                            <?= featured('admin/settings/components/tab/account') ?>
+
+                            <!-- Notification Tab -->
+                            <?= featured('admin/settings/components/tab/notification') ?>
+
+                            <!-- Preferences Tab -->
+                            <?= featured('admin/settings/components/tab/preferences') ?>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-lg-3">
+                    <!-- Settings Nav -->
+                    <?= featured('admin/settings/components/settings-nav') ?>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <?= featured('admin/dashboard/scripts') ?>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
-<div class="section-container">
+<section class="recent-orders">
     <h2 class="title">Recent Orders</h2>
-    <div class="section-wrapper table-list box">
+    <div class="container box table-list">
         <div class="table-filters">
             <div class="base-filters">
                 <div class="ui fluid mini category search">
@@ -58,4 +58,4 @@
             </table>
         </div>
     </div>
-</div>
+</section>

@@ -1,5 +1,5 @@
-<div class="section-container">
-    <div class="section-wrapper stat-cards">
+<section class="stats">
+    <div class="container">
         <div class="row g-4">
             <div class="col-md-4 col-sm-4">
                 <div class="box stat-card">
@@ -78,4 +78,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>

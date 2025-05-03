@@ -1,4 +1,4 @@
-<div class="sidebar">
+<aside class="sidebar">
     <div class="sidebar-logo">
         <img class="rounded-circle" src="<?= asset('img/logo.jpg'); ?>">
         <h2>Admin<span class="text-danger">Panel</span></h2>
@@ -122,4 +122,4 @@
             </li>
         </ul>
     </div>
-</div>
+</aside>

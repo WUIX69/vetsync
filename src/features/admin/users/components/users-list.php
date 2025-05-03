@@ -1,7 +1,20 @@
+<style>
+    main section.users-list .user-details {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    main section.users-list .user-details .image {
+        height: 35px !important;
+        width: 35px !important;
+        border: var(--img-border) !important;
+    }
+</style>
 <!-- User List -->
-<div class="section-container">
+<section class="users-list">
     <h2 class="title">Users List</h2>
-    <div class="section-wrapper table-list box">
+    <div class="container table-list box">
         <div class="table-filters">
             <div class="base-filters">
                 <div class="ui fluid mini category search user-search">
@@ -79,4 +92,4 @@
             </table>
         </div>
     </div>
-</div>
+</section>
