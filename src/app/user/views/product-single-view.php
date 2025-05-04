@@ -39,11 +39,6 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-    <script>
-        $(function () {
-            $('.ui.rating').rating();
-        });
-    </script>
 </body>
 
 </html>

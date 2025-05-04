@@ -1,10 +1,10 @@
-<?php include_once __DIR__ . '/../../../utils/php/functions.php'; ?>
+<?php include_once __DIR__ . '/../../utils/php/functions.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
-    <title>Services (View) - VetSync</title>
+    <title>Services - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
 </head>
 
@@ -24,14 +24,11 @@
                     <!-- Hero -->
                     <?= featured('landing/shared/components/hero'); ?>
 
-                    <!-- Highlights -->
-                    <?= featured('landing/products/components/highlights'); ?>
+                    <!-- Services -->
+                    <?= featured('landing/services/components/services'); ?>
 
-                    <!-- About -->
-                    <?= featured('landing/products/components/about'); ?>
-
-                    <!-- Related Services -->
-                    <?= featured('landing/products/components/related'); ?>
+                    <!-- Reserve -->
+                    <?= featured('landing/shared/components/reserve'); ?>
                 </main>
             </div>
             <div class="col-12">
@@ -41,7 +38,8 @@
     </div>
 
     <!-- Scripts -->
-    <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+    <?= shared('elements/scripts'); ?>
+    <?= featured('landing/services/scripts'); ?>
 </body>
 
 </html>

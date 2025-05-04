@@ -1,17 +1,18 @@
 <style>
     /*----------- MAIN (Single Service) -----------*/
-    .service-title {
+
+    main section.service .service-title {
         margin-bottom: 2.5rem;
     }
 
-    .service-title h1 {
+    main section.service .service-title h1 {
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
         color: var(--color-dark);
     }
 
-    .service-tag {
+    main section.service .service-tag {
         display: inline-block;
         background: #f8f9fa;
         padding: 0.5rem 1rem;
@@ -22,14 +23,14 @@
         color: var(--color-primary);
     }
 
-    .service-description {
+    main section.service .service-description {
         color: var(--color-text-muted);
         font-size: 1.1rem;
         margin-bottom: 2rem;
         line-height: 1.6;
     }
 
-    .service-image-main {
+    main section.service .service-image-main {
         border-radius: 12px;
         overflow: hidden;
         margin-bottom: 2rem;
@@ -39,18 +40,18 @@
         height: 456px;
     }
 
-    .service-image-main img {
+    main section.service .service-image-main img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center;
     }
 
-    .service-benefits {
+    main section.service .service-benefits {
         margin-bottom: 3rem;
     }
 
-    .service-benefit-card {
+    main section.service .service-benefit-card {
         background-color: var(--color-white);
         border-radius: 10px;
         padding: 1.5rem;
@@ -67,7 +68,7 @@
         gap: 1.5rem;
     }
 
-    .benefit-icon {
+    main section.service .benefit-icon {
         margin: 0 auto 1rem;
         display: flex;
         align-items: center;
@@ -77,25 +78,26 @@
         color: var(--color-primary);
     }
 
-    .benefit-icon span {
+    main section.service .benefit-icon span {
         font-size: 3.5rem;
     }
 
-    .benefit-title {
+    main section.service .benefit-title {
         font-size: 1.2rem;
         font-weight: 600;
         margin-bottom: 0.5rem;
         color: var(--color-dark);
     }
 
-    .benefit-description {
+    main section.service .benefit-description {
         color: var(--color-text-muted);
         font-size: 0.9rem;
         line-height: 1.5;
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper service-section">
+
+<section class="service py-5">
+    <div class="container-xl">
         <div class="service-title">
             <!-- <div class="service-tag">Featured Service</div> -->
             <h1>Wellness Checkup</h1>
@@ -163,5 +165,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

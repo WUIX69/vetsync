@@ -4,7 +4,7 @@
 
 <head>
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
-    <title>Services - VetSync</title>
+    <title>Services (View) - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
 </head>
 
@@ -24,11 +24,17 @@
                     <!-- Hero -->
                     <?= featured('landing/shared/components/hero'); ?>
 
-                    <!-- Services -->
-                    <?= featured('landing/services/components/services'); ?>
+                    <!-- Highlights -->
+                    <?= featured('landing/products/components/highlights'); ?>
 
-                    <!-- Reserve -->
-                    <?= featured('landing/shared/components/reserve'); ?>
+                    <!-- About -->
+                    <?= featured('landing/products/components/about'); ?>
+
+                    <!-- Related Services -->
+                    <?= featured('landing/products/components/related'); ?>
+
+                    <!-- Reviews -->
+                    <?= featured('landing/products/components/reviews'); ?>
                 </main>
             </div>
             <div class="col-12">
@@ -38,8 +44,7 @@
     </div>
 
     <!-- Scripts -->
-    <?= shared('elements/scripts'); ?>
-    <?= featured('landing/services/scripts'); ?>
+    <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
 </body>
 
 </html>

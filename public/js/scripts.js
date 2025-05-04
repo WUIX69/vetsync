@@ -47,11 +47,16 @@ function initAccordion() {
     $(".ui.accordion").accordion();
 }
 
+function initRating() {
+    $(".ui.rating").rating();
+}
+
 $(function () {
     // Initialize core components
     if ($(".ui.dropdown").length) initDropdowns();
     if ($(".ui.modal").length) initModal();
     if ($(".ui.accordion").length) initAccordion();
+    if ($(".ui.rating").length) initRating();
 
     // Modal opening via data attribute
     $("body").on("click", "[data-open-modal]", function () {

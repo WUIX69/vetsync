@@ -31,9 +31,9 @@ $activeLink = str_replace('.php', '', $pageName);
                     <div class="nav-links">
                         <a href="<?= app('landing') ?>"
                             class="nav-link <?= ($activeLink === 'index' || $activeLink === '') ? 'active' : '' ?>">Home</a>
-                        <a href="<?= app('landing/services/') ?>"
+                        <a href="<?= app('landing/services') ?>"
                             class="nav-link <?= $activeLink === 'services' ? 'active' : '' ?>">Services</a>
-                        <a href="<?= app('landing/products/') ?>"
+                        <a href="<?= app('landing/products') ?>"
                             class="nav-link <?= $activeLink === 'products' ? 'active' : '' ?>">Products</a>
                         <a href="<?= app('landing/contact') ?>"
                             class="nav-link <?= $activeLink === 'contact' ? 'active' : '' ?>">Contact
