@@ -21,19 +21,19 @@
 
         <main class="site-main">
             <!-- Highlights -->
-            <?= featured('user/product-view/components/header'); ?>
+            <?= featured('user/products/components/header-single-view'); ?>
 
             <!-- Highlights -->
-            <?= featured('user/product-view/components/highlights'); ?>
+            <?= featured('user/products/components/highlights'); ?>
 
             <!-- About -->
-            <?= featured('user/product-view/components/about'); ?>
+            <?= featured('user/products/components/about'); ?>
 
             <!-- Related Services -->
-            <?= featured('user/product-view/components/related'); ?>
+            <?= featured('user/products/components/related'); ?>
 
             <!-- Reviews -->
-            <?= featured('user/product-view/components/reviews'); ?>
+            <?= featured('user/products/components/reviews'); ?>
         </main>
     </div>
 

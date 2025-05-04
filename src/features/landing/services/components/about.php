@@ -198,13 +198,13 @@
                     </div>
 
                     <!-- Service Offers -->
-                    <?= featured('user/service-view/components/col/offer'); ?>
+                    <?= featured('user/services/components/col/offer'); ?>
                 </div>
             </div>
             <div class="col-lg-5">
 
                 <!-- Faqs -->
-                <?= featured('user/service-view/components/col/faqs'); ?>
+                <?= featured('user/services/components/col/faqs'); ?>
 
                 <div class="service-cta">
                     <h3>Schedule a Wellness Checkup</h3>

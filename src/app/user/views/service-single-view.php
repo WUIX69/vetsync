@@ -21,14 +21,17 @@
         <?= featured('user/shared/layouts/header'); ?>
 
         <main class="site-main">
+            <!-- Header -->
+            <?= featured('user/services/components/header-single-view'); ?>
+
             <!-- Highlights -->
-            <?= featured('user/service-view/components/highlights'); ?>
+            <?= featured('user/services/components/highlights'); ?>
 
             <!-- About -->
-            <?= featured('user/service-view/components/about'); ?>
+            <?= featured('user/services/components/about'); ?>
 
             <!-- Related Services -->
-            <?= featured('user/service-view/components/related'); ?>
+            <?= featured('user/services/components/related'); ?>
         </main>
     </div>
 
