@@ -4,7 +4,8 @@ $urlPath = $_SERVER['REQUEST_URI'] ?? null;
 
 global $urlParts;
 $urlParts = explode('/', trim($urlPath, '/')) ?? '';
-$pageName = $urlParts[3] ?? '';
+$pageName = end($urlParts);
+$pageName = strpos($pageName, '.php') !== false ? $pageName : '';
 
 global $activeLink;
 $activeLink = str_replace('.php', '', $pageName);
@@ -32,9 +33,9 @@ $activeLink = str_replace('.php', '', $pageName);
                         <a href="<?= app('landing') ?>"
                             class="nav-link <?= ($activeLink === 'index' || $activeLink === '') ? 'active' : '' ?>">Home</a>
                         <a href="<?= app('landing/services') ?>"
-                            class="nav-link <?= $activeLink === 'services' ? 'active' : '' ?>">Services</a>
+                            class="nav-link <?= ($activeLink === 'services' || $activeLink === 'service-single-view') ? 'active' : '' ?>">Services</a>
                         <a href="<?= app('landing/products') ?>"
-                            class="nav-link <?= $activeLink === 'products' ? 'active' : '' ?>">Products</a>
+                            class="nav-link <?= ($activeLink === 'products' || $activeLink === 'product-single-view') ? 'active' : '' ?>">Products</a>
                         <a href="<?= app('landing/contact') ?>"
                             class="nav-link <?= $activeLink === 'contact' ? 'active' : '' ?>">Contact
                             Us</a>

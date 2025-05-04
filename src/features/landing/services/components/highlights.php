@@ -100,9 +100,9 @@
     <div class="container-xl">
         <div class="service-title">
             <!-- <div class="service-tag">Featured Service</div> -->
-            <h1>Wellness Checkup</h1>
+            <!-- <h1>Wellness Checkup</h1>
             <div class="service-description">Comprehensive health assessment for your beloved
-                pets to ensure they stay happy and healthy.</div>
+                pets to ensure they stay happy and healthy.</div> -->
         </div>
         <div class="row">
             <div class="col-lg-8">
