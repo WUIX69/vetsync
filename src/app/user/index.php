@@ -395,7 +395,7 @@
         <main class="site-main">
             <section class="status">
                 <div class="header">
-                    <h4 id="big">Your courses</h4>
+                    <h4 id="big">Your favorites</h4>
                     <h4 id="small">Weekly Activity</h4>
                 </div>
                 <div class="items-list">
@@ -404,9 +404,9 @@
                             <div class="item item-1">
                                 <div class="info">
                                     <div>
-                                        <h5>Data Analysis</h5>
-                                        <p>- 3 lessons left</p>
-                                        <p>- 1 project left</p>
+                                        <h5>Vaccination </h5>
+                                        <p>- 3 sessions left</p>
+
                                     </div>
                                     <i class='bx bx-data'></i>
                                 </div>
@@ -419,9 +419,9 @@
                             <div class="item item-2">
                                 <div class="info">
                                     <div>
-                                        <h5>Machine Learn</h5>
-                                        <p>- 2 assignments left</p>
-                                        <p>- 5 tutorials left</p>
+                                        <h5>Checkup</h5>
+                                        <p>- 2 appointments made</p>
+
                                     </div>
                                     <i class='bx bx-terminal'></i>
                                 </div>
@@ -434,9 +434,9 @@
                             <div class="item item-3">
                                 <div class="info">
                                     <div>
-                                        <h5>Python</h5>
-                                        <p>- 4 chapters left</p>
-                                        <p>- 8 quizzes left</p>
+                                        <h5>Grooming</h5>
+                                        <p>- 5 sessions made</p>
+
                                     </div>
                                     <i class='bx bxl-python'></i>
                                 </div>
@@ -458,7 +458,7 @@
                     <div class="col-lg-6">
                         <div class="prog-status">
                             <div class="header">
-                                <h4>learning Progress</h4>
+                                <h4>Service Appointments</h4>
                                 <div class="tabs">
                                     <a href="#" class="active">1Y</a>
                                     <a href="#">6M</a>
@@ -467,13 +467,13 @@
                             </div>
                             <div class="details">
                                 <div class="item">
-                                    <h2>3.45</h2>
-                                    <p>Current GPA</p>
+                                    <h2>12</h2>
+                                    <p>Total Appointments</p>
                                 </div>
                                 <div class="separator"></div>
                                 <div class="item">
-                                    <h2>4.78</h2>
-                                    <p>Class Average GPA</p>
+                                    <h2>3</h2>
+                                    <p>Upcoming Appointments</p>
                                 </div>
                             </div>
                             <canvas class="prog-chart"></canvas>
@@ -483,14 +483,14 @@
                         <div class="popular">
                             <div class="header">
                                 <h4>Popular</h4>
-                                <a href="#"># Data</a>
+                                <a href="#"></a>
                             </div>
-                            <img src="<?= asset('img/placeholders/image.png'); ?>">
+                            <img src="<?= asset('img/contents/services/grooming.jpg'); ?>">
                             <div class="audio">
                                 <i class='bx bx-podcast'></i>
-                                <a href="#">Podcast: Mastering Data Visualization</a>
+                                <a href="#">Perfect: Freshly groomed and looking paw-some!</a>
                             </div>
-                            <p>Learn to create compelling visualizations with data.</p>
+                            <p>All cleaned up and ready to conquer the world.</p>
                             <div class="listen">
                                 <div class="author">
                                     <img src="<?= asset('img/profiles/user-1.jpg'); ?>">
@@ -499,7 +499,7 @@
                                         <p>Data Analyst</p>
                                     </div>
                                 </div>
-                                <button>Listen<i class='bx bx-right-arrow-alt'></i></button>
+                                <button>book<i class='bx bx-right-arrow-alt'></i></button>
                             </div>
                         </div>
                     </div>
@@ -547,7 +547,7 @@
                                     <div>
                                         <i class='bx bx-time'></i>
                                         <div class="event-info">
-                                            <a href="#">Data Science</a>
+                                            <a href="#">Vaccination</a>
                                             <p>10:00-11:30</p>
                                         </div>
                                     </div>
@@ -557,7 +557,7 @@
                                     <div>
                                         <i class='bx bx-time'></i>
                                         <div class="event-info">
-                                            <a href="#">Machine Learning</a>
+                                            <a href="#">Grooming</a>
                                             <p>13:30-15:00</p>
                                         </div>
                                     </div>
@@ -567,7 +567,7 @@
                                     <div>
                                         <i class='bx bx-time'></i>
                                         <div class="event-info">
-                                            <a href="#">Beginner Python</a>
+                                            <a href="#">Whelping</a>
                                             <p>11:30-13:00</p>
                                         </div>
                                     </div>
@@ -577,7 +577,7 @@
                                     <div>
                                         <i class='bx bx-time'></i>
                                         <div class="event-info">
-                                            <a href="#">Introduction to SQL</a>
+                                            <a href="#">Pet Accessories</a>
                                             <p>10:00-11:30</p>
                                         </div>
                                     </div>
