@@ -22,10 +22,26 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="appointments.php">
                     <div class="nav-content">
-                        <span class="material-icons-sharp">history</span>
-                        <h3>History</h3>
+                        <span class="material-icons-sharp">book_outline</span>
+                        <h3>Appointments</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="services.php">
+                    <div class="nav-content">
+                        <span class="material-icons-sharp">medical_services</span>
+                        <h3>Services</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="products.php">
+                    <div class="nav-content">
+                        <span class="material-icons-sharp">shopping_cart</span>
+                        <h3>Products</h3>
                     </div>
                 </a>
             </li>
@@ -38,26 +54,10 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="records.php">
                     <div class="nav-content">
-                        <span class="material-icons-sharp">confirmation_number</span>
-                        <h3>Tickets</h3>
-                    </div>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <div class="nav-content">
-                        <span class="material-icons-sharp">receipt_long</span>
-                        <h3>Sales List</h3>
-                    </div>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <div class="nav-content">
-                        <span class="material-icons-sharp">report</span>
-                        <h3>Reports</h3>
+                        <span class="material-icons-sharp">folder</span>
+                        <h3>Records</h3>
                     </div>
                 </a>
             </li>
