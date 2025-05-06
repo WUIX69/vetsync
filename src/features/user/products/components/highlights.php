@@ -278,7 +278,7 @@
                     </div>
 
                     <div class="product-price">
-                        $69.00 <span class="original-price text-decoration-line-through text-muted fs-6">$78.00</span>
+                        ₱69.00 <span class="original-price text-decoration-line-through text-muted fs-6">₱78.00</span>
                     </div>
 
                     <div class="product-description">

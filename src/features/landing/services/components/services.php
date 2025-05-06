@@ -255,7 +255,7 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$75.00</span>
+                            <span class="price">₱75.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
@@ -286,7 +286,7 @@
                             <p>Duration: Varies by procedure</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">From $200.00</span>
+                            <span class="price">From ₱200.00</span>
                             <button>Consult Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
@@ -318,7 +318,7 @@
                             <p>Duration: 60-120 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">From $65.00</span>
+                            <span class="price">From ₱65.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
@@ -381,15 +381,15 @@
                             <p>Coming in September 2023</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">From $45.00/night</span>
+                            <span class="price">From ₱45.00/night</span>
                             <button>Notify Me <i class='bx bx-bell'></i></button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- deworming Service -->
-            <div class="col-lg-4">
+            <!-- Deworming Service -->
+            <!-- <div class="col-lg-4">
                 <div class="service-card card">
                     <div class="card-img">
                         <div class="service-status">
@@ -412,15 +412,15 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$75.00</span>
+                            <span class="price">₱75.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Consultation Service -->
-            <div class="col-lg-4">
+            <!-- <div class="col-lg-4">
                 <div class="service-card card">
                     <div class="card-img">
                         <div class="service-status">
@@ -443,15 +443,15 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$74.00</span>
+                            <span class="price">₱74.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Medication Service -->
-            <div class="col-lg-4">
+            <!-- <div class="col-lg-4">
                 <div class="service-card card">
                     <div class="card-img">
                         <div class="service-status">
@@ -474,15 +474,15 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$52.00</span>
+                            <span class="price">₱52.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Laboratory Service -->
-            <div class="col-lg-4">
+            <!-- <div class="col-lg-4">
                 <div class="service-card card">
                     <div class="card-img">
                         <div class="service-status">
@@ -505,15 +505,15 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$50.00</span>
+                            <span class="price">₱50.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <!-- Home Service Service -->
-            <div class="col-lg-4">
+            <!-- Home Service -->
+            <!-- <div class="col-lg-4">
                 <div class="service-card card">
                     <div class="card-img">
                         <div class="service-status">
@@ -537,15 +537,15 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$80.00</span>
+                            <span class="price">₱80.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- Whelping Service -->
-            <div class="col-lg-4">
+            <!-- <div class="col-lg-4">
                 <div class="service-card card">
                     <div class="card-img">
                         <div class="service-status">
@@ -569,12 +569,12 @@
                             <p>Duration: 20-30 minutes</p>
                         </div>
                         <div class="service-meta">
-                            <span class="price">$90.00</span>
+                            <span class="price">₱90.00</span>
                             <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- Pagination START -->

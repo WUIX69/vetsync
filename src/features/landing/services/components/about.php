@@ -218,7 +218,7 @@
                         </div>
                         <div class="service-specs-item">
                             <div class="spec-label">Price</div>
-                            <div class="spec-value">From $50.00</div>
+                            <div class="spec-value">From ₱50.00</div>
                         </div>
                         <div class="service-specs-item">
                             <div class="spec-label">Availability</div>

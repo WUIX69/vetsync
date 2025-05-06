@@ -283,7 +283,7 @@
                                         <p>Duration: 20-30 minutes</p>
                                     </div>
                                     <div class="service-meta">
-                                        <span class="price">$75.00</span>
+                                        <span class="price">₱75.00</span>
                                         <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                                     </div>
                                 </div>
@@ -316,7 +316,7 @@
                                         <p>Duration: Varies by procedure</p>
                                     </div>
                                     <div class="service-meta">
-                                        <span class="price">From $200.00</span>
+                                        <span class="price">From ₱200.00</span>
                                         <button>Consult Now <i class='bx bx-right-arrow-alt'></i></button>
                                     </div>
                                 </div>
@@ -348,7 +348,7 @@
                                         <p>Duration: 60-120 minutes</p>
                                     </div>
                                     <div class="service-meta">
-                                        <span class="price">From $65.00</span>
+                                        <span class="price">From ₱65.00</span>
                                         <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                                     </div>
                                 </div>
@@ -412,7 +412,7 @@
                                         <p>Coming in September 2023</p>
                                     </div>
                                     <div class="service-meta">
-                                        <span class="price">From $45.00/night</span>
+                                        <span class="price">From ₱45.00/night</span>
                                         <button>Notify Me <i class='bx bx-bell'></i></button>
                                     </div>
                                 </div>

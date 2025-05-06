@@ -396,7 +396,7 @@
             <section class="status">
                 <div class="header">
                     <h4 id="big">Your favorites</h4>
-                    <h4 id="small">Weekly Activity</h4>
+                    <!-- <h4 id="small">Weekly Activity</h4> -->
                 </div>
                 <div class="items-list">
                     <div class="row">
@@ -445,11 +445,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-3">
+                        <!-- <div class="col-lg-3">
                             <div class="item item-4">
                                 <canvas class="activity-chart"></canvas>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </section>
@@ -567,7 +567,7 @@
                                     <div>
                                         <i class='bx bx-time'></i>
                                         <div class="event-info">
-                                            <a href="#">Whelping</a>
+                                            <a href="#">boarding</a>
                                             <p>11:30-13:00</p>
                                         </div>
                                     </div>
