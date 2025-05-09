@@ -45,6 +45,13 @@ aside.sidebar .sidebar-menu .nav {
     margin: 0;
 }
 
+aside.sidebar .sidebar-menu .nav .nav-item:last-child {
+    position: absolute;
+    bottom: 0.7rem;
+
+    margin-top: auto;
+}
+
 aside.sidebar .sidebar-menu .nav .nav-item .nav-link {
     position: relative;
     display: flex;
