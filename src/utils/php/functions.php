@@ -1,10 +1,13 @@
 <?php
 
 // Enable error logging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/logs/error.log');
+function enableErrorLogging()
+{
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+    ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/logs/error.log');
+}
 
 function tryCatch($callback, $errorMessage = "Error: ")
 {
