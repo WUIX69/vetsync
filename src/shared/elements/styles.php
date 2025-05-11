@@ -20,4 +20,4 @@ foreach ($styles as $style) {
 }
 
 // Load Favicon
-echo '<link rel="icon" type="image/png" href="' . asset('img/favicon.png') . '">';
+echo '<link rel="icon" type="image/png" href="' . asset('favicon.png') . '">';
