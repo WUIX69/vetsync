@@ -1,0 +1,1 @@
+<script src="<?= featured('auth/register/js/main.js', true) ?>"></script>

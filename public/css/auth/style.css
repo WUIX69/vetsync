@@ -1,0 +1,109 @@
+body .container-body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+main .section-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+
+    background-image: url("../../img/contents/bg_log.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+main .section-container .section-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 0;
+    margin-top: -5rem;
+    padding: 0;
+}
+
+main .auth-section .section-out-header {
+    color: var(--color-white);
+}
+
+main .auth-section .section-out-header .ui.header {
+    color: var(--color-white);
+}
+
+main .auth-section .section-out-header .content {
+    text-shadow: var(--text-shadow);
+}
+
+main .auth-section .section-out-header .content .text {
+    color: aqua;
+}
+
+main .auth-section .auth-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.6rem;
+    margin: 0;
+    padding: 3rem !important;
+    border: 2px solid var(--color-white) !important;
+    background-color: transparent;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    min-width: 440px;
+}
+
+main .auth-section .auth-wrapper .section-in-header {
+    text-align: center;
+    font-size: 1.7rem;
+    margin: 0;
+    text-shadow: var(--text-shadow);
+}
+
+main .auth-section .auth-wrapper label {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.1rem !important;
+}
+
+main .auth-section .auth-wrapper label,
+main .auth-section .auth-wrapper .ui.text {
+    color: var(--bs-gray-200) !important;
+}
+
+main .auth-section .auth-wrapper .form .field input {
+    font-size: 0.86rem;
+}
+
+main .auth-section .auth-wrapper .form .field input:focus,
+main .auth-section .auth-wrapper .form .field input:hover {
+    border-color: #00b5ad !important;
+    box-shadow: 0 0 0 0.125em rgba(0, 181, 173, 0.25) !important;
+}
+
+main .auth-section .auth-wrapper .form .clearing {
+    padding: 0;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    text-wrap: nowrap;
+}
+
+main .auth-section .auth-wrapper .form .clearing * {
+    font-size: 0.85rem;
+}
+
+main .auth-section .auth-wrapper .form .clearing .remember-me label {
+    padding-left: 1.7rem;
+}
+
+main .auth-section .auth-wrapper .form button[type="submit"] {
+    margin-top: 2rem;
+}
