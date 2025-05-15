@@ -1,5 +1,4 @@
 $(function () {
-    // console.log("login scripts");
     const $loginForm = $("#loginForm");
     $loginForm.form({
         fields: {
@@ -59,7 +58,4 @@ $(function () {
             });
         },
     });
-
-    // $url = apiUrl("auth/login") + "main.php";
-    // console.log($url);
 });
