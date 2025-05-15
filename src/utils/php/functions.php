@@ -1,14 +1,5 @@
 <?php
 
-// Enable error logging
-function enableErrorLogging()
-{
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-    ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/logs/error.log');
-}
-
 function tryCatch($callback, $errorMessage = "Error: ")
 {
     try {
@@ -127,4 +118,20 @@ function app($link = '')
     }
 
     return urlFileHelper('app', $url);
+}
+
+function apiHeaders()
+{
+    // Prevent caching for dynamic content
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
+
+    // Set content type and charset
+    header('Content-Type: application/json; charset=utf-8');
+
+    // Security headers
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: DENY');
+    header('X-XSS-Protection: 1; mode=block');
 }

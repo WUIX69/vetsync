@@ -7,3 +7,12 @@ function ajaxErrorHandler(jqXHR, textStatus, errorThrown, error) {
     console.log("Error:", error);
     return false;
 }
+
+function onErrorHandler(errorMessage, xhr, jqXHR, textStatus, error) {
+    console.error("errorMessage", errorMessage);
+    console.error("xhr", xhr);
+    console.log("Stringy Response:", JSON.stringify(jqXHR));
+    console.log("responseText", JSON.stringify(jqXHR.responseText));
+    console.error("textStatus", textStatus);
+    console.error("error:", error);
+}

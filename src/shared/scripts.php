@@ -1,4 +1,4 @@
-<script src="assets/lib/jquery/jquery.min.js"></script>
+<!-- <script src="assets/lib/jquery/jquery.min.js"></script>
 <script src="assets/lib/jquery/jquery.validate.min.js"></script>
 <script src="assets/lib/jquery/additional-methods.min.js"></script>
 <script src="assets/vendor/fomantic-ui/dist/semantic.min.js"></script>
@@ -9,7 +9,7 @@
 <script src="assets/lib/lodash/lodash.min.js"></script>
 <script src="assets/js/spinner.js"></script>
 <script src="assets/js/darkmode.js"></script>
-<script src="assets/js/scripts.js"></script>
+<script src="assets/js/scripts.js"></script> -->
 <script>
     $(function () {
         const AppConfig = {
@@ -25,7 +25,7 @@
         $.ajaxSetup({
             timeout: AppConfig.AJAX_SETTINGS.timeout,
             cache: AppConfig.AJAX_SETTINGS.cache,
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 if (status === 'timeout') {
                     // Handle timeout error
                     console.log('Request timed out');

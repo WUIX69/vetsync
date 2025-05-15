@@ -39,7 +39,7 @@ function utilScripts()
 {
     // Utility scripts
     $utilityScripts = [
-        'js/validateHandler.js',
+        // 'js/validateHandler.js',
         'js/middleware.js',
     ];
 
@@ -51,7 +51,8 @@ function utilScripts()
 ?>
 
 <script>
-    $(function () {
-        // Custom js here...
-    });
+    // API URL Helper
+    function apiUrl(feature = null) {
+        return `<?= baseUrl() ?>src/features/${feature}/api/`;
+    }
 </script>

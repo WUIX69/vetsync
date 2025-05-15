@@ -1,4 +1,4 @@
-<?php include_once __DIR__ . '/../../utils/php/functions.php'; ?>
+<?php include_once __DIR__ . '/../../core/app.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +21,7 @@
 					<?= featured('auth/shared/components/header') ?> <!-- Header -->
 					<div class="auth-wrapper box column">
 						<?= featured('auth/shared/components/header-in') ?> <!-- Section in header -->
-						<form class="ui large form">
+						<form class="ui large form" id="loginForm">
 							<div class="field">
 								<label for="email">Email</label>
 								<div class="ui input">
@@ -36,8 +36,8 @@
 							</div>
 							<div class="field clearing">
 								<div class="ui checkbox remember-me">
-									<input type="checkbox" name="remember-me">
-									<label>Remember me</label>
+									<input type="checkbox" name="remember">
+									<label for="remember">Remember me</label>
 								</div>
 								<div class="ui text forgot-password">
 									<a href="#">Forgot Password?</a>
@@ -59,7 +59,7 @@
 
 	<!-- Scripts -->
 	<?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-	<?= featured('auth/login/scripts') ?> <!-- Login Scripts -->
+	<script src="<?= featured('auth/login/js/main.js', true) ?>"></script>
 </body>
 
 </html>
