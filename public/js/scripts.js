@@ -77,4 +77,9 @@ $(function () {
     $("body").on("click", ".top-redirect-button button", function () {
         $("html, body").animate({ scrollTop: 0 }, "slow");
     });
+
+    // Prevent submission of non-validated forms
+    $("body").on("submit", "form", function (e) {
+        e.preventDefault();
+    });
 });
