@@ -1,6 +1,6 @@
 $(function () {
-    const $loginForm = $("#loginForm");
-    $loginForm.form({
+    // Validate login form
+    $("#loginForm").form({
         fields: {
             email: {
                 identifier: "email",
@@ -27,34 +27,38 @@ $(function () {
             },
         },
         inline: true,
-        on: "blur",
-        onFailure: function (formErrors, fields) {
-            console.log("Form validation failed:", formErrors);
-        },
+        on: "blur", // EG: submit, blur
         onSuccess: function (event, fields) {
             event.preventDefault();
             const $submitBtn = $(this).find("button[type=submit]");
-            const formData = new FormData(this);
+            // const formData = new FormData(this); // Only use when a file is included
 
-            $submitBtn.api({
+            // console.log(formData);
+            // console.log(fields);
+            // return false;
+
+            $.ajax({
                 url: apiUrl("auth/login") + "users.php",
                 method: "POST",
-                data: formData,
+                data: fields,
+                // processData: false, // Only use when FormData is used
+                // contentType: false, // Only use when FormData is used
                 dataType: "json",
-                serializeForm: true,
                 timeout: 5000,
-                loading: true,
-                onSuccess: function (response) {
-                    console.log(response);
+                beforeSend: function () {
+                    $submitBtn.addClass("loading");
+                },
+                success: function (response) {
+                    console.log("API Response:", response);
                     alert(response.message);
 
                     if (!response.success) return false;
-                    window.location.replace(response.route);
+                    window.location.replace(response.route); // Redirect to its route dir
                 },
-                onComplete: function () {
-                    // Any Cleanup here...
+                complete: function () {
+                    $submitBtn.removeClass("loading");
                 },
-                onError: onErrorHandler,
+                error: ajaxErrorHandler,
             });
         },
     });
