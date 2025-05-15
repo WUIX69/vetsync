@@ -39,7 +39,6 @@ function utilScripts()
 {
     // Utility scripts
     $utilityScripts = [
-        // 'js/validateHandler.js',
         'js/middleware.js',
     ];
 
