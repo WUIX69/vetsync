@@ -18,7 +18,7 @@ $activeLink = str_replace('.php', '', $pageName);
         </div>
         <div class="nav-links">
             <a class="nav-link <?= ($activeLink === 'index' || $activeLink === '') ? 'active' : '' ?>"
-                href="<?= app('user') ?>">Dashboard</a>
+                href="<?= app('user') ?>">Home</a>
             <a class="nav-link <?= $activeLink === 'services' ? 'active' : '' ?>"
                 href="<?= app('user/services') ?>">Services</a>
             <a class="nav-link <?= $activeLink === 'products' ? 'active' : '' ?>"

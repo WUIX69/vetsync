@@ -63,14 +63,12 @@
             <div class="location-map-cont">
                 <div class="header">
                     <span class="material-icons-sharp">location_on</span>
-                    <div class="title">121 Einstein Loop N, Bronx, NY 10475, USA
+                    <div class="title">003 DR Zone III Brgy. Graceville, San Jose Del
+                        Monte Bulacan
                     </div>
                 </div>
-                <div class="google-map">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14920.891757756479!2d-73.83496372506556!3d40.8623107607295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c28cbc17f4a0c3%3A0x9ae0f1e804a817d!2s121%20Einstein%20Loop%20N%2C%20Bronx%2C%20NY%2010475%2C%20USA!5e0!3m2!1sen!2sth!4v1650470337727!5m2!1sen!2sth"
-                        allowfullscreen="" loading="lazy"></iframe>
-                </div>
+                <!-- Google Map Iframe -->
+                <?= featured('landing/shared/components/ui/google-map'); ?>
             </div>
         </div>
     </section>

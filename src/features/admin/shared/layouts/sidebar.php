@@ -1,11 +1,33 @@
-<div class="sidebar">
+<?php
+// TODO: move all the global logic in /config dir
+$urlPath = $_SERVER['REQUEST_URI'] ?? null;
+
+global $urlParts;
+$urlParts = explode('/', trim($urlPath, '/')) ?? '';
+
+// Loop through urlParts to find a file with .php extension
+$pageName = '';
+foreach ($urlParts as $part) {
+    // Found a file with .php extension
+    if (strpos($part, '.php') !== false) {
+        // Extract only the filename part before any query parameters
+        $filenamePart = explode('?', $part)[0];
+        $pageName = str_replace('.php', '', $filenamePart);
+        break;
+    }
+}
+
+global $activeLink;
+$activeLink = str_replace('.php', '', $pageName);
+?>
+<aside class="sidebar">
     <div class="sidebar-logo">
         <img class="rounded-circle" src="<?= asset('img/logo.jpg'); ?>">
         <h2>Admin<span class="text-danger">Panel</span></h2>
     </div>
     <div class="sidebar-menu">
         <ul class="nav navbar-nav">
-            <li class="nav-item active">
+            <li class="nav-item <?= ($activeLink == 'index' || $activeLink == '') ? 'active' : ''; ?>">
                 <a class="nav-link" href="index.php">
                     <div class="nav-content">
                         <span class="material-icons-sharp">dashboard</span>
@@ -13,7 +35,7 @@
                     </div>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?= $activeLink == 'users' ? 'active' : ''; ?>">
                 <a class="nav-link" href="users.php">
                     <div class="nav-content">
                         <span class="material-icons-sharp">person_outline</span>
@@ -21,15 +43,31 @@
                     </div>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
+            <li class="nav-item <?= $activeLink == 'appointments' ? 'active' : ''; ?>">
+                <a class="nav-link" href="appointments.php">
                     <div class="nav-content">
-                        <span class="material-icons-sharp">history</span>
-                        <h3>History</h3>
+                        <span class="material-icons-sharp">book_outline</span>
+                        <h3>Appointments</h3>
                     </div>
                 </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?= $activeLink == 'services' ? 'active' : ''; ?>">
+                <a class="nav-link" href="services.php">
+                    <div class="nav-content">
+                        <span class="material-icons-sharp">medical_services</span>
+                        <h3>Services</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item <?= $activeLink == 'products' ? 'active' : ''; ?>">
+                <a class="nav-link" href="products.php">
+                    <div class="nav-content">
+                        <span class="material-icons-sharp">shopping_cart</span>
+                        <h3>Products</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item <?= $activeLink == 'analytics' ? 'active' : ''; ?>">
                 <a class="nav-link" href="analytics.php">
                     <div class="nav-content">
                         <span class="material-icons-sharp">analytics</span>
@@ -37,31 +75,15 @@
                     </div>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
+            <li class="nav-item <?= $activeLink == 'records' ? 'active' : ''; ?>">
+                <a class="nav-link" href="records.php">
                     <div class="nav-content">
-                        <span class="material-icons-sharp">confirmation_number</span>
-                        <h3>Tickets</h3>
+                        <span class="material-icons-sharp">folder</span>
+                        <h3>Records</h3>
                     </div>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <div class="nav-content">
-                        <span class="material-icons-sharp">receipt_long</span>
-                        <h3>Sales List</h3>
-                    </div>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <div class="nav-content">
-                        <span class="material-icons-sharp">report</span>
-                        <h3>Reports</h3>
-                    </div>
-                </a>
-            </li>
-            <li class="nav-item">
+            <li class="nav-item <?= $activeLink == 'settings' ? 'active' : ''; ?>">
                 <div class="nav-link">
                     <div class="nav-content">
                         <div class="ui accordion">
@@ -112,7 +134,7 @@
                     </div>
                 </div>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?= $activeLink == 'logout' ? 'active' : ''; ?>">
                 <a class="nav-link" href="javascript:void(0);">
                     <div class="nav-content">
                         <span class="material-icons-sharp">logout</span>
@@ -122,4 +144,4 @@
             </li>
         </ul>
     </div>
-</div>
+</aside>

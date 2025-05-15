@@ -1,8 +1,0 @@
-.ui.feed * {
-    background-color: var(--color-white) !important;
-    font-size: 0.8rem !important;
-}
-
-.ui.feed .content *:not(a.user) {
-    color: var(--color-dark) !important;
-}

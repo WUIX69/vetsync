@@ -328,7 +328,7 @@
                                         <div class="ui tag label red">Hot</div>
                                         <!-- <div class="title">Premium Dry Dog Food</div> -->
                                     </div>
-                                    <div class="product-price">$22.99</div>
+                                    <div class="product-price">₱22.99</div>
                                 </div>
                                 <div class="content-2">
                                     <h3 class="product-title">Premium Dry Dog Food</h3>
@@ -398,7 +398,7 @@
                                     <div class="product-tag">
                                         <div class="ui tag label teal">Popular</div>
                                     </div>
-                                    <div class="product-price">$18.50</div>
+                                    <div class="product-price">₱18.50</div>
                                 </div>
                                 <div class="content-2">
                                     <h3 class="product-title">Joint Health Supplements</h3>
@@ -469,7 +469,7 @@
                                     <div class="product-tag">
                                         <div class="ui tag blue label">Featured</div>
                                     </div>
-                                    <div class="product-price">$14.99</div>
+                                    <div class="product-price">₱14.99</div>
                                 </div>
                                 <div class="content-2">
                                     <h3 class="product-title">Adjustable Comfort Collar</h3>
@@ -540,7 +540,7 @@
                                     <div class="product-tag">
                                         <div class="ui tag label">New</div>
                                     </div>
-                                    <div class="product-price">$25.75</div>
+                                    <div class="product-price">₱25.75</div>
                                 </div>
                                 <div class="content-2">
                                     <h3 class="product-title">Grain-Free Cat Food</h3>
@@ -610,7 +610,7 @@
                                     <div class="product-tag">
                                         <div class="ui tag label orange">Limited</div>
                                     </div>
-                                    <div class="product-price">$49.99</div>
+                                    <div class="product-price">₱49.99</div>
                                 </div>
                                 <div class="content-2">
                                     <h3 class="product-title">Orthopedic Pet Bed</h3>
@@ -681,7 +681,7 @@
                                     <div class="product-tag">
                                         <div class="ui tag label teal">Popular</div>
                                     </div>
-                                    <div class="product-price">$28.50</div>
+                                    <div class="product-price">₱28.50</div>
                                 </div>
                                 <div class="content-2">
                                     <h3 class="product-title">Puppy Growth Formula</h3>

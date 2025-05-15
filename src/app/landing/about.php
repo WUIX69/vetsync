@@ -6,7 +6,6 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>Landing Page</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
-    <?= featured('landing/about/styles') ?>
 </head>
 
 <body>

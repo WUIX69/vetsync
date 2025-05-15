@@ -49,21 +49,27 @@ $(function () {
     });
 
     new Chart(ctx2, {
-        type: "line",
+        type: "bar",
         data: {
-            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+            labels: [
+                "Vaccination",
+                "Checkup",
+                "Grooming",
+                "Whelping",
+                "Accessories",
+            ],
             datasets: [
                 {
-                    label: "Class GPA",
-                    data: [6, 10, 8, 14, 6, 7, 4],
-                    borderColor: "#0891b2",
-                    tension: 0.4,
-                },
-                {
-                    label: "Aver GPA",
-                    data: [8, 6, 7, 6, 11, 8, 10],
-                    borderColor: "#ca8a04",
-                    tension: 0.4,
+                    label: "Appointments",
+                    data: [3, 2, 5, 1, 1],
+                    backgroundColor: [
+                        "#0891b2",
+                        "#ca8a04",
+                        "#059669",
+                        "#7c3aed",
+                        "#db2777",
+                    ],
+                    borderRadius: 6,
                 },
             ],
         },
@@ -77,12 +83,10 @@ $(function () {
                     },
                 },
                 y: {
+                    beginAtZero: true,
                     ticks: {
-                        display: false,
-                    },
-                    border: {
-                        display: false,
-                        dash: [5, 5],
+                        display: true,
+                        stepSize: 1,
                     },
                 },
             },
