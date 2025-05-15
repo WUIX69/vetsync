@@ -18,51 +18,47 @@ function validateHandler(options = {}) {
         on: "blur",
         onSuccess: function (event, fields) {
             event.preventDefault();
-            const formData = new FormData(this);
+            // const formData = new FormData(this);
 
-            // console.log(formData);
-            // console.log(config.api_url);
-            // console.log(this);
             // console.log($(this));
+            // console.log(formData);
             // console.log(fields);
             // return false;
 
-            $submitBtn.api({
+            $.ajax({
                 url: config.api_url,
                 method: "POST",
-                data: formData,
+                data: fields,
                 dataType: "json",
                 serializeForm: true,
                 timeout: 5000,
                 loading: true,
-                beforeSend: function (settings) {
-                    console.log(settings);
-                    return false;
-                },
-                onSuccess: function (response) {
+                // beforeSend: function (settings) {
+                //     console.log(settings);
+                //     return settings;
+                // },
+                success: function (response) {
                     console.log(response);
                     alert(response.message);
                     return false;
                 },
-                onComplete: function () {
+                complete: function () {
                     // Any Cleanup here...
                 },
-                onFailure: function (formErrors, fields) {
-                    console.log("Failure");
-                    // $("body").toast({
-                    //     message: formErrors.join("<br/>\n"),
-                    //     showIcon: "exclamation circle",
-                    //     displayTime: 0,
-                    //     className: {
-                    //         toast: "ui error message",
-                    //     },
-                    //     compact: false,
-                    // });
-                    // return false;
-                },
-                onError: function () {
-                    console.log("Error");
-                },
+                // onFailure: function (formErrors, fields) {
+                //     console.log("Failure");
+                //     // $("body").toast({
+                //     //     message: formErrors.join("<br/>\n"),
+                //     //     showIcon: "exclamation circle",
+                //     //     displayTime: 0,
+                //     //     className: {
+                //     //         toast: "ui error message",
+                //     //     },
+                //     //     compact: false,
+                //     // });
+                //     // return false;
+                // },
+                error: ajaxErrorHandler,
             });
         },
     });
