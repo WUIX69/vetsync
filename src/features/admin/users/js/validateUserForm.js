@@ -2,9 +2,9 @@
 const $userModal = $("#userModal");
 const $userForm = $userModal.find("#userForm");
 
-function validateUserForm($form = null) {
-    let userFormConf = {
-        form: $form,
+$(function () {
+    // Validate login form
+    $userForm.form({
         fields: {
             name: {
                 identifier: "name",
@@ -42,10 +42,14 @@ function validateUserForm($form = null) {
                 ],
             },
         },
-    };
-    validateHandler(userFormConf);
-}
+        inline: true,
+        on: "blur", // EG: submit, blur
+        onSuccess: function (event, fields) {
+            event.preventDefault();
+            const $submitBtn = $(this).find("button[type=submit]");
 
-$(function () {
-    validateUserForm($userForm);
+            console.log(fields);
+            return false;
+        },
+    });
 });

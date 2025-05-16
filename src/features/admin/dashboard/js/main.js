@@ -1,9 +1,15 @@
 const $reminderModal = $("#reminderModal");
 const $reminderForm = $reminderModal.find(".ui.form");
 
-function validateReminderForm($form = null) {
-    let reminderFormConf = {
-        form: $form,
+$(function () {
+    initModal({
+        modal_id: $reminderModal,
+        transition: "swing down",
+        duration: 800,
+    });
+
+    // Validate login form
+    $reminderForm.form({
         fields: {
             employee: {
                 identifier: "employee",
@@ -17,6 +23,7 @@ function validateReminderForm($form = null) {
             employee_search: {
                 identifier: "employee_search",
                 optional: true,
+                rules: [],
             },
             date: {
                 identifier: "date",
@@ -59,16 +66,14 @@ function validateReminderForm($form = null) {
                 ],
             },
         },
-    };
-    validateHandler(reminderFormConf);
-}
+        inline: true,
+        on: "blur", // EG: submit, blur
+        onSuccess: function (event, fields) {
+            event.preventDefault();
+            const $submitBtn = $(this).find("button[type=submit]");
 
-$(function () {
-    initModal({
-        modal_id: $reminderModal,
-        transition: "swing down",
-        duration: 800,
+            console.log(fields);
+            return false;
+        },
     });
-
-    validateReminderForm($reminderForm);
 });
