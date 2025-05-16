@@ -12,7 +12,7 @@ if ($_ENV['APP_DEBUG']) {
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     ini_set('log_errors', 1);
-    ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/logs/error.log');
+    ini_set('error_log', $config['root_path'] . '/logs/error.log');
 }
 
 // Set timezone

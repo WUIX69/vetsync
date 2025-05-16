@@ -1,8 +1,6 @@
 <?php
 
-global $conn;
 $conn = null;
-
 try {
 
     $conn = new PDO(
@@ -12,9 +10,11 @@ try {
         $config['db']['username'],
         $config['db']['password']
     );
+
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $e) {
+    error_log("Connection failed: " . $e->getMessage());
     die("Connection failed: " . $e->getMessage());
 }
 

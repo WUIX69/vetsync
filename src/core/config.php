@@ -7,6 +7,7 @@ $dotenv->safeLoad();
 $config = [
     'sub_folder' => 'vetsync',
     'root_path' => $_SERVER['DOCUMENT_ROOT'],
+    'uri_path' => $_SERVER['REQUEST_URI'],
     'app' => [
         'base_url' => $_ENV['APP_URL'],
         'assets_url' => '/public',
@@ -19,4 +20,10 @@ $config = [
         'username' => $_ENV['DB_USERNAME'],
         'password' => $_ENV['DB_PASSWORD'],
     ]
+];
+
+$response = [
+    'success' => false,
+    'message' => '',
+    'data' => null
 ];
