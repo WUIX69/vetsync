@@ -4,11 +4,8 @@ include '../../../../core/app.php';
 featured('auth/login/db/users');
 apiHeaders();
 
-$response = [
-    'success' => false,
-    'message' => '',
-    'route' => null
-];
+// global $response;
+// global $session;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method';
@@ -21,13 +18,15 @@ try {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $user = singleWhereUserEmail($email);
-    $admin = singleWhereAdminEmail($email);
+    $users = new UsersDB();
+    $user = $users->singleWhereUserEmail($email);
+    $admin = $users->singleWhereAdminEmail($email);
 
     if ($user && password_verify($password, $user['password'])) {
 
-        sessionSet($user);
-        sessionAdd(['type' => 'user']);
+        $session->set($user);
+        $session->add(['type' => 'user']);
+
         $response = array_merge($response, [
             'success' => true,
             'message' => 'Welcome user',
@@ -36,8 +35,9 @@ try {
 
     } else if ($admin && password_verify($password, $admin['password'])) {
 
-        sessionSet($admin);
-        sessionAdd(['type' => 'admin']);
+        $session->set($admin);
+        $session->add(['type' => 'admin']);
+
         $response = array_merge($response, [
             'success' => true,
             'message' => 'Welcome admin',
