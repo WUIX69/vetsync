@@ -120,6 +120,12 @@ function app($link = '')
     return urlFileHelper('app', $url);
 }
 
+function uriPath($path = null)
+{
+    global $config;
+    return strpos($config['uri_path'], "/$path/") !== false;
+}
+
 function apiHeaders()
 {
     // Prevent caching for dynamic content
