@@ -1,64 +1,59 @@
 <?php
 
-$sessionName = $_ENV['SESSION_NAME'] ?? null;
+$sessionName = $_ENV['SESSION_NAME'] ?? 'VETSYNC_SESSION';
 $sessionLifetime = ($_ENV['SESSION_LIFETIME'] ?? 120) * 60; // convert minutes to seconds
-$uriPath = $_SERVER['REQUEST_URI']; // Get current path
 
-function sessionSet($data = null)
+class SessionManager
 {
-    global $sessionName;
-    $_SESSION[$sessionName] = $data;
-}
+    private $sessionName;
 
-function sessionAdd($data = null)
-{
-    global $sessionName;
-    if (is_array($data)) {
-        $_SESSION[$sessionName] = array_merge($_SESSION[$sessionName], $data);
-    } else {
-        $_SESSION[$sessionName][$data];
-    }
-}
-
-function sessionGet()
-{
-    global $sessionName;
-    return $_SESSION[$sessionName] ?? null;
-}
-
-function sessionCheck()
-{
-    global $sessionName;
-    return isset($_SESSION[$sessionName]) ?? false;
-}
-
-function sessionRemove($value = null)
-{
-    global $sessionName;
-    if (!sessionCheck()) {
-        return false;
+    public function __construct($sessionName = null)
+    {
+        if ($sessionName !== null) {
+            $this->sessionName = $sessionName;
+        } else {
+            global $sessionName;
+            $this->sessionName = $sessionName;
+        }
     }
 
-    unset($_SESSION[$sessionName][$value]);
-    return true;
-}
+    public function set($data = null)
+    {
+        $_SESSION[$this->sessionName] = $data;
+    }
 
-function sessionDestroy()
-{
-    session_unset();
-    session_destroy();
-    // return true;
-}
+    public function add($data = null)
+    {
+        if (is_array($data)) {
+            $_SESSION[$this->sessionName] = array_merge($_SESSION[$this->sessionName] ?? [], $data);
+        } else {
+            $_SESSION[$this->sessionName][$data] = $data;
+        }
+    }
 
-// Simple path-checking functions
-function isAuthPath($path)
-{
-    return strpos($path, '/auth/') !== false;
-}
+    public function get()
+    {
+        return $_SESSION[$this->sessionName] ?? null;
+    }
 
-function isRestrictedPath($path)
-{
-    return strpos($path, '/user/') !== false || strpos($path, '/admin/') !== false;
+    public function has()
+    {
+        return isset($_SESSION[$this->sessionName]);
+    }
+
+    public function remove($value = null)
+    {
+        if (!$this->has())
+            return false;
+        unset($_SESSION[$this->sessionName][$value]);
+        return true;
+    }
+
+    public function destroy()
+    {
+        session_unset();
+        session_destroy();
+    }
 }
 
 // Configure session settings
@@ -70,27 +65,25 @@ ini_set('session.use_only_cookies', 1); // Forces sessions to only use cookies
 ini_set('session.cookie_secure', $_ENV['APP_ENV'] === 'production' ? 1 : 0); // Secure in production
 
 // Start the session if not already started
-session_name($sessionName); // Set the session name
+session_name($sessionName);
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Session access control logic
-$isAuthPage = isAuthPath($uriPath);
-$isRestrictedPage = isRestrictedPath($uriPath);
-
-// Handle user with active session trying to access auth page
-if ($isAuthPage && sessionCheck()) {
-    error_log('Session destroyed: User with active session accessed auth page');
-    sessionDestroy();
-}
+// Instantiate the session manager
+$session = new SessionManager();
 
 // Handle access to restricted areas without a session
-if ($isRestrictedPage && !sessionCheck()) {
-    error_log('Access denied: No active session for restricted area');
+$isRestrictedPage = uriPath('user') || uriPath('admin');
+if ($isRestrictedPage && !$session->has()) {
+    // error_log('Access denied: No active session for restricted area');
+    header("Location: " . app('landing'));
+    exit;
+}
 
-    if (!$isAuthPage) {
-        header("Location: " . app('landing'));
-        exit;
-    }
+// Handle user with active session trying to access auth page
+$isAuthPage = uriPath('auth');
+if ($isAuthPage && $session->has()) {
+    // error_log('Session destroyed: User with active session accessed auth page');
+    $session->destroy();
 }
