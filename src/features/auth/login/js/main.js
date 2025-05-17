@@ -53,7 +53,7 @@ $(function () {
                     alert(response.message);
 
                     if (!response.success) return false;
-                    window.location.replace(response.route); // Redirect to its route dir
+                    window.location.replace(response.data.route); // Redirect to its route dir
                 },
                 complete: function () {
                     $submitBtn.removeClass("loading");

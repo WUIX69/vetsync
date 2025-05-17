@@ -30,7 +30,9 @@ try {
         $response = array_merge($response, [
             'success' => true,
             'message' => 'Welcome user',
-            'route' => app('user'),
+            'data' => [
+                'route' => app('user'),
+            ],
         ]);
 
     } else if ($admin && password_verify($password, $admin['password'])) {
@@ -41,7 +43,9 @@ try {
         $response = array_merge($response, [
             'success' => true,
             'message' => 'Welcome admin',
-            'route' => app('admin'),
+            'data' => [
+                'route' => app('admin'),
+            ],
         ]);
 
     } else {
