@@ -145,7 +145,6 @@ function uriPagePath()
         }
     }
 
-    error_log('pageName: ' . $pageName);
     $activeLink = str_replace('.php', '', $pageName);
     return $activeLink;
 }
