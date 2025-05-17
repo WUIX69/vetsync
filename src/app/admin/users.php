@@ -1,4 +1,4 @@
-<?php include_once '../../../src/utils/php/functions.php'; ?>
+<?php include_once '../../core/app.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +6,6 @@
     <?= shared('elements/meta') ?>
     <title>Users Management - Admin</title>
     <?= shared('elements/styles') ?>
-    <?= featured('admin/users/styles') ?>
 
     <!-- Required for DataTables -->
     <link rel="stylesheet" href="<?= asset('lib/DataTables/datatables.min.css') ?>">

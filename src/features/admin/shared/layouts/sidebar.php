@@ -1,25 +1,4 @@
-<?php
-// TODO: move all the global logic in /config dir
-$urlPath = $_SERVER['REQUEST_URI'] ?? null;
-
-global $urlParts;
-$urlParts = explode('/', trim($urlPath, '/')) ?? '';
-
-// Loop through urlParts to find a file with .php extension
-$pageName = '';
-foreach ($urlParts as $part) {
-    // Found a file with .php extension
-    if (strpos($part, '.php') !== false) {
-        // Extract only the filename part before any query parameters
-        $filenamePart = explode('?', $part)[0];
-        $pageName = str_replace('.php', '', $filenamePart);
-        break;
-    }
-}
-
-global $activeLink;
-$activeLink = str_replace('.php', '', $pageName);
-?>
+<?= $activeLink = uriPagePath(); ?>
 <aside class="sidebar">
     <div class="sidebar-logo">
         <img class="rounded-circle" src="<?= asset('img/logo.jpg'); ?>">
