@@ -1,4 +1,4 @@
-<?= $activeLink = uriPagePath(); ?>
+<?php $activeLink = uriPagePath(); ?>
 <aside class="sidebar">
     <div class="sidebar-logo">
         <img class="rounded-circle" src="<?= asset('img/logo.jpg'); ?>">
