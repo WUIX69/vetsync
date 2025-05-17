@@ -120,10 +120,34 @@ function app($link = '')
     return urlFileHelper('app', $url);
 }
 
-function uriPath($path = null)
+function uriAppPath($path = null)
 {
     global $config;
     return strpos($config['uri_path'], "/$path/") !== false;
+}
+
+function uriPagePath()
+{
+    global $config;
+
+    $urlPath = $config['uri_path'] ?? '';
+    $urlParts = explode('/', trim($urlPath, '/')) ?? '';
+
+    // Loop through urlParts to find a file with .php extension
+    $pageName = '';
+    foreach ($urlParts as $part) {
+        // Found a file with .php extension
+        if (strpos($part, '.php') !== false) {
+            // Extract only the filename part before any query parameters
+            $filenamePart = explode('?', $part)[0];
+            $pageName = str_replace('.php', '', $filenamePart);
+            break;
+        }
+    }
+
+    error_log('pageName: ' . $pageName);
+    $activeLink = str_replace('.php', '', $pageName);
+    return $activeLink;
 }
 
 function apiHeaders()
