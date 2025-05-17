@@ -14,10 +14,10 @@
     $(function () {
         const AppConfig = {
             AJAX_SETTINGS: {
-                timeout: <?php echo Config::get('AJAX_TIMEOUT'); ?>,
-                cache: <?php echo Config::get('AJAX_CACHE') ? 'true' : 'false'; ?>,
-                retryAttempts: <?php echo Config::get('AJAX_RETRY_ATTEMPTS'); ?>,
-                retryDelay: <?php echo Config::get('AJAX_RETRY_DELAY'); ?>
+                timeout: <?= $_ENV['AJAX_TIMEOUT']; ?>,
+                cache: <?= $_ENV['AJAX_CACHE'] ? true : false; ?>,
+                retryAttempts: <?= $_ENV['AJAX_RETRY_ATTEMPTS']; ?>,
+                retryDelay: <?= $_ENV['AJAX_RETRY_DELAY']; ?>
             }
         };
 
@@ -25,6 +25,8 @@
         $.ajaxSetup({
             timeout: AppConfig.AJAX_SETTINGS.timeout,
             cache: AppConfig.AJAX_SETTINGS.cache,
+            retryAttempts: AppConfig.AJAX_SETTINGS.retryAttempts,
+            retryDelay: AppConfig.AJAX_SETTINGS.retryDelay
             error: function (xhr, status, error) {
                 if (status === 'timeout') {
                     // Handle timeout error
