@@ -6,7 +6,6 @@
     <?= shared('elements/meta') ?>
     <title>Admin Dashboard</title>
     <?= shared('elements/styles') ?>
-    <?= featured('admin/dashboard/styles') ?>
 </head>
 
 <body>
@@ -29,7 +28,7 @@
             <div class="row">
                 <div class="col-lg-9">
                     <!-- Stats Cards -->
-                    <?= featured('admin/appointment/components/stats') ?>
+                    <?= featured('admin/dashboard/components/stats') ?>
 
                     <!-- New Users -->
                     <?= featured('admin/dashboard/components/new-users') ?>
