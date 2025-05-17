@@ -45,7 +45,7 @@ body {
     height: 100vh !important;
     /* font-family: "Poppins", sans-serif !important; */
     font-size: 1rem !important;
-    user-select: none !important;
+    /* user-select: none !important; */
     overflow-x: hidden !important;
     color: var(--color-dark) !important;
     background-color: var(--color-background) !important;
