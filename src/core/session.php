@@ -74,7 +74,7 @@ if (session_status() === PHP_SESSION_NONE) {
 $session = new SessionManager();
 
 // Handle access to restricted areas without a session
-$isRestrictedPage = uriPath('user') || uriPath('admin');
+$isRestrictedPage = uriAppPath('user') || uriAppPath('admin');
 if ($isRestrictedPage && !$session->has()) {
     // error_log('Access denied: No active session for restricted area');
     header("Location: " . app('landing'));
@@ -82,7 +82,7 @@ if ($isRestrictedPage && !$session->has()) {
 }
 
 // Handle user with active session trying to access auth page
-$isAuthPage = uriPath('auth');
+$isAuthPage = uriAppPath('auth');
 if ($isAuthPage && $session->has()) {
     // error_log('Session destroyed: User with active session accessed auth page');
     $session->destroy();
