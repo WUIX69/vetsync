@@ -586,7 +586,7 @@
         <!-- Main Content -->
         <main class="container-main">
             <!-- Header Navbar -->
-            <?= featured('admin/appointment/components/header') ?>
+            <?= featured('admin/appointments/components/header') ?>
 
             <div class="row appointments-container">
                 <div class="col-lg-9">
