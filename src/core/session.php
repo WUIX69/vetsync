@@ -73,34 +73,34 @@ if (session_status() === PHP_SESSION_NONE) {
 // Instantiate the session manager
 $session = new SessionManager();
 
-$isUserSession = uriAppPath('user');
-$isAdminSession = uriAppPath('admin');
-$isAuthSession = uriAppPath('auth');
+// Check path type once to avoid multiple function calls
+$sessionPathType = null;
+if (uriAppPath('user')) {
+    $sessionPathType = 'user';
+} elseif (uriAppPath('admin')) {
+    $sessionPathType = 'admin';
+} elseif (uriAppPath('auth')) {
+    $sessionPathType = 'auth';
+}
 
-// Handle access to restricted areas without a session
-$isRestrictedPage = $isUserSession || $isAdminSession;
-if ($isRestrictedPage && !$session->has()) {
-    // error_log('Access denied: No active session for restricted area');
+// Handle authentication and access control
+if (($sessionPathType === 'user' || $sessionPathType === 'admin') && !$session->has()) {
+    // Redirect to landing page if accessing restricted area without session
     header("Location: " . app('landing'));
     exit;
-}
 
-// Handle user with active session trying to access auth page
-if ($isAuthSession && $session->has()) {
-    // error_log('Session destroyed: User with active session accessed auth page');
+} elseif ($sessionPathType === 'auth' && $session->has()) {
+    // Destroy existing session when accessing auth pages
     $session->destroy();
-}
 
-// Handle user and admin trying to access each other's pages
-// error_log('Session type: ' . $session->get()['type']);
-if ($session->has()) {
-    if ($session->get()['type'] === 'admin' && $isUserSession) {
-        header("Location: " . app('admin'));
-        exit;
-    }
-
-    if ($session->get()['type'] === 'user' && $isAdminSession) {
-        header("Location: " . app('user'));
+} elseif ($session->has()) {
+    // Handle incorrect area access based on account type
+    $sessionType = $session->get()['type'] ?? null;
+    if (
+        ($sessionType === 'user' && $sessionPathType === 'admin') ||
+        ($sessionType === 'admin' && $sessionPathType === 'user')
+    ) {
+        header("Location: " . app($sessionType));
         exit;
     }
 }
