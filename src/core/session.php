@@ -73,8 +73,12 @@ if (session_status() === PHP_SESSION_NONE) {
 // Instantiate the session manager
 $session = new SessionManager();
 
+$isUserSession = uriAppPath('user');
+$isAdminSession = uriAppPath('admin');
+$isAuthSession = uriAppPath('auth');
+
 // Handle access to restricted areas without a session
-$isRestrictedPage = uriAppPath('user') || uriAppPath('admin');
+$isRestrictedPage = $isUserSession || $isAdminSession;
 if ($isRestrictedPage && !$session->has()) {
     // error_log('Access denied: No active session for restricted area');
     header("Location: " . app('landing'));
@@ -82,8 +86,21 @@ if ($isRestrictedPage && !$session->has()) {
 }
 
 // Handle user with active session trying to access auth page
-$isAuthPage = uriAppPath('auth');
-if ($isAuthPage && $session->has()) {
+if ($isAuthSession && $session->has()) {
     // error_log('Session destroyed: User with active session accessed auth page');
     $session->destroy();
+}
+
+// Handle user and admin trying to access each other's pages
+// error_log('Session type: ' . $session->get()['type']);
+if ($session->has()) {
+    if ($session->get()['type'] === 'admin' && $isUserSession) {
+        header("Location: " . app('admin'));
+        exit;
+    }
+
+    if ($session->get()['type'] === 'user' && $isAdminSession) {
+        header("Location: " . app('user'));
+        exit;
+    }
 }
