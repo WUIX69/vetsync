@@ -1,4 +1,4 @@
-<?php include_once __DIR__ . '/../../utils/php/functions.php'; ?>
+<?php include_once __DIR__ . '/../../core/app.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,12 +39,6 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?>
-    <?= featured('landing/services/scripts'); ?>
-    <script type="text/javascript">
-        $(function () {
-            $('.ui.rating').rating();
-        });
-    </script>
 </body>
 
 </html>
