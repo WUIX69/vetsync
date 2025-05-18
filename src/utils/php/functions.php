@@ -123,7 +123,17 @@ function app($link = '')
 function uriAppPath($path = null)
 {
     global $config;
-    return strpos($config['uri_path'], "/$path/") !== false;
+
+    $uriPath = $config['uri_path'] ?? '';
+    $pathResult = "";
+
+    if ($path) {
+        $pathResult = strpos($uriPath, "/$path/") !== false;
+    } else {
+        $pathResult = explode('/', trim($uriPath, '/'))[2] ?? ''; // [0] is the src, [1] is the app, [2] is the app path
+    }
+
+    return $pathResult;
 }
 
 function uriPagePath()
