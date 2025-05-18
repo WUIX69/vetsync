@@ -1,8 +1,6 @@
 <?php
 
-$appUrlPath = $_SERVER['REQUEST_URI'] ?? null;
-$appDirName = explode('/', trim($appUrlPath, '/'))[2] ?? '';
-
+$appDirName = uriAppPath();
 $styles = [
     // 'vendor/bootstrap/dist/css/bootstrap-grid.min.css',
     // 'vendor/bootstrap/dist/css/bootstrap-utilities.min.css',

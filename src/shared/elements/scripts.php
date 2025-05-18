@@ -1,7 +1,6 @@
 <?php
 
-$appUrlPath = $_SERVER['REQUEST_URI'] ?? null;
-$appDirName = explode('/', trim($appUrlPath, '/'))[2] ?? '';
+$appDirName = uriAppPath();
 
 rcsScripts();
 function rcsScripts()
