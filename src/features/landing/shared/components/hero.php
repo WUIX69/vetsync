@@ -1,21 +1,20 @@
 <?php
-// TODO: move all the global logic in /config dir
 
 global $activeLink; // Get the active link from the header
 $activeLink = $activeLink === 'product-single-view' ? 'products' : $activeLink;
 $activeLink = $activeLink === 'service-single-view' ? 'services' : $activeLink;
 
 $heroImage = asset('img/contents/hero/' . $activeLink . '.jpg');
-$heroTitles = [
+$pageTitle = match ($activeLink) {
     'services' => 'Our Services',
     'products' => 'Our Products',
     'contact' => 'Contact Us',
     'about' => 'About Us',
     'product-single-view' => 'Product Details',
     'service-single-view' => 'Service Details',
-    '' => 'Welcome to VetSync'
-];
-$pageTitle = $heroTitles[$activeLink] ?? null;
+    '' => 'Welcome to VetSync',
+    default => null,
+};
 
 ?>
 <style>

@@ -1,4 +1,7 @@
-<?php $activeLink = uriPagePath(); ?>
+<?php
+global $activeLink;
+$activeLink = uriPagePath();
+?>
 <header class="site-header">
     <nav class="navbar">
         <div class="navbar-container">
