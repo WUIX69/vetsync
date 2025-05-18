@@ -1,13 +1,6 @@
 <?php
-// TODO: move all the global logic in /config dir
-$urlPath = $_SERVER['REQUEST_URI'] ?? null;
-
-global $urlParts;
-$urlParts = explode('/', trim($urlPath, '/')) ?? '';
-$pageName = $urlParts[3] ?? '';
-
 global $activeLink;
-$activeLink = str_replace('.php', '', $pageName);
+$activeLink = uriPagePath();
 ?>
 <!-- Site Header -->
 <header class="site-header">
