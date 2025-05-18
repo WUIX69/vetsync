@@ -64,6 +64,7 @@
         font-size: 2rem;
         position: relative;
         top: -0.45rem;
+        color: #9ACBD0;
     }
 
     main section.hero-section .hero-title .sub {
@@ -94,8 +95,8 @@
 
     main section.hero-section .cta-button.primary,
     main section.hero-section .cta-button.primary span {
-        background-color: white;
-        color: #4e54c8;
+        background-color: #006A71;
+        color: #F2EFE7;
     }
 
     main section.hero-section .cta-button.secondary {
@@ -131,7 +132,7 @@
                     <div class="hero-text">
                         <div class="hero-title">
                             J.A.A <span class="full-def">(Josephine Ann Angeles)</span><br>
-                            <div class="sub">Veterinary <span class="ui text yellow">Clinic</span>
+                            <div class="sub">Veterinary <span class="ui text" style="color: #006A71;">Clinic</span>
                             </div>
                         </div>
                         <p class="hero-description">
@@ -155,7 +156,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="hero-image">
-                        <img src="<?= asset('img/gallery/jaa-near.jpg'); ?>" alt="App Interface">
+                        <img src="<?= asset('img/gallery/jaa-near.jpg'); ?>" alt="App Interface" loading="lazy">
                     </div>
                 </div>
             </div>
