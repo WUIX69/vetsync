@@ -62,15 +62,15 @@ header nav .navbar-logo .logo-text-main:hover {
 /*------ NAVBAR (Links & Actions) ------*/
 header nav .nav-links {
     display: flex;
-    gap: 30px;
     align-items: center;
     justify-content: center;
+    gap: 2.5rem;
 }
 
 header nav .nav-links .nav-link {
     color: var(--color-white);
-    font-size: 1.1rem;
-    font-weight: 400;
+    font-size: 1.06rem;
+    font-weight: 500;
     opacity: 1;
     transition: all 0.3s ease;
     text-shadow: var(--text-shadow);
@@ -83,7 +83,10 @@ header nav .nav-links .nav-link:hover {
 
 header nav .nav-links .nav-link.active {
     font-weight: 600;
-    color: teal;
+    background: #00b5ad;
+    color: var(--color-white);
+    border-radius: 60px;
+    padding: 0.36rem 1.1rem;
     text-shadow: none;
 }
 
@@ -103,11 +106,11 @@ header nav .actions .button {
     margin: 0;
 }
 
-header nav .actions .login-btn.button {
+/* header nav .actions .login-btn.button {
     border-radius: 60px;
     border: 1px solid !important;
     font-weight: 500;
-}
+} */
 
 header nav .mobile-menu-btn {
     /*---- Mobile view support a.k.a (Hamburger) ----*/
