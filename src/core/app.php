@@ -7,6 +7,8 @@ require_once __DIR__ . '/php-set.php';
 require_once __DIR__ . '/conn.php';
 require_once __DIR__ . '/session.php';
 
+require_once __DIR__ . '/../utils/php/userData.php';
+
 // Example usage:
 // $dbConnection = Config::getDB();
 // $appName = Config::get('APP_NAME');
