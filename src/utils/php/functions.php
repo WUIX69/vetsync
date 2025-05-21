@@ -78,6 +78,12 @@ function featured($path, $is_url = false)
     includeFileHelper('features', $path);
 }
 
+function partial($path, $file = null)
+{
+    $path = "app/{$path}/partials";
+    includeFileHelper($path, $file);
+}
+
 function utils($file, $is_url = false)
 {
     if ($is_url)

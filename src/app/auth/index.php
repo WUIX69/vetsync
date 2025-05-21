@@ -18,9 +18,9 @@
 		<main class="container-main">
 			<div class="section-container">
 				<div class="section-wrapper auth-section">
-					<?= featured('auth/shared/components/header') ?> <!-- Header -->
+					<?= partial('auth', 'components/header') ?> <!-- Header -->
 					<div class="auth-wrapper box column">
-						<?= featured('auth/shared/components/header-in') ?> <!-- Section in header -->
+						<?= partial('auth', 'components/header-in') ?> <!-- Section in header -->
 						<form class="ui large form" id="loginForm">
 							<div class="field">
 								<label for="email">Email</label>
@@ -44,7 +44,7 @@
 								</div>
 							</div>
 							<div class="actions">
-								<?= featured('auth/shared/components/ui/continue-btn'); ?>
+								<?= partial('auth', 'components/ui/continue-btn'); ?>
 							</div>
 							<div class="ui error message"></div>
 						</form>
