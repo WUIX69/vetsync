@@ -1,4 +1,4 @@
-<?php include_once __DIR__ . '/../../../utils/php/functions.php'; ?>
+<?php include_once __DIR__ . '/../../../core/app.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +17,7 @@
 
     <div class="site-cont">
         <!-- Site Header -->
-        <?= featured('user/shared/layouts/header'); ?>
+        <?= partial('layouts/header'); ?>
 
         <main class="site-main">
             <!-- Highlights -->
