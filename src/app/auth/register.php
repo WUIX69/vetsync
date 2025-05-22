@@ -18,9 +18,9 @@
         <main class="container-main">
             <div class="section-container">
                 <div class="section-wrapper mt-0 auth-section">
-                    <?= partial('auth', 'components/header') ?> <!-- Header -->
+                    <?= partial('components/header') ?> <!-- Header -->
                     <div class="auth-wrapper box column">
-                        <?= partial('auth', 'components/header-in') ?> <!-- Section in header -->
+                        <?= partial('components/header-in') ?> <!-- Section in header -->
                         <form class="ui large form">
                             <div class="two fields">
                                 <div class="field">
@@ -61,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="actions">
-                                <?= partial('auth', 'components/ui/continue-btn'); ?>
+                                <?= partial('components/ui/continue-btn'); ?>
                             </div>
                             <div class="ui error message"></div>
                         </form>
