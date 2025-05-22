@@ -26,7 +26,7 @@ if (!empty($reserveImages)) {
             <div class="col-md-6">
                 <div class="header">
                     <h2>Do You Want To Earn With Us? <br> So Don't Be Late.</h2>
-                    <?= featured('landing/shared/components/ui/booknow-btn') ?>
+                    <?= partial('components/ui/booknow-btn') ?>
                 </div>
             </div>
         </div>

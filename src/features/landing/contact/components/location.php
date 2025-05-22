@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <!-- Google Map Iframe -->
-                <?= featured('landing/shared/components/ui/google-map'); ?>
+                <?= partial('components/ui/google-map'); ?>
             </div>
         </div>
     </section>

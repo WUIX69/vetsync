@@ -15,7 +15,7 @@
         <?= shared('layouts/loader/window'); ?> <!-- Window Spinner -->
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
         <?= shared('components/booknow-modal'); ?> <!-- Book Now Modal -->
-        <?= featured('landing/shared/layouts/header'); ?> <!-- Header -->
+        <?= partial('layouts/header'); ?> <!-- Header -->
     </div>
 
     <div class="container-body">
@@ -32,20 +32,20 @@
                     <?= featured('landing/home/components/services'); ?>
 
                     <!-- Testimonials -->
-                    <?= featured('landing/shared/components/testimonials'); ?>
+                    <?= partial('components/testimonials'); ?>
 
                     <!-- Separator -->
-                    <?= featured('landing/shared/components/separator'); ?>
+                    <?= partial('components/separator'); ?>
 
                     <!-- Locations -->
                     <?= featured('landing/home/components/location'); ?>
 
                     <!-- Reserve -->
-                    <?= featured('landing/shared/components/reserve'); ?>
+                    <?= partial('components/reserve'); ?>
                 </main>
             </div>
             <div class="col-12">
-                <?= featured('landing/shared/layouts/footer'); ?><!-- Footer -->
+                <?= partial('layouts/footer'); ?> <!-- Footer -->
             </div>
         </div>
     </div>

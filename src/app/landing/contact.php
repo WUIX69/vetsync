@@ -18,7 +18,7 @@
         <!-- Book Now Modal -->
         <?= shared('components/booknow-modal'); ?>
         <!--Navbar header -->
-        <?= featured('landing/shared/layouts/header'); ?>
+        <?= partial('layouts/header'); ?>
     </div>
 
     <div class="container-body">
@@ -26,7 +26,7 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/shared/components/hero'); ?>
+                    <?= partial('components/hero'); ?>
 
                     <!-- Contact -->
                     <?= featured('landing/contact/components/contact'); ?>
@@ -35,12 +35,12 @@
                     <?= featured('landing/contact/components/location'); ?>
 
                     <!-- Reserve -->
-                    <?= featured('landing/shared/components/reserve'); ?>
+                    <?= partial('components/reserve'); ?>
                 </main>
             </div>
             <!-- footer -->
             <div class="col-12">
-                <?= featured('landing/shared/layouts/footer'); ?>
+                <?= partial('layouts/footer'); ?>
             </div>
         </div>
     </div>

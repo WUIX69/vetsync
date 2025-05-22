@@ -14,7 +14,7 @@
         <?= shared('layouts/loader/window'); ?> <!-- Window Spinner -->
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
         <?= shared('components/booknow-modal'); ?> <!-- Book Now Modal -->
-        <?= featured('landing/shared/layouts/header'); ?> <!-- Header -->
+        <?= partial('layouts/header'); ?> <!-- Header -->
     </div>
 
     <div class="container-body">
@@ -22,7 +22,7 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/shared/components/hero'); ?>
+                    <?= partial('components/hero'); ?>
 
                     <!-- Highlights -->
                     <?= featured('landing/services/components/highlights'); ?>
@@ -35,7 +35,7 @@
                 </main>
             </div>
             <div class="col-12">
-                <?= featured('landing/shared/layouts/footer'); ?> <!-- Footer -->
+                <?= partial('layouts/footer'); ?> <!-- Footer -->
             </div>
         </div>
     </div>

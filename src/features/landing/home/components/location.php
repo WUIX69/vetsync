@@ -179,9 +179,6 @@
                                         <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-                                    </div>
-                                    <div class="swiper-slide">
                                         <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
                                     </div>
                                 </div>
@@ -216,9 +213,6 @@
                                         <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
                                     </div>
                                     <div class="swiper-slide">
-                                        <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-                                    </div>
-                                    <div class="swiper-slide">
                                         <img src="https://swiperjs.com/demos/images/nature-10.jpg" />
                                     </div>
                                 </div>
@@ -235,7 +229,7 @@
                             </div>
                         </div>
                         <!-- Google Map Iframe -->
-                        <?= featured('landing/shared/components/ui/google-map'); ?>
+                        <?= partial('components/ui/google-map'); ?>
                     </div>
                 </div>
             </div>
