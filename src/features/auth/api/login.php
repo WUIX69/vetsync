@@ -1,7 +1,7 @@
 <?php
 
-include '../../../../core/app.php';
-featured('auth/login/db/users');
+include '../../../core/app.php';
+model('users');
 apiHeaders();
 
 // global $response;
@@ -18,7 +18,7 @@ try {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $users = new UsersDB();
+    $users = new Users();
     $user = $users->singleWhereUserEmail($email);
     $admin = $users->singleWhereAdminEmail($email);
 

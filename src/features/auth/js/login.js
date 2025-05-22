@@ -38,7 +38,7 @@ $(function () {
             // return false;
 
             $.ajax({
-                url: apiUrl("auth/login") + "users.php",
+                url: apiUrl("auth") + "login.php",
                 method: "POST",
                 data: fields,
                 // processData: false, // Only use when FormData is used

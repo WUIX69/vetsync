@@ -1,6 +1,6 @@
 <?php
 
-class UsersDB
+class Users
 {
     private $conn;
 

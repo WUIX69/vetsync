@@ -180,3 +180,8 @@ function apiHeaders()
     header('X-Frame-Options: DENY');
     header('X-XSS-Protection: 1; mode=block');
 }
+
+function model($model = null)
+{
+    includeFileHelper('model', $model);
+}
