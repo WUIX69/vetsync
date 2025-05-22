@@ -12,7 +12,7 @@ function getUserByUuid($uuid)
 {
     global $conn;
 
-    $stmt = $conn->prepare('SELECT * FROM users WHERE uuid = ?');
+    $stmt = $conn->prepare("SELECT * FROM users WHERE uuid = ? LIMIT 1");
     $stmt->execute([$uuid]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
@@ -21,7 +21,7 @@ function getAdminById($id)
 {
     global $conn;
 
-    $stmt = $conn->prepare("SELECT * FROM administrators WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM administrators WHERE id = ? LIMIT 1");
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
