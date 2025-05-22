@@ -1,1 +1,0 @@
-<script src="<?= featured('user/dashboard/js/main.js', true); ?>"></script>
