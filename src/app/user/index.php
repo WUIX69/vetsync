@@ -6,6 +6,7 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>User Dashboard - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
+    <link rel="stylesheet" href="<?= featured('dashboard/css/overview.css', true) ?>">
 </head>
 
 <body>
@@ -24,7 +25,19 @@
             <?= featured('dashboard/components/stats-card'); ?>
 
             <!-- overview section -->
-            <?= featured('dashboard/components/overview'); ?>
+            <div class="overview">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <?= featured('dashboard/components/prog-status-chart'); ?>
+                    </div>
+                    <div class="col-lg-3">
+                        <?= featured('dashboard/components/popular'); ?>
+                    </div>
+                    <div class="col-lg-3">
+                        <?= featured('dashboard/components/upcoming-events'); ?>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
