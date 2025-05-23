@@ -3,48 +3,52 @@ body .container-body {
     padding: 0 !important;
 }
 
-main .section-container {
+main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     overflow: hidden;
-    margin: 0;
 
-    background-image: url("../../img/contents/bg_log.jpg");
+    height: 100vh;
+    width: 100vw;
+
+    margin: 0;
+    padding: 0;
+
+    background-image: url("../../img/contents/auth-bg.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-main .section-container .section-wrapper {
+main section.auth-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 2rem;
+
     margin: 0;
-    margin-top: -5rem;
     padding: 0;
 }
 
-main .auth-section .section-out-header {
+main section.auth-section .section-out-header {
     color: var(--color-white);
 }
 
-main .auth-section .section-out-header .ui.header {
+main section.auth-section .section-out-header .ui.header {
     color: var(--color-white);
 }
 
-main .auth-section .section-out-header .content {
+main section.auth-section .section-out-header .content {
     text-shadow: var(--text-shadow);
 }
 
-main .auth-section .section-out-header .content .text {
+main section.auth-section .section-out-header .content .text {
     color: aqua;
 }
 
-main .auth-section .auth-wrapper {
+main section.auth-section .auth-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,37 +60,37 @@ main .auth-section .auth-wrapper {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
 
-    min-width: 440px;
+    width: 440px;
 }
 
-main .auth-section .auth-wrapper .section-in-header {
+main section.auth-section .auth-wrapper .section-in-header {
     text-align: center;
     font-size: 1.7rem;
     margin: 0;
     text-shadow: var(--text-shadow);
 }
 
-main .auth-section .auth-wrapper label {
+main section.auth-section .auth-wrapper label {
     font-size: 0.9rem !important;
-    margin-bottom: 0.1rem !important;
+    margin-bottom: 0.2rem !important;
 }
 
-main .auth-section .auth-wrapper label,
-main .auth-section .auth-wrapper .ui.text {
+main section.auth-section .auth-wrapper label,
+main section.auth-section .auth-wrapper .ui.text {
     color: var(--bs-gray-200) !important;
 }
 
-main .auth-section .auth-wrapper .form .field input {
+main section.auth-section .auth-wrapper .form .field input {
     font-size: 0.86rem;
 }
 
-main .auth-section .auth-wrapper .form .field input:focus,
-main .auth-section .auth-wrapper .form .field input:hover {
+main section.auth-section .auth-wrapper .form .field input:focus,
+main section.auth-section .auth-wrapper .form .field input:hover {
     border-color: #00b5ad !important;
     box-shadow: 0 0 0 0.125em rgba(0, 181, 173, 0.25) !important;
 }
 
-main .auth-section .auth-wrapper .form .clearing {
+main section.auth-section .auth-wrapper .form .clearing {
     padding: 0;
     margin-bottom: 1rem;
     display: flex;
@@ -96,14 +100,21 @@ main .auth-section .auth-wrapper .form .clearing {
     text-wrap: nowrap;
 }
 
-main .auth-section .auth-wrapper .form .clearing * {
+main section.auth-section .auth-wrapper .form .clearing * {
     font-size: 0.85rem;
 }
 
-main .auth-section .auth-wrapper .form .clearing .remember-me label {
+main section.auth-section .auth-wrapper .form .clearing .remember-me label {
     padding-left: 1.7rem;
 }
 
-main .auth-section .auth-wrapper .form button[type="submit"] {
+main section.auth-section .auth-wrapper .form button[type="submit"] {
     margin-top: 2rem;
+}
+
+main section.auth-section .section-out-footer {
+    color: var(--bs-gray-200);
+    text-shadow: var(--text-shadow);
+    margin-top: 3rem;
+    font-weight: 500;
 }

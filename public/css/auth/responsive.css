@@ -1,5 +1,5 @@
 @media only screen and (max-width: 767px) {
-    main .auth-section .auth-wrapper {
-        min-width: 300px;
+    main section.auth-section .auth-wrapper {
+        width: 330px !important;
     }
 }

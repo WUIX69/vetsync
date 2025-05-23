@@ -16,67 +16,65 @@
 
     <div class="container-body">
         <main class="container-main">
-            <div class="section-container">
-                <div class="section-wrapper mt-0 auth-section">
-                    <?= partial('components/header') ?> <!-- Header -->
-                    <div class="auth-wrapper box column">
-                        <?= partial('components/header-in') ?> <!-- Section in header -->
-                        <form class="ui large form">
-                            <div class="two fields">
-                                <div class="field">
-                                    <label for="firstname">First name</label>
-                                    <div class="ui input">
-                                        <input type="text" name="firstname" placeholder="First Name">
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <label for="lastname">Last name</label>
-                                    <div class="ui input">
-                                        <input type="text" name="lastname" placeholder="Last Name">
-                                    </div>
-                                </div>
-                            </div>
+            <section class="auth-section mt-0">
+                <?= partial('components/header') ?> <!-- Header -->
+                <div class="auth-wrapper box column">
+                    <?= partial('components/header-in') ?> <!-- Section in header -->
+                    <form class="ui large form">
+                        <div class="two fields">
                             <div class="field">
-                                <label for="email">E-mail address</label>
+                                <label for="firstname">First name</label>
                                 <div class="ui input">
-                                    <input type="email" name="email" placeholder="E-mail address">
+                                    <input type="text" name="firstname" placeholder="First Name">
                                 </div>
                             </div>
                             <div class="field">
-                                <label for="password">Password</label>
+                                <label for="lastname">Last name</label>
                                 <div class="ui input">
-                                    <input type="password" name="password" placeholder="Password">
+                                    <input type="text" name="lastname" placeholder="Last Name">
                                 </div>
                             </div>
-                            <div class="field">
-                                <label for="confirm_password">Confirm Password</label>
-                                <div class="ui input">
-                                    <input type="password" name="confirm_password" placeholder="Confirm Password">
-                                </div>
-                            </div>
-                            <div class="field">
-                                <div class="ui checkbox terms">
-                                    <input type="checkbox" name="terms">
-                                    <label for="terms">I agree to the Terms and Conditions</label>
-                                </div>
-                            </div>
-                            <div class="actions">
-                                <?= partial('components/ui/continue-btn'); ?>
-                            </div>
-                            <div class="ui error message"></div>
-                        </form>
-                        <div class="ui text text-center">
-                            Already have an account? <a href="index.php">Login</a>
                         </div>
+                        <div class="field">
+                            <label for="email">E-mail address</label>
+                            <div class="ui input">
+                                <input type="email" name="email" placeholder="E-mail address">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <div class="ui input">
+                                <input type="password" name="password" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="confirm_password">Confirm Password</label>
+                            <div class="ui input">
+                                <input type="password" name="confirm_password" placeholder="Confirm Password">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui checkbox terms">
+                                <input type="checkbox" name="terms">
+                                <label for="terms">I agree to the Terms and Conditions</label>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <?= partial('components/ui/continue-btn'); ?>
+                        </div>
+                        <div class="ui error message"></div>
+                    </form>
+                    <div class="ui text text-center">
+                        Already have an account? <a href="index.php">Login</a>
                     </div>
                 </div>
-            </div>
+                <?= partial('components/footer') ?> <!-- Footer -->
+            </section>
         </main>
     </div>
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-    <?= featured('auth/register/scripts') ?> <!-- Register Scripts -->
 </body>
 
 </html>
