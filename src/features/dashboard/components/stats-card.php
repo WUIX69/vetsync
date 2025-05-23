@@ -1,6 +1,6 @@
 <style>
     main section.status {
-        padding: 20px 20px 20px;
+        padding: 20px 20px 26px;
         background: #031224;
         border-radius: 0 0 30px 30px;
     }
