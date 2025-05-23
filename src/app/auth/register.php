@@ -17,7 +17,7 @@
     <div class="container-body">
         <main class="container-main">
             <section class="auth-section mt-0">
-                <?= partial('components/header') ?> <!-- Header -->
+                <?= partial('components/header-logo') ?> <!-- Header Logo -->
                 <div class="auth-wrapper box column">
                     <?= partial('components/header-in') ?> <!-- Section in header -->
                     <form class="ui large form">
@@ -68,7 +68,7 @@
                         Already have an account? <a href="index.php">Login</a>
                     </div>
                 </div>
-                <?= partial('components/footer') ?> <!-- Footer -->
+                <?= partial('components/terms-privacy') ?> <!-- Terms & Privacy -->
             </section>
         </main>
     </div>
