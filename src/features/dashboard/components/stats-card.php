@@ -125,6 +125,10 @@
     main section.status .items-list .item.item-3 .progress::before {
         content: "80%";
     }
+
+    main section.status .items-list .item.item-4 canvas {
+        height: 140px;
+    }
 </style>
 <section class="status">
     <div class="header">
@@ -178,11 +182,11 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-lg-3">
-                            <div class="item item-4">
-                                <canvas class="activity-chart"></canvas>
-                            </div>
-                        </div> -->
+            <div class="col-lg-3">
+                <div class="item item-4">
+                    <canvas class="activity-chart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </section>
