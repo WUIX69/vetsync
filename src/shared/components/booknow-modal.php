@@ -100,7 +100,7 @@
             </form>
         </div>
         <div class="image-container">
-            <img src="<?= asset('img/gallery/bookNow.jpg') ?>" alt="Elegant dining table with white background" />
+            <img src="<?= asset('img/contents/bookNow.jpg') ?>" alt="Elegant dining table with white background" />
         </div>
     </div>
 </div>
