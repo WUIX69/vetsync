@@ -74,8 +74,8 @@
     }
 
     /*######## MAIN ########*/
-    main section {
-        padding: 6rem 1.5rem !important; /*Add LR padding for small screen*/
+    main section .container-xl {
+        padding: 6rem 1.5rem; /*Add LR padding for small screen*/
     }
 
     /*--- MAIN (Hero) ---*/
