@@ -1,5 +1,5 @@
 <?php
-$isAuthIndex = uriAppPath('auth') && uriPagePath() === 'index';
+$isAuthIndex = uriAppPath('auth') && (uriPagePath() === 'index' || uriPagePath() === '');
 $text = $isAuthIndex
     ? 'Terms of Service and Privacy Policy'
     : 'By creating an account, you agree to the <br> Terms of Service and Privacy Policy';
