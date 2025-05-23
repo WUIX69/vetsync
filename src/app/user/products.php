@@ -22,10 +22,10 @@
 
         <main class="site-main">
             <!-- Header -->
-            <?= featured('user/products/components/header'); ?>
+            <?= featured('products/components/header'); ?>
 
             <!-- Products -->
-            <?= featured('user/products/components/products'); ?>
+            <?= featured('products/components/products'); ?>
         </main>
     </div>
 

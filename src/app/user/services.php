@@ -21,10 +21,10 @@
 
         <main class="site-main">
             <!-- Header -->
-            <?= featured('user/services/components/header'); ?>
+            <?= featured('services/components/header'); ?>
 
             <!-- Services -->
-            <?= featured('user/services/components/services'); ?>
+            <?= featured('services/components/services'); ?>
         </main>
     </div>
 

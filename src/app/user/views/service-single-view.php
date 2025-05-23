@@ -22,16 +22,16 @@
 
         <main class="site-main">
             <!-- Header -->
-            <?= featured('user/services/components/header-single-view'); ?>
+            <?= featured('services/components/header-single-view'); ?>
 
             <!-- Highlights -->
-            <?= featured('user/services/components/highlights'); ?>
+            <?= featured('services/components/highlights'); ?>
 
             <!-- About -->
-            <?= featured('user/services/components/about'); ?>
+            <?= featured('services/components/about'); ?>
 
             <!-- Related Services -->
-            <?= featured('user/services/components/related'); ?>
+            <?= featured('services/components/related'); ?>
         </main>
     </div>
 

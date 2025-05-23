@@ -21,17 +21,17 @@
 
         <main class="site-main">
             <!-- stats card section -->
-            <?= featured('user/dashboard/components/stats-card'); ?>
+            <?= featured('dashboard/components/stats-card'); ?>
 
             <!-- overview section -->
-            <?= featured('user/dashboard/components/overview'); ?>
+            <?= featured('dashboard/components/overview'); ?>
         </main>
     </div>
 
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="<?= featured('user/dashboard/js/main.js', true); ?>"></script>
+    <script src="<?= featured('dashboard/js/main.js', true); ?>"></script>
 
 </body>
 
