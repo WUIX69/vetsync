@@ -1,6 +1,6 @@
 <style>
     /*----------- MAIN (Services) -----------*/
-    main .section-container:has(section.services-section) {
+    main section.services-section {
         background: var(--color-background-variant);
     }
 
@@ -102,8 +102,8 @@
         transform: translateY(-2px);
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper services-section">
+<section class="services-section">
+    <div class="container-xl">
         <div class="section-title">
             <span class="sub-title">Services</span>
             <h2>What We Offer</h2>
@@ -224,5 +224,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

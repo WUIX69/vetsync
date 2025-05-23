@@ -1,6 +1,6 @@
 <style>
     /*----------- MAIN (Testimonials) -----------*/
-    main .section-container:has(section.testimonials-section) {
+    main section.testimonials-section {
         background: var(--color-background);
     }
 
@@ -73,8 +73,8 @@
         color: #4e54c8;
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper testimonials-section">
+<section class="testimonials-section">
+    <div class="container-xl">
         <div class="section-title">
             <span class="sub-title">Testimonials</span>
             <h2>What Our Clients Say</h2>
@@ -218,5 +218,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

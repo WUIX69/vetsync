@@ -123,19 +123,19 @@ header nav .mobile-menu-btn {
 }
 
 /*############## MAIN #############*/
-main .section-container {
+main section {
     padding: 0 !important;
     margin: 0 !important;
     position: relative;
 }
 
-main .section-container section.section-wrapper {
+main section .container-xl {
     margin: 0 auto;
     padding: 6rem 0;
     max-width: 1200px;
 }
 
-main .section-container section .section-title {
+main section .section-title {
     padding-bottom: 6rem;
     text-align: center;
     color: var(--color-dark);
@@ -147,7 +147,7 @@ main .section-container section .section-title {
     gap: 1.5rem;
 }
 
-main .section-container section .section-title .sub-title {
+main section .section-title .sub-title {
     margin-bottom: -0.8rem;
     color: #fbbd08;
     font-size: 1.4rem;
@@ -155,18 +155,18 @@ main .section-container section .section-title .sub-title {
     text-transform: capitalize;
 }
 
-main .section-container section .section-title h2 {
+main section .section-title h2 {
     font-size: 2.5rem;
     font-weight: 700;
 }
 
-main .section-container section .section-title p {
+main section .section-title p {
     color: var(--color-dark-variant);
     max-width: 600px;
 }
 
-main .section-container:has(section.hero-section)::before,
-main .section-container:has(section.reserve-section)::before,
+main section.hero-section::before,
+main section.reserve-section::before,
 footer.site-footer::before {
     content: "";
     position: absolute;
@@ -180,7 +180,7 @@ footer.site-footer::before {
 }
 
 /*------ Main (Hero section) ------*/
-main .section-container:has(section.hero-section) {
+main section.hero-section {
     background-image: url("../../img/contents/hero/default.jpg");
     background-size: cover;
     background-position: center;
@@ -224,8 +224,8 @@ main section.hero-section .hero-content .hero-header {
 }
 
 /*------ Main (Section Seperator) ------*/
-main .section-seperator {
-    background-image: url("../../img/sepe.jpg");
+main .section-separator {
+    background-image: url("../../img/sepa.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -234,7 +234,7 @@ main .section-seperator {
 }
 
 /*------ Main (Reserve Section) ------*/
-main .section-container:has(section.reserve-section) {
+main section.reserve-section {
     background-image: url("../../img/contents/reserves/1.jpg");
     background-size: cover;
     background-position: center;

@@ -93,6 +93,40 @@ $services = [
 ];
 ?>
 <style>
+    main section.services {
+        position: relative;
+        /* padding-top: 0.3rem; */
+        padding-bottom: 3rem;
+        margin: 0;
+    }
+
+    /* Header */
+    main section.services .header {
+        display: flex;
+        justify-content: end;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 2.3rem;
+        flex-wrap: nowrap;
+    }
+
+    @media screen and (max-width: 768px) {
+        main section.services .header {
+            /* flex-wrap: wrap; */
+            flex-direction: column;
+        }
+    }
+
+    main section.services .header .ui.dropdown {
+        background: var(--color-white) !important;
+    }
+
+    main section.services .header .ui.search input {
+        background: var(--color-white) !important;
+    }
+
+    /* Header END */
+
     main section.services .service-card {
         background: var(--color-white);
         padding: 0 !important;
@@ -224,6 +258,16 @@ $services = [
 </style>
 <section class="services">
     <div class="container-xl">
+
+        <!-- Only section-title if its /landing -->
+        <?php if (uriAppPath('landing')): ?>
+            <div class="section-title">
+                <span class="sub-title">Services</span>
+                <h2>What We Offer</h2>
+                <p>Comprehensive veterinary care for your beloved pets</p>
+            </div>
+        <?php endif; ?>
+
         <!-- Header -->
         <div class="header">
             <!-- Status -->

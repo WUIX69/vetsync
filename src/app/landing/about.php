@@ -25,10 +25,10 @@
                     <?= partial('components/hero'); ?>
 
                     <!-- Teams -->
-                    <?= featured('landing/about/components/team'); ?>
+                    <?= featured('about/components/team'); ?>
 
                     <!-- Clinic history -->
-                    <?= featured('landing/about/components/clinic-history'); ?>
+                    <?= featured('about/components/clinic-history'); ?>
 
                     <!-- Testimonials -->
                     <?= partial('components/testimonials'); ?>

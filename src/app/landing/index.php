@@ -23,13 +23,13 @@
             <div class="col-12">
                 <main class="container-main">
                     <!-- Hero -->
-                    <?= featured('landing/home/components/hero'); ?>
+                    <?= featured('home/components/hero'); ?>
 
                     <!-- Features -->
-                    <?= featured('landing/home/components/features'); ?>
+                    <?= featured('home/components/features'); ?>
 
                     <!-- Services -->
-                    <?= featured('landing/home/components/services'); ?>
+                    <?= featured('home/components/services'); ?>
 
                     <!-- Testimonials -->
                     <?= partial('components/testimonials'); ?>
@@ -38,7 +38,7 @@
                     <?= partial('components/separator'); ?>
 
                     <!-- Locations -->
-                    <?= featured('landing/home/components/location'); ?>
+                    <?= featured('home/components/location'); ?>
 
                     <!-- Reserve -->
                     <?= partial('components/reserve'); ?>
@@ -52,7 +52,9 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
-    <?= featured('landing/home/scripts'); ?> <!-- Home Scripts -->
+    <script src="<?= asset('lib/swiper/swiper-bundle.min.js'); ?>"></script><!-- Swiper JS -->
+    <script src="<?= featured('home/js/main.js', true); ?>"></script>
+    <!-- More scripts to be added for home page here -->
 </body>
 
 </html>

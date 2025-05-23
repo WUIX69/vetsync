@@ -1,1 +1,1 @@
-<div class="section-seperator"></div>
+<div class="section-separator"></div>

@@ -25,7 +25,7 @@
                     <?= partial('components/hero'); ?>
 
                     <!-- Products -->
-                    <?= featured('landing/products/components/products'); ?>
+                    <?= featured('products/components/products'); ?>
 
                     <!-- Reserve -->
                     <?= partial('components/reserve'); ?>

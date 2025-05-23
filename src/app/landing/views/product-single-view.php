@@ -25,16 +25,16 @@
                     <?= partial('components/hero'); ?>
 
                     <!-- Highlights -->
-                    <?= featured('landing/products/components/highlights'); ?>
+                    <?= featured('products/components/highlights'); ?>
 
                     <!-- About -->
-                    <?= featured('landing/products/components/about'); ?>
+                    <?= featured('products/components/about'); ?>
 
                     <!-- Related Services -->
-                    <?= featured('landing/products/components/related'); ?>
+                    <?= featured('products/components/related'); ?>
 
                     <!-- Reviews -->
-                    <?= featured('landing/products/components/reviews'); ?>
+                    <?= featured('products/components/reviews'); ?>
                 </main>
             </div>
             <div class="col-12">

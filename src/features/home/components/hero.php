@@ -1,26 +1,31 @@
 <style>
     /*----------- MAIN (Hero) -----------*/
-    main .section-container:has(section.hero-section) {
+    main section.hero-section {
         height: 100vh;
     }
 
-    main .section-container:has(section.hero-section) .section-bg-video {
+    main section.hero-section .bg-video {
         width: 100%;
         height: 100%;
         overflow: hidden;
     }
 
-    main .section-container:has(section.hero-section) .section-bg-video video {
+    main section.hero-section .bg-video video {
         object-fit: cover;
         object-position: center;
     }
 
-    main .section-container section.hero-section {
+    main section.hero-section .hero-content {
+        /* position: relative; */
+        padding: 0;
+        margin: 0;
+        margin-top: 3.7rem;
+
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        padding-top: 10rem;
+        /* padding-top: 10rem; */
 
         position: absolute;
         top: 0;
@@ -28,13 +33,6 @@
         right: 0;
         bottom: 0;
         z-index: 1;
-    }
-
-    main section.hero-section .hero-content {
-        position: relative;
-        padding: 0;
-        margin: 0;
-        margin-top: 5rem;
     }
 
     main section.hero-section .row {
@@ -120,13 +118,75 @@
         max-width: 100%;
         height: auto;
     }
+
+    @media (max-width: 768px) {
+
+        /*######## MAIN ########*/
+        /*--- MAIN (Hero) ---*/
+        main section.hero-section {}
+
+        main section.hero-section {
+            padding: 0 !important;
+            margin: 0;
+
+            height: 89vh;
+        }
+
+        main section.hero-section .container-xl {
+            padding: 0;
+            margin: 0;
+        }
+
+        main section.hero-section .hero-content {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        main section.hero-section .hero-content .hero-text {
+            gap: 0 !important;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            align-items: center;
+        }
+
+        main section.hero-section .hero-title {
+            text-align: center;
+        }
+
+        main section.hero-section .hero-title:not(span.full-def) {
+            font-size: 3.4rem !important;
+        }
+
+        main section.hero-section .hero-title span.full-def {
+            font-size: 1rem !important;
+            color: teal;
+            text-wrap: nowrap !important;
+        }
+
+        main section.hero-section .hero-description {
+            text-align: center;
+        }
+
+        main section.hero-section .cta-buttons {
+            font-size: 0.7rem;
+            text-align: center;
+            text-wrap: nowrap;
+        }
+
+        main section.hero-section .hero-image {
+            text-align: center;
+            margin-top: 3.5rem;
+            display: none;
+        }
+    }
 </style>
-<div class="section-container">
-    <div class="section-bg-video">
+
+<section class="hero-section">
+    <div class="bg-video">
         <video src="<?= asset('vids/montage.mp4'); ?>" autoplay muted loop></video>
     </div>
-    <section class="section-wrapper hero-section">
-        <div class="hero-content">
+    <div class="hero-content">
+        <div class="container-xl">
             <div class="row">
                 <div class="col-md-6">
                     <div class="hero-text">
@@ -161,5 +221,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

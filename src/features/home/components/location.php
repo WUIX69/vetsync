@@ -1,6 +1,6 @@
 <style>
     /*----------- MAIN (Locations) -----------*/
-    main .section-container:has(section.locations-section) {
+    main section.locations-section {
         background: var(--color-background);
     }
 
@@ -132,8 +132,8 @@
         opacity: 1;
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper locations-section">
+<section class="locations-section">
+    <div class="container-xl">
         <div class="section-title">
             <span class="sub-title">Locations</span>
             <h2>Visit Our Clinic</h2>
@@ -234,5 +234,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

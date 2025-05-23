@@ -1,6 +1,6 @@
 <style>
     /*----------- MAIN (Features) -----------*/
-    main .section-container:has(section.features-section) {
+    main section.features-section {
         background: var(--color-background);
     }
 
@@ -54,8 +54,9 @@
         text-align: center;
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper features-section">
+
+<section class="features-section">
+    <div class="container-xl">
         <div class="section-title">
             <span class="sub-title">Features</span>
             <h2>Why Choose Us</h2>
@@ -94,5 +95,5 @@
                     veritatis.</p>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

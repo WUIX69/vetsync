@@ -16,12 +16,12 @@ if (!empty($reserveImages)) {
 ?>
 
 <style>
-    main .section-container:has(section.reserve-section) {
+    main section.reserve-section {
         background-image: url("<?= $reserveImage ?>");
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper reserve-section">
+<section class="reserve-section">
+    <div class="container-xl">
         <div class="row">
             <div class="col-md-6">
                 <div class="header">
@@ -30,5 +30,5 @@ if (!empty($reserveImages)) {
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

@@ -1,6 +1,6 @@
 <style>
     /* Contact Section Styles */
-    main .section-container:has(section.contact-section) {
+    main section.contact-section {
         padding: 5rem 0;
         background: var(--color-white);
     }
@@ -102,8 +102,9 @@
         opacity: 0.9;
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper contact-section">
+
+<section class="contact-section">
+    <div class="container-xl">
         <div class="row">
             <!-- Left Side - Contact Info -->
             <div class="col-lg-6">
@@ -164,5 +165,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

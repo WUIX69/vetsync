@@ -29,10 +29,10 @@
                     <?= partial('components/hero'); ?>
 
                     <!-- Contact -->
-                    <?= featured('landing/contact/components/contact'); ?>
+                    <?= featured('contact/components/contact'); ?>
 
                     <!-- Locations -->
-                    <?= featured('landing/contact/components/location'); ?>
+                    <?= featured('contact/components/location'); ?>
 
                     <!-- Reserve -->
                     <?= partial('components/reserve'); ?>
@@ -47,7 +47,7 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?>
-    <?= featured('landing/contact/scripts'); ?>
+    <script src="<?= featured('contact/js/main.js', true) ?>"></script>
 </body>
 
 </html>

@@ -25,13 +25,13 @@
                     <?= partial('components/hero'); ?>
 
                     <!-- Highlights -->
-                    <?= featured('landing/services/components/highlights'); ?>
+                    <?= featured('services/components/highlights'); ?>
 
                     <!-- About -->
-                    <?= featured('landing/services/components/about'); ?>
+                    <?= featured('services/components/about'); ?>
 
                     <!-- Related Services -->
-                    <?= featured('landing/services/components/related'); ?>
+                    <?= featured('services/components/related'); ?>
                 </main>
             </div>
             <div class="col-12">

@@ -74,45 +74,12 @@
     }
 
     /*######## MAIN ########*/
-    main section.section-wrapper {
+    main section {
         padding: 6rem 1.5rem !important; /*Add LR padding for small screen*/
     }
 
     /*--- MAIN (Hero) ---*/
-    main .section-container:has(section.hero-section):has(.section-bg-video) {
-        height: 110vh;
-    }
-
-    main section.hero-section {
-        padding-top: 7.5rem !important;
-    }
-
     main section.hero-section .hero-content {
         padding: 0 !important;
-    }
-
-    main section.hero-section .hero-content .hero-text {
-        gap: 0 !important;
-    }
-
-    main section.hero-section .hero-title:not(span.full-def) {
-        font-size: 3.4rem !important;
-    }
-
-    main section.hero-section .hero-title span.full-def {
-        font-size: 1rem !important;
-        color: teal;
-        text-wrap: nowrap !important;
-    }
-
-    main section.hero-section .cta-buttons {
-        font-size: 0.7rem;
-        text-align: center;
-        text-wrap: nowrap;
-    }
-
-    main section.hero-section .hero-image {
-        text-align: center;
-        margin-top: 3.5rem;
     }
 }

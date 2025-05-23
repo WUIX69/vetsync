@@ -223,6 +223,16 @@
 <!-- Products Section -->
 <section class="products">
     <div class="container-xl">
+
+        <!-- Only display section title if on the 'landing' app path -->
+        <?php if (uriAppPath('landing')): ?>
+            <div class="section-title">
+                <span class="sub-title">Products</span>
+                <h2>What We Offer</h2>
+                <p>Comprehensive pet Supply for your beloved pets</p>
+            </div>
+        <?php endif; ?>
+
         <div class="header">
             <!-- Filter Bar -->
             <div class="filter-bar">

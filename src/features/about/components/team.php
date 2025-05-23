@@ -80,8 +80,9 @@
         }
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper team-section">
+
+<section class="team-section">
+    <div class="container-xl">
         <div class="section-title">
             <span class="sub-title">Our Team</span>
             <h2>Meet Our Veterinary Professionals</h2>
@@ -144,5 +145,5 @@
                 </div>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>

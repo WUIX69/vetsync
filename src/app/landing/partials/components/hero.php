@@ -19,15 +19,16 @@ $pageTitle = match ($activeLink) {
 ?>
 <style>
     /*----------- MAIN (Hero) -----------*/
-    main .section-container:has(section.hero-section) {
+    main section.hero-section {
         background-image: url("<?= $heroImage ?>");
         <?php if ($activeLink === 'contact'): ?>
             background-position: top center;
         <?php endif; ?>
     }
 </style>
-<div class="section-container">
-    <section class="section-wrapper hero-section">
+
+<section class="hero-section">
+    <div class="container-xl">
         <div class="hero-content">
             <div class="hero-breadcrumb">
                 <div class="ui breadcrumb">
@@ -40,5 +41,5 @@ $pageTitle = match ($activeLink) {
                 <?= $pageTitle ?>
             </div>
         </div>
-    </section>
-</div>
+    </div>
+</section>
