@@ -1,4 +1,4 @@
-<?php include_once '../../core/app.php'; ?>
+<?php include_once __DIR__ . '/../../core/app.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
