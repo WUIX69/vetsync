@@ -22,7 +22,7 @@
 
     <div class="container-body pusher">
         <!-- Sidebar -->
-        <?= featured('admin/shared/layouts/sidebar') ?>
+        <?= partial('layouts/sidebar') ?>
 
         <!-- Main Content -->
         <main class="container-main">
