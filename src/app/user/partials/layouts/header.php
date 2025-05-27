@@ -29,10 +29,10 @@ $activeLink = uriPagePath();
                     <!-- <i class="dropdown icon"></i> -->
                     <div class="text">
                         <div class="info">
-                            <img src="<?= asset('img/profiles/user-1.jpg'); ?>">
+                            <img src="<?= userData()['profile'] ?>">
                             <div class="d-flex flex-column">
-                                <a href="#">Alex Johnson</a>
-                                <p>Data Scientist</p>
+                                <a href="javascript:void(0)"><?= userData()['name'] ?></a>
+                                <p><?= userData()['email'] ?></p>
                             </div>
                             <i class='bx bx-chevron-down'></i>
                         </div>
