@@ -184,5 +184,7 @@ function apiHeaders()
 
 function model($model = null)
 {
+    // Classes using PSR-4 autoloading with namespaces don't need to be explicitly included
+    // But we'll keep this for backward compatibility
     includeFileHelper('model', $model);
 }

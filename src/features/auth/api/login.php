@@ -1,9 +1,9 @@
 <?php
 
 include '../../../core/app.php';
-model('users');
 apiHeaders();
 
+use VetSync\Model\Users;
 // global $response;
 // global $session;
 

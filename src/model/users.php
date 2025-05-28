@@ -1,5 +1,10 @@
 <?php
 
+namespace VetSync\Model;
+
+use PDO;
+use PDOException;
+
 class Users
 {
     private $conn;
