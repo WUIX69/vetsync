@@ -42,11 +42,13 @@ class Users
     public function singleWhereAdminEmail($email = null)
     {
         // Implement your admin query here, for now just return empty array
-        return [
+        $admin = [
             'id' => 1,
             'name' => 'admin',
             'email' => 'admin@mail.com',
             'password' => '$2y$10$xKIlO8qhCbD5hxi466mlHupG5f8LkDakJia8T90kbwsBpS/RjNhg2'
         ];
+
+        return ($email === $admin['email']) ? $admin : [];
     }
 }
