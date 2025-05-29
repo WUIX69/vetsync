@@ -8,5 +8,6 @@ class Email
     public function send($to, $subject, $message, $attachments = [])
     {
         // Email sending logic here
+        return false; // Not implemented
     }
 }
