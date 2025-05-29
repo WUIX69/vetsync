@@ -4,7 +4,7 @@
 
 <head>
     <?= shared('elements/meta') ?>
-    <title>Admin Dashboard</title>
+    <title>Dashboard - VetSync</title>
     <?= shared('elements/styles') ?>
 </head>
 
@@ -18,13 +18,12 @@
 
     <div class="container-body pusher">
         <!-- Sidebar -->
-        <?= partial('layouts/sidebar') ?> <!-- Sidebar -->
+        <?= partial('layouts/sidebar') ?>
+        <!-- Navbar -->
+        <?= partial('layouts/navbar') ?>
 
         <!-- Main Content -->
         <main class="container-main">
-            <!-- Header -->
-            <?= featured('admin/dashboard/components/header') ?>
-
             <div class="row">
                 <div class="col-lg-9">
                     <!-- Stats Cards -->
