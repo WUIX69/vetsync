@@ -233,6 +233,81 @@ aside.sidebar
 }
 /*######################### SIDEBAR END #########################*/
 
+/*#######--------- NAVBAR ---------#######*/
+nav.navbar {
+    margin: 0;
+    padding: 0;
+
+    left: 190px;
+    width: calc(100% - 190px);
+}
+
+nav.navbar h1 {
+    margin: 0;
+}
+
+nav.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0;
+    margin: 0;
+    margin-top: -0.45rem;
+}
+
+nav.navbar .nav {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 2rem;
+    /* margin-bottom: 1.2rem; */
+}
+
+nav.navbar .nav .dark-mode-toggle {
+    background-color: var(--color-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    margin: 0;
+}
+
+nav.navbar .nav .dark-mode-toggle span {
+    font-size: 1rem;
+    padding: 3px 7px;
+}
+
+nav.navbar .nav .dark-mode-toggle span.active {
+    background-color: #6c9bcf;
+    color: white;
+    border-radius: 0.4rem;
+}
+
+nav.navbar .nav .profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.8rem;
+}
+
+nav.navbar .nav .profile .info {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: center;
+}
+
+nav.navbar .nav .profile .info * {
+    color: var(--color-dark) !important;
+}
+
+nav.navbar .nav .profile span {
+    font-size: 0.76rem;
+}
+/*#######--------- NAVBAR END ---------#######*/
+
 /*######################### MAIN CONTENT #########################*/
 main.container-main {
     position: relative;
@@ -287,78 +362,6 @@ main section .ui.form .field .description {
     font-size: 0.82rem;
     color: var(--color-dark-variant) !important;
 }
-
-/*#######--------- SECTION HEADER ---------#######*/
-main section.header {
-    margin: 0;
-    padding: 0;
-}
-
-main section.header h1 {
-    margin: 0;
-}
-
-main section.header .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    /* position: relative;
-    top: -2px; */
-    margin-top: -0.45rem;
-}
-
-main section.header .nav {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: 2rem;
-    /* margin-bottom: 1.2rem; */
-}
-
-main section.header .nav .dark-mode-toggle {
-    background-color: var(--color-light);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    border-radius: 0.4rem;
-    margin: 0;
-}
-
-main section.header .nav .dark-mode-toggle span {
-    font-size: 1rem;
-    padding: 3px 7px;
-}
-
-main section.header .nav .dark-mode-toggle span.active {
-    background-color: #6c9bcf;
-    color: white;
-    border-radius: 0.4rem;
-}
-
-main section.header .nav .profile {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.8rem;
-}
-
-main section.header .nav .profile .info {
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    justify-content: center;
-}
-
-main section.header .nav .profile .info * {
-    color: var(--color-dark) !important;
-}
-
-main section.header .nav .profile span {
-    font-size: 0.76rem;
-}
-/*#######--------- SECTION HEADER END ---------#######*/
 
 /*#######--------- SECTION STATS ---------#######*/
 main section.stats {
