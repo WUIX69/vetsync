@@ -51,4 +51,26 @@ class Users
 
         return ($email === $admin['email']) ? $admin : [];
     }
+
+    function store($data = [])
+    {
+        try {
+            $this->conn->beginTransaction();
+            $stmt = $this->conn->prepare("INSERT INTO users (uuid, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$data['uuid'], $data['firstname'], $data['lastname'], $data['email'], $data['password']]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'User registered successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'User registration failed.',
+            ];
+        }
+    }
 }

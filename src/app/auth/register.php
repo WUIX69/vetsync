@@ -20,7 +20,7 @@
                 <?= partial('components/header-logo') ?> <!-- Header Logo -->
                 <div class="auth-wrapper box column">
                     <?= partial('components/header-in') ?> <!-- Section in header -->
-                    <form class="ui large form">
+                    <form class="ui large form" id="registerForm">
                         <div class="two fields">
                             <div class="field">
                                 <label for="firstname">First name</label>
@@ -75,6 +75,7 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+    <script src="<?= featured('auth/js/register.js', true) ?>"></script>
 </body>
 
 </html>
