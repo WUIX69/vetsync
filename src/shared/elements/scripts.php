@@ -39,18 +39,10 @@ function utilScripts()
     // Utility scripts
     $utilityScripts = [
         'js/middleware.js',
+        'js/functions.js',
     ];
 
     foreach ($utilityScripts as $script) {
         echo '<script src="' . utils($script, true) . '"></script>';
     }
 }
-
-?>
-
-<script>
-    // API URL Helper
-    function apiUrl(feature = null) {
-        return `<?= baseUrl() ?>src/features/${feature}/api/`;
-    }
-</script>
