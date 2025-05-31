@@ -27,22 +27,22 @@
             <div class="row">
                 <div class="col-lg-9">
                     <!-- Stats Cards -->
-                    <?= featured('admin/dashboard/components/stats') ?>
+                    <?= featured('dashboard/components/stats-card-admin') ?>
 
                     <!-- New Users -->
-                    <?= featured('admin/dashboard/components/new-users') ?>
+                    <?= featured('dashboard/components/new-users') ?>
 
                     <!-- Recent Orders -->
-                    <?= featured('admin/dashboard/components/recent-orders') ?>
+                    <?= featured('dashboard/components/recent-orders') ?>
                 </div>
 
                 <!-- Right Section -->
                 <div class="col-lg-3">
                     <!-- System Info -->
-                    <?= featured('admin/dashboard/components/sys-info') ?>
+                    <?= featured('dashboard/components/sys-info') ?>
 
                     <!-- Reminders -->
-                    <?= featured('admin/dashboard/components/reminders') ?>
+                    <?= featured('dashboard/components/reminders') ?>
                 </div>
             </div>
         </main>
@@ -50,8 +50,8 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <script src="<?= featured('admin/dashboard/js/main.js', true) ?>"></script>
-    <script src="<?= featured('admin/dashboard/js/recentOrders.js', true) ?>"></script>
+    <script src="<?= featured('dashboard/js/reminderForm.js', true) ?>"></script>
+    <script src="<?= featured('dashboard/js/recentOrders.js', true) ?>"></script>
 </body>
 
 </html>
