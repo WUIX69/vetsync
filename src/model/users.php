@@ -73,4 +73,47 @@ class Users
             ];
         }
     }
+
+    function update($data = [])
+    {
+        try {
+
+            $this->conn->beginTransaction();
+            $stmt = $this->conn->prepare("
+                UPDATE users SET 
+                    firstname=?, 
+                    lastname=?, 
+                    email=?, 
+                    bio=?, 
+                    telephone=?, 
+                    dob=?, 
+                    location=? 
+                WHERE uuid=?
+            ");
+
+            $stmt->execute([
+                $data['firstname'],
+                $data['lastname'],
+                $data['email'],
+                $data['bio'],
+                $data['telephone'],
+                $data['dob'],
+                $data['location'],
+                $data['user_uuid']
+            ]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'User updated successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'User update failed.',
+            ];
+        }
+    }
 }

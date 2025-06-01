@@ -357,3 +357,13 @@ body.pushable > .pusher {
     /* Adjust the body background again due to pusher */
     background: var(--color-background);
 }
+
+/* Filepond Overrides */
+.filepond--label-action {
+    text-decoration: underline !important;
+    text-decoration-color: #a7a4a4 !important;
+}
+
+.filepond--drop-label label {
+    font-size: 0.875em !important;
+}
