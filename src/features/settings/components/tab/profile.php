@@ -2,7 +2,7 @@
     main section.settings .avatar-upload {
         position: relative;
         max-width: 200px;
-        margin: 0 auto 2rem;
+        margin: 2rem auto;
     }
 
     main section.settings .avatar-upload img {
@@ -63,35 +63,39 @@
     <form class="ui form">
         <!-- Profile Picture -->
         <div class="avatar-upload">
-            <img src="<?= asset('img/profiles/user-1.jpg'); ?>" alt="Profile Picture">
-            <div class="upload-button">
-                <i class="camera icon"></i>
-            </div>
+            <input type="file" class="filepond profile-pond" name="profile">
         </div>
 
-        <!-- Username -->
-        <div class="field">
-            <label>Username</label>
-            <input type="text" placeholder="Enter your username">
-            <div class="ui small text">
-                This is your public display name. It can be your real name or a
-                pseudonym.
+        <div class="two fields">
+            <div class="field">
+                <label>Firstname</label>
+                <input type="text" placeholder="Enter your first name" value="<?= userData()['firstname'] ?>">
+                <div class="ui small text">
+                    This is your first name. It will be visible to others on your profile.
+                </div>
+            </div>
+            <div class="field">
+                <label>Lastname</label>
+                <input type="text" placeholder="Enter your last name" value="<?= userData()['lastname'] ?>">
+                <div class="ui small text">
+                    This is your last name. It will be visible to others on your profile.
+                </div>
             </div>
         </div>
 
         <!-- Password -->
-        <div class="field">
+        <!-- <div class="field">
             <label>Password</label>
             <input type="password" placeholder="Enter new password">
             <div class="ui small text">
                 Your password must be at least 8 characters long.
             </div>
-        </div>
+        </div> -->
 
         <!-- Email -->
         <div class="field">
             <label>Email Address</label>
-            <input type="email" placeholder="Enter your email">
+            <input type="email" placeholder="Enter your email" value="<?= userData()['email'] ?>">
             <div class="ui small text">
                 You can manage verified email addresses in your email settings.
             </div>
@@ -100,7 +104,7 @@
         <!-- Bio -->
         <div class="field">
             <label>Bio</label>
-            <textarea rows="4" placeholder="Enter your bio"></textarea>
+            <textarea rows="4" placeholder="Enter your bio"><?= userData()['bio'] ?></textarea>
             <div class="ui small text">
                 Tell us about yourself. You can @mention other users.
             </div>
@@ -118,10 +122,11 @@
                     <input type="url" placeholder="Enter your URL">
                 </div>
             </div>
-            <button type="button" class="ui basic green icon compact button">
+            <button type="button" class="ui basic teal icon compact button">
                 <i class="plus icon"></i> Add URL
             </button>
         </div>
+
         <div class="actions mt-4">
             <button class="ui primary button" type="submit">Save
                 Changes</button>
