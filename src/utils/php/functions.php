@@ -1,5 +1,7 @@
 <?php
 
+use VetSync\Services\Attachments;
+
 function tryCatch($callback, $errorMessage = "Error: ")
 {
     try {
@@ -187,4 +189,26 @@ function model($model = null)
     // Classes using PSR-4 autoloading with namespaces don't need to be explicitly included
     // But we'll keep this for backward compatibility
     includeFileHelper('model', $model);
+}
+
+function media($dir = '', $reference_uuid = null)
+{
+    try {
+        global $config;
+
+        $attachments = new Attachments();
+        $attachment = $attachments->single($reference_uuid);
+
+        $fullPath = $dir . '/' . $attachment['folder'] . '/' . $attachment['filename'];
+        $physical_path = $config['root_path'] . '/src/uploads/' . $fullPath;
+
+        if (!$attachment || !file_exists($physical_path)) {
+            return asset('img/profiles/profile.jpg');
+        } else {
+            return urlFileHelper('uploads', $fullPath);
+        }
+    } catch (Throwable $t) {
+        error_log($t->getMessage());
+        return null;
+    }
 }
