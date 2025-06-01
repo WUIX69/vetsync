@@ -24,7 +24,7 @@
         <!-- Main Content -->
         <main class="container-main">
             <!-- Header -->
-            <?= featured('admin/settings/components/header') ?>
+            <?= featured('dashboard/components/header-admin') ?>
 
             <div class="row">
                 <div class="col-lg-9">
@@ -32,22 +32,22 @@
                     <section class="settings">
                         <div class="tab-content container box">
                             <!-- Profile Tab -->
-                            <?= featured('admin/settings/components/tab/profile') ?>
+                            <?= featured('settings/components/tab-admin/profile-admin') ?>
 
                             <!-- Account Tab -->
-                            <?= featured('admin/settings/components/tab/account') ?>
+                            <?= featured('settings/components/tab-admin/account-admin') ?>
 
                             <!-- Notification Tab -->
-                            <?= featured('admin/settings/components/tab/notification') ?>
+                            <?= featured('settings/components/tab-admin/notification-admin') ?>
 
                             <!-- Preferences Tab -->
-                            <?= featured('admin/settings/components/tab/preferences') ?>
+                            <?= featured('settings/components/tab-admin/preferences-admin') ?>
                         </div>
                     </section>
                 </div>
                 <div class="col-lg-3">
                     <!-- Settings Nav -->
-                    <?= featured('admin/settings/components/settings-nav') ?>
+                    <?= featured('admin/settings/components/settings-nav-admin') ?>
                 </div>
             </div>
         </main>

@@ -17,7 +17,7 @@
 
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
-        <?= featured('admin/users/components/user-modal') ?> <!-- User Modal -->
+        <?= featured('dashboard/components/user-modal-admin') ?> <!-- User Modal -->
     </div>
 
     <div class="container-body pusher">
@@ -27,22 +27,22 @@
         <!-- Main Content -->
         <main class="container-main">
             <!-- Header -->
-            <?= featured('admin/users/components/header') ?>
+            <?= featured('dashboard/components/header-admin') ?>
 
             <div class="row">
                 <div class="col-lg-9">
                     <!-- User Stats -->
-                    <?= featured('admin/users/components/user-stats') ?>
+                    <?= featured('admin/users/components/user-stats-admin') ?>
 
                     <!-- New Users -->
-                    <?= featured('admin/users/components/new-users') ?>
+                    <?= featured('admin/users/components/new-users-admin') ?>
 
                     <!-- Users List -->
-                    <?= featured('admin/users/components/users-list') ?>
+                    <?= featured('admin/users/components/users-list-admin') ?>
                 </div>
                 <div class="col-lg-3">
                     <!-- Recent Activity -->
-                    <?= featured('admin/users/components/recent-act') ?>
+                    <?= featured('admin/users/components/recent-act-admin') ?>
                 </div>
             </div>
         </main>
@@ -61,8 +61,8 @@
     <script src="<?= utils('js/tableListFilters.js', true) ?>"></script>
 
     <!-- Page Scripts -->
-    <script src="<?= featured('admin/users/js/usersDataTable.js', true) ?>"></script>
-    <script src="<?= featured('admin/users/js/validateUserForm.js', true) ?>"></script>
+    <script src="<?= featured('users/js/usersDataTable.js', true) ?>"></script>
+    <script src="<?= featured('users/js/validateUserForm.js', true) ?>"></script>
 </body>
 
 </html>

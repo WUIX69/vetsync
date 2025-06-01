@@ -311,7 +311,7 @@
         <!-- Main Content -->
         <main class="container-main">
             <!-- Header -->
-            <?= featured('admin/dashboard/components/header') ?>
+            <?= featured('dashboard/components/header-admin') ?>
 
             <div class="row">
                 <div class="col-lg-9">
@@ -647,7 +647,7 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <script src="<?= featured('admin/dashboard/js/main.js', true) ?>"></script>
+    <script src="<?= featured('dashboard/js/main.js', true) ?>"></script>
     <script>
         $(document).ready(function () {
             // Initialize dropdowns
