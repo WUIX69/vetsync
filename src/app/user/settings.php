@@ -76,6 +76,7 @@
         src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
     <!-- Profile -->
     <script src="<?= featured('settings/js/profile.js', true); ?>"></script>
+    <script src="<?= featured('settings/js/profile-upload.js', true); ?>"></script>
 </body>
 
 </html>
