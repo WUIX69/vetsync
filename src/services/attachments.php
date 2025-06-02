@@ -15,6 +15,19 @@ class Attachments
         $this->conn = $conn;
     }
 
+    public function all($reference_uuid)
+    {
+        try {
+            $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':reference_uuid' => $reference_uuid]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        }
+    }
+
     public function single($reference_uuid)
     {
         try {

@@ -1,7 +1,5 @@
 <?php
 
-use VetSync\Services\Attachments;
-
 function tryCatch($callback, $errorMessage = "Error: ")
 {
     try {
@@ -54,11 +52,19 @@ function includeFileHelper($dir, $file)
 
 function urlFileHelper($dir, $file, $is_public = false)
 {
+    global $config;
+
     // Define the directory where your source files are located
     $dir_path = $is_public ? 'public' : "src/$dir";
     $url = $dir_path . '/' . ltrim($file, '/');
-    // Return the URL of the source file
-    return baseURL($url);
+
+    // Check if the file exists
+    $checkUrlPath = $config['root_path'] . '/' . $url;
+    if (file_exists($checkUrlPath)) {
+        return baseURL($url); // Return the URL of the source file
+    }
+
+    return '';
 }
 
 function asset($file)
@@ -189,28 +195,4 @@ function model($model = null)
     // Classes using PSR-4 autoloading with namespaces don't need to be explicitly included
     // But we'll keep this for backward compatibility
     includeFileHelper('model', $model);
-}
-
-function media($dir = '', $reference_uuid = null)
-{
-    try {
-        global $config;
-
-        $attachments = new Attachments();
-        $attachment = $attachments->single($reference_uuid);
-        if (!$attachment) {
-            return asset('img/profiles/profile.jpg');
-        }
-
-        $fullPath = $dir . '/' . $attachment['folder'] . '/' . $attachment['filename'];
-        $physical_path = $config['root_path'] . '/src/uploads/' . $fullPath;
-        if (!file_exists($physical_path)) {
-            return asset('img/profiles/profile.jpg');
-        }
-
-        return urlFileHelper('uploads', $fullPath);
-    } catch (Throwable $t) {
-        error_log($t->getMessage());
-        return null;
-    }
 }

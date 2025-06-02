@@ -37,7 +37,7 @@ function userData($uuid = null)
     $user_formatted_data = [
         'type' => $session->get()['type'] ?? '',
         'name' => $user['firstname'] . ' ' . $user['lastname'] ?? '',
-        'profile' => media('profiles', $uuid) ?? null,
+        'profile' => media($uuid) ?? null,
     ];
 
     $merged_data = array_merge($user, $user_formatted_data);
