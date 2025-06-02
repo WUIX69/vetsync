@@ -8,6 +8,7 @@ use PDOException;
 class Attachments
 {
     private $conn;
+
     public function __construct()
     {
         global $conn;
@@ -16,26 +17,40 @@ class Attachments
 
     public function single($reference_uuid)
     {
-        $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid LIMIT 1";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':reference_uuid', $reference_uuid);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+        try {
+            $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid LIMIT 1";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':reference_uuid' => $reference_uuid]);
+            return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            return [];
+        }
     }
 
     public function store($data = [])
     {
         try {
             $this->conn->beginTransaction();
+            $sql = "INSERT INTO attachments (
+                        reference_model, 
+                        reference_uuid, 
+                        folder, 
+                        filename
+                    ) VALUES (
+                        :reference_model, 
+                        :reference_uuid, 
+                        :folder, 
+                        :filename
+                    )";
 
-            $sql = "INSERT INTO attachments (reference_model, reference_uuid, folder, filename) VALUES (:reference_model, :reference_uuid, :folder, :filename)";
             $stmt = $this->conn->prepare($sql);
-
-            $stmt->bindParam(':reference_model', $data['reference_model']);
-            $stmt->bindParam(':reference_uuid', $data['reference_uuid']);
-            $stmt->bindParam(':folder', $data['folder']);
-            $stmt->bindParam(':filename', $data['filename']);
-            $stmt->execute();
+            $stmt->execute([
+                ':reference_model' => $data['reference_model'],
+                ':reference_uuid' => $data['reference_uuid'],
+                ':folder' => $data['folder'],
+                ':filename' => $data['filename']
+            ]);
 
             $this->conn->commit();
             return [
@@ -56,12 +71,15 @@ class Attachments
     {
         try {
             $this->conn->beginTransaction();
+            $sql = "DELETE FROM attachments 
+                    WHERE reference_model = :reference_model 
+                    AND reference_uuid = :reference_uuid";
 
-            $sql = "DELETE FROM attachments WHERE reference_model = :reference_model AND reference_uuid = :reference_uuid";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':reference_model', $reference_model);
-            $stmt->bindParam(':reference_uuid', $reference_uuid);
-            $stmt->execute();
+            $stmt->execute([
+                ':reference_model' => $reference_model,
+                ':reference_uuid' => $reference_uuid
+            ]);
 
             $this->conn->commit();
             return [
