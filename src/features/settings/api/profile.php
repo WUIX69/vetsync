@@ -55,7 +55,7 @@ try {
             'email' => $_POST['email'],
             'location' => $_POST['location'],
             'bio' => $_POST['bio'] ? $_POST['bio'] : null,
-            'url' => $_POST['url'] ? $_POST['url'] : null,
+            'urls' => $_POST['urls'] ? implode(',', $_POST['urls']) : null,
         ];
 
         // Update profile

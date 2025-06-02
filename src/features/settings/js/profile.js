@@ -69,8 +69,8 @@ $(function () {
                     optional: true,
                     rules: [],
                 },
-                url: {
-                    identifier: "url[]",
+                urls: {
+                    identifier: "urls[]",
                     optional: true,
                     rules: [],
                 },

@@ -139,9 +139,9 @@
                 profiles.</div>
             <div class="fields mt-2">
                 <div class="sixteen wide field url-inputs">
-                    <input type="url" placeholder="Enter your URL" name="url[]">
-                    <input type="url" placeholder="Enter your URL" name="url[]">
-                    <input type="url" placeholder="Enter your URL" name="url[]">
+                    <input type="url" placeholder="Enter your URL" name="urls[]">
+                    <input type="url" placeholder="Enter your URL" name="urls[]">
+                    <input type="url" placeholder="Enter your URL" name="urls[]">
                 </div>
             </div>
             <button type="button" class="ui basic teal icon compact button">

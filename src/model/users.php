@@ -87,7 +87,8 @@ class Users
                     bio=?, 
                     telephone=?, 
                     dob=?, 
-                    location=? 
+                    location=?,
+                    urls=?
                 WHERE uuid=?
             ");
 
@@ -99,6 +100,7 @@ class Users
                 $data['telephone'],
                 $data['dob'],
                 $data['location'],
+                $data['urls'],
                 $data['user_uuid']
             ]);
 
