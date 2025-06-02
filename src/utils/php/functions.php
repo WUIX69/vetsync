@@ -198,15 +198,17 @@ function media($dir = '', $reference_uuid = null)
 
         $attachments = new Attachments();
         $attachment = $attachments->single($reference_uuid);
+        if (!$attachment) {
+            return asset('img/profiles/profile.jpg');
+        }
 
         $fullPath = $dir . '/' . $attachment['folder'] . '/' . $attachment['filename'];
         $physical_path = $config['root_path'] . '/src/uploads/' . $fullPath;
-
-        if (!$attachment || !file_exists($physical_path)) {
+        if (!file_exists($physical_path)) {
             return asset('img/profiles/profile.jpg');
-        } else {
-            return urlFileHelper('uploads', $fullPath);
         }
+
+        return urlFileHelper('uploads', $fullPath);
     } catch (Throwable $t) {
         error_log($t->getMessage());
         return null;
