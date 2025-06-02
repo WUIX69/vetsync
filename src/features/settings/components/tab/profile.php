@@ -45,12 +45,13 @@
         gap: 0.3rem;
     }
 
-    main section.settings .ui.form .field .add-url-btn {
-        background: var(--color-background) !important;
+    main section.settings .ui.form .field .add-url-btn,
+    main section.settings .ui.form .field .remove-url-btn {
+        /* background: var(--color-background) !important;
         color: var(--color-dark-variant) !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 0.4rem;
+        border-radius: 0.4rem; */
         font-size: 0.7rem !important;
     }
 </style>
@@ -69,16 +70,14 @@
         <div class="two fields">
             <div class="field">
                 <label for="firstname">Firstname *</label>
-                <input type="text" placeholder="Enter your first name" name="firstname"
-                    value="<?= userData()['firstname'] ?>">
+                <input type="text" placeholder="Enter your first name" name="firstname" value="">
                 <div class="ui small text">
                     This is your first name. It will be visible to others on your profile.
                 </div>
             </div>
             <div class="field">
                 <label for="lastname">Lastname *</label>
-                <input type="text" placeholder="Enter your last name" name="lastname"
-                    value="<?= userData()['lastname'] ?>">
+                <input type="text" placeholder="Enter your last name" name="lastname" value="">
                 <div class="ui small text">
                     This is your last name. It will be visible to others on your profile.
                 </div>
@@ -89,8 +88,7 @@
             <!-- Telephone -->
             <div class="field">
                 <label>Telephone *</label>
-                <input type="tel" placeholder="Enter your telephone" name="telephone"
-                    value="<?= userData()['telephone'] ?>">
+                <input type="tel" placeholder="Enter your telephone" name="telephone" value="">
                 <div class="ui small text">
                     Your telephone number will be visible to others on your profile.
                 </div>
@@ -98,7 +96,7 @@
             <!-- Date of Birth -->
             <div class="field">
                 <label>Date of Birth *</label>
-                <input type="date" placeholder="Enter your date of birth" name="dob" value="<?= userData()['dob'] ?>">
+                <input type="date" placeholder="Enter your date of birth" name="dob" value="">
                 <div class="ui small text">
                     Your date of birth will be visible to others on your profile.
                 </div>
@@ -108,7 +106,7 @@
         <!-- Email -->
         <div class="field">
             <label for="email">Email Address *</label>
-            <input type="email" placeholder="Enter your email" name="email" value="<?= userData()['email'] ?>">
+            <input type="email" placeholder="Enter your email" name="email" value="">
             <div class="ui small text">
                 You can manage verified email addresses in your email settings.
             </div>
@@ -117,7 +115,7 @@
         <!-- Address -->
         <div class="field">
             <label for="location">Location *</label>
-            <input type="text" placeholder="Enter your location" name="location" value="<?= userData()['location'] ?>">
+            <input type="text" placeholder="Enter your location" name="location" value="">
             <div class="ui small text">
                 Your location will be visible to others on your profile.
             </div>
@@ -126,7 +124,7 @@
         <!-- Bio -->
         <div class="field">
             <label for="bio">Bio <small class="text-muted">(optional)</small></label>
-            <textarea rows="4" placeholder="Enter your bio" name="bio"><?= userData()['bio'] ?></textarea>
+            <textarea rows="4" placeholder="Enter your bio" name="bio"></textarea>
             <div class="ui small text">
                 Tell us about yourself. You can @mention other users.
             </div>
@@ -140,13 +138,17 @@
             <div class="fields mt-2">
                 <div class="sixteen wide field url-inputs">
                     <input type="url" placeholder="Enter your URL" name="urls[]">
-                    <input type="url" placeholder="Enter your URL" name="urls[]">
-                    <input type="url" placeholder="Enter your URL" name="urls[]">
+                    <!-- Dynamically add URL input fields -->
                 </div>
             </div>
-            <button type="button" class="ui basic teal icon compact button">
-                <i class="plus icon"></i> Add URL
-            </button>
+            <div>
+                <button type="button" class="ui basic teal icon compact button add-url-btn">
+                    <i class="plus icon"></i> Add URL
+                </button>
+                <button type="button" class="ui basic red icon compact button remove-url-btn">
+                    <i class="trash icon"></i> Remove URL
+                </button>
+            </div>
         </div>
 
         <div class="actions mt-4">

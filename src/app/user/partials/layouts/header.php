@@ -31,7 +31,7 @@ $activeLink = uriPagePath();
                         <div class="info">
                             <img class="user-profile-photo" src="<?= userData()['profile'] ?>">
                             <div class="d-flex flex-column">
-                                <a href="javascript:void(0)"><?= userData()['name'] ?></a>
+                                <a href="javascript:void(0)" class="text-capitalize"><?= userData()['name'] ?></a>
                                 <p><?= userData()['email'] ?></p>
                             </div>
                             <i class='bx bx-chevron-down'></i>

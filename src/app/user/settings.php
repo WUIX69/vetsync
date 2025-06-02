@@ -8,10 +8,7 @@
     <title>Settings - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
     <link rel="stylesheet" href="<?= featured('settings/css/settings.css', true); ?>">
-    <!-- Filepond -->
-    <link rel="stylesheet" href="https://unpkg.com/filepond/dist/filepond.min.css">
-    <link rel="stylesheet"
-        href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css">
+    <?= shared('elements/filepond/styles'); ?><!-- Filepond -->
 </head>
 
 <body>
@@ -63,20 +60,15 @@
         </main>
     </div>
 
+    <!-- rcs Scripts -->
     <?= shared('elements/scripts'); ?>
     <!-- Filepond -->
-    <script src="https://unpkg.com/filepond/dist/filepond.min.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-    <script
-        src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
-    <script
-        src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
-    <script
-        src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
+    <?= shared('elements/filepond/scripts'); ?>
     <!-- Profile -->
-    <script src="<?= featured('settings/js/profile.js', true); ?>"></script>
-    <script src="<?= featured('settings/js/profile-upload.js', true); ?>"></script>
+    <script src="<?= featured('settings/js/urlInputsBtn.js', true); ?>"></script>
+    <script src="<?= featured('settings/js/profileFetch.js', true); ?>"></script>
+    <script src="<?= featured('settings/js/profileForm.js', true); ?>"></script>
+    <script src="<?= featured('settings/js/profileUpload.js', true); ?>"></script>
 </body>
 
 </html>

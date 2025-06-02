@@ -26,7 +26,7 @@ $(function () {
     // Set server configuration
     profilePond.setOptions({
         server: {
-            url: apiUrl("settings") + "profile.php",
+            url: apiUrl("settings") + "profilePost.php",
             headers: {},
             timeout: 7000,
             withCredentials: false,
