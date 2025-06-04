@@ -40,9 +40,9 @@
                                     <?= featured('settings/components/tab/profile'); ?>
                                     <!-- Profile Tab End -->
 
-                                    <!-- Account Tab Start -->
-                                    <?= featured('settings/components/tab/account'); ?>
-                                    <!-- Account Tab End -->
+                                    <!-- Change Password Tab Start -->
+                                    <?= featured('settings/components/tab/change-password'); ?>
+                                    <!-- Change Password Tab End -->
 
                                     <!-- Notification Tab Start -->
                                     <?= featured('settings/components/tab/notification'); ?>
@@ -65,10 +65,12 @@
     <!-- Filepond -->
     <?= shared('elements/filepond/scripts'); ?>
     <!-- Profile -->
-    <script src="<?= featured('settings/js/urlInputsBtn.js', true); ?>"></script>
+    <script src="<?= featured('settings/js/profileUrlInputs.js', true); ?>"></script>
     <script src="<?= featured('settings/js/profileFetch.js', true); ?>"></script>
     <script src="<?= featured('settings/js/profileForm.js', true); ?>"></script>
     <script src="<?= featured('settings/js/profileUpload.js', true); ?>"></script>
+    <!-- Change Password -->
+    <script src="<?= featured('settings/js/changePasswordForm.js', true); ?>"></script>
 </body>
 
 </html>

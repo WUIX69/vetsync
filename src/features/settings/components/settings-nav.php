@@ -43,8 +43,8 @@
         <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#profile">
             <i class="bx bx-user-circle"></i>Profile
         </button>
-        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#account">
-            <i class="bx bx-shield-alt"></i>Account
+        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#changePassword">
+            <i class="bx bx-shield-alt"></i>Change Password
         </button>
         <button class="nav-link" data-bs-toggle="pill" data-bs-target="#notification">
             <i class="bx bx-bell"></i>Notifications

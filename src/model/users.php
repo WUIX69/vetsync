@@ -52,7 +52,7 @@ class Users
         return ($email === $admin['email']) ? $admin : [];
     }
 
-    function store($data = [])
+    public function store($data = [])
     {
         try {
             $this->conn->beginTransaction();
@@ -85,7 +85,7 @@ class Users
         }
     }
 
-    function update($data = [])
+    public function update($data = [])
     {
         try {
 
@@ -129,4 +129,35 @@ class Users
             ];
         }
     }
+
+    public function updateWherePassword($new_password = null, $user_uuid = null)
+    {
+        try {
+            $this->conn->beginTransaction();
+            $stmt = $this->conn->prepare("
+                UPDATE users SET 
+                    password=?
+                WHERE uuid=?
+            ");
+
+            $stmt->execute([
+                $new_password,
+                $user_uuid
+            ]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'Password updated successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Password update failed.',
+            ];
+        }
+    }
+
 }

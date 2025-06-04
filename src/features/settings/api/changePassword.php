@@ -1,0 +1,39 @@
+<?php
+
+include '../../../core/app.php';
+apiHeaders();
+
+use VetSync\Model\Users;
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $response['message'] = 'Invalid request method';
+    echo json_encode($response);
+    exit;
+}
+
+try {
+
+    $user_uuid = userData()['uuid'] ?? null;
+    $currentPassword = $_POST['current_password'];
+    $newPassword = $_POST['new_password'];
+
+    $user = new Users();
+    $UserOGPassword = $user->single($user_uuid)['password'] ?? null;
+
+    // Check if current password is correct
+    if (!password_verify($currentPassword, $UserOGPassword)) {
+        $response['message'] = 'Current password is incorrect';
+    }
+    // Update password
+    else {
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT); // Hash new password
+        $response = $user->updateWherePassword($hashedPassword, $user_uuid);
+    }
+
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    $response['message'] = $e->getMessage();
+}
+
+echo json_encode($response);
+exit;

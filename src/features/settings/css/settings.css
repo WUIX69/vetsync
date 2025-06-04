@@ -30,3 +30,9 @@ main section.settings .ui.form .field label {
 main section.settings .tab-header p {
     color: var(--color-dark-variant);
 }
+
+main section.settings .ui.form .field input,
+main section.settings .ui.form .field textarea,
+main section.settings .ui.form .field .ui.dropdown {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
