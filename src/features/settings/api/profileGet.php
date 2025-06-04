@@ -3,7 +3,7 @@
 include '../../../core/app.php';
 apiHeaders();
 
-// use VetSync\Model\Users;
+use VetSync\Model\Users;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     $response['message'] = 'Invalid request GET method';
@@ -11,28 +11,30 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-// $user_uuid = userData()['uuid'];
+$user_uuid = userData()['uuid'];
 // $action = $_GET['action'];
 
 try {
 
-    // $user = new Users();
-    $data = userData();
-    $data['urls'] = $data['urls'] ? explode(',', $data['urls']) : []; // Format the urls array
+    $user = new Users();
+    $data = $user->single($user_uuid) ?? [];
 
-    // Remove unwanted fields, security purposes
-    unset($data['uuid']);
-    unset($data['created_at']);
-    unset($data['is_dark']);
-    unset($data['type']);
-    unset($data['password']);
-    unset($data['profile']);
-    unset($data['name']);
+    // Fetch only the needed data
+    $userData = [
+        'firstname' => $data['firstname'],
+        'lastname' => $data['lastname'],
+        'email' => $data['email'],
+        'bio' => $data['bio'],
+        'telephone' => $data['telephone'],
+        'dob' => $data['dob'],
+        'location' => $data['location'],
+        'urls' => $data['urls'] ? explode(',', $data['urls']) : [], // Format the urls array
+    ];
 
     $response = array_merge($response, [
         'success' => true,
         'message' => 'Profile data fetched successfully',
-        'data' => $data,
+        'data' => $userData,
     ]);
 
 } catch (Exception $e) {
