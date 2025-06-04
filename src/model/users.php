@@ -56,8 +56,19 @@ class Users
     {
         try {
             $this->conn->beginTransaction();
-            $stmt = $this->conn->prepare("INSERT INTO users (uuid, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$data['uuid'], $data['firstname'], $data['lastname'], $data['email'], $data['password']]);
+            $stmt = $this->conn->prepare("
+                INSERT INTO users (
+                    uuid, firstname, lastname, email, password
+                ) VALUES (?, ?, ?, ?, ?)
+            ");
+
+            $stmt->execute([
+                $data['uuid'],
+                $data['firstname'],
+                $data['lastname'],
+                $data['email'],
+                $data['password']
+            ]);
 
             $this->conn->commit();
             return [
