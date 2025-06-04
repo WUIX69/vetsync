@@ -370,11 +370,11 @@
     <div class="container-body pusher">
         <!-- Sidebar -->
         <?= partial('layouts/sidebar') ?> <!-- Sidebar -->
+        <!-- Navbar -->
+        <?= partial('layouts/navbar') ?> <!-- Navbar -->
 
         <!-- Main Content -->
         <main class="container-main">
-            <!-- Header -->
-            <?= featured('admin/dashboard/components/header') ?>
 
             <div class="row">
                 <div class="col-lg-12">
@@ -689,11 +689,6 @@
             });
         });
     </script> -->
-</body>
-
-</html>
-});
-</script> -->
 </body>
 
 </html>

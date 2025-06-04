@@ -20,11 +20,11 @@
     <div class="container-body pusher">
         <!-- Sidebar -->
         <?= partial('layouts/sidebar') ?>
+        <!-- Header -->
+        <?= partial('layouts/navbar') ?>
 
         <!-- Main Content -->
         <main class="container-main">
-            <!-- Header -->
-            <?= featured('dashboard/components/header-admin') ?>
 
             <div class="row">
                 <div class="col-lg-9">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-lg-3">
                     <!-- Settings Nav -->
-                    <?= featured('admin/settings/components/settings-nav-admin') ?>
+                    <?= featured('settings/components/settings-nav-admin') ?>
                 </div>
             </div>
         </main>
