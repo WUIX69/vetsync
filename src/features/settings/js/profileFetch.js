@@ -10,14 +10,18 @@ function getProfile() {
         },
         success: function (response) {
             // console.log(response);
-            // alert(response.message);
             // return false;
 
             $.each(response.data, function (name, value) {
                 if (name == "urls") {
-                    $.each(value, function (index, url) {
-                        $($('input[name="urls[]"]')[index]).val(url);
-                    });
+                    const urlInputs = $(".url-inputs");
+                    if (value.length > 0) urlInputs.empty();
+
+                    value.forEach((url) =>
+                        urlInputs.append(
+                            `<input type="url" placeholder="Enter your URL" name="urls[]" value="${url}">`
+                        )
+                    );
                 } else {
                     // Populate normal input fields
                     $(`[name="${name}"]`).val(value);

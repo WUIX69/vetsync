@@ -18,7 +18,7 @@ try {
 
     // $user = new Users();
     $data = userData();
-    $data['urls'] = explode(',', $data['urls']); // Format the urls array
+    $data['urls'] = $data['urls'] ? explode(',', $data['urls']) : []; // Format the urls array
 
     // Remove unwanted fields, security purposes
     unset($data['uuid']);
