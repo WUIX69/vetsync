@@ -62,12 +62,15 @@
     </div>
     <div class="section-divider"></div>
     <form class="ui form" id="profileForm">
-        <!-- Profile Picture -->
-        <div class="avatar-upload">
-            <input type="file" class="filepond profile-pond" name="profile">
+        <!-- Profile Upload -->
+        <div class="field">
+            <div class="avatar-upload">
+                <input type="file" class="filepond profile-pond ignore" name="profile">
+            </div>
         </div>
 
         <div class="two fields">
+            <!-- Firstname -->
             <div class="field">
                 <label for="firstname">Firstname *</label>
                 <input type="text" placeholder="Enter your first name" name="firstname" value="">
@@ -75,6 +78,7 @@
                     This is your first name. It will be visible to others on your profile.
                 </div>
             </div>
+            <!-- Lastname -->
             <div class="field">
                 <label for="lastname">Lastname *</label>
                 <input type="text" placeholder="Enter your last name" name="lastname" value="">
