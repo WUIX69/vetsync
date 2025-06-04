@@ -1,6 +1,11 @@
 $(function () {
     $("#profileForm").form({
         fields: {
+            profile: {
+                identifier: "profile",
+                optional: true,
+                rules: [],
+            },
             firstname: {
                 identifier: "firstname",
                 rules: [
@@ -79,21 +84,22 @@ $(function () {
         onSuccess: function (event, fields) {
             event.preventDefault();
             const $submitBtn = $(this).find("button[type=submit]");
-            // const formData = new FormData(this); // Only use when a file is included
+            // const formData = new FormData(this); // Only use when uploading a file is included
 
-            // console.log(formData);
+            // Use Serialize instead of fields for the form (includes all urls[])
+            let formSerialized = $(this).serializeArray();
+            formSerialized.push({ name: "action", value: "profile-update" }); // Add action
+
+            // console.log(formSerialized);
             // console.log(fields);
             // return false;
 
             $.ajax({
                 url: apiUrl("settings") + "profilePost.php",
                 method: "POST",
-                data: {
-                    action: "profile-update",
-                    ...fields,
-                },
-                // processData: false, // Only use when FormData is used
-                // contentType: false, // Only use when FormData is used
+                data: formSerialized,
+                // processData: false, // Only use when FormData
+                // contentType: false, // Only use when FormData
                 dataType: "json",
                 timeout: 5000,
                 beforeSend: function () {
