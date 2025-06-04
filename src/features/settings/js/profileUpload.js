@@ -30,6 +30,7 @@ $(function () {
             headers: {},
             timeout: 7000,
             withCredentials: false,
+            credit: false,
             process: {
                 url: "/",
                 method: "POST",
@@ -40,6 +41,8 @@ $(function () {
                 onload: (jsonResponse) => {
                     const response = JSON.parse(jsonResponse);
                     alert(response.message);
+                    // return false;
+
                     profilePond.removeFiles();
 
                     // Update all visible img src that uses profile photo with fade animation

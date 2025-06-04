@@ -80,6 +80,39 @@ class Attachments
         }
     }
 
+    public function update($reference_model, $reference_uuid, $data = [])
+    {
+        try {
+            $this->conn->beginTransaction();
+            $sql = "UPDATE attachments SET 
+                        folder = :folder, 
+                        filename = :filename
+                    WHERE reference_model = :reference_model 
+                    AND reference_uuid = :reference_uuid";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':folder' => $data['folder'],
+                ':filename' => $data['filename'],
+                ':reference_model' => $reference_model,
+                ':reference_uuid' => $reference_uuid
+            ]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'Attachment updated successfully',
+            ];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Failed to update attachment: ' . $e->getMessage(),
+            ];
+        }
+    }
+
     public function delete($reference_model, $reference_uuid)
     {
         try {
