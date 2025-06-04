@@ -46,7 +46,7 @@ class Users
             'id' => 1,
             'name' => 'admin',
             'email' => 'admin@mail.com',
-            'password' => '$2y$10$xKIlO8qhCbD5hxi466mlHupG5f8LkDakJia8T90kbwsBpS/RjNhg2'
+            'password' => '$2y$10$xKIlO8qhCbD5hxi466mlHupG5f8LkDakJia8T90kbwsBpS/RjNhg2' // admin
         ];
 
         return ($email === $admin['email']) ? $admin : [];

@@ -1,6 +1,6 @@
 <section class="header">
     <div class="container">
-        <h1>Pet Records Management</h1>
+        <h1>Users Management</h1>
 
         <!-- Nav -->
         <div class="nav">
