@@ -80,6 +80,39 @@ class Attachments
         }
     }
 
+    public function storeWhereTemporary($folder, $filename)
+    {
+        try {
+            $this->conn->beginTransaction();
+            $sql = "INSERT INTO attachments_temporary (
+                        folder, 
+                        filename
+                    ) VALUES (
+                        :folder, 
+                        :filename
+                    )";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':folder' => $folder,
+                ':filename' => $filename
+            ]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'Attachment stored on temporary table successfully',
+            ];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Failed to store attachment on temporary table: ' . $e->getMessage(),
+            ];
+        }
+    }
+
     public function update($reference_model, $reference_uuid, $data = [])
     {
         try {
@@ -138,6 +171,35 @@ class Attachments
             return [
                 'success' => false,
                 'message' => 'Failed to delete attachment: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public function deleteWhereTemporary($folder, $filename)
+    {
+        try {
+            $this->conn->beginTransaction();
+            $sql = "DELETE FROM attachments_temporary 
+                    WHERE folder = :folder 
+                    AND filename = :filename";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([
+                ':folder' => $folder,
+                ':filename' => $filename
+            ]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'Successfully deleted attachment from the temporary table',
+            ];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Failed to delete attachment on temporary table: ' . $e->getMessage(),
             ];
         }
     }
