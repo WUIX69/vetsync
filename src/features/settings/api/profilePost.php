@@ -13,6 +13,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+function urlsHandler($urls = null)
+{
+    if (is_array($urls) && !empty($urls)) {
+        // Remove empty values
+        $filtered = array_filter($urls, function ($url) {
+            return trim($url) !== '';
+        });
+        // Only implode if there are any non-empty values left
+        return !empty($filtered) ? implode(',', $filtered) : null;
+    }
+
+    return null;
+}
+
 try {
 
     $user_uuid = userData()['uuid'] ?? null;
@@ -54,7 +68,7 @@ try {
             'email' => $_POST['email'],
             'location' => $_POST['location'],
             'bio' => $_POST['bio'] ? $_POST['bio'] : null,
-            'urls' => $_POST['urls'] ? implode(',', $_POST['urls']) : null,
+            'urls' => urlsHandler($_POST['urls']),
         ];
 
         // Update profile
