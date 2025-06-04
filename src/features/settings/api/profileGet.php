@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-$user_uuid = userData()['uuid'];
-// $action = $_GET['action'];
-
 try {
+
+    $user_uuid = userData()['uuid'];
+    // $action = $_GET['action'];
 
     $user = new Users();
     $data = $user->single($user_uuid) ?? [];
