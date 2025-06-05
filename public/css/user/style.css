@@ -31,7 +31,7 @@ body {
 }
 
 header.site-header {
-    background: #031224;
+    background: #006a71;
 }
 
 header.site-header .nav {
@@ -39,7 +39,7 @@ header.site-header .nav {
     align-items: center;
     justify-content: space-between;
     padding: 20px 20px 14px;
-    border-bottom: 2px solid #1e293b !important;
+    border-bottom: 2px solid #48a6a7 !important;
 }
 
 header.site-header .nav .logo {
@@ -84,7 +84,7 @@ header.site-header .nav .right-section {
 
 header.site-header .nav .right-section > i {
     color: #f1f3f2;
-    background: #1e293b;
+    background: #48a6a7;
     padding: 12px;
     border-radius: 50%;
     cursor: pointer;
@@ -93,7 +93,7 @@ header.site-header .nav .right-section > i {
 header.site-header .nav .right-section .profile {
     display: flex;
     align-items: center;
-    background: #1e293b;
+    background: #48a6a7;
     padding: 5px 10px;
     border-radius: 50px;
     gap: 10px;
@@ -165,6 +165,8 @@ main.site-main {
     margin: 0;
     padding: 0;
     position: relative;
+
+    /* background: #f2efe7; */
 }
 
 main .site-main section {
