@@ -57,14 +57,6 @@ $activeLink = uriPagePath();
                     </div>
                 </a>
             </li>
-            <li class="nav-item <?= $activeLink == 'records' ? 'active' : ''; ?>">
-                <a class="nav-link" href="records.php">
-                    <div class="nav-content">
-                        <span class="material-icons-sharp">folder</span>
-                        <h3>Records</h3>
-                    </div>
-                </a>
-            </li>
             <li class="nav-item <?= $activeLink == 'settings' ? 'active' : ''; ?>">
                 <div class="nav-link">
                     <div class="nav-content">
