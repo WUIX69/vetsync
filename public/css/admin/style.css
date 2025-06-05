@@ -645,7 +645,8 @@ main section .dt-container.dt-semanticUI table colgroup {
 
 main section .dt-container.dt-semanticUI .dt-scroll:has(table.quick-view) {
     /* Table custom width fix for quick-view table */
-    max-width: 840px;
+    /* max-width: 840px; */
+    position: relative;
     /* overflow: hidden; */
 }
 /*######################### DATA TABLES CUSTOM STYLES END #########################*/

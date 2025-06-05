@@ -28,7 +28,6 @@
 
         <!-- Main Content -->
         <main class="container-main">
-
             <div class="row">
                 <div class="col-lg-9">
                     <!-- User Stats -->
@@ -36,13 +35,14 @@
 
                     <!-- New Users -->
                     <?= featured('users/components/new-users') ?>
-
-                    <!-- Users List -->
-                    <?= featured('users/components/users-list') ?>
                 </div>
                 <div class="col-lg-3">
-                    <!-- Recent Activity -->
-                    <?= featured('users/components/recent-act') ?>
+                    <!-- System Info -->
+                    <?= featured('users/components/sys-info') ?>
+                </div>
+                <div class="col-lg-12">
+                    <!-- Users List -->
+                    <?= featured('users/components/users-list') ?>
                 </div>
             </div>
         </main>
