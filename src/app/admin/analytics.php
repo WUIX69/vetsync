@@ -17,11 +17,11 @@
     <div class="container-body pusher">
         <!-- Sidebar -->
         <?= partial('layouts/sidebar') ?> <!-- Sidebar -->
+        <?= partial('layouts/navbar') ?> <!-- Navbar -->
 
         <!-- Main Content -->
         <main class="container-main">
-            <!-- Header Navbar -->
-            <?= featured('analytics/components/header') ?>
+
 
             <?= featured('analytics/components/stats') ?>
             <div class="row">

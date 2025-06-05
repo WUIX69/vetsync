@@ -19,6 +19,9 @@ switch ($activeLink) {
     case 'products':
         $navbarTitle = 'products';
         break;
+    case 'analytics':
+        $navbarTitle = 'analytics';
+        break;
     case 'settings':
         $navbarTitle = 'settings';
         break;
