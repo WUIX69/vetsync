@@ -17,7 +17,7 @@
 
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
-        <?= featured('admin/users/components/user-modal') ?> <!-- User Modal -->
+        <?= featured('users/components/user-modal') ?> <!-- User Modal -->
     </div>
 
     <div class="container-body pusher">

@@ -32,16 +32,16 @@
                     <section class="settings">
                         <div class="tab-content container box">
                             <!-- Profile Tab -->
-                            <?= featured('settings/components/tab-admin/profile-admin') ?>
+                            <?= featured('settings/components/tab/profile-admin') ?>
 
                             <!-- Account Tab -->
-                            <?= featured('settings/components/tab-admin/account-admin') ?>
+                            <?= featured('settings/components/tab/account-admin') ?>
 
                             <!-- Notification Tab -->
-                            <?= featured('settings/components/tab-admin/notification-admin') ?>
+                            <?= featured('settings/components/tab/notification-admin') ?>
 
                             <!-- Preferences Tab -->
-                            <?= featured('settings/components/tab-admin/preferences-admin') ?>
+                            <?= featured('settings/components/tab/preferences-admin') ?>
                         </div>
                     </section>
                 </div>
