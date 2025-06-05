@@ -1,7 +1,7 @@
 <style>
     main section.status {
         padding: 20px 20px 26px;
-        background: #031224;
+        background: #006A71;
         border-radius: 0 0 30px 30px;
     }
 
@@ -48,7 +48,7 @@
     }
 
     main section.status .items-list .item.item-4 {
-        background: #031224;
+        background: #006A71;
         padding: 0;
         margin: 0;
     }

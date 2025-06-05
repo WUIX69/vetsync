@@ -10,10 +10,10 @@ $(function () {
                 {
                     label: "Time",
                     data: [8, 6, 7, 6, 10, 8, 4],
-                    backgroundColor: "#1e293b",
+                    backgroundColor: "#48A6A7",
                     borderWidth: 3,
                     borderRadius: 6,
-                    hoverBackgroundColor: "#60a5fa",
+                    hoverBackgroundColor: "#9ACBD0",
                 },
             ],
         },
@@ -23,15 +23,21 @@ $(function () {
             scales: {
                 x: {
                     border: {
-                        display: true,
+                        display: false,
                     },
                     grid: {
-                        display: true,
-                        color: "#1e293b",
+                        display: false,
+                        // color: "#48A6A7",
+                    },
+                    ticks: {
+                        color: "#FFFFFF",
                     },
                 },
                 y: {
                     ticks: {
+                        display: false,
+                    },
+                    border: {
                         display: false,
                     },
                 },
