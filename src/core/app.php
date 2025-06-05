@@ -9,11 +9,3 @@ require_once __DIR__ . '/session.php';
 
 require_once __DIR__ . '/../utils/php/media.php';
 require_once __DIR__ . '/../services/userData.php';
-
-// Example usage:
-// $dbConnection = Config::getDB();
-// $appName = Config::get('APP_NAME');
-// $dateFormat = Config::get('DATE_FORMAT');
-
-// Example of formatting current date
-// $today = date(Config::get('DATE_FORMAT'));
