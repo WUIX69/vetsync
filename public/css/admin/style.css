@@ -529,7 +529,7 @@ main section .table-list .table-container .table .ui.dropdown .icon {
 
 /*######################### DATA TABLES CUSTOM STYLES (.dt-container) #########################*/
 main section:has(.table-list .table-container .dt-container) {
-    width: fit-content !important;
+    width: 100% !important; /* Alternative: fit-content */
 }
 
 main section .table-list .table-container .dt-container th {
