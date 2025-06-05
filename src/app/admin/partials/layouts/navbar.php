@@ -29,6 +29,7 @@ switch ($activeLink) {
         $navbarTitle = 'unknown';
         break;
 }
+$navbarTitle = $navbarTitle != 'dashboard' ? $navbarTitle . ' Management' : $navbarTitle;
 ?>
 <nav class="navbar">
     <div class="container">
