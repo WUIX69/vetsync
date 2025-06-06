@@ -6,11 +6,8 @@
     <?= shared('elements/meta') ?>
     <title>Users Management - Admin</title>
     <?= shared('elements/styles') ?>
-
-    <!-- Required for DataTables -->
-    <link rel="stylesheet" href="<?= asset('lib/DataTables/datatables.min.css') ?>">
-    <link rel="stylesheet" href="<?= asset('lib/DataTables/dataTables.semanticui.min.css') ?>">
-    <link rel="stylesheet" href="<?= asset('lib/DataTables/responsive.semanticui.min.css') ?>">
+    <!-- DataTables -->
+    <?= shared('elements/dataTables/styles') ?>
 </head>
 
 <body>
@@ -41,8 +38,8 @@
                     <?= featured('users/components/sys-info') ?>
                 </div>
                 <div class="col-lg-12">
-                    <!-- Users List -->
-                    <?= featured('users/components/users-list') ?>
+                    <!-- Users Table -->
+                    <?= featured('users/components/users-table') ?>
                 </div>
             </div>
         </main>
@@ -50,13 +47,10 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <!-- Required for DataTables -->
-    <script src="<?= asset('lib/DataTables/datatables.min.js') ?>"></script>
-    <script src="<?= asset('lib/DataTables/dataTables.semanticui.min.js') ?>"></script>
-    <script src="<?= asset('lib/DataTables/dataTables.responsive.min.js') ?>"></script>
-    <script src="<?= asset('lib/DataTables/responsive.semanticui.min.js') ?>"></script>
+    <!-- DataTables -->
+    <?= shared('elements/dataTables/scripts') ?>
 
-    <!-- Required for tables -->
+    <!-- Utils -->
     <script src="<?= utils('js/formatters.js', true) ?>"></script>
     <script src="<?= utils('js/tableListFilters.js', true) ?>"></script>
 

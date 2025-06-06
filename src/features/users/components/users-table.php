@@ -1,18 +1,18 @@
 <style>
-    main section.users-list .user-details {
+    main section.users-table table .user-details {
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
-    main section.users-list .user-details .image {
+    main section.users-table table .user-details .image {
         height: 35px !important;
         width: 35px !important;
         border: var(--img-border) !important;
     }
 </style>
 <!-- User List -->
-<section class="users-list">
+<section class="users-table">
     <h2 class="title">Users List</h2>
     <div class="container table-list box">
         <div class="table-filters">
