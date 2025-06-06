@@ -18,6 +18,27 @@ $(function () {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            scales: {
+                x: {
+                    border: {
+                        display: false,
+                    },
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        // color: "#FFFFFF",
+                    },
+                },
+                y: {
+                    ticks: {
+                        display: false,
+                    },
+                    border: {
+                        display: false,
+                    },
+                },
+            },
             plugins: {
                 legend: {
                     display: false,
