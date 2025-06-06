@@ -162,62 +162,147 @@
             transform: translateY(0);
         }
     }
+
+    /* Product Form Modal */
+    .product-form-modal .ui.form .field {
+        margin-bottom: 1.2rem;
+    }
+
+    .product-form-modal .ui.form label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .product-form-modal .ui.form .field.image-preview {
+        margin-top: 1rem;
+    }
+
+    .product-form-modal .ui.form .field.image-preview img {
+        max-width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+    }
 </style>
 <!-- Product Modal -->
-<div class="product-modal" id="productModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modalTitle">Add New Product</h3>
-            <button class="modal-close" id="closeModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form id="productForm">
-                <input type="hidden" id="productId">
-                <div class="form-group">
-                    <label for="productName">Product Name</label>
-                    <input type="text" class="form-control" id="productName" required>
-                </div>
-                <div class="form-group">
-                    <label for="productCategory">Category</label>
-                    <select class="form-select" id="productCategory" required>
-                        <option value="">Select Category</option>
-                        <option value="dog-food">Dog Food</option>
-                        <option value="cat-food">Cat Food</option>
-                        <option value="supplements">Supplements</option>
-                        <option value="accessories">Accessories</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="productPrice">Price ($)</label>
-                    <input type="number" class="form-control" id="productPrice" step="0.01" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label for="productStock">Stock Quantity</label>
-                    <input type="number" class="form-control" id="productStock" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label for="productDescription">Description</label>
-                    <textarea class="form-control" id="productDescription" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="productImage">Product Image</label>
-                    <input type="file" class="form-control" id="productImage" accept="image/*">
-                    <div class="image-preview">
-                        <img id="imagePreview" src="<?= asset('img/placeholder.jpg') ?>" alt="Product Image Preview">
+<div class="ui tiny modal product-form-modal" id="productModal">
+    <i class="close icon"></i>
+    <div class="header">
+        <i class="plus circle icon"></i> Add New Product
+    </div>
+    <div class="content">
+        <form class="ui form">
+            <div class="field">
+                <label>Product Name</label>
+                <input type="text" name="name" placeholder="Enter product name">
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <textarea name="description" rows="3" placeholder="Enter product description"></textarea>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Price</label>
+                    <div class="ui labeled input">
+                        <div class="ui label">$</div>
+                        <input type="number" name="price" placeholder="0.00">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="productStatus">Status</label>
-                    <select class="form-select" id="productStatus" required>
-                        <option value="available">Available</option>
-                        <option value="unavailable">Unavailable</option>
-                    </select>
+                <div class="field">
+                    <label>Stock</label>
+                    <input type="number" name="stock" placeholder="0">
                 </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
-            <button class="btn btn-primary" id="saveProductBtn">Save Product</button>
-        </div>
+            </div>
+            <div class="field">
+                <label>Status</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="status">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Status</div>
+                    <div class="menu">
+                        <div class="item" data-value="available">
+                            <i class="check circle green icon"></i>Available
+                        </div>
+                        <div class="item" data-value="unavailable">
+                            <i class="times circle red icon"></i>Unavailable
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Category</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="category">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Category</div>
+                    <div class="menu">
+                        <div class="item" data-value="dogfood">
+                            <i class="food icon"></i>Dog Food
+                        </div>
+                        <div class="item" data-value="supplements">
+                            <i class="medkit icon"></i>Supplements
+                        </div>
+                        <div class="item" data-value="accessories">
+                            <i class="paw icon"></i>Accessories
+                        </div>
+                        <div class="item" data-value="grooming">
+                            <i class="shower icon"></i>Grooming
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Tags</label>
+                <div class="ui fluid multiple search selection dropdown" id="tagsDropdown">
+                    <input type="hidden" name="tags">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Tags</div>
+                    <div class="menu">
+                        <div class="item" data-value="organic">Organic</div>
+                        <div class="item" data-value="grainfree">Grain-Free</div>
+                        <div class="item" data-value="puppy">Puppy</div>
+                        <div class="item" data-value="senior">Senior</div>
+                        <div class="item" data-value="hypoallergenic">Hypoallergenic</div>
+                        <div class="item" data-value="bestseller">Bestseller</div>
+                        <div class="item" data-value="new">New Arrival</div>
+                        <div class="item" data-value="limited">Limited Edition</div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Specs</label>
+                <div class="ui fluid multiple search selection dropdown" id="specsDropdown">
+                    <input type="hidden" name="specs">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Specs</div>
+                    <div class="menu">
+                        <div class="item" data-value="smallbreed">Small Breed</div>
+                        <div class="item" data-value="largebreed">Large Breed</div>
+                        <div class="item" data-value="chicken">Chicken Flavor</div>
+                        <div class="item" data-value="beef">Beef Flavor</div>
+                        <div class="item" data-value="1kg">1kg Pack</div>
+                        <div class="item" data-value="5kg">5kg Pack</div>
+                        <div class="item" data-value="softchews">Soft Chews</div>
+                        <div class="item" data-value="liquid">Liquid</div>
+                        <div class="item" data-value="tablet">Tablet</div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Upload Image</label>
+                <input type="file" name="image">
+            </div>
+            <div class="field image-preview">
+                <img id="imagePreview" src="<?= asset('img/products/placeholder.jpg') ?>" alt="Product Image Preview">
+            </div>
+            <div class="actions">
+                <div class="ui black deny button">
+                    Cancel
+                </div>
+                <div class="ui positive right labeled icon button">
+                    Save
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
