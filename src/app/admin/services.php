@@ -6,43 +6,38 @@
     <?= shared('elements/meta') ?>
     <title>Services Management - Admin</title>
     <?= shared('elements/styles') ?>
-
 </head>
 
 <body>
 
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
-
-        <!-- Service Form Modal -->
-        <?= featured('services/components/service-form-modal') ?>
+        <?= featured('services/components/service-modal') ?><!-- Service Modal -->
+        <?= featured('services/components/category-modal') ?><!-- Service Category Modal -->
     </div>
 
     <div class="container-body pusher">
-        <!-- Sidebar -->
         <?= partial('layouts/sidebar') ?> <!-- Sidebar -->
-        <!-- Navbar -->
         <?= partial('layouts/navbar') ?> <!-- Navbar -->
 
         <!-- Main Content -->
         <main class="container-main">
-
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-12">
                     <!-- Services Stats -->
-                    <?= featured('services/components/services-stats') ?>
-
-                    <!-- Services List -->
-                    <?= featured('services/components/services-list') ?>
+                    <?= featured('services/components/stats') ?>
                 </div>
-
-                <!-- Right Section -->
+                <div class="col-lg-9">
+                    <!-- Categories Table -->
+                    <?= featured('services/components/categories-table') ?>
+                </div>
                 <div class="col-lg-3">
-                    <!-- Service Activity -->
-                    <?= featured('services/components/service-activity') ?>
-
-                    <!-- Most Booked Services -->
-                    <?= featured('services/components/most-booked-services') ?>
+                    <!-- Most Booked Services-->
+                    <?= featured('services/components/most-booked') ?>
+                </div>
+                <div class="col-lg-12">
+                    <!-- Services Table -->
+                    <?= featured('services/components/services-table') ?>
                 </div>
             </div>
         </main>
@@ -50,9 +45,8 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <script src="<?= featured('services/js/main-admin.js', true) ?>"></script>
-
-    </script>
+    <script src="<?= featured('services/js/serviceCategoriesTable.js', true) ?>"></script>
+    <script src="<?= featured('services/js/servicesTable.js', true) ?>"></script>
 </body>
 
 </html>

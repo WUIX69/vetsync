@@ -19,7 +19,7 @@
         border: 1px solid #e2e8f0;
     }
 </style>
-<div class="ui tiny modal service-form-modal">
+<div class="ui tiny modal service-form-modal" id="serviceModal">
     <i class="close icon"></i>
     <div class="header">
         <i class="plus circle icon"></i> Add New Service
@@ -92,15 +92,15 @@
             <div class="field image-preview">
                 <img id="imagePreview" src="<?= asset('img/services/placeholder.jpg') ?>" alt="Service Image Preview">
             </div>
+            <div class="actions">
+                <div class="ui black deny button">
+                    Cancel
+                </div>
+                <div class="ui positive right labeled icon button">
+                    Save
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
         </form>
-    </div>
-    <div class="actions">
-        <div class="ui black deny button">
-            Cancel
-        </div>
-        <div class="ui positive right labeled icon button">
-            Save
-            <i class="checkmark icon"></i>
-        </div>
     </div>
 </div>
