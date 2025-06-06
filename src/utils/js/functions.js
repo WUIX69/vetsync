@@ -30,6 +30,58 @@ function BASE_URL(path = "") {
     }
 }
 
+function urlFileHelper(dir, file, is_public = false) {
+    // Define the directory where your source files are located
+    const dir_path = is_public ? dir : "src/" + dir;
+    const url = dir_path + "/" + file.replace(/^\//, "");
+
+    // Check if the file exists
+    const checkUrlPath = BASE_URL() + url;
+    if (checkUrlPath) {
+        return BASE_URL(url); // Return the URL of the source file
+    }
+
+    return "";
+}
+
+function asset(file = "") {
+    return urlFileHelper("public", file, true);
+}
+
+function app($link = "") {
+    // Handle empty link case
+    if (link === "") {
+        return urlFileHelper("app", "landing");
+    }
+
+    // Check if the link ends with a trailing slash (indicating a directory)
+    if (link.endsWith("/")) {
+        url = link + "index.php";
+    }
+    // Check if the link has no slashes (just a directory name)
+    else if (link.indexOf("/") === -1) {
+        url = link + "/index.php";
+    }
+    // Handle paths with subdirectories
+    else {
+        // Check if the path contains a file extension
+        if (link.match(/\.[a-zA-Z0-9]+$/)) {
+            // If it already has an extension, use it as is
+            url = link;
+        } else {
+            // No extension, so add .php
+            url = link + ".php";
+        }
+    }
+
+    // Ensure we have the .php extension
+    if (url.endsWith(".php") === false) {
+        url += ".php";
+    }
+
+    return urlFileHelper("app", url);
+}
+
 // API URL Helper
 function apiUrl(feature = null) {
     return `${BASE_URL()}src/features/${feature}/api/`;
