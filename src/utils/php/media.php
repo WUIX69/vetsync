@@ -1,6 +1,6 @@
 <?php
 
-use VetSync\Model\Attachments;
+use VetSync\Models\Attachments;
 
 function mediaHelper($dir = '', $folder = '', $filename = '')
 {

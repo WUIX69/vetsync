@@ -3,7 +3,7 @@
 include '../../../core/app.php';
 apiHeaders();
 
-use VetSync\Model\Users;
+use VetSync\Models\Users;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method';

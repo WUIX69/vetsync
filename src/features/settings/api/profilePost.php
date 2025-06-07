@@ -3,8 +3,8 @@
 include '../../../core/app.php';
 apiHeaders();
 
-use VetSync\Model\Users;
-use VetSync\Model\Attachments;
+use VetSync\Models\Users;
+use VetSync\Models\Attachments;
 use VetSync\Services\FilePond;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
