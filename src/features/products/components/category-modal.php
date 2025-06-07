@@ -1,3 +1,8 @@
+<style>
+    .category-form-modal form .field textarea {
+        min-height: 100px;
+    }
+</style>
 <div class="ui tiny modal category-form-modal" id="productCategoryModal">
     <i class="close icon"></i>
     <div class="header">
@@ -5,6 +10,7 @@
     </div>
     <div class="content">
         <form class="ui form">
+            <input type="hidden" name="id"> <!-- For edit -->
             <div class="field">
                 <label>Category Name</label>
                 <input type="text" name="name" placeholder="Enter category name">
@@ -26,7 +32,7 @@
                             <div class="item" data-value="cut"><i class="cut icon"></i>Scalpel</div>
                             <div class="item" data-value="paw"><i class="paw icon"></i>Paw</div>
                             <div class="item" data-value="tooth"><i class="tooth icon"></i>Tooth</div>
-                            <div class="item" data-value="x-ray"><i class="x-ray icon"></i>X-Ray</div>
+                            <div class="item" data-value="heartbeat"><i class="heartbeat icon"></i>Heartbeat</div>
                             <div class="item" data-value="shower"><i class="shower icon"></i>Shower</div>
                             <div class="item" data-value="medkit"><i class="medkit icon"></i>Medkit</div>
                         </div>
@@ -46,13 +52,13 @@
                 </div>
             </div>
             <div class="actions">
-                <div class="ui black deny button">
+                <button class="ui black deny clear button" type="reset">
                     Cancel
-                </div>
-                <div class="ui positive right labeled icon button">
+                </button>
+                <button class="ui positive right labeled icon submit button" type="submit">
                     Save
                     <i class="checkmark icon"></i>
-                </div>
+                </button>
             </div>
         </form>
     </div>

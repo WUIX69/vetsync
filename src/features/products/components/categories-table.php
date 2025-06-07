@@ -1,7 +1,24 @@
 <style>
-    main section.categories-table table td:first-child i {
+    main section.categories-table table tbody td:first-child i {
         text-align: center;
         font-size: 1.1rem !important;
+    }
+
+    main section.categories-table table tbody td .category-status {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 1rem;
+        font-weight: 500;
+    }
+
+    main section.categories-table table tbody td .category-status.active {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    main section.categories-table table tbody td .category-status.inactive {
+        background-color: #ffebee;
+        color: #c62828;
     }
 </style>
 <section class="categories-table">
