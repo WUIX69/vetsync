@@ -424,6 +424,10 @@ main section.new-users .user small {
 /*#######--------- SECTION STATS END ---------#######*/
 
 /*#######--------- SECTION TABLE LIST DESIGN ---------#######*/
+main section .table-list {
+    overflow: visible;
+}
+
 main section .table-list .table-filters {
     display: flex;
     justify-content: space-between;
