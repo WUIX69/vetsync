@@ -15,6 +15,18 @@ class Users
         $this->conn = $conn;
     }
 
+    public function all()
+    {
+        try {
+            $stmt = $this->conn->prepare('SELECT * FROM users');
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
     public function single($uuid = null)
     {
         try {
