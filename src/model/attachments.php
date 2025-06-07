@@ -1,6 +1,6 @@
 <?php
 
-namespace VetSync\Services;
+namespace VetSync\Model;
 
 use PDO;
 use PDOException;
