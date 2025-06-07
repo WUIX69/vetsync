@@ -5,7 +5,7 @@ apiHeaders();
 
 use VetSync\Model\Users;
 use VetSync\Model\Attachments;
-use VetSync\Service\FilePond;
+use VetSync\Services\FilePond;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method';

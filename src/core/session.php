@@ -1,6 +1,6 @@
 <?php
 
-use VetSync\Service\SessionManager;
+use VetSync\Services\SessionManager;
 
 $sessionName = $_ENV['SESSION_NAME'] ?? 'VETSYNC_SESSION';
 $sessionLifetime = ($_ENV['SESSION_LIFETIME'] ?? 120) * 60; // convert minutes to seconds

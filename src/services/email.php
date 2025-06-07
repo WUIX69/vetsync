@@ -1,6 +1,6 @@
 <?php
 
-namespace VetSync\Service;
+namespace VetSync\Services;
 
 class Email
 {
