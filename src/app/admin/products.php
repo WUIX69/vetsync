@@ -46,7 +46,7 @@
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
     <script src="<?= featured('products/js/productCategories.js', true) ?>"></script>
-    <script src="<?= featured('products/js/productsTable.js', true) ?>"></script>
+    <script src="<?= featured('products/js/products.js', true) ?>"></script>
 
 </body>
 

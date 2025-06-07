@@ -1,60 +1,28 @@
 <style>
-    /* Admin Products Management Styles */
-    main section.products-table .product-image {
+    main section.products-table table tbody td .product-status {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 1rem;
+        font-weight: 500;
+        width: fit-content;
+        text-align: center;
+    }
+
+    main section.products-table table tbody td .product-status.available {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    main section.products-table table tbody td .product-status.unavailable {
+        background-color: #ffebee;
+        color: #c62828;
+    }
+
+    main section.products-table table tbody td .product-image {
         width: 60px;
         height: 60px;
         border-radius: 0.3rem;
         object-fit: cover;
-    }
-
-    main section.products-table .product-status {
-        display: inline-block;
-        padding: 0.25rem 0.6rem;
-        border-radius: 0.3rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        text-transform: uppercase;
-    }
-
-    main section.products-table .product-status.available {
-        background-color: rgba(47, 158, 68, 0.1);
-        color: #2f9e44;
-    }
-
-    main section.products-table .product-status.unavailable {
-        background-color: rgba(240, 62, 62, 0.1);
-        color: #f03e3e;
-    }
-
-    main section.products-table .actions-container {
-        display: flex;
-        gap: 0.5rem;
-    }
-
-    main section.products-table .action-btn {
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        border-radius: 0.3rem;
-        cursor: pointer;
-    }
-
-    main section.products-table .action-btn.edit-btn {
-        background-color: rgba(13, 110, 253, 0.1);
-        color: #0d6efd;
-    }
-
-    main section.products-table .action-btn.toggle-btn {
-        background-color: rgba(108, 117, 125, 0.1);
-        color: #6c757d;
-    }
-
-    main section.products-table .action-btn.delete-btn {
-        background-color: rgba(240, 62, 62, 0.1);
-        color: #f03e3e;
     }
 </style>
 <!-- Products Table -->
@@ -112,6 +80,10 @@
                         <th>Price</th>
                         <th>Stock</th>
                         <th>Status</th>
+                        <th>Tags</th>
+                        <th>Specs</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

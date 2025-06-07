@@ -20,10 +20,18 @@ class Products
         try {
             $stmt = $this->conn->prepare('SELECT * FROM products');
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Products fetched successfully.',
+                'data' => $data,
+            ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            return [];
+            return [
+                'success' => false,
+                'message' => 'Products fetching failed: ' . $e->getMessage(),
+            ];
         }
     }
 
@@ -32,10 +40,18 @@ class Products
         try {
             $stmt = $this->conn->prepare('SELECT * FROM products WHERE uuid=? LIMIT 1');
             $stmt->execute([$uuid]);
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+            $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Product fetched successfully.',
+                'data' => $data,
+            ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            return [];
+            return [
+                'success' => false,
+                'message' => 'Product fetching failed: ' . $e->getMessage(),
+            ];
         }
     }
 
@@ -47,21 +63,31 @@ class Products
             $stmt = $this->conn->prepare("
                 INSERT INTO products (
                     uuid, 
+                    category_id,
                     name, 
                     description, 
-                    price, 
-                    quantity
+                    status,
+                    og_price, 
+                    dc_price,
+                    stock,
+                    tags,
+                    specs
                 ) VALUES (
-                    ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )
             ");
 
             $stmt->execute([
                 $data['uuid'],
+                $data['category_id'],
                 $data['name'],
                 $data['description'],
-                $data['price'],
-                $data['quantity']
+                $data['status'],
+                $data['og_price'],
+                $data['dc_price'],
+                $data['stock'],
+                $data['tags'],
+                $data['specs']
             ]);
 
             $this->conn->commit();
@@ -86,19 +112,29 @@ class Products
 
             $stmt = $this->conn->prepare("
                 UPDATE products SET 
+                    category_id=?,
                     name=?, 
                     description=?, 
-                    price=?, 
-                    quantity=?,
+                    status=?,
+                    og_price=?, 
+                    dc_price=?,
+                    stock=?,
+                    tags=?,
+                    specs=?,
                     updated_at=NOW()
                 WHERE uuid=?
             ");
 
             $stmt->execute([
+                $data['category_id'],
                 $data['name'],
                 $data['description'],
-                $data['price'],
-                $data['quantity'],
+                $data['status'],
+                $data['og_price'],
+                $data['dc_price'],
+                $data['stock'],
+                $data['tags'],
+                $data['specs'],
                 $data['uuid']
             ]);
 
