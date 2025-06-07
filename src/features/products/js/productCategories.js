@@ -155,12 +155,14 @@ function deleteProductCategory(categoryId = null) {
 $(function () {
     getAllProductCategories();
 
+    // Get Single Product Category and open modal
     $("body").on("click", ".product-category-item", function (e) {
         if (e.target.closest(".ui.dropdown")) return false;
         const categoryId = $(this).data("category-id");
         getSingleProductCategory(categoryId);
     });
 
+    // Validate Product Category Modal Form
     productCategoryModalForm.form({
         fields: {
             icon: {
