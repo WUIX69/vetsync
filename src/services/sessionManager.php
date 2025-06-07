@@ -1,6 +1,6 @@
 <?php
 
-namespace VetSync\Services;
+namespace VetSync\Service;
 
 class SessionManager
 {

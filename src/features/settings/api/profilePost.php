@@ -4,8 +4,8 @@ include '../../../core/app.php';
 apiHeaders();
 
 use VetSync\Model\Users;
-use VetSync\Services\Attachments;
-use VetSync\Services\FilePond;
+use VetSync\Model\Attachments;
+use VetSync\Service\FilePond;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $response['message'] = 'Invalid request method';
