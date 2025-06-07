@@ -12,7 +12,7 @@
 
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
-        <?= shared('components/reminder-modal') ?> <!-- Reminder Modal -->
+        <?= featured('dashboard/components/reminder-modal') ?> <!-- Reminder Modal -->
         <?= shared('components/flyout') ?> <!-- Flyout -->
     </div>
 
@@ -35,7 +35,6 @@
                     <!-- Recent Orders -->
                     <?= featured('dashboard/components/recent-orders') ?>
                 </div>
-
                 <!-- Right Section -->
                 <div class="col-lg-3">
                     <!-- System Info -->
