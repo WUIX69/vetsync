@@ -291,9 +291,9 @@ body.scrolled .shared-standalone-content .top-redirect-button {
     margin-top: -0.35rem;
 }
 
-.ui.modal .ui.form .ui.dropdown:not(.search) .dropdown.icon {
+/* .ui.modal .ui.form .ui.dropdown:not(.search) .dropdown.icon {
     margin-top: 0.1rem;
-}
+} */
 
 .ui.modal .ui.form .ui.dropdown > .text > .image:not(.icon),
 .ui.dropdown > .text > img {
