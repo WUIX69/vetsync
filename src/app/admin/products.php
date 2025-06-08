@@ -6,6 +6,7 @@
     <?= shared('elements/meta') ?>
     <title>Admin Products Dashboard</title>
     <?= shared('elements/styles') ?>
+    <?= shared('elements/filepond/styles') ?>
 </head>
 
 <body>
@@ -45,8 +46,10 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
+    <?= shared('elements/filepond/scripts') ?>
     <script src="<?= featured('products/js/productCategories.js', true) ?>"></script>
     <script src="<?= featured('products/js/products.js', true) ?>"></script>
+    <script src="<?= featured('products/js/productFilepond.js', true) ?>"></script>
 
 </body>
 

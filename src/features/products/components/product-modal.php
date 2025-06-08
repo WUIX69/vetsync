@@ -15,7 +15,7 @@ $allCategories = $categories->all('products')['data'] ?? [];
         <i class="plus circle icon"></i> Add New Product
     </div>
     <div class="content">
-        <form class="ui form">
+        <form class="ui form" enctype="multipart/form-data">
             <input type="hidden" name="uuid"> <!-- For edit -->
             <div class="field">
                 <label>Product Name</label>
@@ -118,7 +118,7 @@ $allCategories = $categories->all('products')['data'] ?? [];
             </div>
             <div class="field">
                 <label>Upload Image</label>
-                <input type="file" name="image">
+                <input type="file" name="image" class="filepond image-pond">
             </div>
             <div class="actions">
                 <button class="ui black deny clear button" type="reset">

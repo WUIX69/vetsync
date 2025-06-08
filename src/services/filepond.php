@@ -228,4 +228,45 @@ class FilePond
             'filename' => $filename
         ];
     }
+
+    /**
+     * Load a file from the specified destination.
+     *
+     * @param string $folderName The folder name (UUID) to load
+     * @param string $destination The destination folder name
+     * @return array|bool File data or false on failure
+     */
+    public function load($folderName, $destination)
+    {
+        $basePath = $this->uploadDirectory . $destination;
+        $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
+
+        if (!is_dir($folderPath)) {
+            return false;
+        }
+
+        // Get the first file in the folder
+        $files = glob($folderPath . '/*');
+        if (empty($files) || !is_file($files[0])) {
+            return false;
+        }
+
+        $filePath = $files[0];
+        $filename = basename($filePath);
+        $fileSize = filesize($filePath);
+        $mimeType = mime_content_type($filePath);
+
+        // header('Content-Type: ' . ($mimeType ?: 'application/octet-stream')); // Default if not found
+        // header('Content-Length: ' . ($fileSize ?: 0));
+        // readfile($filePath);
+
+        // Return file data
+        return [
+            'name' => $filename,
+            'size' => $fileSize,
+            'type' => $mimeType,
+            'path' => $filePath,
+            'folder' => $folderName
+        ];
+    }
 }

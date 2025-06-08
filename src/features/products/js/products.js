@@ -6,6 +6,51 @@ const productsTableBody = productSection.find("table tbody");
 const productModal = $("#productModal");
 const productModalForm = productModal.find("form");
 
+// Product Image FilePond
+const productImagePond = FilePond.create(
+    document.querySelector(".image-pond"),
+    {
+        maxFiles: 2,
+        maxFileSize: "2MB",
+        allowMultiple: true,
+        allowFileTypes: ["image/*"],
+
+        labelIdle: `Drag & Drop your image or <span class="filepond--label-action">Browse</span>`,
+
+        imagePreviewHeight: 170,
+        imageCropAspectRatio: "1:1",
+        imageResizeTargetWidth: 200,
+        imageResizeTargetHeight: 200,
+    }
+);
+
+// Set Product Image FilePond server configuration
+productImagePond.setOptions({
+    server: {
+        url: apiUrl("products") + "productPond.php",
+        headers: {},
+        timeout: 7000,
+        withCredentials: false,
+        process: {
+            url: "",
+            method: "POST",
+            ondata: function (formData) {
+                formData.append("action", "process");
+                return formData;
+            },
+        },
+        revert: {
+            url: "",
+            method: "DELETE",
+        },
+        load: {
+            url: "?foldername=", // FilePond appends the source (your unique folder name) to this URL
+            method: "GET",
+        },
+        files: [], // Initially empty, will be populated by loadExistingFiles
+    },
+});
+
 function getAllProducts() {
     productsTableBody.empty();
 
@@ -118,6 +163,8 @@ function getAllProducts() {
 function getSingleProduct(productUuid = null) {
     if (!productUuid) return false;
 
+    loadExistingFiles(productUuid);
+
     $.ajax({
         url: apiUrl("products") + "products.php",
         method: "GET",
@@ -172,6 +219,43 @@ function deleteProduct(productUuid = null) {
     });
 }
 
+// Function to load existing files for the given record ID
+function loadExistingFiles(productUuid = null) {
+    if (!productUuid) return false;
+
+    $.ajax({
+        url: apiUrl("products") + "productPond.php", // PHP script to fetch file metadata
+        type: "GET",
+        dataType: "json",
+        data: { product_uuid: productUuid },
+        success: function (response) {
+            // console.log("response:", response);
+            // return false;
+
+            // Get the FilePond instance
+            if (response.success && response.files.length > 0) {
+                response.files.forEach(function (file) {
+                    // Add each existing file to FilePond
+                    productImagePond
+                        .addFile(file.source, {
+                            // Use file.source (which is your unique folder name)
+                            options: {
+                                type: file.options.type, // 'local'
+                                file: file.options.file, // original name (size and type aren't sent from fetch_files.php but FilePond handles it)
+                            },
+                        })
+                        .then(function (fileItem) {
+                            // Crucial: Set the serverId of the file item to the unique folder name
+                            // This links the FilePond item to the database entry for revert/load
+                            // fileItem.setServerId(file.metadata.serverId);
+                        });
+                });
+            }
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
 $(function () {
     getAllProducts();
 
@@ -180,6 +264,11 @@ $(function () {
         if (e.target.closest(".ui.dropdown")) return false;
         const productUuid = $(this).data("product-uuid");
         getSingleProduct(productUuid);
+    });
+
+    // Remove files from FilePond when modal is hidden
+    productModal.modal("setting", "onHide", function () {
+        productImagePond.removeFiles();
     });
 
     // Validate Product Modal Form
@@ -291,8 +380,8 @@ $(function () {
             if (formData.get("uuid")) action = "update";
             formData.append("action", action);
 
-            // console.log(formData);
-            // return false;
+            console.log(formData);
+            return false;
 
             $.ajax({
                 url: apiUrl("products") + "products.php", // Change to your actual products endpoint if needed

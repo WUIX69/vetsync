@@ -5,8 +5,12 @@ apiHeaders();
 
 use VetSync\Models\Products;
 use VetSync\Models\Categories;
+
 use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
+
+use VetSync\Services\FilePond;
+use VetSync\Models\Attachments;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     $response['message'] = 'Invalid request method';
@@ -14,14 +18,36 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
     exit;
 }
 
+function storePondHelper($filepond, $reference_model, $data, $attachments)
+{
+    global $response;
+
+    if (!empty($data['image'])) {
+        $result = $filepond->move($data['image'], $reference_model);
+        $attachment_data = array_merge($result, [
+            'reference_uuid' => $data['uuid'],
+            'reference_model' => $reference_model,
+        ]);
+
+        $response = $attachments->store($attachment_data);
+    }
+
+    return $response;
+}
+
 try {
 
-    $products = new Products();
     $categories = new Categories();
+    $products = new Products();
+    $filepond = new FilePond();
+    $attachments = new Attachments();
     $reference_model = 'products';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $attachments = new Attachments();
         $action = $_POST['action'] ?? null;
+
         $data = [
             'category_id' => $_POST['category_id'] ?? '',
             'name' => $_POST['name'] ?? '',
@@ -32,14 +58,23 @@ try {
             'status' => $_POST['status'] ?? '',
             'tags' => $_POST['tags'] ? $_POST['tags'] : null,
             'specs' => $_POST['specs'] ? $_POST['specs'] : null,
+            'image' => $_POST['image'] ?? null,
         ];
 
         if ($action === 'store') {
             $data['uuid'] = uuid();
-            $response = $products->store($data);
+            $response = storePondHelper($filepond, $reference_model, $data, $attachments);
+            if ($response['success']) {
+                $response = $products->store($data);
+            }
         } else if ($action === 'update') {
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
-            $response = $products->update($data);
+            $response = storePondHelper($filepond, $reference_model, $data, $attachments);
+            if ($response['success']) {
+                $response = $products->update($data);
+            }
+        } else {
+            $response['message'] = 'Invalid POST action';
         }
     }
 
@@ -71,6 +106,8 @@ try {
         } else if ($action === 'single') {
             $product_uuid = $_GET['uuid'] ?? null;
             $response = $products->single($product_uuid);
+        } else {
+            $response['message'] = 'Invalid GET action';
         }
     }
 
