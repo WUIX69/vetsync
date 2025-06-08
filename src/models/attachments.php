@@ -211,4 +211,28 @@ class Attachments
             ];
         }
     }
+
+    public function deleteWhereFolder($folder = null)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            $sql = "DELETE FROM attachments WHERE folder = :folder";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([':folder' => $folder]);
+
+            $this->conn->commit();
+            return [
+                'success' => true,
+                'message' => 'Successfully deleted attachment from the permanent table',
+            ];
+        } catch (PDOException $e) {
+            error_log($e->getMessage());
+            $this->conn->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Failed to delete attachment from the permanent table: ' . $e->getMessage(),
+            ];
+        }
+    }
 }
