@@ -2,14 +2,23 @@
 
 namespace VetSync\Services;
 
+use VetSync\Models\Attachments;
+
 class FilePond
 {
     private $uploadDirectory;
+    private $response;
+    private $attachments;
 
     public function __construct()
     {
+        global $response;
+        $this->response = $response;
+
         global $config;
         $this->uploadDirectory = $config['root_path'] . '/src/uploads/';
+
+        $this->attachments = new Attachments();
     }
 
     /**
@@ -20,17 +29,13 @@ class FilePond
      * @param array $args Additional arguments (optional)
      * @return array Returns the folder name and filename on success, empty array on failure
      */
-    public function store($file, $destination, $args = [])
+    public function storeWherePermanent($file, $destination, $args = [])
     {
-        $result = [
-            'folder' => '',
-            'filename' => ''
-        ];
 
         // Check for upload errors
         if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
             error_log('Upload error: ' . $file['error']);
-            return $result;
+            return $this->response;
         }
 
         // Set base destination path
@@ -39,7 +44,7 @@ class FilePond
         // Ensure base destination directory exists
         if (!is_dir($basePath) && !mkdir($basePath, 0777, true)) {
             error_log('Failed to create base directory: ' . $basePath);
-            return $result;
+            return $this->response;
         }
 
         // Create a unique UUID for the folder name
@@ -49,7 +54,7 @@ class FilePond
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
         if (!mkdir($folderPath, 0777, true)) {
             error_log('Failed to create folder: ' . $folderPath);
-            return $result;
+            return $this->response;
         }
 
         // Keep original filename
@@ -57,14 +62,24 @@ class FilePond
         $targetPath = $folderPath . DIRECTORY_SEPARATOR . $filename;
 
         // Move the uploaded file
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            return array_merge($result, [
-                'folder' => $folderName,
-                'filename' => $filename
-            ]);
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            return $this->response;
         }
 
-        return $result;
+        // Delete Existing file first
+        $oldFile = $this->attachments->single($args['reference_uuid']);
+        if ($oldFile['success'] && !empty($oldFile['data'])) {
+            $this->deleteWherePermanent($destination, $oldFile['data']['folder']);
+            $this->attachments->deleteWhereReference($destination, $args['reference_uuid']);
+        }
+
+        // Store new file
+        return $this->attachments->store([
+            'reference_model' => $destination,
+            'reference_uuid' => $args['reference_uuid'],
+            'folder' => $folderName,
+            'filename' => $filename,
+        ]);
     }
 
     /**
@@ -114,12 +129,13 @@ class FilePond
         return '';
     }
 
-    public function delete($destination, $folderName)
+    public function deleteWherePermanent($destination, $folderName)
     {
         $basePath = $this->uploadDirectory . $destination;
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
 
         if (!is_dir($folderPath)) {
+            error_log("Folder not found on $destination: " . $folderPath);
             return false;
         }
 
@@ -151,7 +167,7 @@ class FilePond
 
         // Check if folder exists
         if (!is_dir($folderPath)) {
-            error_log('Folder not found: ' . $folderPath);
+            error_log("Folder not found on temporary folder: " . $folderPath);
             return false;
         }
 
@@ -163,12 +179,7 @@ class FilePond
         }
 
         // Remove the folder
-        if (rmdir($folderPath)) {
-            return true;
-        }
-
-        // error_log('Failed to delete folder: ' . $folderPath);
-        return false;
+        return rmdir($folderPath);
     }
 
     public function move($folderName, $destination)
@@ -251,10 +262,6 @@ class FilePond
         $filename = basename($filePath);
         $fileSize = filesize($filePath);
         $mimeType = mime_content_type($filePath);
-
-        // header('Content-Type: ' . ($mimeType ?: 'application/octet-stream')); // Default if not found
-        // header('Content-Length: ' . ($fileSize ?: 0));
-        // readfile($filePath);
 
         // Return file data
         return [
