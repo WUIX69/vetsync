@@ -42,10 +42,18 @@ class Attachments
             $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid LIMIT 1";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute([':reference_uuid' => $reference_uuid]);
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+            $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Attachment fetched successfully',
+                'data' => $data,
+            ];
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            return [];
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch attachment: ' . $e->getMessage(),
+            ];
         }
     }
 
@@ -121,7 +129,7 @@ class Attachments
         }
     }
 
-    public function delete($reference_model, $reference_uuid)
+    public function deleteWhereReference($reference_model, $reference_uuid)
     {
         try {
             $this->conn->beginTransaction();
