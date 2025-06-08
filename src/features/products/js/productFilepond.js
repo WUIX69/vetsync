@@ -1,1 +1,3 @@
-return false; // Implement later
+$(function () {
+    return false; // Implement later
+});

@@ -3,11 +3,6 @@
 include '../../../core/app.php';
 apiHeaders();
 
-// You might need to set appropriate headers for CORS if your frontend is on a different domain
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-File-Id, X-Requested-With'); // X-File-Id is crucial for revert
-
 use VetSync\Services\FilePond;
 use VetSync\Models\Attachments;
 
@@ -15,16 +10,13 @@ try {
 
     $filepond = new FilePond();
     $attachments = new Attachments();
-
     $reference_model = 'products';
-    $foldername = isset($_SERVER['HTTP_X_FILE_ID']) ? $_SERVER['HTTP_X_FILE_ID'] : ($_GET['foldername'] ?? null);
-    // error_log("foldername: " . $foldername);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? null;
 
         if ($action === 'process') {
-            $response = $filepond->storeWhereTemporary($_FILES['image']);
+            $response = $filepond->storeWhereTemporary($_FILES['file']);
         } else {
             $response['message'] = 'Invalid FilePond POST action';
         }
@@ -61,7 +53,7 @@ try {
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-        $foldername = $foldername ?? file_get_contents('php://input');
+        $foldername = file_get_contents('php://input');
         $response = $filepond->deleteWhereTemporary($foldername);
     }
 

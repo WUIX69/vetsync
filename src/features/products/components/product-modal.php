@@ -118,7 +118,7 @@ $allCategories = $categories->all('products')['data'] ?? [];
             </div>
             <div class="field">
                 <label>Upload Image</label>
-                <input type="file" name="image" class="filepond image-pond">
+                <input type="file" name="file" class="filepond product-pond">
             </div>
             <div class="actions">
                 <button class="ui black deny clear button" type="reset">

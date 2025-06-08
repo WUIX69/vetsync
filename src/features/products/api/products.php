@@ -22,8 +22,8 @@ function storePondHelper($filepond, $reference_model, $data, $attachments)
 {
     global $response;
 
-    if (!empty($data['image'])) {
-        $result = $filepond->move($data['image'], $reference_model);
+    if (!empty($data['file'])) {
+        $result = $filepond->move($data['file'], $reference_model);
         $attachment_data = array_merge($result, [
             'reference_uuid' => $data['uuid'],
             'reference_model' => $reference_model,
@@ -44,8 +44,6 @@ try {
     $reference_model = 'products';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        $attachments = new Attachments();
         $action = $_POST['action'] ?? null;
 
         $data = [
@@ -58,7 +56,7 @@ try {
             'status' => $_POST['status'] ?? '',
             'tags' => $_POST['tags'] ? $_POST['tags'] : null,
             'specs' => $_POST['specs'] ? $_POST['specs'] : null,
-            'image' => $_POST['image'] ?? null,
+            'file' => $_POST['file'] ?? null,
         ];
 
         if ($action === 'store') {

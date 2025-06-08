@@ -8,7 +8,7 @@ const productModalForm = productModal.find("form");
 
 // Product Image FilePond
 const productImagePond = FilePond.create(
-    document.querySelector(".image-pond"),
+    document.querySelector(".product-pond"),
     {
         maxFiles: 2,
         maxFileSize: "2MB",
