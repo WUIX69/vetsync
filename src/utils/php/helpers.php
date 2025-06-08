@@ -39,4 +39,18 @@ class Helpers
 
         return $categories ?? $default;
     }
+
+    public static function settingsUrlHandler($urls = null)
+    {
+        if (is_array($urls) && !empty($urls)) {
+            // Remove empty values
+            $filtered = array_filter($urls, function ($url) {
+                return trim($url) !== '';
+            });
+            // Only implode if there are any non-empty values left
+            return !empty($filtered) ? implode(',', $filtered) : null;
+        }
+
+        return null;
+    }
 }
