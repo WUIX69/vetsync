@@ -123,7 +123,7 @@ class FilePond
             return false;
         }
 
-        // Remove all files inside the folder, then remove the folder itself
+        // Remove all files inside the folder
         foreach (glob($folderPath . '/*') as $file) {
             if (is_file($file)) {
                 unlink($file);
@@ -131,11 +131,7 @@ class FilePond
         }
 
         // Remove the folder
-        if (rmdir($folderPath)) {
-            return true;
-        }
-
-        return false;
+        return rmdir($folderPath);
     }
 
     /**
