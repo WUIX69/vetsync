@@ -25,12 +25,12 @@ function media($reference_uuid, $is_all = false)
 
     $attachment = [];
     if ($is_all) {
-        $attachment = $attachmentService->all($reference_uuid);
+        $attachment = $attachmentService->all($reference_uuid)['data'] ?? [];
     } else {
-        $attachment = $attachmentService->single($reference_uuid);
+        $attachment = $attachmentService->single($reference_uuid)['data'] ?? [];
     }
 
-    if (!$attachment) {
+    if (empty($attachment)) {
         return asset('img/profiles/profile.jpg');
     }
 
