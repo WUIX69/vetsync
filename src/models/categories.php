@@ -7,18 +7,21 @@ use PDOException;
 
 class Categories
 {
-    private $conn;
+    private static $conn;
 
-    public function __construct()
+    private static function conn()
     {
-        global $conn;
-        $this->conn = $conn;
+        if (!isset(self::$conn)) {
+            global $conn;
+            self::$conn = $conn;
+        }
+        return self::$conn;
     }
 
-    public function all($reference_model = null)
+    public static function all($reference_model = null)
     {
         try {
-            $stmt = $this->conn->prepare('SELECT * FROM categories WHERE reference_model=?');
+            $stmt = self::conn()->prepare('SELECT * FROM categories WHERE reference_model=?');
             $stmt->execute([$reference_model]);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -35,10 +38,10 @@ class Categories
         }
     }
 
-    public function single($id = null, $reference_model = null)
+    public static function single($id = null, $reference_model = null)
     {
         try {
-            $stmt = $this->conn->prepare('SELECT * FROM categories WHERE id=? AND reference_model=? LIMIT 1');
+            $stmt = self::conn()->prepare('SELECT * FROM categories WHERE id=? AND reference_model=? LIMIT 1');
             $stmt->execute([$id, $reference_model]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -55,12 +58,12 @@ class Categories
         }
     }
 
-    public function store($data = [])
+    public static function store($data = [])
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
-            $stmt = $this->conn->prepare("
+            $stmt = self::conn()->prepare("
                 INSERT INTO categories (
                     reference_model, 
                     icon, 
@@ -80,14 +83,14 @@ class Categories
                 $data['status']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => $data['reference_model'] . ' category created successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => $data['reference_model'] . ' category creation failed: ' . $e->getMessage(),
@@ -95,12 +98,12 @@ class Categories
         }
     }
 
-    public function update($data = [])
+    public static function update($data = [])
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
-            $stmt = $this->conn->prepare("
+            $stmt = self::conn()->prepare("
                 UPDATE categories SET 
                     icon=?, 
                     name=?, 
@@ -118,14 +121,14 @@ class Categories
                 $data['reference_model']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => $data['reference_model'] . ' category updated successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => $data['reference_model'] . ' category update failed: ' . $e->getMessage(),
@@ -133,22 +136,22 @@ class Categories
         }
     }
 
-    public function delete($id = null, $reference_model = null)
+    public static function delete($id = null, $reference_model = null)
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
-            $stmt = $this->conn->prepare('DELETE FROM categories WHERE id=? AND reference_model=?');
+            $stmt = self::conn()->prepare('DELETE FROM categories WHERE id=? AND reference_model=?');
             $stmt->execute([$id, $reference_model]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => $reference_model . ' category deleted successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => $reference_model . ' category deletion failed: ' . $e->getMessage(),

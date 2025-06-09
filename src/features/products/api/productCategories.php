@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
 
 try {
 
-    $categories = new Categories();
     $reference_model = 'products';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,10 +26,10 @@ try {
         ];
 
         if ($action === 'store') {
-            $response = $categories->store($data);
+            $response = Categories::store($data);
         } else if ($action === 'update') {
             $data['id'] = $_POST['id'] ?? null; // add id to data, required for update
-            $response = $categories->update($data);
+            $response = Categories::update($data);
         }
     }
 
@@ -38,16 +37,16 @@ try {
         $action = $_GET['action'] ?? null;
 
         if ($action === 'all') {
-            $response = $categories->all($reference_model);
+            $response = Categories::all($reference_model);
         } else if ($action === 'single') {
             $category_id = $_GET['id'] ?? null;
-            $response = $categories->single($category_id, $reference_model);
+            $response = Categories::single($category_id, $reference_model);
         }
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $category_id = $_GET['id'] ?? null;
-        $response = $categories->delete($category_id, $reference_model);
+        $response = Categories::delete($category_id, $reference_model);
     }
 
 } catch (Exception $e) {

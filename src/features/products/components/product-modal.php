@@ -1,7 +1,6 @@
 <?php
 use VetSync\Models\Categories;
-$categories = new Categories();
-$allCategories = $categories->all('products')['data'] ?? [];
+$categories = Categories::all('products')['data'] ?? [];
 ?>
 <style>
     .product-form-modal form .field textarea {
@@ -70,7 +69,7 @@ $allCategories = $categories->all('products')['data'] ?? [];
                         <div class="default text">Select Category</div>
                         <div class="menu">
                             <!-- Category Options -->
-                            <?php foreach ($allCategories as $category) { ?>
+                            <?php foreach ($categories as $category) { ?>
                                 <div class="item" data-value="<?= $category['id'] ?>">
                                     <i class="<?= $category['icon'] ?> icon"></i><?= $category['name'] ?>
                                 </div>

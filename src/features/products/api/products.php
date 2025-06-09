@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
 
 try {
 
-    $categories = new Categories();
     $products = new Products();
     $filepond = new FilePond();
     $reference_model = 'products';
@@ -63,10 +62,10 @@ try {
         if ($action === 'all') {
 
             $result = $products->all();
-            $result['data'] = array_map(function ($item) use ($categories, $reference_model) {
+            $result['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [
-                    'category_name' => Helpers::categoryName($categories->single($item['category_id'], $reference_model)['data']),
+                    'category_name' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
                     'status' => Helpers::productStatus($item['status']),
                     'tags' => $item['tags'] ? count(explode(',', $item['tags'])) : 0,
                     'specs' => $item['specs'] ? count(explode(',', $item['specs'])) : 0,
