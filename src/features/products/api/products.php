@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
 
 try {
 
-    $products = new Products();
     $filepond = new FilePond();
     $reference_model = 'products';
 
@@ -43,13 +42,13 @@ try {
             $data['uuid'] = uuid();
             $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             if ($response['success']) {
-                $response = $products->store($data);
+                $response = Products::store($data);
             }
         } else if ($action === 'update') {
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
             $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             if ($response['success']) {
-                $response = $products->update($data);
+                $response = Products::update($data);
             }
         } else {
             $response['message'] = 'Invalid POST action';
@@ -61,7 +60,7 @@ try {
 
         if ($action === 'all') {
 
-            $result = $products->all();
+            $result = Products::all();
             $result['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [
@@ -83,7 +82,7 @@ try {
 
         } else if ($action === 'single') {
             $product_uuid = $_GET['uuid'] ?? null;
-            $response = $products->single($product_uuid);
+            $response = Products::single($product_uuid);
         } else {
             $response['message'] = 'Invalid GET action';
         }
@@ -91,7 +90,7 @@ try {
 
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $product_uuid = $_GET['uuid'] ?? null;
-        $response = $products->delete($product_uuid);
+        $response = Products::delete($product_uuid);
     }
 
 } catch (Exception $e) {

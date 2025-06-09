@@ -7,18 +7,21 @@ use PDOException;
 
 class Products
 {
-    private $conn;
+    private static $conn;
 
-    public function __construct()
+    private static function conn()
     {
-        global $conn;
-        $this->conn = $conn;
+        if (!isset(self::$conn)) {
+            global $conn;
+            self::$conn = $conn;
+        }
+        return self::$conn;
     }
 
-    public function all()
+    public static function all()
     {
         try {
-            $stmt = $this->conn->prepare('SELECT * FROM products');
+            $stmt = self::conn()->prepare('SELECT * FROM products');
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -35,10 +38,10 @@ class Products
         }
     }
 
-    public function single($uuid = null)
+    public static function single($uuid = null)
     {
         try {
-            $stmt = $this->conn->prepare('SELECT * FROM products WHERE uuid=? LIMIT 1');
+            $stmt = self::conn()->prepare('SELECT * FROM products WHERE uuid=? LIMIT 1');
             $stmt->execute([$uuid]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -55,12 +58,12 @@ class Products
         }
     }
 
-    public function store($data = [])
+    public static function store($data = [])
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
-            $stmt = $this->conn->prepare("
+            $stmt = self::conn()->prepare("
                 INSERT INTO products (
                     uuid, 
                     category_id,
@@ -90,14 +93,14 @@ class Products
                 $data['specs']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Product created successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Product creation failed: ' . $e->getMessage(),
@@ -105,12 +108,12 @@ class Products
         }
     }
 
-    public function update($data = [])
+    public static function update($data = [])
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
-            $stmt = $this->conn->prepare("
+            $stmt = self::conn()->prepare("
                 UPDATE products SET 
                     category_id=?,
                     name=?, 
@@ -138,34 +141,34 @@ class Products
                 $data['uuid']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Product updated successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return 0;
         }
     }
 
-    public function delete($uuid = null)
+    public static function delete($uuid = null)
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
-            $stmt = $this->conn->prepare('DELETE FROM products WHERE uuid=?');
+            $stmt = self::conn()->prepare('DELETE FROM products WHERE uuid=?');
             $stmt->execute([$uuid]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Product deleted successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Product deletion failed: ' . $e->getMessage(),
