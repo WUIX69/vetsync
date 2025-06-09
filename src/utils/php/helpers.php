@@ -27,17 +27,10 @@ class Helpers
 
     public static function categoryName($category = [])
     {
-        $default = [
-            'icon' => 'folder outline grey',
-            'label' => 'Uncategorized',
+        return [
+            'icon' => $category['icon'] ?? 'folder outline grey',
+            'label' => $category['name'] ?? 'Uncategorized',
         ];
-
-        $categories = [
-            'icon' => $category['icon'],
-            'label' => $category['name'],
-        ];
-
-        return $categories ?? $default;
     }
 
     public static function settingsUrlHandler($urls = null)
