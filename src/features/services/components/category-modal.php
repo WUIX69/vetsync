@@ -5,6 +5,7 @@
     </div>
     <div class="content">
         <form class="ui form">
+            <input type="hidden" name="id">
             <div class="field">
                 <label>Category Name</label>
                 <input type="text" name="name" placeholder="Enter category name">
@@ -46,13 +47,13 @@
                 </div>
             </div>
             <div class="actions">
-                <div class="ui black deny button">
+                <button class="ui black deny clear button" type="reset">
                     Cancel
-                </div>
-                <div class="ui positive right labeled icon button">
+                </button>
+                <button class="ui positive right labeled icon submit button" type="submit">
                     Save
                     <i class="checkmark icon"></i>
-                </div>
+                </button>
             </div>
         </form>
     </div>
