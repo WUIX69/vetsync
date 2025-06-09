@@ -21,8 +21,7 @@ try {
         'password' => isset($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '',
     ];
 
-    $users = new Users();
-    $user = $users->store($data);
+    $user = Users::store($data);
     $response = array_merge($response, $user);
 
 } catch (Exception $e) {

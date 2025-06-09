@@ -16,8 +16,7 @@ try {
     $user_uuid = userData()['uuid'];
     // $action = $_GET['action'];
 
-    $user = new Users();
-    $data = $user->single($user_uuid) ?? [];
+    $data = Users::single($user_uuid) ?? [];
 
     // Fetch only the needed data
     $userData = [

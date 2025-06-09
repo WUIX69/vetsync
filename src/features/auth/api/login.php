@@ -18,9 +18,8 @@ try {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $users = new Users();
-    $user = $users->singleWhereUserEmail($email);
-    $admin = $users->singleWhereAdminEmail($email);
+    $user = Users::singleWhereUserEmail($email);
+    $admin = Users::singleWhereAdminEmail($email);
 
     if ($user && password_verify($password, $user['password'])) {
 

@@ -17,17 +17,15 @@ try {
     $currentPassword = $_POST['current_password'];
     $newPassword = $_POST['new_password'];
 
-    $user = new Users();
-    $UserOGPassword = $user->single($user_uuid)['password'] ?? null;
-
     // Check if current password is correct
+    $UserOGPassword = Users::single($user_uuid)['password'] ?? null;
     if (!password_verify($currentPassword, $UserOGPassword)) {
         $response['message'] = 'Current password is incorrect';
     }
     // Update password
     else {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT); // Hash new password
-        $response = $user->updateWherePassword($hashedPassword, $user_uuid);
+        $response = Users::updateWherePassword($hashedPassword, $user_uuid);
     }
 
 } catch (Exception $e) {

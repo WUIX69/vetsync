@@ -39,8 +39,7 @@ try {
         ];
 
         // Update profile
-        $user = new Users();
-        $response = $user->update($data);
+        $response = Users::update($data);
 
     } else {
         $response['message'] = 'Invalid profile action';

@@ -7,18 +7,21 @@ use PDOException;
 
 class Users
 {
-    private $conn;
+    private static $conn;
 
-    public function __construct()
+    private static function conn()
     {
-        global $conn;
-        $this->conn = $conn;
+        if (!isset(self::$conn)) {
+            global $conn;
+            self::$conn = $conn;
+        }
+        return self::$conn;
     }
 
-    public function all()
+    public static function all()
     {
         try {
-            $stmt = $this->conn->prepare('SELECT * FROM users');
+            $stmt = self::conn()->prepare('SELECT * FROM users');
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
         } catch (PDOException $e) {
@@ -27,10 +30,10 @@ class Users
         }
     }
 
-    public function single($uuid = null)
+    public static function single($uuid = null)
     {
         try {
-            $stmt = $this->conn->prepare('SELECT * FROM users WHERE uuid=? LIMIT 1');
+            $stmt = self::conn()->prepare('SELECT * FROM users WHERE uuid=? LIMIT 1');
             $stmt->execute([$uuid]);
             return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
         } catch (PDOException $e) {
@@ -39,10 +42,10 @@ class Users
         }
     }
 
-    public function singleWhereUserEmail($email = null)
+    public static function singleWhereUserEmail($email = null)
     {
         try {
-            $stmt = $this->conn->prepare("SELECT * FROM users WHERE email=? LIMIT 1");
+            $stmt = self::conn()->prepare("SELECT * FROM users WHERE email=? LIMIT 1");
             $stmt->execute([$email]);
             return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
         } catch (PDOException $e) {
@@ -51,7 +54,7 @@ class Users
         }
     }
 
-    public function singleWhereAdminEmail($email = null)
+    public static function singleWhereAdminEmail($email = null)
     {
         // Implement your admin query here, for now just return empty array
         $admin = [
@@ -64,11 +67,11 @@ class Users
         return ($email === $admin['email']) ? $admin : [];
     }
 
-    public function store($data = [])
+    public static function store($data = [])
     {
         try {
-            $this->conn->beginTransaction();
-            $stmt = $this->conn->prepare("
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("
                 INSERT INTO users (
                     uuid, firstname, lastname, email, password
                 ) VALUES (?, ?, ?, ?, ?)
@@ -82,14 +85,14 @@ class Users
                 $data['password']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'User registered successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'User registration failed.',
@@ -97,12 +100,12 @@ class Users
         }
     }
 
-    public function update($data = [])
+    public static function update($data = [])
     {
         try {
 
-            $this->conn->beginTransaction();
-            $stmt = $this->conn->prepare("
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("
                 UPDATE users SET 
                     firstname=?, 
                     lastname=?, 
@@ -127,14 +130,14 @@ class Users
                 $data['user_uuid']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'User updated successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'User update failed.',
@@ -142,11 +145,11 @@ class Users
         }
     }
 
-    public function updateWherePassword($new_password = null, $user_uuid = null)
+    public static function updateWherePassword($new_password = null, $user_uuid = null)
     {
         try {
-            $this->conn->beginTransaction();
-            $stmt = $this->conn->prepare("
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("
                 UPDATE users SET 
                     password=?
                 WHERE uuid=?
@@ -157,14 +160,14 @@ class Users
                 $user_uuid
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Password updated successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Password update failed.',
