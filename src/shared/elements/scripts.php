@@ -40,7 +40,6 @@ function utilScripts()
     $utilityScripts = [
         'js/middleware.js',
         'js/functions.js',
-        'js/filepond.js',
     ];
 
     foreach ($utilityScripts as $script) {
