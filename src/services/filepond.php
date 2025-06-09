@@ -8,7 +8,6 @@ class FilePond
 {
     private $uploadDirectory;
     private $response;
-    private $attachments;
 
     public function __construct()
     {
@@ -17,8 +16,6 @@ class FilePond
 
         global $config;
         $this->uploadDirectory = $config['root_path'] . '/src/uploads/';
-
-        $this->attachments = new Attachments();
     }
 
     /**
@@ -68,14 +65,14 @@ class FilePond
         }
 
         // Delete Existing file first
-        $oldFile = $this->attachments->single($reference_uuid);
+        $oldFile = Attachments::single($reference_uuid);
         if ($oldFile['success'] && !empty($oldFile['data'])) {
             $this->deleteWherePermanent($oldFile['data']['folder'], $reference_model);
-            $this->attachments->deleteWhereReference($reference_model, $reference_uuid);
+            Attachments::deleteWhereReference($reference_model, $reference_uuid);
         }
 
         // Store new file
-        return $this->attachments->store([
+        return Attachments::store([
             'reference_model' => $reference_model,
             'reference_uuid' => $reference_uuid,
             'folder' => $folderName,
@@ -192,7 +189,7 @@ class FilePond
         rmdir($sourceFolderPath);
 
         // Store new file
-        return $this->attachments->store([
+        return Attachments::store([
             'reference_uuid' => $reference_uuid,
             'reference_model' => $reference_model,
             'folder' => $folderName,

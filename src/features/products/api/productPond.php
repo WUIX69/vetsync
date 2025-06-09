@@ -9,7 +9,6 @@ use VetSync\Models\Attachments;
 try {
 
     $filepond = new FilePond();
-    $attachments = new Attachments();
     $reference_model = 'products';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -25,7 +24,7 @@ try {
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $product_uuid = $_GET['product_uuid'] ?? null;
-        $response = $attachments->all($product_uuid);
+        $response = Attachments::all($product_uuid);
 
         if ($response['success']) {
             $files = [];

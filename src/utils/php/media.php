@@ -21,13 +21,12 @@ function mediaHelper($dir = '', $folder = '', $filename = '')
 
 function media($reference_uuid, $is_all = false)
 {
-    $attachmentService = new Attachments();
 
     $attachment = [];
     if ($is_all) {
-        $attachment = $attachmentService->all($reference_uuid)['data'] ?? [];
+        $attachment = Attachments::all($reference_uuid)['data'] ?? [];
     } else {
-        $attachment = $attachmentService->single($reference_uuid)['data'] ?? [];
+        $attachment = Attachments::single($reference_uuid)['data'] ?? [];
     }
 
     if (empty($attachment)) {

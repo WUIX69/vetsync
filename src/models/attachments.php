@@ -7,19 +7,22 @@ use PDOException;
 
 class Attachments
 {
-    private $conn;
+    private static $conn;
 
-    public function __construct()
+    private static function conn()
     {
-        global $conn;
-        $this->conn = $conn;
+        if (!isset(self::$conn)) {
+            global $conn;
+            self::$conn = $conn;
+        }
+        return self::$conn;
     }
 
-    public function all($reference_uuid)
+    public static function all($reference_uuid)
     {
         try {
             $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid";
-            $stmt = $this->conn->prepare($sql);
+            $stmt = self::conn()->prepare($sql);
             $stmt->execute([':reference_uuid' => $reference_uuid]);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -36,11 +39,11 @@ class Attachments
         }
     }
 
-    public function single($reference_uuid)
+    public static function single($reference_uuid)
     {
         try {
             $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid LIMIT 1";
-            $stmt = $this->conn->prepare($sql);
+            $stmt = self::conn()->prepare($sql);
             $stmt->execute([':reference_uuid' => $reference_uuid]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -57,10 +60,10 @@ class Attachments
         }
     }
 
-    public function store($data = [])
+    public static function store($data = [])
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
             $sql = "INSERT INTO attachments (
                         reference_model, 
                         reference_uuid, 
@@ -73,7 +76,7 @@ class Attachments
                         :filename
                     )";
 
-            $stmt = $this->conn->prepare($sql);
+            $stmt = self::conn()->prepare($sql);
             $stmt->execute([
                 ':reference_model' => $data['reference_model'],
                 ':reference_uuid' => $data['reference_uuid'],
@@ -81,14 +84,14 @@ class Attachments
                 ':filename' => $data['filename']
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Attachment stored successfully',
             ];
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Failed to store attachment: ' . $e->getMessage(),
@@ -96,17 +99,17 @@ class Attachments
         }
     }
 
-    public function update($reference_model, $reference_uuid, $data = [])
+    public static function update($reference_model, $reference_uuid, $data = [])
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
             $sql = "UPDATE attachments SET 
                         folder = :folder, 
                         filename = :filename
                     WHERE reference_model = :reference_model 
                     AND reference_uuid = :reference_uuid";
 
-            $stmt = $this->conn->prepare($sql);
+            $stmt = self::conn()->prepare($sql);
             $stmt->execute([
                 ':folder' => $data['folder'],
                 ':filename' => $data['filename'],
@@ -114,14 +117,14 @@ class Attachments
                 ':reference_uuid' => $reference_uuid
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Attachment updated successfully',
             ];
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Failed to update attachment: ' . $e->getMessage(),
@@ -129,28 +132,28 @@ class Attachments
         }
     }
 
-    public function deleteWhereReference($reference_model, $reference_uuid)
+    public static function deleteWhereReference($reference_model, $reference_uuid)
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
             $sql = "DELETE FROM attachments 
                     WHERE reference_model = :reference_model 
                     AND reference_uuid = :reference_uuid";
 
-            $stmt = $this->conn->prepare($sql);
+            $stmt = self::conn()->prepare($sql);
             $stmt->execute([
                 ':reference_model' => $reference_model,
                 ':reference_uuid' => $reference_uuid
             ]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Attachment deleted successfully',
             ];
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Failed to delete attachment: ' . $e->getMessage(),
@@ -158,23 +161,23 @@ class Attachments
         }
     }
 
-    public function deleteWhereFolder($folder = null)
+    public static function deleteWhereFolder($folder = null)
     {
         try {
-            $this->conn->beginTransaction();
+            self::conn()->beginTransaction();
 
             $sql = "DELETE FROM attachments WHERE folder = :folder";
-            $stmt = $this->conn->prepare($sql);
+            $stmt = self::conn()->prepare($sql);
             $stmt->execute([':folder' => $folder]);
 
-            $this->conn->commit();
+            self::conn()->commit();
             return [
                 'success' => true,
                 'message' => 'Successfully deleted attachment',
             ];
         } catch (PDOException $e) {
             error_log($e->getMessage());
-            $this->conn->rollBack();
+            self::conn()->rollBack();
             return [
                 'success' => false,
                 'message' => 'Failed to delete attachment: ' . $e->getMessage(),

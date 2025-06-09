@@ -10,7 +10,6 @@ use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
 
 use VetSync\Services\FilePond;
-use VetSync\Models\Attachments;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     $response['message'] = 'Invalid request method';
@@ -23,7 +22,6 @@ try {
     $categories = new Categories();
     $products = new Products();
     $filepond = new FilePond();
-    $attachments = new Attachments();
     $reference_model = 'products';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
