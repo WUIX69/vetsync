@@ -163,7 +163,7 @@ function getAllProducts() {
 function getSingleProduct(productUuid = null) {
     if (!productUuid) return false;
 
-    loadExistingFiles(productUuid);
+    // loadExistingFiles(productUuid);
 
     $.ajax({
         url: apiUrl("products") + "products.php",
