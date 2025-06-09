@@ -18,23 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
     exit;
 }
 
-function storePondHelper($filepond, $reference_model, $data, $attachments)
-{
-    global $response;
-
-    if (!empty($data['file'])) {
-        $result = $filepond->move($data['file'], $reference_model);
-        $attachment_data = array_merge($result, [
-            'reference_uuid' => $data['uuid'],
-            'reference_model' => $reference_model,
-        ]);
-
-        $response = $attachments->store($attachment_data);
-    }
-
-    return $response;
-}
-
 try {
 
     $categories = new Categories();
@@ -61,13 +44,13 @@ try {
 
         if ($action === 'store') {
             $data['uuid'] = uuid();
-            $response = storePondHelper($filepond, $reference_model, $data, $attachments);
+            $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             if ($response['success']) {
                 $response = $products->store($data);
             }
         } else if ($action === 'update') {
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
-            $response = storePondHelper($filepond, $reference_model, $data, $attachments);
+            $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             if ($response['success']) {
                 $response = $products->update($data);
             }

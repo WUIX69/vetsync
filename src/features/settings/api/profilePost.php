@@ -21,10 +21,7 @@ try {
     if ($action === 'profile-upload') {
 
         $filePond = new FilePond();
-        $response = $filePond->storeWherePermanent($_FILES['profile'], 'profiles', [
-            'reference_uuid' => $user_uuid,
-        ]);
-
+        $response = $filePond->storeWhereInstant($_FILES['profile'], 'profiles', $user_uuid);
         $response['data']['profile_url'] = userData()['profile'];
 
     } else if ($action === 'profile-update') {

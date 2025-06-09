@@ -25,25 +25,26 @@ class FilePond
      * Instant upload a file to the specified destination.
      *
      * @param array $file The uploaded file array (e.g., from $_FILES)
-     * @param string $destination The destination folder name
-     * @param array $args Additional arguments (optional)
-     * @return array Returns the folder name and filename on success, empty array on failure
+     * @param string $reference_model The destination folder name
+     * @param string $reference_uuid The reference UUID
+     * @param array $args Additional arguments (required)
+     * @return array Returns the response on success, empty array on failure
      */
-    public function storeWherePermanent($file, $destination, $args = [])
+    public function storeWhereInstant($file, $reference_model, $reference_uuid, $args = [])
     {
 
         // Check for upload errors
         if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-            error_log('Upload error: ' . $file['error']);
+            error_log('STORE INSTANT: Upload error: ' . $file['error']);
             return $this->response;
         }
 
         // Set base destination path
-        $basePath = $this->uploadDirectory . $destination;
+        $basePath = $this->uploadDirectory . $reference_model;
 
         // Ensure base destination directory exists
         if (!is_dir($basePath) && !mkdir($basePath, 0777, true)) {
-            error_log('Failed to create base directory: ' . $basePath);
+            error_log('STORE INSTANT: Failed to create base directory: ' . $basePath);
             return $this->response;
         }
 
@@ -53,7 +54,7 @@ class FilePond
         // Create folder inside the destination
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
         if (!mkdir($folderPath, 0777, true)) {
-            error_log('Failed to create folder: ' . $folderPath);
+            error_log('STORE INSTANT: Failed to create folder: ' . $folderPath);
             return $this->response;
         }
 
@@ -67,16 +68,16 @@ class FilePond
         }
 
         // Delete Existing file first
-        $oldFile = $this->attachments->single($args['reference_uuid']);
+        $oldFile = $this->attachments->single($reference_uuid);
         if ($oldFile['success'] && !empty($oldFile['data'])) {
-            $this->deleteWherePermanent($destination, $oldFile['data']['folder']);
-            $this->attachments->deleteWhereReference($destination, $args['reference_uuid']);
+            $this->deleteWherePermanent($reference_model, $oldFile['data']['folder']);
+            $this->attachments->deleteWhereReference($reference_model, $reference_uuid);
         }
 
         // Store new file
         return $this->attachments->store([
-            'reference_model' => $destination,
-            'reference_uuid' => $args['reference_uuid'],
+            'reference_model' => $reference_model,
+            'reference_uuid' => $reference_uuid,
             'folder' => $folderName,
             'filename' => $filename,
         ]);
@@ -85,25 +86,18 @@ class FilePond
     /**
      * Upload a file to temporary folder.
      *
-     * @param array $file The uploaded file array (e.g., from $_FILES)
+     * @param array|string $file The uploaded file array (e.g., from $_FILES)
      * @param array $args Additional arguments (optional)
      * @return string Returns the folder name on success, empty string on failure
      */
     public function storeWhereTemporary($file, $args = [])
     {
-
-        // Check for upload errors
-        if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-            error_log('Upload error: ' . $file['error']);
-            return '';
-        }
-
         // Set base destination path
         $basePath = $this->uploadDirectory . 'tmp';
 
         // Ensure base destination directory exists
         if (!is_dir($basePath) && !mkdir($basePath, 0777, true)) {
-            error_log('Failed to create base directory: ' . $basePath);
+            error_log('STORE TEMPORARY: Failed to create base directory: ' . $basePath);
             return '';
         }
 
@@ -113,7 +107,7 @@ class FilePond
         // Create folder inside the destination
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
         if (!mkdir($folderPath, 0777, true)) {
-            error_log('Failed to create folder: ' . $folderPath);
+            error_log('STORE TEMPORARY: Failed to create folder: ' . $folderPath);
             return '';
         }
 
@@ -122,20 +116,111 @@ class FilePond
         $targetPath = $folderPath . DIRECTORY_SEPARATOR . $filename;
 
         // Move the uploaded file
-        if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            return $folderName;
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            error_log('STORE TEMPORARY: Failed to move file: ' . $targetPath);
+            return '';
         }
 
-        return '';
+        return $folderName;
     }
 
-    public function deleteWherePermanent($destination, $folderName)
+    /**
+     * Move a file from temporary folder to permanent folder.
+     *
+     * @param array|string $folderName The foldername (UUID) to move from
+     * @param string $reference_model The destination folder name
+     * @param string $reference_uuid The reference UUID
+     * @param array $args Additional arguments (optional)
+     * @return array Returns the $response array
+     */
+    public function storeWherePermanent($folderName, $reference_model, $reference_uuid, $args = [])
     {
-        $basePath = $this->uploadDirectory . $destination;
+
+        if (empty($folderName)) {
+            $this->response['message'] = 'STORE PERMANENT: Folder name not found';
+            return $this->response;
+        }
+
+        // Clean the folder name
+        $folderName = trim($folderName, '"\'{}[]');
+
+        // Set source path (temp folder)
+        $tempPath = $this->uploadDirectory . 'tmp';
+        $sourceFolderPath = rtrim($tempPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
+
+        // Check if source folder exists
+        if (!is_dir($sourceFolderPath)) {
+            $this->response['message'] = 'STORE PERMANENT: Source folder not found';
+            return $this->response;
+        }
+
+        // Get the first file in the source folder (assuming there's just one)
+        $files = glob($sourceFolderPath . '/*');
+        if (empty($files) || !is_file($files[0])) {
+            $this->response['message'] = 'STORE PERMANENT: File not found';
+            return $this->response;
+        }
+
+        $sourceFilePath = $files[0];
+        $filename = basename($sourceFilePath);
+
+        // Set destination path
+        $destPath = $this->uploadDirectory . $reference_model;
+
+        // Ensure destination directory exists
+        if (!is_dir($destPath) && !mkdir($destPath, 0777, true)) {
+            $this->response['message'] = 'Moved: Destination folder not found';
+            return $this->response;
+        }
+
+        // Create destination folder using the same UUID
+        $destFolderPath = rtrim($destPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
+        if (!is_dir($destFolderPath) && !mkdir($destFolderPath, 0777, true)) {
+            $this->response['message'] = 'STORE PERMANENT: Destination folder not found';
+            return $this->response;
+        }
+
+        // Copy file to destination
+        $destFilePath = $destFolderPath . DIRECTORY_SEPARATOR . $filename;
+        if (!copy($sourceFilePath, $destFilePath)) {
+            $this->response['message'] = 'STORE PERMANENT: File not found';
+            return $this->response;
+        }
+
+        // Remove the source file and folder
+        unlink($sourceFilePath);
+        rmdir($sourceFolderPath);
+
+        // Store new file
+        return $this->attachments->store([
+            'reference_uuid' => $reference_uuid,
+            'reference_model' => $reference_model,
+            'folder' => $folderName,
+            'filename' => $filename,
+        ]);
+
+    }
+
+    /**
+     * Delete a file/folder from permanent folder.
+     *
+     * @param string $folderName The foldername (UUID) to delete
+     * @param string $reference_model The destination folder name
+     * @param array $args Additional arguments (optional)
+     * @return bool Returns the $response array or true if successful
+     */
+    public function deleteWherePermanent($folderName, $reference_model, $args = [])
+    {
+        // Clean the folder name (in case it contains path separators or is JSON)
+        $folderName = trim($folderName, '"\'{}[]');
+
+        // Set base destination path
+        $basePath = $this->uploadDirectory . $reference_model;
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
 
+        // Check if folder exists
         if (!is_dir($folderPath)) {
-            error_log("Folder not found on $destination: " . $folderPath);
+            error_log("DELETE PERMANENT: Folder not found on $reference_model: " . $folderPath);
             return false;
         }
 
@@ -151,12 +236,13 @@ class FilePond
     }
 
     /**
-     * Delete a file/folder from temporary folder.
-     * 
+     * Delete a folder/file from temporary folder.
+     *
      * @param string $folderName The folder name (UUID) to delete
+     * @param array $args Additional arguments (optional)
      * @return bool True if successful, false otherwise
      */
-    public function deleteWhereTemporary($folderName)
+    public function deleteWhereTemporary($folderName, $args = [])
     {
         // Clean the folder name (in case it contains path separators or is JSON)
         $folderName = trim($folderName, '"\'{}[]');
@@ -167,7 +253,7 @@ class FilePond
 
         // Check if folder exists
         if (!is_dir($folderPath)) {
-            error_log("Folder not found on temporary folder: " . $folderPath);
+            error_log("DELETE TEMPORARY: Folder not found on temporary folder: " . $folderPath);
             return false;
         }
 
@@ -182,79 +268,28 @@ class FilePond
         return rmdir($folderPath);
     }
 
-    public function move($folderName, $destination)
-    {
-
-        // Clean the folder name
-        $folderName = trim($folderName, '"\'{}[]');
-
-        // Set source path (temp folder)
-        $tempPath = $this->uploadDirectory . 'tmp';
-        $sourceFolderPath = rtrim($tempPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
-
-        // Check if source folder exists
-        if (!is_dir($sourceFolderPath)) {
-            return false;
-        }
-
-        // Get the first file in the source folder (assuming there's just one)
-        $files = glob($sourceFolderPath . '/*');
-        if (empty($files) || !is_file($files[0])) {
-            return false;
-        }
-
-        $sourceFilePath = $files[0];
-        $filename = basename($sourceFilePath);
-
-        // Set destination path
-        $destPath = $this->uploadDirectory . $destination;
-
-        // Ensure destination directory exists
-        if (!is_dir($destPath) && !mkdir($destPath, 0777, true)) {
-            return false;
-        }
-
-        // Create destination folder using the same UUID
-        $destFolderPath = rtrim($destPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
-        if (!is_dir($destFolderPath) && !mkdir($destFolderPath, 0777, true)) {
-            return false;
-        }
-
-        // Copy file to destination
-        $destFilePath = $destFolderPath . DIRECTORY_SEPARATOR . $filename;
-        if (!copy($sourceFilePath, $destFilePath)) {
-            return false;
-        }
-
-        // Remove the source file and folder
-        unlink($sourceFilePath);
-        rmdir($sourceFolderPath);
-
-        return [
-            'folder' => $folderName,
-            'filename' => $filename
-        ];
-    }
-
     /**
      * Load a file from the specified destination.
      *
      * @param string $folderName The folder name (UUID) to load
-     * @param string $destination The destination folder name
+     * @param string $reference_model The destination folder name
+     * @param array $args Additional arguments (optional)
      * @return array|bool File data or false on failure
      */
-    public function load($folderName, $destination)
+    public function load($folderName, $reference_model, $args = [])
     {
-        $basePath = $this->uploadDirectory . $destination;
+        $basePath = $this->uploadDirectory . $reference_model;
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
 
         if (!is_dir($folderPath)) {
+            error_log("LOAD: Folder not found on $reference_model: " . $folderPath);
             return false;
         }
 
         // Get the first file in the folder
         $files = glob($folderPath . '/*');
         if (empty($files) || !is_file($files[0])) {
+            error_log("LOAD: File not found on $reference_model: " . $folderPath);
             return false;
         }
 

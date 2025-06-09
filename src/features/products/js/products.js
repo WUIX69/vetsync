@@ -220,41 +220,41 @@ function deleteProduct(productUuid = null) {
 }
 
 // Function to load existing files for the given record ID
-function loadExistingFiles(productUuid = null) {
-    if (!productUuid) return false;
+// function loadExistingFiles(productUuid = null) {
+//     if (!productUuid) return false;
 
-    $.ajax({
-        url: apiUrl("products") + "productPond.php", // PHP script to fetch file metadata
-        type: "GET",
-        dataType: "json",
-        data: { product_uuid: productUuid },
-        success: function (response) {
-            // console.log("response:", response);
-            // return false;
+//     $.ajax({
+//         url: apiUrl("products") + "productPond.php", // PHP script to fetch file metadata
+//         type: "GET",
+//         dataType: "json",
+//         data: { product_uuid: productUuid },
+//         success: function (response) {
+//             // console.log("response:", response);
+//             // return false;
 
-            // Get the FilePond instance
-            if (response.success && response.files.length > 0) {
-                response.files.forEach(function (file) {
-                    // Add each existing file to FilePond
-                    productImagePond
-                        .addFile(file.source, {
-                            // Use file.source (which is your unique folder name)
-                            options: {
-                                type: file.options.type, // 'local'
-                                file: file.options.file, // original name (size and type aren't sent from fetch_files.php but FilePond handles it)
-                            },
-                        })
-                        .then(function (fileItem) {
-                            // Crucial: Set the serverId of the file item to the unique folder name
-                            // This links the FilePond item to the database entry for revert/load
-                            // fileItem.setServerId(file.metadata.serverId);
-                        });
-                });
-            }
-        },
-        error: ajaxErrorHandler,
-    });
-}
+//             // Get the FilePond instance
+//             if (response.success && response.files.length > 0) {
+//                 response.files.forEach(function (file) {
+//                     // Add each existing file to FilePond
+//                     productImagePond
+//                         .addFile(file.source, {
+//                             // Use file.source (which is your unique folder name)
+//                             options: {
+//                                 type: file.options.type, // 'local'
+//                                 file: file.options.file, // original name (size and type aren't sent from fetch_files.php but FilePond handles it)
+//                             },
+//                         })
+//                         .then(function (fileItem) {
+//                             // Crucial: Set the serverId of the file item to the unique folder name
+//                             // This links the FilePond item to the database entry for revert/load
+//                             // fileItem.setServerId(file.metadata.serverId);
+//                         });
+//                 });
+//             }
+//         },
+//         error: ajaxErrorHandler,
+//     });
+// }
 
 $(function () {
     getAllProducts();
