@@ -70,7 +70,7 @@ class FilePond
         // Delete Existing file first
         $oldFile = $this->attachments->single($reference_uuid);
         if ($oldFile['success'] && !empty($oldFile['data'])) {
-            $this->deleteWherePermanent($reference_model, $oldFile['data']['folder']);
+            $this->deleteWherePermanent($oldFile['data']['folder'], $reference_model);
             $this->attachments->deleteWhereReference($reference_model, $reference_uuid);
         }
 
