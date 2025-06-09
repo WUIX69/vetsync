@@ -6,3 +6,13 @@
 <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
 <script
     src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
+<script>
+    // Use filepond for instance and uploading the image
+    FilePond.registerPlugin(
+        FilePondPluginFileEncode,
+        FilePondPluginFileValidateType,
+        FilePondPluginFileValidateSize,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginImagePreview
+    );
+</script>
