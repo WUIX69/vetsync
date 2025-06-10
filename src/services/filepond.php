@@ -262,7 +262,19 @@ class FilePond
         }
 
         // Remove the folder
-        return rmdir($folderPath);
+        if (!rmdir($folderPath)) {
+            error_log("DELETE PERMANENT: Failed to remove folder $folderPath");
+            return false;
+        }
+
+        // Delete the attachment from the database
+        $result = Attachments::deleteWhereFolder($folderName);
+        if (!$result['success']) {
+            error_log("DELETE PERMANENT: Failed to delete attachment from database");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -320,7 +332,7 @@ class FilePond
      * @param array $args Additional arguments (optional)
      * @return array|bool File data or false on failure
      */
-    public function load($folderName, $reference_model, $args = [])
+    public function loadWherePermanent($folderName, $reference_model, $args = [])
     {
         $basePath = $this->uploadDirectory . $reference_model;
         $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
@@ -344,11 +356,11 @@ class FilePond
 
         // Return file data
         return [
-            'name' => $filename,
-            'size' => $fileSize,
-            'type' => $mimeType,
-            'path' => $filePath,
-            'folder' => $folderName
+            'foldername' => $folderName,
+            'filename' => $filename,
+            'filesize' => $fileSize,
+            'mimetype' => $mimeType,
+            'filepath' => $filePath
         ];
     }
 }
