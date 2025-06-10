@@ -35,21 +35,27 @@ try {
             'status' => $_POST['status'] ?? '',
             'tags' => $_POST['tags'] ? $_POST['tags'] : null,
             'specs' => $_POST['specs'] ? $_POST['specs'] : null,
-            'file' => $_POST['file'] ?? null,
+            'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
         ];
 
         if ($action === 'store') {
+
             $data['uuid'] = uuid();
-            $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
-            if ($response['success']) {
-                $response = Products::store($data);
+            $response = Products::store($data);
+            foreach ($data['files'] as $file) {
+                $uploadResult = $filepond->storeWherePermanent($file, $reference_model, $data['uuid']);
+                error_log("uploadResult: " . print_r($uploadResult, true));
             }
+
         } else if ($action === 'update') {
+
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
-            $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
-            if ($response['success']) {
-                $response = Products::update($data);
+            $response = Products::update($data);
+            foreach ($data['files'] as $file) {
+                $uploadResult = $filepond->storeWherePermanent($file, $reference_model, $data['uuid']);
+                error_log("uploadResult: " . print_r($uploadResult, true));
             }
+
         } else {
             $response['message'] = 'Invalid POST action';
         }
@@ -60,8 +66,8 @@ try {
 
         if ($action === 'all') {
 
-            $result = Products::all();
-            $result['data'] = array_map(function ($item) use ($reference_model) {
+            $products = Products::all();
+            $products['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [
                     'category_name' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
@@ -73,12 +79,12 @@ try {
                 ];
 
                 // Remove unnecessary data
-                unset($item['category_id'], $item['dc_price'], $item['features']);
+                unset($item['category_id'], $item['dc_price'], $item['features'], $item['size']);
 
                 // Merge formatted data with the original item
                 return array_merge($item, $formattedData);
-            }, $result['data'] ?? []);
-            $response = $result;
+            }, $products['data'] ?? []);
+            $response = $products;
 
         } else if ($action === 'single') {
             $product_uuid = $_GET['uuid'] ?? null;
@@ -91,6 +97,9 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $product_uuid = $_GET['uuid'] ?? null;
         $response = Products::delete($product_uuid);
+        if ($response['success']) {
+            $response = $filepond->deleteWhereReferencePermanent($product_uuid, $reference_model);
+        }
     }
 
 } catch (Exception $e) {

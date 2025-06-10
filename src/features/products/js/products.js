@@ -21,6 +21,9 @@ const productImagePond = FilePond.create(
         imageCropAspectRatio: "1:1",
         imageResizeTargetWidth: 200,
         imageResizeTargetHeight: 200,
+        onremovefile: function (error, file) {
+            // console.log("file.serverId", file.serverId);
+        },
     }
 );
 
@@ -33,19 +36,16 @@ productImagePond.setOptions({
         withCredentials: false,
         process: {
             url: "",
-            method: "POST",
-            ondata: function (formData) {
-                formData.append("action", "process");
-                return formData;
+            onload: function (response) {
+                const parsedResponse = JSON.parse(response);
+                return parsedResponse;
             },
         },
         revert: {
             url: "",
-            method: "DELETE",
         },
         load: {
-            url: "?foldername=", // FilePond appends the source (your unique folder name) to this URL
-            method: "GET",
+            url: "",
         },
         files: [], // Initially empty, will be populated by loadExistingFiles
     },
@@ -268,7 +268,29 @@ $(function () {
 
     // Remove files from FilePond when modal is hidden
     productModal.modal("setting", "onHide", function () {
-        productImagePond.removeFiles();
+        let isSubmit = productModal.attr("data-filepond-is-submit") === "true";
+        if (!isSubmit) {
+            // Delete files from FilePond
+            const files = productImagePond.getFiles();
+            files.forEach((fileItem) => {
+                // Manually call the revert endpoint
+                $.ajax({
+                    url: apiUrl("products") + "productPond.php",
+                    method: "DELETE",
+                    data: fileItem.serverId,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        // After server deletion, remove from UI
+                        productImagePond.removeFile(fileItem.id);
+                    },
+                    error: ajaxErrorHandler,
+                });
+            });
+        } else {
+            // Reset the flag for next time
+            productModal.attr("data-filepond-is-submit", "false");
+        }
     });
 
     // Validate Product Modal Form
@@ -380,8 +402,13 @@ $(function () {
             if (formData.get("uuid")) action = "update";
             formData.append("action", action);
 
-            console.log(formData);
-            return false;
+            // Collect all FilePond serverIds (folder names)
+            let files = productImagePond.getFiles().map((f) => f.serverId);
+            formData.set("files", files.join(","));
+            formData.delete("file");
+
+            // console.log(formData);
+            // return false;
 
             $.ajax({
                 url: apiUrl("products") + "products.php", // Change to your actual products endpoint if needed
@@ -400,6 +427,7 @@ $(function () {
 
                     alert(response.message);
                     getAllProducts(); // Refresh the products data
+                    productModal.attr("data-filepond-is-submit", "true"); // Set the flag BEFORE hiding the modal, For FilePond to know that the form is submitting on hide
                     productModal.modal("hide");
                 },
                 complete: function () {
