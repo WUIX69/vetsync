@@ -271,22 +271,7 @@ $(function () {
         let isSubmit = productModal.attr("data-filepond-is-submit") === "true";
         if (!isSubmit) {
             // Delete files from FilePond
-            const files = productImagePond.getFiles();
-            files.forEach((fileItem) => {
-                // Manually call the revert endpoint
-                $.ajax({
-                    url: apiUrl("products") + "productPond.php",
-                    method: "DELETE",
-                    data: fileItem.serverId,
-                    processData: false,
-                    contentType: false,
-                    success: function () {
-                        // After server deletion, remove from UI
-                        productImagePond.removeFile(fileItem.id);
-                    },
-                    error: ajaxErrorHandler,
-                });
-            });
+            productImagePond.removeFiles({ revert: true });
         } else {
             // Reset the flag for next time
             productModal.attr("data-filepond-is-submit", "false");
