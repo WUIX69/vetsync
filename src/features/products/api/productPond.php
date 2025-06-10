@@ -11,49 +11,44 @@ try {
     $filepond = new FilePond();
     $reference_model = 'products';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $action = $_POST['action'] ?? null;
-
-        if ($action === 'process') {
+    switch ($_SERVER['REQUEST_METHOD']) {
+        case 'POST':
             $response = $filepond->storeWhereTemporary($_FILES['file']);
-        } else {
-            $response['message'] = 'Invalid FilePond POST action';
-        }
+            break;
 
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        $product_uuid = $_GET['product_uuid'] ?? null;
-        $response = Attachments::all($product_uuid);
-
-        if ($response['success']) {
-            $files = [];
-            foreach ($response['data'] as $file) {
-                $pond = $filepond->load($file['folder'], $reference_model);
-                $files[] = [
-                    'source' => $pond['path'],
-                    'options' => [
-                        'type' => 'local',
-                        'file' => [
-                            'name' => $pond['name'],
-                            'size' => $pond['size'],
-                            'type' => $pond['type'],
-                            'path' => $pond['path'],
-                            'folder' => $pond['folder'],
+        case 'GET':
+            $product_uuid = $_GET['product_uuid'] ?? null;
+            $response = Attachments::all($product_uuid);
+            if ($response['success']) {
+                $files = [];
+                foreach ($response['data'] as $file) {
+                    $pond = $filepond->load($file['folder'], $reference_model);
+                    $files[] = [
+                        'source' => $pond['path'],
+                        'options' => [
+                            'type' => 'local',
+                            'file' => [
+                                'name' => $pond['name'],
+                                'size' => $pond['size'],
+                                'type' => $pond['type'],
+                                'path' => $pond['path'],
+                                'folder' => $pond['folder'],
+                            ],
                         ],
-                    ],
-                    'metadata' => [
-                        'serverId' => $pond['path'],
-                    ],
-                ];
+                        'metadata' => [
+                            'serverId' => $pond['path'],
+                        ],
+                    ];
+                }
+                $response['files'] = $files;
             }
-            $response['files'] = $files;
-        }
-    }
+            break;
 
-    if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-        $foldername = file_get_contents('php://input');
-        $response = $filepond->deleteWhereTemporary($foldername);
+        case 'DELETE':
+            $foldername = file_get_contents('php://input');
+            error_log("foldername: " . $foldername);
+            $response = $filepond->deleteWhereTemporary($foldername);
+            break;
     }
 
 } catch (Exception $e) {
