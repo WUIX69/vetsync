@@ -14,20 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
 
     $user_uuid = userData()['uuid'];
-    // $action = $_GET['action'];
+    $user = Users::single($user_uuid) ?? [];
 
-    $data = Users::single($user_uuid) ?? [];
-
-    // Fetch only the needed data
     $userData = [
-        'firstname' => $data['firstname'],
-        'lastname' => $data['lastname'],
-        'email' => $data['email'],
-        'bio' => $data['bio'],
-        'telephone' => $data['telephone'],
-        'dob' => $data['dob'],
-        'location' => $data['location'],
-        'urls' => $data['urls'] ? explode(',', $data['urls']) : [], // Format the urls array
+        'firstname' => $user['firstname'],
+        'lastname' => $user['lastname'],
+        'email' => $user['email'],
+        'bio' => $user['bio'],
+        'telephone' => $user['telephone'],
+        'dob' => $user['dob'],
+        'location' => $user['location'],
+        'urls' => $user['urls'] ? explode(',', $user['urls']) : [], // Format the urls array
     ];
 
     $response = array_merge($response, [
