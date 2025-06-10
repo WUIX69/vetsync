@@ -1,7 +1,7 @@
 <?php
 
 include '../../../core/app.php';
-apiHeaders();
+// apiHeaders();
 
 use VetSync\Services\FilePond;
 use VetSync\Models\Attachments;
@@ -17,37 +17,54 @@ try {
             break;
 
         case 'GET':
-            $product_uuid = $_GET['product_uuid'] ?? null;
-            $response = Attachments::all($product_uuid);
-            if ($response['success']) {
-                $files = [];
-                foreach ($response['data'] as $file) {
-                    $pond = $filepond->load($file['folder'], $reference_model);
-                    $files[] = [
-                        'source' => $pond['path'],
-                        'options' => [
-                            'type' => 'local',
-                            'file' => [
-                                'name' => $pond['name'],
-                                'size' => $pond['size'],
-                                'type' => $pond['type'],
-                                'path' => $pond['path'],
-                                'folder' => $pond['folder'],
-                            ],
-                        ],
-                        'metadata' => [
-                            'serverId' => $pond['path'],
-                        ],
-                    ];
+            if (isset($_GET['folder'])) {
+                $foldername = $_GET['folder'];
+                $pond = $filepond->loadWherePermanent($foldername, $reference_model);
+                error_log("filepond load: " . json_encode($pond));
+                $filepath = $pond['filepath'];
+                if (file_exists($filepath)) {
+                    // Expose Content-Disposition for CORS if needed
+                    header('Access-Control-Expose-Headers: Content-Disposition');
+                    header('Content-Type: ' . mime_content_type($filepath));
+                    header('Content-Length: ' . filesize($filepath));
+                    header('Content-Disposition: inline; filename="' . basename($filepath) . '"');
+                    readfile($filepath);
+                    exit;
+                } else {
+                    http_response_code(404);
+                    echo 'File not found';
+                    exit;
                 }
-                $response['files'] = $files;
+            } else {
+                $product_uuid = $_GET['product_uuid'] ?? null;
+                $response = Attachments::all($product_uuid);
+
+                $files = [];
+                if (!empty($response['data'])) {
+                    foreach ($response['data'] as $file) {
+                        $files[] = [
+                            'source' => $file['folder'],
+                            'options' => [
+                                'type' => 'local',
+                                'file' => [
+                                    'name' => $file['filename'],
+                                ],
+                            ],
+                            'metadata' => [
+                                'serverId' => $file['folder'],
+                            ],
+                        ];
+                    }
+                }
+                $response['data'] = $files;
             }
             break;
 
         case 'DELETE':
             $foldername = file_get_contents('php://input');
-            error_log("foldername: " . $foldername);
+            // error_log("foldername: " . $foldername);
             $response = $filepond->deleteWhereTemporary($foldername);
+            $response = $filepond->deleteWherePermanent($foldername, $reference_model);
             break;
     }
 

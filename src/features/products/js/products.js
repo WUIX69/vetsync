@@ -24,6 +24,14 @@ const productImagePond = FilePond.create(
         onremovefile: function (error, file) {
             // console.log("file.serverId", file.serverId);
         },
+        onupdatefiles: function (files) {
+            const totalFileSize = files.reduce(
+                (total, file) => total + file.fileSize,
+                0
+            );
+            const showErrorState = totalFileSize > 26214400; // 25MB in bytes
+            console.log({ totalFileSize, showErrorState });
+        },
     }
 );
 
@@ -44,8 +52,43 @@ productImagePond.setOptions({
         revert: {
             url: "",
         },
-        load: {
-            url: "",
+        load: (source, load, error, progress, abort, headers) => {
+            console.log("FilePond load called with source:", source);
+            // source is your folder name or unique file id
+            const xhr = new XMLHttpRequest();
+            xhr.open(
+                "GET",
+                apiUrl("products") +
+                    "productPond.php?folder=" +
+                    encodeURIComponent(source)
+            );
+            xhr.responseType = "blob";
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    load(xhr.response); // Pass the Blob to FilePond
+                } else {
+                    error("Could not load file");
+                }
+            };
+
+            xhr.onerror = function () {
+                error("Could not load file");
+            };
+
+            xhr.onprogress = function (e) {
+                progress(e.lengthComputable, e.loaded, e.total);
+            };
+
+            xhr.send();
+
+            // Provide abort method
+            return {
+                abort: () => {
+                    xhr.abort();
+                    abort();
+                },
+            };
         },
         files: [], // Initially empty, will be populated by loadExistingFiles
     },
@@ -162,8 +205,7 @@ function getAllProducts() {
 
 function getSingleProduct(productUuid = null) {
     if (!productUuid) return false;
-
-    // loadExistingFiles(productUuid);
+    loadExistingFiles(productUuid);
 
     $.ajax({
         url: apiUrl("products") + "products.php",
@@ -219,42 +261,42 @@ function deleteProduct(productUuid = null) {
     });
 }
 
-// Function to load existing files for the given record ID
-// function loadExistingFiles(productUuid = null) {
-//     if (!productUuid) return false;
+// Function to load existing files for the given product uuid
+function loadExistingFiles(productUuid = null) {
+    if (!productUuid) return false;
 
-//     $.ajax({
-//         url: apiUrl("products") + "productPond.php", // PHP script to fetch file metadata
-//         type: "GET",
-//         dataType: "json",
-//         data: { product_uuid: productUuid },
-//         success: function (response) {
-//             // console.log("response:", response);
-//             // return false;
+    $.ajax({
+        url: apiUrl("products") + "productPond.php", // PHP script to fetch file metadata
+        type: "GET",
+        dataType: "json",
+        data: { product_uuid: productUuid },
+        success: function (response) {
+            // console.log("response:", response);
+            // return false;
 
-//             // Get the FilePond instance
-//             if (response.success && response.files.length > 0) {
-//                 response.files.forEach(function (file) {
-//                     // Add each existing file to FilePond
-//                     productImagePond
-//                         .addFile(file.source, {
-//                             // Use file.source (which is your unique folder name)
-//                             options: {
-//                                 type: file.options.type, // 'local'
-//                                 file: file.options.file, // original name (size and type aren't sent from fetch_files.php but FilePond handles it)
-//                             },
-//                         })
-//                         .then(function (fileItem) {
-//                             // Crucial: Set the serverId of the file item to the unique folder name
-//                             // This links the FilePond item to the database entry for revert/load
-//                             // fileItem.setServerId(file.metadata.serverId);
-//                         });
-//                 });
-//             }
-//         },
-//         error: ajaxErrorHandler,
-//     });
-// }
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+
+            const files = response.data;
+            if (files.length > 0) {
+                // Prevent FilePond from deleting files when modal is hidden and !empty files
+                productModal.attr("data-is-pond-render", "true");
+            }
+
+            // Add files to FilePond
+            files.forEach(function (file) {
+                productImagePond.addFile(file.source, {
+                    type: file.options.type,
+                    file: file.options.file,
+                    metadata: file.metadata,
+                });
+            });
+        },
+        error: ajaxErrorHandler,
+    });
+}
 
 $(function () {
     getAllProducts();
@@ -268,13 +310,13 @@ $(function () {
 
     // Remove files from FilePond when modal is hidden
     productModal.modal("setting", "onHide", function () {
-        let isSubmit = productModal.attr("data-filepond-is-submit") === "true";
-        if (!isSubmit) {
+        let isPopulate = productModal.attr("data-is-pond-render") === "true";
+        if (!isPopulate) {
             // Delete files from FilePond
             productImagePond.removeFiles({ revert: true });
         } else {
             // Reset the flag for next time
-            productModal.attr("data-filepond-is-submit", "false");
+            productModal.attr("data-is-pond-render", "false");
         }
     });
 
@@ -412,7 +454,7 @@ $(function () {
 
                     alert(response.message);
                     getAllProducts(); // Refresh the products data
-                    productModal.attr("data-filepond-is-submit", "true"); // Set the flag BEFORE hiding the modal, For FilePond to know that the form is submitting on hide
+                    productModal.attr("data-is-pond-render", "true"); // Set the flag BEFORE hiding the modal, For FilePond to know that the form is submitting on hide
                     productModal.modal("hide");
                 },
                 complete: function () {
