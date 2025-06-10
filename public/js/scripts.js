@@ -31,7 +31,13 @@ function initModal(options = {}) {
         onShow: () => {
             $modal.find(".ui.dropdown").dropdown();
         },
-        onHide: () => {
+        // onHide: ($element) => {
+        //     // console.log($element);
+        //     // $form[0].reset();
+        //     $form.form("clear");
+        //     $submitBtn.removeClass("loading");
+        // },
+        onHidden: () => {
             // $form[0].reset();
             $form.form("clear");
             $submitBtn.removeClass("loading");
