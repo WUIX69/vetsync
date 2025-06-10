@@ -85,7 +85,7 @@ class FilePond
      *
      * @param array|string $file The uploaded file array (e.g., from $_FILES)
      * @param array $args Additional arguments (optional)
-     * @return string Returns the folder name on success, empty string on failure
+     * @return string Returns the folder name on success for filepond, empty string on failure
      */
     public function storeWhereTemporary($file, $args = [])
     {
@@ -199,6 +199,39 @@ class FilePond
     }
 
     /**
+     * Delete a folder/file from temporary folder.
+     *
+     * @param string $folderName The folder name (UUID) to delete
+     * @param array $args Additional arguments (optional)
+     * @return bool True if successful, false otherwise
+     */
+    public function deleteWhereTemporary($folderName, $args = [])
+    {
+        // Clean the folder name (in case it contains path separators or is JSON)
+        $folderName = trim($folderName, '"\'{}[]');
+
+        // Set base destination path
+        $basePath = $this->uploadDirectory . 'tmp';
+        $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
+
+        // Check if folder exists
+        if (!is_dir($folderPath)) {
+            error_log("DELETE TEMPORARY: Folder not found on temporary folder: " . $folderPath);
+            return false;
+        }
+
+        // Remove all files inside the folder, then remove the folder itself
+        foreach (glob($folderPath . '/*') as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        // Remove the folder
+        return rmdir($folderPath);
+    }
+
+    /**
      * Delete a file/folder from permanent folder.
      *
      * @param string $folderName The foldername (UUID) to delete
@@ -233,36 +266,50 @@ class FilePond
     }
 
     /**
-     * Delete a folder/file from temporary folder.
+     * Delete all folders/files from permanent folder for a given reference_uuid and reference_model.
      *
-     * @param string $folderName The folder name (UUID) to delete
+     * @param string $reference_uuid The reference UUID
+     * @param string $reference_model The destination folder name
      * @param array $args Additional arguments (optional)
-     * @return bool True if successful, false otherwise
+     * @return array Returns the $response array or true if successful
      */
-    public function deleteWhereTemporary($folderName, $args = [])
+    public function deleteWhereReferencePermanent($reference_uuid, $reference_model, $args = [])
     {
-        // Clean the folder name (in case it contains path separators or is JSON)
-        $folderName = trim($folderName, '"\'{}[]');
-
-        // Set base destination path
-        $basePath = $this->uploadDirectory . 'tmp';
-        $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
-
-        // Check if folder exists
-        if (!is_dir($folderPath)) {
-            error_log("DELETE TEMPORARY: Folder not found on temporary folder: " . $folderPath);
-            return false;
+        $attachments = Attachments::all($reference_uuid);
+        if (!$attachments['success'] || empty($attachments['data'])) {
+            error_log("DELETE WHERE REFERENCE PERMANENT: Attachments not found for $reference_uuid");
+            return $this->response;
         }
 
-        // Remove all files inside the folder, then remove the folder itself
-        foreach (glob($folderPath . '/*') as $file) {
-            if (is_file($file)) {
-                unlink($file);
+        $basePath = $this->uploadDirectory . $reference_model;
+        $allSuccess = true;
+
+        foreach ($attachments['data'] as $attachment) {
+            $folder = $attachment['folder'];
+            $folderPath = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folder;
+
+            if (is_dir($folderPath)) {
+                // Remove all files inside the folder
+                foreach (glob($folderPath . '/*') as $file) {
+                    if (is_file($file)) {
+                        unlink($file);
+                    }
+                }
+                // Remove the folder
+                if (!rmdir($folderPath)) {
+                    $allSuccess = false;
+                    error_log("DELETE PERMANENT: Failed to remove folder $folderPath");
+                }
             }
         }
 
-        // Remove the folder
-        return rmdir($folderPath);
+        // Delete all attachments from the database for this reference_model and reference_uuid
+        $deleteResult = Attachments::deleteWhereReference($reference_model, $reference_uuid);
+        if (!$deleteResult['success']) {
+            $allSuccess = false;
+        }
+
+        return $allSuccess ? ['success' => true, 'message' => 'All attachments and folders deleted successfully.'] : ['success' => false, 'message' => 'Some folders or attachments could not be deleted.'];
     }
 
     /**
