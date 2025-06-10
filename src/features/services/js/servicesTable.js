@@ -1,133 +1,330 @@
-function getServicesData() {
-    // Table Data
-    const services = [
-        {
-            name: "General Examination",
-            description:
-                "Comprehensive check-up of your pet's overall health status, including weight, temperature, heart and lung sounds, and more.",
-            price: "$45.00",
-            duration: "30 minutes",
-            category: "Examination",
-            status: "available",
-        },
-        {
-            name: "Pet Grooming",
-            description:
-                "Professional grooming service including bath, hair trimming, nail clipping, ear cleaning, and more based on your pet's needs.",
-            price: "$65.00",
-            duration: "60 minutes",
-            category: "Grooming",
-            status: "busy",
-        },
-        {
-            name: "Vaccination",
-            description:
-                "Essential vaccinations to protect your pet against common diseases. Based on age, lifestyle, and previous vaccination history.",
-            price: "$35.00",
-            duration: "15 minutes",
-            category: "Treatment",
-            status: "soon",
-        },
-        {
-            name: "Dental Cleaning",
-            description:
-                "Professional dental cleaning to prevent oral diseases and maintain your pet's dental health.",
-            price: "$80.00",
-            duration: "45 minutes",
-            category: "Treatment",
-            status: "available",
-        },
-        {
-            name: "X-Ray",
-            description:
-                "Digital radiography for accurate diagnosis of internal issues and injuries.",
-            price: "$120.00",
-            duration: "20 minutes",
-            category: "Diagnostics",
-            status: "busy",
-        },
-        {
-            name: "Surgery Consultation",
-            description:
-                "Consultation and pre-surgical assessment for planned procedures.",
-            price: "$55.00",
-            duration: "40 minutes",
-            category: "Surgery",
-            status: "available",
-        },
-        {
-            name: "Nutritional Advice",
-            description:
-                "Personalized nutrition plans and advice for your pet's optimal health.",
-            price: "$30.00",
-            duration: "25 minutes",
-            category: "Consultation",
-            status: "available",
-        },
-    ];
+// services Table variables
+const serviceSection = $("section.services-table");
+const servicesTableBody = serviceSection.find("table tbody");
 
-    let servicesTableBody = $("#servicesTableBody");
+// service Modal variables
+const serviceModal = $("#serviceModal");
+const serviceModalForm = serviceModal.find("form");
+
+// ignore for service
+// Service Image FilePond
+const serviceImagePond = FilePond.create(
+    document.querySelector(".service-pond"),
+    {
+        maxFiles: 2,
+        maxFileSize: "2MB",
+        allowMultiple: true,
+        allowFileTypes: ["image/*"],
+
+        labelIdle: `Drag & Drop your image or <span class="filepond--label-action">Browse</span>`,
+
+        imagePreviewHeight: 170,
+        imageCropAspectRatio: "1:1",
+        imageResizeTargetWidth: 200,
+        imageResizeTargetHeight: 200,
+    }
+);
+
+// ignore for service
+// Set Services Image FilePond server configuration
+serviceImagePond.setOptions({
+    server: {
+        url: "",
+        headers: {},
+        timeout: 7000,
+        withCredentials: false,
+        process: {
+            url: "",
+            method: "POST",
+            ondata: function (formData) {
+                formData.append("action", "process");
+                return formData;
+            },
+        },
+        revert: {
+            url: "",
+            method: "DELETE",
+        },
+        load: {
+            url: "?foldername=", // FilePond appends the source (your unique folder name) to this URL
+            method: "GET",
+        },
+        files: [], // Initially empty, will be populated by loadExistingFiles
+    },
+});
+
+function getAllServices() {
     servicesTableBody.empty();
 
-    let servicesHTML = "";
-    services.forEach((service) => {
-        const statusClass =
-            service.status === "available"
-                ? "status available"
-                : service.status === "unavailable"
-                ? "status unavailable"
-                : service.status === "busy"
-                ? "status busy"
-                : service.status === "soon"
-                ? "status soon"
-                : "status";
-        const statusIcon =
-            service.status === "available"
-                ? '<i class="check circle icon"></i>'
-                : service.status === "unavailable"
-                ? '<i class="times circle icon"></i>'
-                : service.status === "busy"
-                ? '<i class="clock outline icon"></i>'
-                : service.status === "soon"
-                ? '<i class="hourglass half icon"></i>'
-                : "";
-        const statusText =
-            service.status.charAt(0).toUpperCase() + service.status.slice(1);
-        servicesHTML += `
-            <tr>
-                <td>${service.name}</td>
-                <td>${service.description}</td>
-                <td>${service.price}</td>
-                <td>${service.duration}</td>
-                <td>${service.category}</td>
-                <td><span class="service-status ${statusClass}">${statusIcon} ${statusText}</span></td>
-                <td>
-                    <div class="ui compact floating selection dropdown services-list-actions-dd">
-                        <i class="dropdown icon"></i>
-                        <div class="text">Actions</div>
-                        <div class="menu">
-                            <div class="item" data-value="view">View</div>
-                            <div class="item" data-value="edit">Edit</div>
-                            <div class="item" data-value="delete">Delete</div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        `;
-    });
-
-    servicesTableBody.append(servicesHTML);
-    servicesTableBody.find(".ui.dropdown").dropdown();
-
-    // Add event listener to dropdown
-    $(".services-list-actions-dd").dropdown({
-        onChange: function (value) {
-            console.log(value);
-            // Add your logic for view, edit, delete here
+    $.ajax({
+        url: apiUrl("services") + "services.php",
+        method: "GET",
+        data: {
+            action: "all",
         },
+        dataType: "json",
+        timeout: 5000,
+        success: function (response) {
+            // console.log("API Response:", response);
+            // return false;
+
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+
+            const services = response.data;
+            let servicesHTML = "";
+
+            services.forEach((service, idx) => {
+                servicesHTML += `
+                    <tr class="service-item" data-service-uuid="${
+                        service.uuid
+                    }">
+                        <td>
+                            <img src="${asset(service.image)}" alt="Services">
+                        </td>
+                        <td>${service.name}</td>
+                        <td>
+                            ${service.description}
+                        </td>
+                        <td>&#8369; ${service.price}</td>
+                        <td>${service.duration}</td>
+                        <td>
+                            <i class="${service.category.icon} icon"></i>
+                            ${service.category.label}
+                        </td>
+                        <td>
+                            <span class="text-capitalize service-status ${
+                                service.status.label
+                            }">
+                                <i class="${service.status.icon} icon"></i>
+                                ${service.status.label}
+                            </span>
+                        </td>
+                        <td>
+                            ${service.created_at}
+                        </td>
+                        <td>
+                            ${service.updated_at}
+                        </td>
+                        <td>
+                            <div class="ui compact floating selection dropdown actions-dd">
+                                <i class="dropdown icon"></i>
+                                <div class="text">Actions</div>
+                                <div class="menu">
+                                    <div class="item" data-value="view"><i class="eye icon"></i>View</div>
+                                    <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
+                                    <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            servicesTableBody.append(servicesHTML);
+        },
+        complete: function () {
+            // Add event listener to dropdown
+            servicesTableBody.find(".ui.dropdown").dropdown();
+            servicesTableBody.find(".actions-dd").dropdown({
+                onChange: function (value) {
+                    // console.log(value);
+
+                    // Get the category ID on its tr
+                    const serviceUuid = $(this)
+                        .closest(".service-item")
+                        .data("service-uuid");
+
+                    if (value === "view" || value === "edit") {
+                        getSingleService(serviceUuid);
+                    } else if (value === "delete") {
+                        deleteService(serviceUuid);
+                    } else {
+                        return false;
+                    }
+                },
+            });
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
+function getSingleService(serviceUuid = null) {
+    if (!serviceUuid) return false;
+
+    // loadExistingFiles(serviceUuid);
+
+    $.ajax({
+        url: apiUrl("services") + "services.php",
+        method: "GET",
+        data: {
+            action: "single",
+            uuid: serviceUuid,
+        },
+        dataType: "json",
+        timeout: 5000,
+        success: function (response) {
+            // console.log("API Response:", response);
+            // return false;
+
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+
+            // Populate the form fields
+            const service = response.data;
+            $.each(service, function (key, value) {
+                serviceModalForm.find('[name="' + key + '"]').val(value);
+            });
+
+            // Show the modal
+            serviceModal.modal("show");
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
+function deleteService(serviceUuid = null) {
+    if (!serviceUuid) return false;
+
+    // console.log(serviceUuid);
+    // return false;
+
+    $.ajax({
+        url: apiUrl("services") + "services.php?uuid=" + serviceUuid,
+        method: "DELETE",
+        dataType: "json",
+        timeout: 5000,
+        success: function (response) {
+            // console.log("API Response:", response);
+            // return false;
+
+            alert(response.message);
+            if (!response.success) return false;
+            getAllServices(); // Refresh the services data
+        },
+        error: ajaxErrorHandler,
     });
 }
 
 $(function () {
-    getServicesData();
+    getAllServices();
+
+    // Get Single service and open modal
+    $("body").on("click", ".service-item", function (e) {
+        if (e.target.closest(".ui.dropdown")) return false;
+        const serviceUuid = $(this).data("service-uuid");
+        getSingleService(serviceUuid);
+    });
+
+    // Remove files from FilePond when modal is hidden
+    // serviceModal.modal("setting", "onHide", function () {
+    //     serviceImagePond.removeFiles();
+    // });
+
+    // Validate service Modal Form
+    serviceModalForm.form({
+        fields: {
+            name: {
+                identifier: "name",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter a name",
+                    },
+                ],
+            },
+            description: {
+                identifier: "description",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter a description",
+                    },
+                ],
+            },
+            price: {
+                identifier: "price",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter an original price",
+                    },
+                    {
+                        type: "decimal",
+                        prompt: "Please enter a valid original price",
+                    },
+                ],
+            },
+            duration: {
+                identifier: "duration",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter an original price",
+                    },
+                ],
+            },
+            status: {
+                identifier: "status",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select a status",
+                    },
+                ],
+            },
+            category_id: {
+                identifier: "category_id",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select a category",
+                    },
+                ],
+            },
+        },
+        inline: true,
+        on: "submit",
+        onSuccess: function (event, fields) {
+            event.preventDefault();
+            const $submitBtn = $(this).find("button[type=submit]");
+            const formData = new FormData(serviceModalForm[0]);
+
+            let action = "store";
+            if (formData.get("uuid")) action = "update";
+            formData.append("action", action);
+
+            // console.log(formData);
+            // return false;
+
+            $.ajax({
+                url: apiUrl("services") + "services.php", // Change to your actual services endpoint if needed
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                timeout: 5000,
+                beforeSend: function () {
+                    $submitBtn.addClass("loading");
+                },
+                success: function (response) {
+                    // console.log(response);
+                    // return false;
+
+                    alert(response.message);
+                    getAllServices(); // Refresh the service data
+                    serviceModal.modal("hide");
+                },
+                complete: function () {
+                    $submitBtn.removeClass("loading");
+                },
+                error: ajaxErrorHandler,
+            });
+        },
+    });
 });

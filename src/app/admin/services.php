@@ -6,6 +6,7 @@
     <?= shared('elements/meta') ?>
     <title>Services Management - Admin</title>
     <?= shared('elements/styles') ?>
+    <?= shared('elements/filepond/styles') ?>
 </head>
 
 <body>
@@ -45,6 +46,7 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
+    <?= shared('elements/filepond/scripts') ?>
     <script src="<?= featured('services/js/serviceCategoriesTable.js', true) ?>"></script>
     <script src="<?= featured('services/js/servicesTable.js', true) ?>"></script>
 </body>

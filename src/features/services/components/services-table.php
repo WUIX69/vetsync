@@ -75,12 +75,15 @@
             <table class="ui fixed single line small center aligned very basic selectable table">
                 <thead>
                     <tr>
-                        <th>Service Name</th>
+                        <th>Image</th>
+                        <th>Name</th>
                         <th>Description</th>
                         <th>Price</th>
                         <th>Duration</th>
                         <th>Category</th>
                         <th>Status</th>
+                        <th>Created_at</th>
+                        <th>Updated_at</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

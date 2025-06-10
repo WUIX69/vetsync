@@ -1,3 +1,7 @@
+<?php
+use VetSync\Models\Categories;
+$categories = Categories::all('services')['data'] ?? [];
+?>
 <style>
     /* Service Form Modal */
     .service-form-modal .ui.form .field {
@@ -26,6 +30,7 @@
     </div>
     <div class="content">
         <form class="ui form">
+            <input type="hidden" name="uuid">
             <div class="field">
                 <label>Service Name</label>
                 <input type="text" name="name" placeholder="Enter service name">
@@ -38,7 +43,7 @@
                 <div class="field">
                     <label>Price</label>
                     <div class="ui labeled input">
-                        <div class="ui label">$</div>
+                        <div class="ui label">&#8369;</div>
                         <input type="number" name="price" placeholder="0.00">
                     </div>
                 </div>
@@ -66,40 +71,31 @@
             <div class="field">
                 <label>Category</label>
                 <div class="ui selection dropdown">
-                    <input type="hidden" name="category">
+                    <input type="hidden" name="category_id">
                     <i class="dropdown icon"></i>
                     <div class="default text">Select Category</div>
                     <div class="menu">
-                        <div class="item" data-value="examination">
-                            <i class="stethoscope icon"></i>Examination
-                        </div>
-                        <div class="item" data-value="treatment">
-                            <i class="medkit icon"></i>Treatment
-                        </div>
-                        <div class="item" data-value="surgery">
-                            <i class="cut icon"></i>Surgery
-                        </div>
-                        <div class="item" data-value="grooming">
-                            <i class="shower icon"></i>Grooming
-                        </div>
+                        <!-- Category Options for services -->
+                        <?php foreach ($categories as $category) { ?>
+                            <div class="item" data-value="<?= $category['id'] ?>">
+                                <i class="<?= $category['icon'] ?> icon"></i><?= $category['name'] ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
             <div class="field">
                 <label>Upload Image</label>
-                <input type="file" name="image">
-            </div>
-            <div class="field image-preview">
-                <img id="imagePreview" src="<?= asset('img/services/placeholder.jpg') ?>" alt="Service Image Preview">
+                <input type="file" name="file" class="filepond service-pond">
             </div>
             <div class="actions">
-                <div class="ui black deny button">
+                <button class="ui black deny clear button" type="reset">
                     Cancel
-                </div>
-                <div class="ui positive right labeled icon button">
+                </button>
+                <button class="ui positive right labeled icon submit button" type="submit">
                     Save
                     <i class="checkmark icon"></i>
-                </div>
+                </button>
             </div>
         </form>
     </div>
