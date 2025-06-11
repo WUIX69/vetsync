@@ -18,9 +18,7 @@ const productImagePond = FilePond.create(
         maxFileSize: "2MB",
         allowMultiple: true,
         allowFileTypes: ["image/*"],
-
         labelIdle: `Drag & Drop your image or <span class="filepond--label-action">Browse</span>`,
-
         imagePreviewHeight: 170,
         imageCropAspectRatio: "1:1",
         imageResizeTargetWidth: 200,
@@ -55,27 +53,23 @@ const productImagePond = FilePond.create(
             // const showErrorState = totalFileSize > 26214400; // 25MB in bytes
             // console.log({ totalFileSize, showErrorState });
         },
+        server: {
+            url: apiUrl("products") + "productPond.php",
+            headers: {},
+            timeout: 7000,
+            withCredentials: false,
+            process: {
+                url: "",
+            },
+            revert: {
+                url: "",
+            },
+            load: {
+                url: "?folder=",
+            },
+        },
     }
 );
-
-// Set Product Image FilePond server configuration
-productImagePond.setOptions({
-    server: {
-        url: apiUrl("products") + "productPond.php",
-        headers: {},
-        timeout: 7000,
-        withCredentials: false,
-        process: {
-            url: "",
-        },
-        revert: {
-            url: "",
-        },
-        load: {
-            url: "?folder=",
-        },
-    },
-});
 
 function getAllProducts() {
     productsTableBody.empty();
@@ -269,6 +263,7 @@ function deleteProduct(productUuid = null) {
 }
 
 $(function () {
+    // Get all products on page load
     getAllProducts();
 
     // Get Single Product and open modal
