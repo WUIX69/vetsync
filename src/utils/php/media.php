@@ -9,7 +9,7 @@ function mediaHelper($dir = '', $folder = '', $filename = '')
 
         $source = urlFileHelper('uploads', $fullPath);
         if (!$source || $source == '') {
-            return asset('img/profiles/profile.jpg');
+            return asset('img/placeholders/image.png');
         }
 
         return $source;
@@ -30,7 +30,7 @@ function media($reference_uuid, $is_all = false)
     }
 
     if (empty($attachment)) {
-        return asset('img/profiles/profile.jpg');
+        return asset('img/placeholders/image.png');
     }
 
     if ($is_all) {
