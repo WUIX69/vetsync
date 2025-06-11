@@ -10,7 +10,7 @@ use VetSync\Models\Attachments;
 use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
 
-use VetSync\Services\FilePond;
+use VetSync\Services\FileManager;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     $response['message'] = 'Invalid request method';
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
 
 try {
 
-    $filepond = new FilePond();
+    $fileManager = new FileManager();
     $reference_model = 'products';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -44,7 +44,7 @@ try {
             $data['uuid'] = uuid();
             $response = Products::store($data);
             foreach ($data['files'] as $file) {
-                $uploadResult = $filepond->storeWherePermanent($file, $reference_model, $data['uuid']);
+                $uploadResult = $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
                 error_log("uploadResult: " . print_r($uploadResult, true));
             }
 
@@ -53,7 +53,7 @@ try {
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
             $response = Products::update($data);
             foreach ($data['files'] as $file) {
-                $uploadResult = $filepond->storeWherePermanent($file, $reference_model, $data['uuid']);
+                $uploadResult = $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
                 error_log("uploadResult: " . print_r($uploadResult, true));
             }
 
@@ -100,7 +100,7 @@ try {
         $product_uuid = $_GET['uuid'] ?? null;
         $response = Products::delete($product_uuid);
         if ($response['success']) {
-            $response = $filepond->deleteWhereReferencePermanent($product_uuid, $reference_model);
+            $response = $fileManager->deleteWhereReferencePermanent($product_uuid, $reference_model);
         }
     }
 

@@ -4,7 +4,7 @@ namespace VetSync\Services;
 
 use VetSync\Models\Attachments;
 
-class FilePond
+class FileManager
 {
     private $uploadDirectory;
     private $response;

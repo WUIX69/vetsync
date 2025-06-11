@@ -4,7 +4,7 @@ include '../../../core/app.php';
 apiHeaders();
 
 use VetSync\Models\Users;
-use VetSync\Services\FilePond;
+use VetSync\Services\FileManager;
 use VetSync\Utils\Php\Helpers;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -20,8 +20,8 @@ try {
 
     if ($action === 'profile-upload') {
 
-        $filePond = new FilePond();
-        $response = $filePond->storeWhereInstant($_FILES['profile'], 'profiles', $user_uuid);
+        $fileManager = new FileManager();
+        $response = $fileManager->storeWhereInstant($_FILES['profile'], 'profiles', $user_uuid);
         $response['data']['profile_url'] = userData()['profile'];
 
     } else if ($action === 'profile-update') {

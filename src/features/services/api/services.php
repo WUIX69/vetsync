@@ -9,7 +9,7 @@ use VetSync\Models\Categories;
 use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
 
-use VetSync\Services\FilePond;
+use VetSync\Services\FileManager;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     $response['message'] = 'Invalid request method';
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
 
 try {
 
-    $filepond = new FilePond();
+    $fileManager = new FileManager();
     $reference_model = 'services';
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,11 +38,11 @@ try {
 
         if ($action === 'store') {
             $data['uuid'] = uuid();
-            // $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
+            // $response = $fileManager->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             $response = Services::store($data);
         } else if ($action === 'update') {
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
-            // $response = $filepond->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
+            // $response = $fileManager->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             $response = Services::update($data);
         } else {
             $response['message'] = 'Invalid POST action';
