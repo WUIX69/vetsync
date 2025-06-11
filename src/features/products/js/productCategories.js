@@ -6,17 +6,33 @@ const categoriesTableBody = productCategorySection.find("table tbody");
 const productCategoryModal = $("#productCategoryModal");
 const productCategoryModalForm = productCategoryModal.find("form");
 
-function getAllProductCategories() {
-    categoriesTableBody.empty();
+function productCategoriesAjax(options) {
+    // Set default URL prefix and headers
+    let url = apiUrl("shared") + "categories.php";
+    if (options.urlParams) {
+        url += "?" + $.param(options.urlParams);
+    }
 
-    $.ajax({
-        url: apiUrl("products") + "productCategories.php",
-        method: "GET",
-        data: {
-            action: "all",
+    const defaultOptions = {
+        url: url,
+        headers: {
+            "X-Reference-Model": "products",
         },
         dataType: "json",
         timeout: 5000,
+        error: ajaxErrorHandler,
+    };
+    // Merge defaults with user options (user options take precedence)
+    const finalOptions = $.extend(true, {}, defaultOptions, options);
+    return $.ajax(finalOptions);
+}
+
+function getAllProductCategories() {
+    categoriesTableBody.empty();
+
+    productCategoriesAjax({
+        method: "GET",
+        data: { action: "all" },
         success: function (response) {
             // console.log("API Response:", response);
             // return false;
@@ -88,22 +104,18 @@ function getAllProductCategories() {
                 },
             });
         },
-        error: ajaxErrorHandler,
     });
 }
 
 function getSingleProductCategory(categoryId = null) {
     if (!categoryId) return false;
 
-    $.ajax({
-        url: apiUrl("products") + "productCategories.php",
+    productCategoriesAjax({
         method: "GET",
         data: {
             action: "single",
             id: categoryId,
         },
-        dataType: "json",
-        timeout: 5000,
         success: function (response) {
             // console.log("API Response:", response);
             // return false;
@@ -125,7 +137,6 @@ function getSingleProductCategory(categoryId = null) {
             // Show the modal
             productCategoryModal.modal("show");
         },
-        error: ajaxErrorHandler,
     });
 }
 
@@ -135,11 +146,9 @@ function deleteProductCategory(categoryId = null) {
     // console.log(categoryId);
     // return false;
 
-    $.ajax({
-        url: apiUrl("products") + "productCategories.php?id=" + categoryId,
+    productCategoriesAjax({
+        urlParams: { id: categoryId },
         method: "DELETE",
-        dataType: "json",
-        timeout: 5000,
         success: function (response) {
             // console.log("API Response:", response);
             // return false;
@@ -148,7 +157,6 @@ function deleteProductCategory(categoryId = null) {
             if (!response.success) return false;
             getAllProductCategories(); // Refresh the product categories data
         },
-        error: ajaxErrorHandler,
     });
 }
 
@@ -211,15 +219,12 @@ $(function () {
             // console.log(fields);
             // return false;
 
-            $.ajax({
-                url: apiUrl("products") + "productCategories.php",
+            productCategoriesAjax({
                 method: "POST",
                 data: {
                     action: fields.id ? "update" : "store", // If id is present use update, otherwise use store
                     ...fields,
                 },
-                dataType: "json",
-                timeout: 5000,
                 beforeSend: function () {
                     $submitBtn.addClass("loading");
                 },
@@ -234,7 +239,6 @@ $(function () {
                 complete: function () {
                     $submitBtn.removeClass("loading");
                 },
-                error: ajaxErrorHandler,
             });
         },
     });
