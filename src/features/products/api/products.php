@@ -71,7 +71,8 @@ try {
             $products['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [
-                    'category_name' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
+                    'image' => media($item['uuid']),
+                    'category' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
                     'status' => Helpers::productStatus($item['status']),
                     'tags' => $item['tags'] ? count(explode(',', $item['tags'])) : 0,
                     'specs' => $item['specs'] ? count(explode(',', $item['specs'])) : 0,

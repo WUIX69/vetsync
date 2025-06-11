@@ -98,27 +98,19 @@ function getAllProducts() {
 
             products.forEach((product, idx) => {
                 productsHTML += `
-                    <tr class="product-item" data-product-uuid="${
-                        product.uuid
-                    }">
+                    <tr class="product-item" data-product-uuid="${product.uuid}">
                         <td>
-                            <img src="${asset(
-                                product.image
-                            )}" alt="Product" class="product-image">
+                            <img src="${product.image}" alt="Product" class="product-image">
                         </td>
                         <td class="product-name">${product.name}</td>
                         <td class="product-category">
-                            <i class="${product.category_name.icon} icon"></i>
-                            ${product.category_name.label}
+                            <i class="${product.category.icon} icon"></i>
+                            ${product.category.label}
                         </td>
-                        <td class="product-price">&#8369; ${
-                            product.og_price
-                        }</td>
+                        <td class="product-price">&#8369; ${product.og_price}</td>
                         <td class="product-stock">${product.stock}</td>
                         <td>
-                            <span class="text-capitalize product-status ${
-                                product.status.label
-                            }">
+                            <span class="text-capitalize product-status ${product.status.label}">
                                 <i class="${product.status.icon} icon"></i>
                                 ${product.status.label}
                             </span>
