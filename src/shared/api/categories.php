@@ -1,6 +1,6 @@
 <?php
 
-include '../../../core/app.php';
+include '../../core/app.php';
 apiHeaders();
 
 use VetSync\Models\Categories;
@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET
 
 try {
 
-    $reference_model = 'products';
+    $reference_model = $_SERVER['HTTP_X_REFERENCE_MODEL'] ?? null; // (e.g. products, services) only
+    error_log("reference_model: " . $reference_model);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'] ?? null;
@@ -46,6 +47,8 @@ try {
 
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $category_id = $_GET['id'] ?? null;
+        error_log("category_id: " . $category_id);
+        error_log("reference_model on delete: " . $reference_model);
         $response = Categories::delete($category_id, $reference_model);
     }
 
