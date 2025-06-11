@@ -6,8 +6,8 @@
         justify-content: center;
         gap: 1rem;
 
-        margin-top: 1.25rem;
-        height: 91%;
+        margin-top: 50px !important;
+        height: calc(100% - 69px);
     }
 
     main section.system-info .info {
