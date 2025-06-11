@@ -36,7 +36,7 @@ const productImagePond = FilePond.create(
             if (file.origin === 3 && !isModalHide) {
                 console.log("is local delete");
                 $.ajax({
-                    url: apiUrl("products") + "productPond.php",
+                    url: apiUrl("shared") + "filepond.php",
                     method: "DELETE",
                     data: file.serverId,
                     processData: false,
@@ -54,8 +54,10 @@ const productImagePond = FilePond.create(
             // console.log({ totalFileSize, showErrorState });
         },
         server: {
-            url: apiUrl("products") + "productPond.php",
-            headers: {},
+            url: apiUrl() + "filepond.php",
+            headers: {
+                "X-Reference-Model": "products",
+            },
             timeout: 7000,
             withCredentials: false,
             process: {
