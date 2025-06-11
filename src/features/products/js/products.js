@@ -6,6 +6,10 @@ const productsTableBody = productSection.find("table tbody");
 const productModal = $("#productModal");
 const productModalForm = productModal.find("form");
 
+// Filepond Flags (Required)
+let isModalHide = false;
+let isPondRender = false;
+
 // Product Image FilePond
 const productImagePond = FilePond.create(
     document.querySelector(".product-pond"),
@@ -30,9 +34,8 @@ const productImagePond = FilePond.create(
         onremovefile: function (error, file) {
             // console.log("On Remove File:", file);
 
-            // Only handle "local" files (already on server)
-            if (file.origin === 3 /* FileOrigin.LOCAL */) {
-                // Manually call your API to delete the file
+            // Only handle "local" files (already on server) and only if not modal hide
+            if (file.origin === 3 && !isModalHide) {
                 console.log("is local delete");
                 $.ajax({
                     url: apiUrl("products") + "productPond.php",
@@ -209,10 +212,8 @@ function getSingleProduct(productUuid = null) {
             const product = response.data;
             $.each(product, function (key, value) {
                 if (key === "files") {
-                    if (value.length > 0) {
-                        // Prevent FilePond from deleting files when modal is hidden and !empty files
-                        productModal.attr("data-is-pond-render", "true");
-                    }
+                    // Prevent FilePond from deleting files when modal is hidden and !empty files
+                    if (value.length > 0) isPondRender = true;
 
                     // Add files to FilePond
                     value.forEach(function (file) {
@@ -279,14 +280,15 @@ $(function () {
 
     // Remove files from FilePond when modal is hidden
     productModal.modal("setting", "onHide", function () {
-        let isPopulate = productModal.attr("data-is-pond-render") === "true";
-        if (!isPopulate) {
-            // Delete files from FilePond
+        isModalHide = true;
+        if (!isPondRender) {
+            // Delete files from storage and FilePond
             productImagePond.removeFiles({ revert: true });
         } else {
-            // Reset the flag for next time
-            productModal.attr("data-is-pond-render", "false");
+            // Delete files from FilePond UI
             productImagePond.removeFiles();
+            // Reset the flag for next time
+            isPondRender = false;
         }
     });
 
@@ -424,7 +426,7 @@ $(function () {
 
                     alert(response.message);
                     getAllProducts(); // Refresh the products data
-                    productModal.attr("data-is-pond-render", "true"); // Set the flag BEFORE hiding the modal, For FilePond to know that the form is submitting on hide
+                    isPondRender = true; // Set the flag BEFORE hiding the modal, For FilePond to know that the form is submitting on hide
                     productModal.modal("hide");
                 },
                 complete: function () {
