@@ -82,7 +82,20 @@ function app($link = "") {
     return urlFileHelper("app", url);
 }
 
-// API URL Helper
+/**
+ * Returns the API base URL for a given feature or for shared APIs.
+ *
+ * @param {string|null} feature - The feature name (e.g., "products"), or "shared" for shared APIs.
+ * @returns {string} The full API base URL for the specified feature.
+ */
 function apiUrl(feature = null) {
-    return `${BASE_URL()}src/features/${feature}/api/`;
+    let url = "";
+
+    if (feature === "shared" || feature === null) {
+        url = BASE_URL() + "src/shared/api/";
+    } else {
+        url = BASE_URL() + "src/features/" + feature + "/api/";
+    }
+
+    return url;
 }
