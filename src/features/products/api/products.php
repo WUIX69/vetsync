@@ -5,6 +5,7 @@ apiHeaders();
 
 use VetSync\Models\Products;
 use VetSync\Models\Categories;
+use VetSync\Models\Attachments;
 
 use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
@@ -89,6 +90,7 @@ try {
         } else if ($action === 'single') {
             $product_uuid = $_GET['uuid'] ?? null;
             $response = Products::single($product_uuid);
+            $response['data']['files'] = Attachments::all($product_uuid)['data'] ?? []; // Get product files
         } else {
             $response['message'] = 'Invalid GET action';
         }

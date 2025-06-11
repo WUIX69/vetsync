@@ -21,16 +21,36 @@ const productImagePond = FilePond.create(
         imageCropAspectRatio: "1:1",
         imageResizeTargetWidth: 200,
         imageResizeTargetHeight: 200,
+        onprocessfile: function (error, file) {
+            // console.log("On Process Files:", file);
+        },
+        onaddfile: function (error, file) {
+            // console.log("On Add File:", file);
+        },
         onremovefile: function (error, file) {
-            // console.log("file.serverId", file.serverId);
+            // console.log("On Remove File:", file);
+
+            // Only handle "local" files (already on server)
+            if (file.origin === 3 /* FileOrigin.LOCAL */) {
+                // Manually call your API to delete the file
+                console.log("is local delete");
+                $.ajax({
+                    url: apiUrl("products") + "productPond.php",
+                    method: "DELETE",
+                    data: file.serverId,
+                    processData: false,
+                    contentType: false,
+                    error: ajaxErrorHandler,
+                });
+            }
         },
         onupdatefiles: function (files) {
-            const totalFileSize = files.reduce(
-                (total, file) => total + file.fileSize,
-                0
-            );
-            const showErrorState = totalFileSize > 26214400; // 25MB in bytes
-            console.log({ totalFileSize, showErrorState });
+            // const totalFileSize = files.reduce(
+            //     (total, file) => total + file.fileSize,
+            //     0
+            // );
+            // const showErrorState = totalFileSize > 26214400; // 25MB in bytes
+            // console.log({ totalFileSize, showErrorState });
         },
     }
 );
@@ -44,53 +64,13 @@ productImagePond.setOptions({
         withCredentials: false,
         process: {
             url: "",
-            onload: function (response) {
-                const parsedResponse = JSON.parse(response);
-                return parsedResponse;
-            },
         },
         revert: {
             url: "",
         },
-        load: (source, load, error, progress, abort, headers) => {
-            console.log("FilePond load called with source:", source);
-            // source is your folder name or unique file id
-            const xhr = new XMLHttpRequest();
-            xhr.open(
-                "GET",
-                apiUrl("products") +
-                    "productPond.php?folder=" +
-                    encodeURIComponent(source)
-            );
-            xhr.responseType = "blob";
-
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    load(xhr.response); // Pass the Blob to FilePond
-                } else {
-                    error("Could not load file");
-                }
-            };
-
-            xhr.onerror = function () {
-                error("Could not load file");
-            };
-
-            xhr.onprogress = function (e) {
-                progress(e.lengthComputable, e.loaded, e.total);
-            };
-
-            xhr.send();
-
-            // Provide abort method
-            return {
-                abort: () => {
-                    xhr.abort();
-                    abort();
-                },
-            };
+        load: {
+            url: "?folder=",
         },
-        files: [], // Initially empty, will be populated by loadExistingFiles
     },
 });
 
@@ -205,7 +185,7 @@ function getAllProducts() {
 
 function getSingleProduct(productUuid = null) {
     if (!productUuid) return false;
-    loadExistingFiles(productUuid);
+    // loadExistingFiles(productUuid);
 
     $.ajax({
         url: apiUrl("products") + "products.php",
@@ -228,7 +208,33 @@ function getSingleProduct(productUuid = null) {
             // Populate the form fields
             const product = response.data;
             $.each(product, function (key, value) {
-                productModalForm.find('[name="' + key + '"]').val(value);
+                if (key === "files") {
+                    if (value.length > 0) {
+                        // Prevent FilePond from deleting files when modal is hidden and !empty files
+                        productModal.attr("data-is-pond-render", "true");
+                    }
+
+                    // Add files to FilePond
+                    value.forEach(function (file) {
+                        productImagePond
+                            .addFile(file.folder, {
+                                type: "local",
+                                options: {
+                                    file: {
+                                        name: file.filename,
+                                    },
+                                    metadata: {
+                                        serverId: file.folder,
+                                    },
+                                },
+                            })
+                            .then(function (fileItem) {
+                                // console.log("Added fileItem:", fileItem);
+                            });
+                    });
+                } else {
+                    productModalForm.find('[name="' + key + '"]').val(value);
+                }
             });
 
             // Show the modal
@@ -261,43 +267,6 @@ function deleteProduct(productUuid = null) {
     });
 }
 
-// Function to load existing files for the given product uuid
-function loadExistingFiles(productUuid = null) {
-    if (!productUuid) return false;
-
-    $.ajax({
-        url: apiUrl("products") + "productPond.php", // PHP script to fetch file metadata
-        type: "GET",
-        dataType: "json",
-        data: { product_uuid: productUuid },
-        success: function (response) {
-            // console.log("response:", response);
-            // return false;
-
-            if (!response.success) {
-                alert(response.message);
-                return false;
-            }
-
-            const files = response.data;
-            if (files.length > 0) {
-                // Prevent FilePond from deleting files when modal is hidden and !empty files
-                productModal.attr("data-is-pond-render", "true");
-            }
-
-            // Add files to FilePond
-            files.forEach(function (file) {
-                productImagePond.addFile(file.source, {
-                    type: file.options.type,
-                    file: file.options.file,
-                    metadata: file.metadata,
-                });
-            });
-        },
-        error: ajaxErrorHandler,
-    });
-}
-
 $(function () {
     getAllProducts();
 
@@ -317,6 +286,7 @@ $(function () {
         } else {
             // Reset the flag for next time
             productModal.attr("data-is-pond-render", "false");
+            productImagePond.removeFiles();
         }
     });
 
