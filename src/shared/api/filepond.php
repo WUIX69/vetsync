@@ -1,6 +1,6 @@
 <?php
 
-include '../../../core/app.php';
+include '../../core/app.php';
 // apiHeaders();
 
 use VetSync\Services\FileManager;
@@ -8,7 +8,7 @@ use VetSync\Services\FileManager;
 try {
 
     $fileManager = new FileManager();
-    $reference_model = 'products';
+    $reference_model = $_SERVER['HTTP_X_REFERENCE_MODEL'] ?? null;
 
     switch ($_SERVER['REQUEST_METHOD']) {
         case 'POST':
