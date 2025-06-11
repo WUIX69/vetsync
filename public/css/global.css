@@ -366,6 +366,7 @@ body.pushable > .pusher {
 
 .filepond--drop-label label {
     font-size: 0.875em !important;
+    color: var(--color-dark-variant);
 }
 
 .filepond--credits {
