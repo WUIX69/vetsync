@@ -37,6 +37,9 @@ const productImagePond = FilePond.create(
                 console.log("is local delete");
                 $.ajax({
                     url: apiUrl("shared") + "filepond.php",
+                    headers: {
+                        "X-Reference-Model": "products",
+                    },
                     method: "DELETE",
                     data: file.serverId,
                     processData: false,
