@@ -44,8 +44,7 @@ try {
             $data['uuid'] = uuid();
             $response = Products::store($data);
             foreach ($data['files'] as $file) {
-                $uploadResult = $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
-                error_log("uploadResult: " . print_r($uploadResult, true));
+                $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
             }
 
         } else if ($action === 'update') {
@@ -53,8 +52,7 @@ try {
             $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
             $response = Products::update($data);
             foreach ($data['files'] as $file) {
-                $uploadResult = $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
-                error_log("uploadResult: " . print_r($uploadResult, true));
+                $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
             }
 
         } else {
@@ -101,7 +99,7 @@ try {
         $product_uuid = $_GET['uuid'] ?? null;
         $response = Products::delete($product_uuid);
         if ($response['success']) {
-            $response = $fileManager->deleteWhereReferencePermanent($product_uuid, $reference_model);
+            $fileManager->deleteWhereReferencePermanent($product_uuid, $reference_model);
         }
     }
 
