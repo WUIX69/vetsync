@@ -4,6 +4,7 @@ include '../../../core/app.php';
 apiHeaders();
 
 use VetSync\Models\Users;
+use VetSync\Models\Attachments;
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     $response['message'] = 'Invalid request GET method';
@@ -25,6 +26,7 @@ try {
         'dob' => $user['dob'],
         'location' => $user['location'],
         'urls' => $user['urls'] ? explode(',', $user['urls']) : [], // Format the urls array
+        'profile' => Attachments::single($user_uuid)['data'],
     ];
 
     $response = array_merge($response, [

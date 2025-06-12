@@ -22,6 +22,21 @@ function getProfile() {
                             `<input type="url" placeholder="Enter your URL" name="urls[]" value="${url}">`
                         )
                     );
+                } else if (name == "profile") {
+                    if (value && Object.keys(value).length !== 0) {
+                        window.profilePond.addFile(value.folder, {
+                            type: "local",
+                            options: {
+                                file: {
+                                    name: value.filename,
+                                },
+                                metadata: {
+                                    name: value.filename,
+                                    serverId: value.folder,
+                                },
+                            },
+                        });
+                    }
                 } else {
                     // Populate normal input fields
                     $(`[name="${name}"]`).val(value);
