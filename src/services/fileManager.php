@@ -137,7 +137,7 @@ class FileManager
     {
 
         if (empty($folderName)) {
-            $this->response['message'] = 'STORE PERMANENT: Folder name not found';
+            error_log('STORE PERMANENT: Folder name not found');
             return $this->response;
         }
 
@@ -150,14 +150,14 @@ class FileManager
 
         // Check if source folder exists
         if (!is_dir($sourceFolderPath)) {
-            $this->response['message'] = 'STORE PERMANENT: Source folder not found';
+            error_log('STORE PERMANENT: Source folder not found');
             return $this->response;
         }
 
         // Get the first file in the source folder (assuming there's just one)
         $files = glob($sourceFolderPath . '/*');
         if (empty($files) || !is_file($files[0])) {
-            $this->response['message'] = 'STORE PERMANENT: File not found';
+            error_log('STORE PERMANENT: Source file not found');
             return $this->response;
         }
 
@@ -169,21 +169,21 @@ class FileManager
 
         // Ensure destination directory exists
         if (!is_dir($destPath) && !mkdir($destPath, 0777, true)) {
-            $this->response['message'] = 'Moved: Destination folder not found';
+            error_log('STORE PERMANENT: Destination folder does not exist');
             return $this->response;
         }
 
         // Create destination folder using the same UUID
         $destFolderPath = rtrim($destPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $folderName;
         if (!is_dir($destFolderPath) && !mkdir($destFolderPath, 0777, true)) {
-            $this->response['message'] = 'STORE PERMANENT: Destination folder not found';
+            error_log('STORE PERMANENT: Failed to create destination folder');
             return $this->response;
         }
 
         // Copy file to destination
         $destFilePath = $destFolderPath . DIRECTORY_SEPARATOR . $filename;
         if (!copy($sourceFilePath, $destFilePath)) {
-            $this->response['message'] = 'STORE PERMANENT: File not found';
+            error_log('STORE PERMANENT: Failed to copy file to destination');
             return $this->response;
         }
 
@@ -319,12 +319,19 @@ class FileManager
         }
 
         // Delete all attachments from the database for this reference_model and reference_uuid
-        $deleteResult = Attachments::deleteWhereReference($reference_model, $reference_uuid);
+        $deleteResult = Attachments::deleteWhereReference($reference_uuid, $reference_model);
         if (!$deleteResult['success']) {
             $allSuccess = false;
         }
 
-        return $allSuccess ? ['success' => true, 'message' => 'All attachments and folders deleted successfully.'] : ['success' => false, 'message' => 'Some folders or attachments could not be deleted.'];
+        if ($allSuccess) {
+            $this->response['success'] = true;
+            $this->response['message'] = 'All attachments and folders deleted successfully.';
+        } else {
+            $this->response['message'] = 'Some folders or attachments could not be deleted.';
+        }
+
+        return $this->response;
     }
 
     /**
