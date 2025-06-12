@@ -74,7 +74,8 @@
             </button>
         </div>
         <div class="table-container">
-            <table class="ui fixed single line small very basic nowrap selectable quick-view table" id="usersTable">
+            <table class="ui fixed single line small very basic nowrap selectable quick-view table display"
+                id="usersTable">
                 <thead>
                     <tr>
                         <th width="150">User</th>
