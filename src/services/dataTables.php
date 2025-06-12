@@ -1,5 +1,10 @@
 <?php
 
+namespace VetSync\Services;
+
+use PDO;
+use PDOException;
+
 /*
  * Helper functions for building a DataTables server-side processing SQL query
  *
@@ -17,13 +22,13 @@
 
 
 // Please Remove below 4 lines as this is use in Datatatables test environment for your local or live environment please remove it or else it will not work
-// $file = $_SERVER['DOCUMENT_ROOT'].'/datatables/pdo.php';
-// if ( is_file( $file ) ) {
-// 	include( $file );
+// $file = $_SERVER['DOCUMENT_ROOT'] . '/datatables/pdo.php';
+// if (is_file($file)) {
+// 	include($file);
 // }
 
 
-class SSP
+class DataTables
 {
 	/**
 	 * Create the data output array for the DataTables rows
