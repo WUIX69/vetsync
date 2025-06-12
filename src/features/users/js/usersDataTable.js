@@ -1,9 +1,20 @@
 const $usersTable = $("#usersTable");
 const $usersDataTable = $usersTable.DataTable({
-    dom: 't<"bottom-controls"<"info"i><"right-controls"l<"pagination"p>>>',
+    // dom: 't<"bottom-controls"<"info"i><"right-controls"l<"pagination"p>>>',
+    // dom: 'rt<"dt-layout-row"<"dt-layout-start"i><"dt-layout-end"lp>>',
+    layout: {
+        topStart: null,
+        topEnd: null,
+
+        bottomStart: "info",
+        bottomEnd: {
+            pageLength: {},
+            paging: {},
+        },
+    },
     pageLength: 10,
     deferRender: true,
-    stateSave: true,
+    // stateSave: true,
     responsive: true,
     processing: true,
     serverSide: true,
@@ -12,7 +23,7 @@ const $usersDataTable = $usersTable.DataTable({
     autoWidth: false,
     scrollCollapse: true,
     scrollX: true,
-    scrollY: "500px",
+    scrollY: "565px",
     language: {
         info: "Showing _START_ to _END_ of _TOTAL_ entries",
         lengthMenu: "Entries per page _MENU_",
