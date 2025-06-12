@@ -23,10 +23,18 @@ class Users
         try {
             $stmt = self::conn()->prepare('SELECT * FROM users');
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Users fetched successfully',
+                'data' => $data
+            ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            return [];
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch users: ' . $e->getMessage(),
+            ];
         }
     }
 
