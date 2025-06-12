@@ -192,13 +192,15 @@ class FileManager
         rmdir($sourceFolderPath);
 
         // Store new file
-        return Attachments::store([
+        $this->response = Attachments::store([
             'reference_uuid' => $reference_uuid,
             'reference_model' => $reference_model,
             'folder' => $folderName,
             'filename' => $filename,
         ]);
 
+        error_log("STORE PERMANENT UPLOAD RESULT: " . print_r($this->response, true));
+        return $this->response;
     }
 
     /**
@@ -331,6 +333,7 @@ class FileManager
             $this->response['message'] = 'Some folders or attachments could not be deleted.';
         }
 
+        error_log("DELETE WHERE REFERENCE PERMANENT RESULT: " . print_r($this->response, true));
         return $this->response;
     }
 
