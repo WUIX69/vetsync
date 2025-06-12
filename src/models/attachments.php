@@ -132,18 +132,18 @@ class Attachments
         }
     }
 
-    public static function deleteWhereReference($reference_model, $reference_uuid)
+    public static function deleteWhereReference($reference_uuid, $reference_model)
     {
         try {
             self::conn()->beginTransaction();
             $sql = "DELETE FROM attachments 
-                    WHERE reference_model = :reference_model 
-                    AND reference_uuid = :reference_uuid";
+                    WHERE reference_uuid = :reference_uuid 
+                    AND reference_model = :reference_model";
 
             $stmt = self::conn()->prepare($sql);
             $stmt->execute([
-                ':reference_model' => $reference_model,
-                ':reference_uuid' => $reference_uuid
+                ':reference_uuid' => $reference_uuid,
+                ':reference_model' => $reference_model
             ]);
 
             self::conn()->commit();
