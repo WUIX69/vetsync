@@ -1,15 +1,11 @@
 const $usersTable = $("#usersTable");
 const $usersDataTable = $usersTable.DataTable({
-    // dom: 't<"bottom-controls"<"info"i><"right-controls"l<"pagination"p>>>',
-    // dom: 'rt<"dt-layout-row"<"dt-layout-start"i><"dt-layout-end"lp>>',
     layout: {
         topStart: null,
         topEnd: null,
-
         bottomStart: "info",
         bottomEnd: {
-            pageLength: {},
-            paging: {},
+            features: ["pageLength", "paging"],
         },
     },
     pageLength: 10,
