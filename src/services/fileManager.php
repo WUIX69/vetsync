@@ -72,12 +72,15 @@ class FileManager
         }
 
         // Store new file
-        return Attachments::store([
+        $this->response = Attachments::store([
             'reference_model' => $reference_model,
             'reference_uuid' => $reference_uuid,
             'folder' => $folderName,
             'filename' => $filename,
         ]);
+
+        $this->response['data']['folder'] = $folderName;
+        return $this->response;
     }
 
     /**
