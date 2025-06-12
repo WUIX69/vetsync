@@ -35,38 +35,73 @@ const $usersDataTable = $usersTable.DataTable({
         //     </div>
         // `,
     },
-    columnDefs: [
-        { orderable: false, targets: [6] },
-        // { width: '13%', targets: 0 }, // User column
-        // { width: '15%', targets: 1 }, // Email column
-        // { width: '6%', targets: [2, 3] }, // Role and Gender columns
-        // { width: '9%', targets: [4, 5] }, // Phone and Birth Date columns
-        // { width: '6%', targets: 6 }  // Actions column
-    ],
     columns: [
         { data: "user" },
         { data: "email" },
-        { data: "role" },
-        { data: "gender" },
-        { data: "phone" },
-        { data: "birthDate" },
-        { data: "actions" },
+        { data: "role", orderable: false },
+        { data: "location" },
+        { data: "telephone" },
+        { data: "dob" },
+        { data: "created_at" },
+        { data: "actions", orderable: false },
     ],
+    // columns: [
+    //     {
+    //         data: null,
+    //         render: function (data) {
+    //             return `
+    //                 <div class="user-details">
+    //                     <img class="ui avatar image" src="${data.profile}" alt="${data.name}" />
+    //                     <div class="info d-flex flex-column">
+    //                         <span class="text-capitalize">${data.name}</span>
+    //                         <small>ID: ${data.user_uuid}</small>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //         },
+    //     },
+    //     { data: "email" },
+    //     {
+    //         data: null,
+    //         orderable: false,
+    //         render: function (data) {
+    //             return `${data.role}`;
+    //         },
+    //     },
+    //     { data: "location", orderable: false },
+    //     { data: "telephone" },
+    //     { data: "dob" },
+    //     { data: "created_at" },
+    //     {
+    //         data: null,
+    //         orderable: false,
+    //         render: function (data) {
+    //             return `
+    //                 <div class="ui compact floating selection dropdown recent-orders-dd">
+    //                     <i class="dropdown icon"></i>
+    //                     <div class="text">Actions</div>
+    //                     <div class="menu">
+    //                         <div class="item" data-value="view"><i class="eye icon"></i> View</div>
+    //                         <div class="item" data-value="edit"><i class="edit blue icon"></i> Edit</div>
+    //                         <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i> Delete</div>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //         },
+    //     },
+    // ],
     ajax: {
-        url: "https://dummyjson.com/users/search",
+        url: apiUrl("users") + "usersDataTable.php",
         method: "GET",
         dataType: "json",
         data: function (d) {
-            return {
-                q: d.search.value,
-                limit: d.length,
-                skip: d.start || 0,
-            };
+            return d;
         },
         dataSrc: function (response) {
-            response.recordsTotal = response.total;
-            response.recordsFiltered = response.total;
-            return userMap(response.users);
+            // console.log(response);
+            // return false;
+            return userMap(response.data);
+            // return response.data;
         },
         error: ajaxErrorHandler,
     },
@@ -88,29 +123,28 @@ const $usersDataTable = $usersTable.DataTable({
 function userMap(users) {
     return users.map((user) => ({
         user: `<div class="user-details">
-                        <img class="ui avatar image" src="${user.image}" alt="${user.username}" />
+                        <img class="ui avatar image" src="${user.profile}" alt="${user.name}" />
                         <div class="info d-flex flex-column">
-                            <span>${user.firstName} ${user.lastName}</span>
-                            <small>ID: ${user.ein}</small>
+                            <span class="text-capitalize">${user.name}</span>
+                            <small>ID: ${user.user_uuid}</small>
                         </div>
                     </div>`,
-        email: `<span class="email-td">${user.email}</span>`,
-        role: `<span class="role-td text-capitalize">${user.role}</span>`,
-        gender: `<span class="gender-td text-capitalize">${user.gender}</span>`,
-        phone: `<span class="phone-td">${user.phone}</span>`,
-        birthDate: `<span class="birth-date-td">${dateToMDY(
-            user.birthDate
-        )}</span>`,
+        email: `${user.email}`,
+        role: `${user.role}`,
+        location: `${user.location}`,
+        telephone: `${user.telephone}`,
+        dob: `${user.dob}`,
+        created_at: `${user.created_at}`,
         actions: `<div class="ui compact floating selection dropdown recent-orders-dd">
                         <i class="dropdown icon"></i>
                         <div class="text">Actions</div>
                         <div class="menu">
-                            <div class="item" data-value="view">View</div>
-                            <div class="item" data-value="edit">Edit</div>
-                            <div class="item" data-value="delete">Delete</div>
+                            <div class="item" data-value="view"><i class="eye icon"></i> View</div>
+                            <div class="item" data-value="edit"><i class="edit blue icon"></i> Edit</div>
+                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i> Delete</div>
                         </div>
                     </div>`,
-        DT_RowId: `${user.id}`,
+        DT_RowId: `${user.user_uuid}`,
         DT_RowClass: "user-item",
     }));
 }

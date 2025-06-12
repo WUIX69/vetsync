@@ -78,13 +78,14 @@
                 id="usersTable">
                 <thead>
                     <tr>
-                        <th width="150">User</th>
-                        <th width="220">Email</th>
-                        <th width="80">Role</th>
-                        <th width="80">Gender</th>
-                        <th width="128">Phone</th>
-                        <th width="118">Birth Date</th>
-                        <th width="100">Actions</th>
+                        <th width="304">User</th>
+                        <th width="170">Email</th>
+                        <th width="70">Role</th>
+                        <th width="197">Location</th>
+                        <th>Telephone</th>
+                        <th width="120">Birth Date</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
