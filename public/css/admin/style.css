@@ -554,11 +554,23 @@ main section .table-list .table-container .dt-container th:first-child {
     padding-left: 0.3rem !important;
 }
 
-main section .table-list .table-container .dt-container .bottom-controls * {
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    * {
     font-size: 0.8rem;
 }
 
-main section .table-list .table-container .dt-container .bottom-controls {
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -570,8 +582,8 @@ main
     .table-list
     .table-container
     .dt-container
-    .bottom-controls
-    .right-controls {
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -582,8 +594,8 @@ main
     .table-list
     .table-container
     .dt-container
-    .bottom-controls
-    .right-controls
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
     .dt-length {
     display: flex;
     align-items: center;
@@ -595,9 +607,9 @@ main
     .table-list
     .table-container
     .dt-container
-    .bottom-controls
-    .right-controls
-    .pagination
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-paging
     .ui.pagination.menu {
     background: var(--color-background) !important;
 }
@@ -607,12 +619,26 @@ main
     .table-list
     .table-container
     .dt-container
-    .bottom-controls
-    .right-controls
-    .pagination
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-paging
     .ui.pagination.menu
     .item {
     color: var(--color-dark) !important;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-paging
+    .ui.pagination.menu
+    .item.active {
+    background-color: var(--color-dark-variant);
+    color: var(--color-white) !important;
 }
 
 /* DataTables Custom Styles (.dt-container) fixing serverside processing */
