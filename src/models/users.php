@@ -191,4 +191,25 @@ class Users
         }
     }
 
+    public static function delete($user_uuid = null)
+    {
+        try {
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("DELETE FROM users WHERE uuid=?");
+            $stmt->execute([$user_uuid]);
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => 'User deleted successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'User deletion failed.',
+            ];
+        }
+    }
+
 }
