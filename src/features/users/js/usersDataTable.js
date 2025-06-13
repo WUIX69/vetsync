@@ -36,60 +36,44 @@ const $usersDataTable = $usersTable.DataTable({
         // `,
     },
     columns: [
-        { data: "user" },
+        {
+            data: null,
+            render: function (data) {
+                return `
+                    <div class="user-details">
+                        <img class="ui avatar image" src="${data.profile}" alt="${data.name}" />
+                        <div class="info d-flex flex-column">
+                            <span class="text-capitalize">${data.name}</span>
+                            <small>ID: ${data.user_uuid}</small>
+                        </div>
+                    </div>
+                `;
+            },
+        },
         { data: "email" },
         { data: "role", orderable: false },
         { data: "location" },
         { data: "telephone" },
         { data: "dob" },
         { data: "created_at" },
-        { data: "actions", orderable: false },
+        {
+            data: null,
+            orderable: false,
+            render: function (data) {
+                return `
+                    <div class="ui compact floating selection dropdown actions-dd">
+                        <i class="dropdown icon"></i>
+                        <div class="text">Actions</div>
+                        <div class="menu">
+                            <div class="item" data-value="view"><i class="eye icon"></i> View</div>
+                            <div class="item" data-value="edit"><i class="edit blue icon"></i> Edit</div>
+                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i> Delete</div>
+                        </div>
+                    </div>
+                `;
+            },
+        },
     ],
-    // columns: [
-    //     {
-    //         data: null,
-    //         render: function (data) {
-    //             return `
-    //                 <div class="user-details">
-    //                     <img class="ui avatar image" src="${data.profile}" alt="${data.name}" />
-    //                     <div class="info d-flex flex-column">
-    //                         <span class="text-capitalize">${data.name}</span>
-    //                         <small>ID: ${data.user_uuid}</small>
-    //                     </div>
-    //                 </div>
-    //             `;
-    //         },
-    //     },
-    //     { data: "email" },
-    //     {
-    //         data: null,
-    //         orderable: false,
-    //         render: function (data) {
-    //             return `${data.role}`;
-    //         },
-    //     },
-    //     { data: "location", orderable: false },
-    //     { data: "telephone" },
-    //     { data: "dob" },
-    //     { data: "created_at" },
-    //     {
-    //         data: null,
-    //         orderable: false,
-    //         render: function (data) {
-    //             return `
-    //                 <div class="ui compact floating selection dropdown recent-orders-dd">
-    //                     <i class="dropdown icon"></i>
-    //                     <div class="text">Actions</div>
-    //                     <div class="menu">
-    //                         <div class="item" data-value="view"><i class="eye icon"></i> View</div>
-    //                         <div class="item" data-value="edit"><i class="edit blue icon"></i> Edit</div>
-    //                         <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i> Delete</div>
-    //                     </div>
-    //                 </div>
-    //             `;
-    //         },
-    //     },
-    // ],
     ajax: {
         url: apiUrl("users") + "usersDataTable.php",
         method: "GET",
@@ -100,8 +84,7 @@ const $usersDataTable = $usersTable.DataTable({
         dataSrc: function (response) {
             // console.log(response);
             // return false;
-            return userMap(response.data);
-            // return response.data;
+            return response.data;
         },
         error: ajaxErrorHandler,
     },
@@ -120,35 +103,22 @@ const $usersDataTable = $usersTable.DataTable({
     },
 });
 
-function userMap(users) {
-    return users.map((user) => ({
-        user: `<div class="user-details">
-                        <img class="ui avatar image" src="${user.profile}" alt="${user.name}" />
-                        <div class="info d-flex flex-column">
-                            <span class="text-capitalize">${user.name}</span>
-                            <small>ID: ${user.user_uuid}</small>
-                        </div>
-                    </div>`,
-        email: `${user.email}`,
-        role: `${user.role}`,
-        location: `${user.location}`,
-        telephone: `${user.telephone}`,
-        dob: `${user.dob}`,
-        created_at: `${user.created_at}`,
-        actions: `<div class="ui compact floating selection dropdown recent-orders-dd">
-                        <i class="dropdown icon"></i>
-                        <div class="text">Actions</div>
-                        <div class="menu">
-                            <div class="item" data-value="view"><i class="eye icon"></i> View</div>
-                            <div class="item" data-value="edit"><i class="edit blue icon"></i> Edit</div>
-                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i> Delete</div>
-                        </div>
-                    </div>`,
-        DT_RowId: `${user.user_uuid}`,
-        DT_RowClass: "user-item",
-    }));
-}
-
 $(function () {
     tableListBaseFilters($usersDataTable);
+
+    $("body").on("click", ".user-item", function () {
+        const userUuid = $(this).data("user-uuid");
+        console.log(userUuid);
+
+        $.ajax({
+            url: apiUrl("users") + "users.php",
+            method: "GET",
+            data: { uuid: userUuid },
+            success: function (response) {
+                console.log(response);
+                return false;
+            },
+            error: ajaxErrorHandler,
+        });
+    });
 });
