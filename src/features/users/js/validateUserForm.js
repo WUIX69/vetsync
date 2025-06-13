@@ -1,21 +1,26 @@
 // Cache DOM elements
 const $userModal = $("#userModal");
-const $userForm = $userModal.find("#userForm");
+const $userModalForm = $userModal.find("#userForm");
 
 $(function () {
     // Validate login form
-    $userForm.form({
+    $userModalForm.form({
         fields: {
-            name: {
-                identifier: "name",
+            firstname: {
+                identifier: "firstname",
                 rules: [
                     {
                         type: "empty",
-                        prompt: "Please enter a name",
+                        prompt: "Please enter a first name",
                     },
+                ],
+            },
+            lastname: {
+                identifier: "lastname",
+                rules: [
                     {
-                        type: "minLength[2]",
-                        prompt: "Name must be at least 2 characters",
+                        type: "empty",
+                        prompt: "Please enter a last name",
                     },
                 ],
             },
@@ -29,6 +34,36 @@ $(function () {
                     {
                         type: "email",
                         prompt: "Please enter a valid email",
+                    },
+                ],
+            },
+            telephone: {
+                identifier: "telephone",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter a telephone number",
+                    },
+                    {
+                        type: "minLength[11]",
+                        prompt: "Telephone number must be at least 11 digits",
+                    },
+                    {
+                        type: "maxLength[11]",
+                        prompt: "Telephone number must be at most 11 digits",
+                    },
+                    {
+                        type: "number",
+                        prompt: "Telephone number must be a number",
+                    },
+                ],
+            },
+            dob: {
+                identifier: "dob",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter a date of birth",
                     },
                 ],
             },
@@ -48,8 +83,34 @@ $(function () {
             event.preventDefault();
             const $submitBtn = $(this).find("button[type=submit]");
 
-            console.log(fields);
-            return false;
+            // console.log(fields);
+            // return false;
+
+            $.ajax({
+                url: apiUrl("users") + "users.php",
+                method: "POST",
+                data: fields,
+                dataType: "json",
+                timeout: 5000,
+                beforeSend: function () {
+                    $submitBtn.addClass("loading");
+                },
+                success: function (response) {
+                    // console.log("API Response:", response);
+                    // return false;
+
+                    alert(response.message);
+                    $usersDataTable.ajax.reload();
+                },
+                complete: function () {
+                    $submitBtn.removeClass("loading");
+                },
+                error: ajaxErrorHandler,
+            });
         },
     });
 });
+
+// Export userModal and userModalForm to window for debugging
+window.$userModal = $userModal;
+window.$userModalForm = $userModalForm;

@@ -1,3 +1,5 @@
+const $userFlyout = $("#userFlyout");
+
 const $usersTable = $("#usersTable");
 const $usersDataTable = $usersTable.DataTable({
     layout: {
@@ -24,16 +26,16 @@ const $usersDataTable = $usersTable.DataTable({
         info: "Showing _START_ to _END_ of _TOTAL_ entries",
         lengthMenu: "Entries per page _MENU_",
         processing: '<div class="ui active inline elastic loader"></div>',
-        // infoEmpty: "No entries to show",
-        // emptyTable: `
-        //     <div class="ui placeholder segment">
-        //         <div class="ui icon header">
-        //             <i class="search icon"></i>
-        //             No Users Found
-        //         </div>
-        //         <div class="ui primary button">Add New User</div>
-        //     </div>
-        // `,
+        infoEmpty: "No entries to show",
+        emptyTable: `
+            <div class="ui placeholder segment">
+                <div class="ui icon header">
+                    <i class="search icon"></i>
+                    No Users Found
+                </div>
+                <div class="ui primary button">Add New User</div>
+            </div>
+        `,
     },
     columns: [
         {
@@ -90,6 +92,27 @@ const $usersDataTable = $usersTable.DataTable({
     },
     drawCallback: function (settings) {
         $(this).find(".ui.dropdown").dropdown();
+        $(this)
+            .find(".actions-dd")
+            .dropdown({
+                onChange: function (value) {
+                    console.log(value);
+
+                    // Get the category ID on its tr
+                    const userUuid =
+                        $(this).closest(".user-item").data("user-uuid") ?? null;
+
+                    if (value === "view") {
+                        singleUserWhereView(userUuid);
+                    } else if (value === "edit") {
+                        singleUserWhereEdit(userUuid);
+                    } else if (value === "delete") {
+                        deleteUser(userUuid);
+                    } else {
+                        return false;
+                    }
+                },
+            });
     },
     initComplete: function (settings, json) {
         // this.api().columns().every(function () {
@@ -103,22 +126,83 @@ const $usersDataTable = $usersTable.DataTable({
     },
 });
 
+function singleUserWhereEdit(userUuid = null) {
+    if (!userUuid) return false;
+    $.ajax({
+        url: apiUrl("users") + "users.php",
+        method: "GET",
+        data: { action: "singleWhereEdit", uuid: userUuid },
+        success: function (response) {
+            // console.log(response);
+            // return false;
+
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+
+            $userModal.find(".header").text("Edit User");
+            $userModalForm.form("set values", response.data);
+            $userModal.modal("show");
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
+function singleUserWhereView(userUuid = null) {
+    if (!userUuid) return false;
+    $.ajax({
+        url: apiUrl("users") + "users.php",
+        method: "GET",
+        data: { action: "singleWhereView", uuid: userUuid },
+        success: function (response) {
+            // console.log(response);
+            // return false;
+
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+
+            const flyoutContent = $userFlyout.find(".content");
+            const userData = response.data;
+
+            $.each(userData, function (key, value) {
+                if (key === "profile") {
+                    flyoutContent.find(`#profile`).attr("src", value);
+                } else {
+                    flyoutContent.find(`#${key}`).text(value);
+                }
+            });
+
+            $userFlyout.flyout("show");
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
+function deleteUser(userUuid = null) {
+    if (!userUuid) return false;
+    $.ajax({
+        url: apiUrl("users") + "users.php?user_uuid=" + userUuid,
+        method: "DELETE",
+        success: function (response) {
+            // console.log(response);
+            // return false;
+
+            $usersDataTable.ajax.reload();
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
 $(function () {
+    // Handle table list base filters
     tableListBaseFilters($usersDataTable);
 
-    $("body").on("click", ".user-item", function () {
+    $("body").on("click", ".user-item", function (e) {
+        if (e.target.closest(".ui.dropdown")) return false;
         const userUuid = $(this).data("user-uuid");
-        console.log(userUuid);
-
-        $.ajax({
-            url: apiUrl("users") + "users.php",
-            method: "GET",
-            data: { uuid: userUuid },
-            success: function (response) {
-                console.log(response);
-                return false;
-            },
-            error: ajaxErrorHandler,
-        });
+        singleUserWhereView(userUuid);
     });
 });

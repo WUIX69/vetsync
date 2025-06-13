@@ -85,7 +85,7 @@
                         <th>Telephone</th>
                         <th width="120">Birth Date</th>
                         <th>Created At</th>
-                        <th>Actions</th>
+                        <th width="120">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

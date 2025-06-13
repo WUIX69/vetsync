@@ -15,6 +15,7 @@
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window') ?> <!-- Window Spinner -->
         <?= featured('users/components/user-modal') ?> <!-- User Modal -->
+        <?= featured('users/components/user-flyout') ?> <!-- User Flyout -->
     </div>
 
     <div class="container-body pusher">
