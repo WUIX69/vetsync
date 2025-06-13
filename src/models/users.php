@@ -43,10 +43,18 @@ class Users
         try {
             $stmt = self::conn()->prepare('SELECT * FROM users WHERE uuid=? LIMIT 1');
             $stmt->execute([$uuid]);
-            return $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+            $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'User fetched successfully',
+                'data' => $data
+            ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
-            return [];
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch user: ' . $e->getMessage(),
+            ];
         }
     }
 
