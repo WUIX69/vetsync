@@ -15,10 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
 
     $user_uuid = userData()['uuid'];
-    $user = Users::single($user_uuid)['data'] ?? [];
+    $response = Users::single($user_uuid) ?? [];
+    $user = $response['data'] ?? [];
 
     // Format and Fetch only needed data
-    $user['data'] = [
+    $response['data'] = [
         'firstname' => $user['firstname'],
         'lastname' => $user['lastname'],
         'email' => $user['email'],
@@ -29,8 +30,6 @@ try {
         'urls' => $user['urls'] ? explode(',', $user['urls']) : [], // Format the urls array
         'profile' => Attachments::single($user_uuid)['data'],
     ];
-
-    $response = array_merge($response, $user);
 
 } catch (Exception $e) {
     error_log($e->getMessage());
