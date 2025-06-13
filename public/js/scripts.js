@@ -41,6 +41,13 @@ function initModal(options = {}) {
             // $form[0].reset();
             $form.form("clear");
             $submitBtn.removeClass("loading");
+
+            // Reset modal to default state on close
+            let modalHeader = $modal.find(".header");
+            let modalDataHeader = modalHeader.data("default-header");
+            if (modalDataHeader) {
+                modalHeader.text(modalDataHeader); // If default data-default-header is set, reset the header text
+            }
         },
         onApprove: () => {
             if (!$form.form("is valid")) return false; //: Optional
