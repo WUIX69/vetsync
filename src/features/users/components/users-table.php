@@ -74,14 +74,14 @@
             </button>
         </div>
         <div class="table-container">
-            <table class="ui fixed single line small very basic nowrap selectable quick-view table display"
+            <table class="ui fixed single line small very basic nowrap selectable quick-view display table"
                 id="usersTable">
                 <thead>
                     <tr>
                         <th width="304">User</th>
                         <th width="170">Email</th>
                         <th width="70">Role</th>
-                        <th width="197">Location</th>
+                        <th width="166">Location</th>
                         <th>Telephone</th>
                         <th width="120">Birth Date</th>
                         <th>Created At</th>
@@ -89,7 +89,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Users Table Dynamic Data -->
+                    <!-- Users Table DataTable Dynamic Data -->
                 </tbody>
             </table>
         </div>
