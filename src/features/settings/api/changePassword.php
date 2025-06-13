@@ -18,7 +18,7 @@ try {
     $newPassword = $_POST['new_password'];
 
     // Check if current password is correct
-    $UserOGPassword = Users::single($user_uuid)['password'] ?? null;
+    $UserOGPassword = Users::single($user_uuid)['data']['password'] ?? null;
     if (!password_verify($currentPassword, $UserOGPassword)) {
         $response['message'] = 'Current password is incorrect';
     }
