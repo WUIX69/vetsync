@@ -25,6 +25,27 @@ class Helpers
         return $statuses[$status] ?? $default;
     }
 
+    public static function serviceStatus($status)
+    {
+        $default = [
+            'icon' => 'circle outline grey',
+            'label' => 'unknown',
+        ];
+
+        $statuses = [
+            'available' => [
+                'icon' => 'check circle green',
+                'label' => 'available',
+            ],
+            'unavailable' => [
+                'icon' => 'times circle red',
+                'label' => 'unavailable',
+            ],
+        ];
+
+        return $statuses[$status] ?? $default;
+    }
+
     public static function categoryName($category = [])
     {
         return [
