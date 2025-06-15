@@ -6,18 +6,33 @@ const categoriesTableBody = serviceCategorySection.find("table tbody");
 const serviceCategoryModal = $("#serviceCategoryModal");
 const serviceCategoryModalForm = serviceCategoryModal.find("form");
 
-function getAllServiceCategories() {
-    // Service Categories Data
-    categoriesTableBody.empty();
+function serviceCategoriesAjax(options) {
+    // Set default URL prefix and headers
+    let url = apiUrl("shared") + "categories.php";
+    if (options.urlParams) {
+        url += "?" + $.param(options.urlParams);
+    }
 
-    $.ajax({
-        url: apiUrl("services") + "serviceCategories.php",
-        method: "GET",
-        data: {
-            action: "all",
+    const defaultOptions = {
+        url: url,
+        headers: {
+            "X-Reference-Model": "services",
         },
         dataType: "json",
         timeout: 5000,
+        error: ajaxErrorHandler,
+    };
+    // Merge defaults with user options (user options take precedence)
+    const finalOptions = $.extend(true, {}, defaultOptions, options);
+    return $.ajax(finalOptions);
+}
+
+function getAllServiceCategories() {
+    categoriesTableBody.empty();
+
+    serviceCategoriesAjax({
+        method: "GET",
+        data: { action: "all" },
         success: function (response) {
             // console.log("API Response:", response);
             // return false;
@@ -89,22 +104,18 @@ function getAllServiceCategories() {
                 },
             });
         },
-        error: ajaxErrorHandler,
     });
 }
 
 function getSingleServiceCategory(categoryId = null) {
     if (!categoryId) return false;
 
-    $.ajax({
-        url: apiUrl("services") + "serviceCategories.php",
+    serviceCategoriesAjax({
         method: "GET",
         data: {
             action: "single",
             id: categoryId,
         },
-        dataType: "json",
-        timeout: 5000,
         success: function (response) {
             // console.log("API Response:", response);
             // return false;
@@ -126,7 +137,6 @@ function getSingleServiceCategory(categoryId = null) {
             // Show the modal
             serviceCategoryModal.modal("show");
         },
-        error: ajaxErrorHandler,
     });
 }
 
@@ -136,20 +146,17 @@ function deleteServiceCategory(categoryId = null) {
     // console.log(categoryId);
     // return false;
 
-    $.ajax({
-        url: apiUrl("services") + "serviceCategories.php?id=" + categoryId,
+    serviceCategoriesAjax({
+        urlParams: { id: categoryId },
         method: "DELETE",
-        dataType: "json",
-        timeout: 5000,
         success: function (response) {
             // console.log("API Response:", response);
             // return false;
 
             alert(response.message);
             if (!response.success) return false;
-            getAllServiceCategories(); // Refresh the services categories data
+            getAllServiceCategories(); // Refresh the service categories data
         },
-        error: ajaxErrorHandler,
     });
 }
 
@@ -213,31 +220,26 @@ $(function () {
             // return false;
 
             // api
-            $.ajax({
-                url: apiUrl("services") + "serviceCategories.php",
+            serviceCategoriesAjax({
                 method: "POST",
                 data: {
                     action: fields.id ? "update" : "store", // If id is present use update, otherwise use store
                     ...fields,
                 },
-                dataType: "json",
-                timeout: 5000,
                 beforeSend: function () {
                     $submitBtn.addClass("loading");
                 },
                 success: function (response) {
-                    // check if working
                     // console.log("API Response:", response);
                     // return false;
 
                     alert(response.message);
-                    getAllServiceCategories(); // Refresh the service categories data
+                    getAllServiceCategories(); // Refresh the product categories data
                     serviceCategoryModal.modal("hide");
                 },
                 complete: function () {
                     $submitBtn.removeClass("loading");
                 },
-                error: ajaxErrorHandler,
             });
         },
     });

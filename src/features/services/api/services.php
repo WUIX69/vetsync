@@ -5,6 +5,7 @@ apiHeaders();
 
 use VetSync\Models\Services;
 use VetSync\Models\Categories;
+use VetSync\Models\Attachments;
 
 use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
@@ -33,17 +34,22 @@ try {
             'status' => $_POST['status'] ?? '',
             'duration' => $_POST['duration'] ? $_POST['duration'] : null,
             // 'faqs' => $_POST['faqs'] ? $_POST['faqs'] : null,
-            // 'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
+            'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
         ];
 
         if ($action === 'store') {
+
             $data['uuid'] = uuid();
-            // $response = $fileManager->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
             $response = Services::store($data);
+            foreach ($data['files'] as $file) {
+                $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
+            }
         } else if ($action === 'update') {
-            $data['uuid'] = $_POST['uuid'] ?? null; // add product uuid to data, required for update
-            // $response = $fileManager->storeWherePermanent($data['file'], $reference_model, $data['uuid']);
+            $data['uuid'] = $_POST['uuid'] ?? null; // add service uuid to data, required for update
             $response = Services::update($data);
+            foreach ($data['files'] as $file) {
+                $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
+            }
         } else {
             $response['message'] = 'Invalid POST action';
         }
@@ -58,9 +64,9 @@ try {
             $result['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [
-                    'image' => '', // TODO: Placeholder
+                    'image' => media($item['uuid']),
                     'category' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
-                    'status' => Helpers::productStatus($item['status']),
+                    'status' => Helpers::serviceStatus($item['status']),
                     'created_at' => Formatters::dateToMDY($item['created_at']),
                     'updated_at' => Formatters::dateToMDY($item['updated_at']),
                 ];
@@ -76,6 +82,7 @@ try {
         } else if ($action === 'single') {
             $product_uuid = $_GET['uuid'] ?? null;
             $response = Services::single($product_uuid);
+            $response['data']['files'] = Attachments::all($product_uuid)['data'] ?? []; // Get product files
         } else {
             $response['message'] = 'Invalid GET action';
         }
@@ -84,6 +91,9 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $product_uuid = $_GET['uuid'] ?? null;
         $response = Services::delete($product_uuid);
+        if ($response['success']) {
+            $fileManager->deleteWhereReferencePermanent($product_uuid, $reference_model);
+        }
     }
 
 } catch (Exception $e) {

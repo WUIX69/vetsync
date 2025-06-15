@@ -6,7 +6,10 @@ const servicesTableBody = serviceSection.find("table tbody");
 const serviceModal = $("#serviceModal");
 const serviceModalForm = serviceModal.find("form");
 
-// ignore for service
+// Filepond Flags (Required)
+let isModalHide = false;
+let isPondRender = false;
+
 // Service Image FilePond
 const serviceImagePond = FilePond.create(
     document.querySelector(".service-pond"),
@@ -15,43 +18,63 @@ const serviceImagePond = FilePond.create(
         maxFileSize: "2MB",
         allowMultiple: true,
         allowFileTypes: ["image/*"],
-
         labelIdle: `Drag & Drop your image or <span class="filepond--label-action">Browse</span>`,
-
         imagePreviewHeight: 170,
         imageCropAspectRatio: "1:1",
         imageResizeTargetWidth: 200,
         imageResizeTargetHeight: 200,
-    }
-);
+        onprocessfile: function (error, file) {
+            // console.log("On Process Files:", file);
+        },
+        onaddfile: function (error, file) {
+            // console.log("On Add File:", file);
+        },
+        onremovefile: function (error, file) {
+            // console.log("On Remove File:", file);
 
-// ignore for service
-// Set Services Image FilePond server configuration
-serviceImagePond.setOptions({
-    server: {
-        url: "",
-        headers: {},
-        timeout: 7000,
-        withCredentials: false,
-        process: {
-            url: "",
-            method: "POST",
-            ondata: function (formData) {
-                formData.append("action", "process");
-                return formData;
+            // Only handle "local" files (already on server) and only if not modal hide
+            if (file.origin === 3 && !isModalHide) {
+                console.log("is local delete");
+                $.ajax({
+                    url: apiUrl("shared") + "filepond.php",
+                    headers: {
+                        "X-Reference-Model": "services",
+                    },
+                    method: "DELETE",
+                    data: file.serverId,
+                    processData: false,
+                    contentType: false,
+                    error: ajaxErrorHandler,
+                });
+            }
+        },
+        onupdatefiles: function (files) {
+            // const totalFileSize = files.reduce(
+            //     (total, file) => total + file.fileSize,
+            //     0
+            // );
+            // const showErrorState = totalFileSize > 26214400; // 25MB in bytes
+            // console.log({ totalFileSize, showErrorState });
+        },
+        server: {
+            url: apiUrl() + "filepond.php",
+            headers: {
+                "X-Reference-Model": "services",
+            },
+            timeout: 7000,
+            withCredentials: false,
+            process: {
+                url: "",
+            },
+            revert: {
+                url: "",
+            },
+            load: {
+                url: "?folder=",
             },
         },
-        revert: {
-            url: "",
-            method: "DELETE",
-        },
-        load: {
-            url: "?foldername=", // FilePond appends the source (your unique folder name) to this URL
-            method: "GET",
-        },
-        files: [], // Initially empty, will be populated by loadExistingFiles
-    },
-});
+    }
+);
 
 function getAllServices() {
     servicesTableBody.empty();
@@ -78,11 +101,9 @@ function getAllServices() {
 
             services.forEach((service, idx) => {
                 servicesHTML += `
-                    <tr class="service-item" data-service-uuid="${
-                        service.uuid
-                    }">
+                    <tr class="service-item" data-service-uuid="${service.uuid}">
                         <td>
-                            <img src="${asset(service.image)}" alt="Services">
+                            <img class="service-img" src="${service.image}" alt="Services">
                         </td>
                         <td>${service.name}</td>
                         <td>
@@ -94,10 +115,8 @@ function getAllServices() {
                             <i class="${service.category.icon} icon"></i>
                             ${service.category.label}
                         </td>
-                        <td>
-                            <span class="text-capitalize service-status ${
-                                service.status.label
-                            }">
+                       <td>
+                            <span class="text-capitalize service-status ${service.status.label}">
                                 <i class="${service.status.icon} icon"></i>
                                 ${service.status.label}
                             </span>
@@ -153,7 +172,6 @@ function getAllServices() {
 
 function getSingleService(serviceUuid = null) {
     if (!serviceUuid) return false;
-
     // loadExistingFiles(serviceUuid);
 
     $.ajax({
@@ -177,7 +195,31 @@ function getSingleService(serviceUuid = null) {
             // Populate the form fields
             const service = response.data;
             $.each(service, function (key, value) {
-                serviceModalForm.find('[name="' + key + '"]').val(value);
+                if (key === "files") {
+                    // Prevent FilePond from deleting files when modal is hidden and !empty files
+                    if (value.length > 0) isPondRender = true;
+
+                    // Add files to FilePond
+                    value.forEach(function (file) {
+                        serviceImagePond
+                            .addFile(file.folder, {
+                                type: "local",
+                                options: {
+                                    file: {
+                                        name: file.filename,
+                                    },
+                                    metadata: {
+                                        serverId: file.folder,
+                                    },
+                                },
+                            })
+                            .then(function (fileItem) {
+                                // console.log("Added fileItem:", fileItem);
+                            });
+                    });
+                } else {
+                    serviceModalForm.find('[name="' + key + '"]').val(value);
+                }
             });
 
             // Show the modal
@@ -221,9 +263,18 @@ $(function () {
     });
 
     // Remove files from FilePond when modal is hidden
-    // serviceModal.modal("setting", "onHide", function () {
-    //     serviceImagePond.removeFiles();
-    // });
+    serviceModal.modal("setting", "onHide", function () {
+        isModalHide = true;
+        if (!isPondRender) {
+            // Delete files from storage and FilePond
+            serviceImagePond.removeFiles({ revert: true });
+        } else {
+            // Delete files from FilePond UI
+            serviceImagePond.removeFiles();
+            // Reset the flag for next time
+            isPondRender = false;
+        }
+    });
 
     // Validate service Modal Form
     serviceModalForm.form({
@@ -298,6 +349,11 @@ $(function () {
             if (formData.get("uuid")) action = "update";
             formData.append("action", action);
 
+            // Collect all FilePond serverIds (folder names)
+            let files = serviceImagePond.getFiles().map((f) => f.serverId);
+            formData.set("files", files.join(","));
+            formData.delete("file");
+
             // console.log(formData);
             // return false;
 
@@ -318,6 +374,7 @@ $(function () {
 
                     alert(response.message);
                     getAllServices(); // Refresh the service data
+                    isPondRender = true; // Set the flag BEFORE hiding the modal, For FilePond to know that the form is submitting on hide
                     serviceModal.modal("hide");
                 },
                 complete: function () {

@@ -1,4 +1,11 @@
 <style>
+    main section.services-table table tbody td .service-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 0.3rem;
+        object-fit: cover;
+    }
+
     main section.services-table .service-status {
         font-size: 0.7rem;
         padding: 0.2rem 0.5rem;
@@ -72,7 +79,7 @@
         </div>
 
         <div class="table-container">
-            <table class="ui fixed single line small center aligned very basic selectable table">
+            <table class="ui fixed single line small center aligned very basic selectable display table">
                 <thead>
                     <tr>
                         <th>Image</th>
