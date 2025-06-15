@@ -37,6 +37,15 @@ $(function () {
                     },
                 ],
             },
+            password: {
+                identifier: "password",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter an email",
+                    },
+                ],
+            },
             telephone: {
                 identifier: "telephone",
                 rules: [
@@ -89,7 +98,10 @@ $(function () {
             $.ajax({
                 url: apiUrl("users") + "users.php",
                 method: "POST",
-                data: fields,
+                data: {
+                    action: fields.uuid ? "update" : "store",
+                    ...fields,
+                },
                 dataType: "json",
                 timeout: 5000,
                 beforeSend: function () {

@@ -142,6 +142,7 @@ function singleUserWhereEdit(userUuid = null) {
             }
 
             $userModal.find(".header").text("Edit User");
+            $userModal.find("input[name='password']").prop("disabled", true);
             $userModalForm.form("set values", response.data);
             $userModal.modal("show");
         },

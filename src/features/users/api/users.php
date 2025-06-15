@@ -6,7 +6,7 @@ apiHeaders();
 use VetSync\Models\Users;
 use VetSync\Utils\Php\Formatters;
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+if ($_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'DELETE') {
     $response['message'] = 'Invalid getUsers request method';
     echo json_encode($response);
     exit;
@@ -56,10 +56,12 @@ try {
         ];
 
         if ($action === 'store') {
-            $response = Users::store($data) ?? [];
+            $data['uuid'] = uuid();
+            $data['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT); // Add password for admin manual user
+            $response = Users::storeWhereUserAdmin($data) ?? [];
         } else if ($action === 'update') {
             $data['uuid'] = $_POST['uuid'] ?? null;
-            $response = Users::update($data) ?? [];
+            $response = Users::updateWhereUserAdmin($data) ?? [];
         }
     }
 

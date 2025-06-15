@@ -116,6 +116,41 @@ class Users
         }
     }
 
+    public static function storeWhereUserAdmin($data = [])
+    {
+        try {
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("
+                INSERT INTO users (
+                    uuid, firstname, lastname, email, password, telephone, dob
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            ");
+
+            $stmt->execute([
+                $data['uuid'],
+                $data['firstname'],
+                $data['lastname'],
+                $data['email'],
+                $data['password'],
+                $data['telephone'],
+                $data['dob']
+            ]);
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => 'User registered successfully on admin.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'User registration failed on admin.',
+            ];
+        }
+    }
+
     public static function update($data = [])
     {
         try {
@@ -187,6 +222,44 @@ class Users
             return [
                 'success' => false,
                 'message' => 'Password update failed.',
+            ];
+        }
+    }
+
+    public static function updateWhereUserAdmin($data = [])
+    {
+        try {
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("
+                UPDATE users SET 
+                    firstname=?, 
+                    lastname=?, 
+                    email=?, 
+                    telephone=?, 
+                    dob=?
+                WHERE uuid=?
+            ");
+
+            $stmt->execute([
+                $data['firstname'],
+                $data['lastname'],
+                $data['email'],
+                $data['telephone'],
+                $data['dob'],
+                $data['uuid']
+            ]);
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => 'User updated successfully on admin.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'User update failed on admin.',
             ];
         }
     }

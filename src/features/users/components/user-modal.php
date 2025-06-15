@@ -20,9 +20,13 @@
                     <input type="email" name="email" placeholder="Email" />
                 </div>
                 <div class="field">
-                    <label>Telephone</label>
-                    <input type="text" name="telephone" placeholder="Telephone" />
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="password" />
                 </div>
+            </div>
+            <div class="field">
+                <label>Telephone</label>
+                <input type="text" name="telephone" placeholder="Telephone" />
             </div>
             <div class="two fields">
                 <div class="field">
