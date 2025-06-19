@@ -16,11 +16,12 @@ $activeLink = uriPagePath();
                 href="<?= app('user/services') ?>">Services</a>
             <a class="nav-link <?= $activeLink === 'products' ? 'active' : '' ?>"
                 href="<?= app('user/products') ?>">Products</a>
-            <a class="nav-link <?= $activeLink === 'pets' ? 'active' : '' ?>" href="<?= app('user/pets') ?>">Pets</a>
             <a class="nav-link <?= $activeLink === 'appointments' ? 'active' : '' ?>"
                 href="<?= app('user/appointments') ?>">Appointments</a>
             <a class="nav-link <?= $activeLink === 'settings' ? 'active' : '' ?>"
                 href="<?= app('user/settings') ?>">Settings</a>
+            <a class="nav-link <?= $activeLink === 'ratings' ? 'active' : '' ?>"
+                href="<?= app('user/ratings') ?>">Ratings</a>
         </div>
         <div class="right-section">
             <i class='bx bx-bell'></i>
