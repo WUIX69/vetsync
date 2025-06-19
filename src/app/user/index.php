@@ -28,7 +28,7 @@
             <div class="overview">
                 <div class="row">
                     <div class="col-lg-6">
-                        <?= featured('dashboard/components/prog-status-chart'); ?>
+                        <?= featured('dashboard/components/my-pets'); ?>
                     </div>
                     <div class="col-lg-3">
                         <?= featured('dashboard/components/popular'); ?>
