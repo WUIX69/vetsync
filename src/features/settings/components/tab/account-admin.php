@@ -53,28 +53,7 @@
             </div>
         </div>
 
-        <!-- Dark Mode Toggle -->
-        <div class="field">
-            <label>Theme Preference</label>
-            <div class="ui toggle checkbox">
-                <input type="checkbox" name="dark_mode">
-                <label>Enable Dark Mode</label>
-            </div>
-        </div>
 
-        <!-- Delete Account -->
-        <div class="field mt-5">
-            <label>Danger Zone</label>
-            <div class="ui segment"
-                style="background-color: rgba(255, 0, 0, 0.05); border-color: rgba(255, 0, 0, 0.2);">
-                <h4 class="ui header">Delete Account</h4>
-                <p>Once you delete your account, there is no going back. Please
-                    be
-                    certain.</p>
-                <button type="button" class="ui red button">Delete
-                    Account</button>
-            </div>
-        </div>
 
         <div class="actions mt-4">
             <button class="ui primary button" type="submit">Save Account
