@@ -20,8 +20,7 @@ $activeLink = uriPagePath();
                 href="<?= app('user/appointments') ?>">Appointments</a>
             <a class="nav-link <?= $activeLink === 'settings' ? 'active' : '' ?>"
                 href="<?= app('user/settings') ?>">Settings</a>
-            <a class="nav-link <?= $activeLink === 'ratings' ? 'active' : '' ?>"
-                href="<?= app('user/ratings') ?>">Ratings</a>
+
         </div>
         <div class="right-section">
             <i class='bx bx-bell'></i>
