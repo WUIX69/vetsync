@@ -360,7 +360,12 @@ $services = [
                             </div>
                             <div class="service-meta">
                                 <span class="price"><?= $service['price']; ?></span>
-                                <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
+                                <div class="actions">
+                                    <a href="<?= app('user/service-single-view') ?>" class="ui button primary">
+                                        View
+                                    </a>
+                                    <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
