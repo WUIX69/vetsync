@@ -14,6 +14,8 @@
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window'); ?> <!-- Window Spinner -->
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
+        <?= featured('dashboard/components/modal/pet-flyout'); ?> <!-- Top Redirect Button -->
+        <?= featured('dashboard/components/modal/add-pet-modal'); ?> <!-- Top Redirect Button -->
     </div>
 
     <div class="container-body">
@@ -45,6 +47,7 @@
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="<?= featured('dashboard/js/main.js', true); ?>"></script>
+    <script src="<?= featured('dashboard/js/myPets.js', true); ?>"></script>
 
 </body>
 
