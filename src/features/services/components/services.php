@@ -255,6 +255,43 @@ $services = [
     main section.services .service-card .card-body .service-meta button:hover {
         background: #062451;
     }
+
+    main section.services .service-card .card-body .service-meta .service-view-btn {
+        background: linear-gradient(90deg, #2e7d4f 0%, #1de9b6 100%);
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 1.2rem;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+        margin-right: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        justify-content: center;
+        box-shadow: 0 2px 8px 0 rgba(46, 125, 79, 0.10);
+        margin-bottom: 0.5rem;
+    }
+
+    main section.services .service-card .card-body .service-meta .service-view-btn:hover {
+        background: linear-gradient(90deg, #1de9b6 0%, #2e7d4f 100%);
+        color: #b2dfdb;
+        text-decoration: none;
+        box-shadow: 0 4px 16px 0 rgba(46, 125, 79, 0.18);
+    }
+
+    main section.services .service-card .card-body .service-meta .service-view-btn .eye.icon {
+        margin-right: 0.4em;
+        color: #b2dfdb;
+    }
+
+    main section.services .service-card .card-body .service-meta .service-view-btn-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
 </style>
 <section class="services">
     <div class="container-xl">
@@ -361,9 +398,14 @@ $services = [
                             <div class="service-meta">
                                 <span class="price"><?= $service['price']; ?></span>
                                 <div class="actions">
-                                    <a href="<?= app('user/service-single-view') ?>" class="ui button primary">
-                                        View
-                                    </a>
+
+                                    <div class="service-view-btn-wrapper">
+                                        <a href="<?= app('user/service-single-view') ?>"
+                                            class="service-view-btn ui eye icon" title="View Service">
+                                            <i class="eye icon"></i>View
+                                        </a>
+                                    </div>
+
                                     <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
                                 </div>
                             </div>
