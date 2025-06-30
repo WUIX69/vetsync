@@ -32,6 +32,8 @@
 
             <!-- Related Services -->
             <?= featured('services/components/related'); ?>
+            <!-- Reviews -->
+            <?= featured('services/components/reviews'); ?>
         </main>
     </div>
 
