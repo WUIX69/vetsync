@@ -182,6 +182,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="actions">
+                            <button id="updatePetBtn" class="ui green button" type="button" style="margin-right:10px;">
+                                <i class="edit icon"></i> Update
+                            </button>
+                            <button id="deletePetBtn" class="ui red button" type="button">
+                                <i class="trash alternate outline icon"></i> Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="service" role="tabpanel" aria-labelledby="service-tab">
@@ -197,7 +205,7 @@
         </div>
     </div>
     <div class="actions" style="display:flex; justify-content:center; margin-top:8px;">
-        <button id="rateUsBtn" class="ui positive right labeled icon rate-us-btn">
+        <button id="rateUsBtn" class="ui positive right labeled icon rate-us-btn" style="display:block;">
             Rate Us
             <i class="star icon"></i>
         </button>

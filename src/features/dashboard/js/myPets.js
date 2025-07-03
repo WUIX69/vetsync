@@ -1,148 +1,292 @@
+// My Pets CRUD (database-backed) using pets.php API
+
 const myPetsSection = $("section.my-pets");
+const petsList = myPetsSection.find(".pet-items");
 
-// Sample data for pets as an array
-const myPets = [
-    {
-        id: 1,
-        img: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?auto=format&fit=facearea&w=400&h=400&facepad=2",
-        name: "Daniel",
-        breed: "West Highland White Terrier",
-        age: "3 years",
-        notes: "Loves to wear ties.",
-        weight: "32kg",
-        height: "99cm",
-        vacc: "5",
-        grooming: "complete",
-    },
-    {
-        id: 2,
-        img: "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&w=400&h=400&fit=facearea",
-        name: "Zeus",
-        breed: "Golden Retriever",
-        age: "5 years",
-        notes: "Enjoys long walks.",
-        weight: "28kg",
-        height: "85cm",
-        vacc: "3",
-        grooming: "pending",
-    },
-    {
-        id: 3,
-        img: "https://images.pexels.com/photos/4587997/pexels-photo-4587997.jpeg?auto=compress&w=400&h=400&fit=facearea",
-        name: "Bella",
-        breed: "Labrador Retriever",
-        age: "2 years",
-        notes: "Loves to swim.",
-        weight: "30kg",
-        height: "90cm",
-        vacc: "4",
-        grooming: "complete",
-    },
-    {
-        id: 4,
-        img: "https://images.pexels.com/photos/45201/kitty-cat-kitten-pet-45201.jpeg?auto=compress&w=400&h=400&fit=facearea",
-        name: "Milo",
-        breed: "Beagle",
-        age: "4 years",
-        notes: "Chases squirrels.",
-        weight: "18kg",
-        height: "60cm",
-        vacc: "6",
-        grooming: "pending",
-    },
-    {
-        id: 5,
-        img: "https://images.pexels.com/photos/733416/pexels-photo-733416.jpeg?auto=compress&w=400&h=400&fit=facearea",
-        name: "Luna",
-        breed: "Siberian Husky",
-        age: "3 years",
-        notes: "Howls at night.",
-        weight: "25kg",
-        height: "80cm",
-        vacc: "5",
-        grooming: "complete",
-    },
-    {
-        id: 6,
-        img: "https://images.pexels.com/photos/374906/pexels-photo-374906.jpeg?auto=compress&w=400&h=400&fit=facearea",
-        name: "Charlie",
-        breed: "Pug",
-        age: "1 year",
-        notes: "Loves belly rubs.",
-        weight: "10kg",
-        height: "40cm",
-        vacc: "2",
-        grooming: "pending",
-    },
-    {
-        id: 7,
-        img: "https://images.pexels.com/photos/356378/pexels-photo-356378.jpeg?auto=compress&w=400&h=400&fit=facearea",
-        name: "Max",
-        breed: "German Shepherd",
-        age: "6 years",
-        notes: "Very protective.",
-        weight: "35kg",
-        height: "100cm",
-        vacc: "7",
-        grooming: "complete",
-    },
-];
+// Modal for add/edit pet (use the correct id: addPetModal)
+const petModal = $("#addPetModal");
+const petModalForm = petModal.find("form");
 
-/**
- * Populates the .pet-items list with pet data from myPets array.
- * This will replace the current list with the pets in myPets and an Add Pet button.
- */
-function populateMyPets() {
-    const petItems = myPetsSection.find(".pet-items");
-    if (!petItems.length) return;
-
-    petItems.empty();
-    let petsHTML = "";
-
-    // Add each pet
-    myPets.forEach((pet) => {
-        petsHTML += `
-            <li class="item view-pet" data-pet-id="${pet.id}">
-                <img class="avatar-img" src="${pet.img}" alt="${pet.name}" />
-                <div class="avatar-name">${pet.name}</div>
-            </li>
-        `;
-    });
-    petItems.append(petsHTML);
-
-    // Add the "Add Pet" button on the last
-    petItems.append(`
-        <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal">
-            <i class="plus icon"></i> Add Pet
-        </button>
-    `);
+// Helper for AJAX to pets API
+function petsAjax(options) {
+    let url = apiUrl("dashboard") + "pets.php";
+    if (options.urlParams) {
+        url += "?" + $.param(options.urlParams);
+    }
+    const defaultOptions = {
+        url: url,
+        dataType: "json",
+        timeout: 5000,
+        error: ajaxErrorHandler,
+    };
+    const finalOptions = $.extend(true, {}, defaultOptions, options);
+    return $.ajax(finalOptions);
 }
 
-function singleWherePetView(petId = null) {
-    if (!petId) return false;
-    const petFlyout = $("#petFlyout");
+// Fetch and render all pets
+function getAllPets() {
+    petsList.empty();
 
-    const pet = myPets.find((p) => p.id === petId);
-    $.each(pet, function (name, value) {
-        // Remove quotes around ${name} and use correct class selector
-        if (name === "img") {
-            petFlyout.find(`.pet-profile-img`).attr("src", value);
-        } else {
-            petFlyout.find(`.pet-profile-${name}`).text(value);
-        }
+    petsAjax({
+        method: "GET",
+        data: { action: "all" },
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+            const pets = response.data || [];
+            let petsHTML = "";
+
+            pets.forEach((pet) => {
+                petsHTML += `
+                    <li class="item view-pet" data-pet-uuid="${pet.uuid}">
+                        <img class="avatar-img" src="${
+                            pet.image || "https://placehold.co/100x100?text=Pet"
+                        }" alt="${pet.name}">
+                        <div class="avatar-name">${pet.name}</div>
+                    </li>
+                `;
+            });
+
+            // Add the "Add Pet" button at the end, using the correct modal id
+            petsHTML += `
+                <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal">
+                    <i class="plus icon"></i> Add Pet
+                </button>
+            `;
+
+            petsList.append(petsHTML);
+        },
     });
+}
 
-    $("#petFlyout").flyout("show");
+// Fetch and show a single pet in the modal (for view/edit)
+function getSinglePet(petUuid = null) {
+    if (!petUuid) return false;
+
+    petsAjax({
+        method: "GET",
+        data: {
+            action: "single",
+            uuid: petUuid,
+        },
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+            const pet = response.data || {};
+            // Populate the form fields
+            $.each(pet, function (key, value) {
+                petModalForm.find('[name="' + key + '"]').val(value);
+            });
+            petModal.modal("show");
+        },
+    });
+}
+
+// Delete a pet
+function deletePet(petUuid = null) {
+    if (!petUuid) return false;
+    if (!confirm("Are you sure you want to delete this pet?")) return false;
+
+    petsAjax({
+        urlParams: { uuid: petUuid },
+        method: "DELETE",
+        success: function (response) {
+            alert(response.message);
+            if (!response.success) return false;
+            getAllPets();
+            // Also hide the flyout if open
+            $("#petFlyout").flyout("hide");
+        },
+    });
+}
+
+// Show pet details in flyout (read-only view)
+function showPetFlyout(petUuid = null) {
+    if (!petUuid) return false;
+    // You may want to fetch the pet again, or use cached data
+    petsAjax({
+        method: "GET",
+        data: {
+            action: "single",
+            uuid: petUuid,
+        },
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+            const pet = response.data || {};
+            const petFlyout = $("#petFlyout");
+            // Fill in the flyout fields
+            $.each(pet, function (name, value) {
+                if (name === "image") {
+                    petFlyout
+                        .find(`.pet-profile-img`)
+                        .attr(
+                            "src",
+                            value || "https://placehold.co/100x100?text=Pet"
+                        );
+                } else {
+                    petFlyout.find(`.pet-profile-${name}`).text(value);
+                }
+            });
+            // Store the uuid on the flyout for later use (update/delete)
+            petFlyout.data("pet-uuid", pet.uuid);
+            petFlyout.flyout("show");
+        },
+    });
 }
 
 $(function () {
-    populateMyPets();
+    getAllPets();
 
+    // View pet details on click
     $("body").on("click", ".view-pet", function (e) {
-        console.log("clickin on pet item");
-        const petId = $(this).data("pet-id");
+        const petUuid = $(this).data("pet-uuid");
+        showPetFlyout(petUuid);
+    });
 
-        // Show the pet flyout modal (assumes #petFlyout exists and is initialized)
-        singleWherePetView(petId);
+    // Open modal for adding a new pet
+    $("body").on("click", ".add-pet-btn", function () {
+        // Only reset if form exists
+        if (
+            petModalForm.length &&
+            typeof petModalForm[0].reset === "function"
+        ) {
+            petModalForm[0].reset();
+        } else {
+            // fallback: clear all input fields manually
+            petModalForm.find("input, textarea, select").each(function () {
+                if ($(this).is(":checkbox") || $(this).is(":radio")) {
+                    $(this).prop("checked", false);
+                } else {
+                    $(this).val("");
+                }
+            });
+        }
+        petModalForm.find('[name="uuid"]').val(""); // Clear uuid for new pet
+        petModal.modal("show");
+    });
+
+    // Handle delete (if you add a delete button in the UI)
+    $("body").on("click", ".delete-pet-btn", function (e) {
+        e.stopPropagation();
+        const petUuid = $(this).closest(".item").data("pet-uuid");
+        deletePet(petUuid);
+    });
+
+    // --- Flyout Update and Delete Handlers ---
+
+    // Update button in flyout: open modal with pet data for editing
+    $("body").on("click", "#updatePetBtn", function () {
+        const petUuid = $("#petFlyout").data("pet-uuid");
+        if (!petUuid) return;
+        // Fetch pet data and open modal for editing
+        petsAjax({
+            method: "GET",
+            data: {
+                action: "single",
+                uuid: petUuid,
+            },
+            success: function (response) {
+                if (!response.success) {
+                    alert(response.message);
+                    return false;
+                }
+                const pet = response.data || {};
+                // Populate the form fields
+                $.each(pet, function (key, value) {
+                    petModalForm.find('[name="' + key + '"]').val(value);
+                });
+                petModalForm.find('[name="uuid"]').val(petUuid);
+                petModal.modal("show");
+                // Hide the flyout
+                $("#petFlyout").flyout("hide");
+            },
+        });
+    });
+
+    // Delete button in flyout: delete pet
+    $("body").on("click", "#deletePetBtn", function () {
+        const petUuid = $("#petFlyout").data("pet-uuid");
+        if (!petUuid) return;
+        deletePet(petUuid);
+    });
+
+    // Validate and submit pet form (add/edit)
+    petModalForm.form({
+        fields: {
+            name: {
+                identifier: "name",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter a pet name",
+                    },
+                ],
+            },
+            pet_dob: {
+                identifier: "dob",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter date of birth",
+                    },
+                ],
+            },
+            pet_species: {
+                identifier: "species",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter species",
+                    },
+                ],
+            },
+            pet_breed: {
+                identifier: "breed",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter breed",
+                    },
+                ],
+            },
+        },
+        inline: true,
+        on: "blur",
+        onSuccess: function (event, fields) {
+            event.preventDefault();
+            const $submitBtn = $(this).find("button[type=submit]");
+            const isUpdate = !!fields.uuid;
+
+            // Prepare form data for file upload
+            const formData = new FormData(petModalForm[0]);
+            formData.append("action", isUpdate ? "update" : "store");
+
+            petsAjax({
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $submitBtn.addClass("loading");
+                },
+                success: function (response) {
+                    alert(response.message);
+                    if (response.success) {
+                        getAllPets();
+                        petModal.modal("hide");
+                    }
+                },
+                complete: function () {
+                    $submitBtn.removeClass("loading");
+                },
+            });
+        },
     });
 });

@@ -6,27 +6,32 @@
     </div>
     <div class="content">
         <form class="ui form" id="addPetForm">
+            <input type="hidden" name="user_uuid" id="user_uuid" value="">
+            <input type="hidden" name="uuid">
             <div class="field">
                 <label>Pet Name</label>
-                <input type="text" name="pet_name" placeholder="Enter pet name" required>
+                <input type="text" name="name" placeholder="Enter pet name" required>
+            </div>
+
+            <div class="field">
+                <label>Date Of Birth</label>
+                <input type="date" name="dob" required>
+            </div>
+
+            <div class="field">
+                <label>Species</label>
+                <input type="text" name="species" placeholder="e.g. Dog/Cat" required>
             </div>
             <div class="field">
                 <label>Breed</label>
-                <input type="text" name="pet_breed" placeholder="Enter breed" required>
+                <input type="text" name="breed" placeholder="Enter breed" required>
             </div>
-            <div class="two fields">
-                <div class="field">
-                    <label>Age</label>
-                    <input type="text" name="pet_age" placeholder="e.g. 3 years" required>
-                </div>
-                <div class="field">
-                    <label>Notes</label>
-                    <input type="text" name="pet_notes" placeholder="e.g. Loves to wear ties.">
-                </div>
-            </div>
+
+
+
             <div class="field">
                 <label>Avatar</label>
-                <input type="file" name="pet_avatar" accept="image/*">
+                <input type="file" name="files[]" id="pet_files" multiple>
             </div>
             <div class="actions" style="margin-top: 18px;">
                 <button class="ui black deny clear button" type="reset">
