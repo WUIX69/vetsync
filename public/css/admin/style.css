@@ -254,6 +254,9 @@ nav.navbar .container {
     padding: 0;
     margin: 0;
     margin-top: -0.45rem;
+
+    width: 100%;
+    min-width: 100%;
 }
 
 nav.navbar .nav {
@@ -327,6 +330,9 @@ main section .container {
     position: relative;
     padding: 0;
     margin: 0;
+
+    width: 100%;
+    min-width: 100%;
 }
 
 main section:has(.title) .container {
