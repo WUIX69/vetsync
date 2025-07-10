@@ -27,7 +27,7 @@ try {
         $action = $_POST['action'] ?? null;
 
         $data = [
-            // 'category_id' => $_POST['category_id'] ?? null,
+            'user_uuid' => userData()['uuid'] ?? null, // Use server-side session
             'name' => $_POST['name'] ?? '',
             'dob' => $_POST['dob'] ?? '',
             'species' => $_POST['species'] ?? '',
@@ -68,8 +68,8 @@ try {
         $action = $_GET['action'] ?? null;
 
         if ($action === 'all') {
-
-            $result = Pets::all();
+            $user_uuid = userData()['uuid'] ?? null;
+            $result = Pets::all($user_uuid); // Pass user_uuid to the model
             $result['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [

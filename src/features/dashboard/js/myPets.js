@@ -29,7 +29,9 @@ function getAllPets() {
 
     petsAjax({
         method: "GET",
-        data: { action: "all" },
+        data: {
+            action: "all",
+        },
         success: function (response) {
             if (!response.success) {
                 alert(response.message);
@@ -229,7 +231,7 @@ $(function () {
                     },
                 ],
             },
-            pet_dob: {
+            dob: {
                 identifier: "dob",
                 rules: [
                     {
@@ -238,7 +240,7 @@ $(function () {
                     },
                 ],
             },
-            pet_species: {
+            species: {
                 identifier: "species",
                 rules: [
                     {
@@ -247,7 +249,7 @@ $(function () {
                     },
                 ],
             },
-            pet_breed: {
+            breed: {
                 identifier: "breed",
                 rules: [
                     {
@@ -267,6 +269,7 @@ $(function () {
             // Prepare form data for file upload
             const formData = new FormData(petModalForm[0]);
             formData.append("action", isUpdate ? "update" : "store");
+            // formData.append("user_uuid", userData()["uuid"]); // <-- KEEP THIS REMOVED/COMMENTED
 
             petsAjax({
                 method: "POST",

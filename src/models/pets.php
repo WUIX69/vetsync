@@ -18,11 +18,16 @@ class Pets
         return self::$conn;
     }
 
-    public static function all()
+    public static function all($user_uuid = null)
     {
         try {
-            $stmt = self::conn()->prepare('SELECT * FROM pets');
-            $stmt->execute();
+            if ($user_uuid) {
+                $stmt = self::conn()->prepare('SELECT * FROM pets WHERE user_uuid = ?');
+                $stmt->execute([$user_uuid]);
+            } else {
+                $stmt = self::conn()->prepare('SELECT * FROM pets');
+                $stmt->execute();
+            }
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
             return [
                 'success' => true,
@@ -66,17 +71,19 @@ class Pets
             $stmt = self::conn()->prepare("
                 INSERT INTO pets (
                     uuid, 
+                    user_uuid, 
                     name, 
                     dob, 
                     species,
                     breed 
                 ) VALUES (
-                    ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?
                 )
             ");
 
             $stmt->execute([
                 $data['uuid'],
+                $data['user_uuid'],
                 $data['name'],
                 $data['dob'],
                 $data['species'],
@@ -104,7 +111,7 @@ class Pets
             self::conn()->beginTransaction();
 
             // Only update the fields that are present in $data
-            // For now, update name, dob, species, breed (no category_id)
+
             $stmt = self::conn()->prepare("
                 UPDATE pets SET 
                     name = ?, 
