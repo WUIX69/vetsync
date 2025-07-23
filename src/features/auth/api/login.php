@@ -25,6 +25,7 @@ try {
 
         $session->set($user);
         $session->add(['type' => 'user']);
+        session_write_close();
 
         $response = array_merge($response, [
             'success' => true,
@@ -38,6 +39,7 @@ try {
 
         $session->set($admin);
         $session->add(['type' => 'admin']);
+        session_write_close();
 
         $response = array_merge($response, [
             'success' => true,

@@ -1,6 +1,7 @@
 <?php
 $services = [
     [
+        'uuid' => 'service-1',
         'name' => 'Vaccination',
         'description' => 'Essential vaccinations to protect your pet against common diseases. 
                             Includes consultation and vaccine administration.',
@@ -19,6 +20,7 @@ $services = [
         'image' => asset('img/contents/services/vaccination.jpg'),
     ],
     [
+        'uuid' => 'service-2',
         'name' => 'Surgery',
         'description' => 'Professional surgical procedures performed by experienced 
                             veterinarians in a state-of-the-art facility.',
@@ -37,6 +39,7 @@ $services = [
         'image' => asset('img/contents/services/surgery.jpg'),
     ],
     [
+        'uuid' => 'service-3',
         'name' => 'Grooming',
         'description' => 'Professional grooming services including bath, haircut, 
                             nail trimming, and ear cleaning.',
@@ -55,6 +58,7 @@ $services = [
         'image' => asset('img/contents/services/grooming.jpg'),
     ],
     [
+        'uuid' => 'service-4',
         'name' => 'Foods & Accessories',
         'description' => 'Premium quality pet foods, nutritional supplements, and a wide range 
                             of accessories including collars, leashes, beds, toys, and care products.',
@@ -73,6 +77,7 @@ $services = [
         'image' => asset('img/contents/services/accessories.jpg'),
     ],
     [
+        'uuid' => 'service-5',
         'name' => 'Boarding',
         'description' => 'Safe and comfortable boarding facilities for your pets while you\'re away. 
                             Includes feeding, daily exercise, and medical monitoring if needed.',
@@ -406,7 +411,10 @@ $services = [
                                         </a>
                                     </div>
 
-                                    <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
+                                    <button type="button" class="book-now-btn" data-open-modal="#bookNowModal"
+                                        data-service-uuid="<?= $service['uuid'] ?>">
+                                        Book Now <i class='bx bx-right-arrow-alt'></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -420,3 +428,4 @@ $services = [
         <!-- Pagination END -->
     </div>
 </section>
+<?= featured('services/components/booknow-modal'); ?> <!-- Book Now Modal -->

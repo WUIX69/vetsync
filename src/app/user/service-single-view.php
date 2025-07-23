@@ -13,7 +13,7 @@
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window'); ?> <!-- Window Spinner -->
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
-        <?= shared('components/booknow-modal'); ?> <!-- Book Now Modal -->
+        <?= featured('services/components/booknow-modal'); ?> <!-- Book Now Modal -->
     </div>
 
     <div class="site-cont">
@@ -39,6 +39,9 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+
+
+    <?= featured('services/components/booknow-modal'); ?> <!-- Book Now Modal -->
 </body>
 
 </html>

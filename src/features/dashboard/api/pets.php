@@ -69,6 +69,7 @@ try {
 
         if ($action === 'all') {
             $user_uuid = userData()['uuid'] ?? null;
+            error_log("User UUID for pets: " . $user_uuid);
             $result = Pets::all($user_uuid); // Pass user_uuid to the model
             $result['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data

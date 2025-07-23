@@ -11,6 +11,8 @@
 
 <body>
     <div class="shared-standalone-content">
+
+
         <?= shared('layouts/loader/window'); ?> <!-- Window Spinner -->
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
     </div>
@@ -29,6 +31,9 @@
     </div>
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+
+    <script src="/src/features/services/js/booknow.js"></script>
+
 </body>
 
 </html>

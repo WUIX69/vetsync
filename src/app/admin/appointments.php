@@ -41,6 +41,8 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
+
+    <script src="/src/features/appointments/js/appointments.js"></script>
 </body>
 
 </html>

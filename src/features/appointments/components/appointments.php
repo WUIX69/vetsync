@@ -234,184 +234,28 @@
                     <h3 class="section-title">All Appointments</h3>
                     <div class="date-separator">Morning</div>
 
-                    <div class="appointment-card">
-                        <div class="appointment-header">
-                            <div class="appointment-time">
-                                <i class="material-icons-sharp">schedule</i>
-                                09:00 AM
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                        </div>
-                        <div class="appointment-patient">
-                            <div class="patient-avatar">
-                                <img src="<?= asset('img/avatars/chris.jpg'); ?>" alt="Pet">
-                            </div>
-                            <div class="patient-info">
-                                <h4>Max (Golden Retriever)</h4>
-                                <p>Owner: John Smith</p>
-                            </div>
-                        </div>
-                        <div class="appointment-service">
-                            <strong>Service:</strong> Vaccination
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="ui action-btn green button">Confirm</button>
-                            <button class="ui action-btn blue button">Reschedule</button>
-                            <button class="ui action-btn red button">Cancel</button>
-                        </div>
-                    </div>
-
-                    <div class="appointment-card">
-                        <div class="appointment-header">
-                            <div class="appointment-time">
-                                <i class="material-icons-sharp">schedule</i>
-                                10:30 AM
-                            </div>
-                            <span class="appointment-status status-pending">Pending</span>
-                        </div>
-                        <div class="appointment-patient">
-                            <div class="patient-avatar">
-                                <img src="<?= asset('img/avatars/elliot.jpg'); ?>" alt="Pet">
-                            </div>
-                            <div class="patient-info">
-                                <h4>Luna (Persian Cat)</h4>
-                                <p>Owner: Sarah Johnson</p>
-                            </div>
-                        </div>
-                        <div class="appointment-service">
-                            <strong>Service:</strong> Routine Check-up
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="ui action-btn green button">Confirm</button>
-                            <button class="ui action-btn blue button">Reschedule</button>
-                            <button class="ui action-btn red button">Cancel</button>
-                        </div>
-                    </div>
-
-                    <div class="date-separator">Afternoon</div>
-
-                    <div class="appointment-card">
-                        <div class="appointment-header">
-                            <div class="appointment-time">
-                                <i class="material-icons-sharp">schedule</i>
-                                01:15 PM
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                        </div>
-                        <div class="appointment-patient">
-                            <div class="patient-avatar">
-                                <img src="<?= asset('img/avatars/helen.jpg'); ?>" alt="Pet">
-                            </div>
-                            <div class="patient-info">
-                                <h4>Bella (Labrador)</h4>
-                                <p>Owner: Michael Brown</p>
-                            </div>
-                        </div>
-                        <div class="appointment-service">
-                            <strong>Service:</strong> Dental Cleaning
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="ui action-btn green button">Confirm</button>
-                            <button class="ui action-btn blue button">Reschedule</button>
-                            <button class="ui action-btn red button">Cancel</button>
-                        </div>
-                    </div>
+                    <div id="appointmentsCardsAll"></div>
                 </div>
 
                 <!-- Pending Appointments -->
                 <div class="tab-pane fade" id="pending">
                     <h3 class="section-title">Pending Appointments</h3>
                     <div class="date-separator">Morning</div>
-                    <div class="appointment-card">
-                        <div class="appointment-header">
-                            <div class="appointment-time">
-                                <i class="material-icons-sharp">schedule</i>
-                                09:00 AM
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                        </div>
-                        <div class="appointment-patient">
-                            <div class="patient-avatar">
-                                <img src="<?= asset('img/avatars/chris.jpg'); ?>" alt="Pet">
-                            </div>
-                            <div class="patient-info">
-                                <h4>Max (Golden Retriever)</h4>
-                                <p>Owner: John Smith</p>
-                            </div>
-                        </div>
-                        <div class="appointment-service">
-                            <strong>Service:</strong> Vaccination
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="ui action-btn green button">Confirm</button>
-                            <button class="ui action-btn blue button">Reschedule</button>
-                            <button class="ui action-btn red button">Cancel</button>
-                        </div>
-                    </div>
+                    <div id="appointmentsCardsPending"></div>
                 </div>
 
                 <!-- Confirmed Appointments -->
                 <div class="tab-pane fade" id="confirmed">
                     <h3 class="section-title">Confirmed Appointments</h3>
                     <div class="date-separator">Morning</div>
-                    <div class="appointment-card">
-                        <div class="appointment-header">
-                            <div class="appointment-time">
-                                <i class="material-icons-sharp">schedule</i>
-                                09:00 AM
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                        </div>
-                        <div class="appointment-patient">
-                            <div class="patient-avatar">
-                                <img src="<?= asset('img/avatars/chris.jpg'); ?>" alt="Pet">
-                            </div>
-                            <div class="patient-info">
-                                <h4>Max (Golden Retriever)</h4>
-                                <p>Owner: John Smith</p>
-                            </div>
-                        </div>
-                        <div class="appointment-service">
-                            <strong>Service:</strong> Vaccination
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="ui action-btn green button">Confirm</button>
-                            <button class="ui action-btn blue button">Reschedule</button>
-                            <button class="ui action-btn red button">Cancel</button>
-                        </div>
-                    </div>
+                    <div id="appointmentsCardsConfirmed"></div>
                 </div>
 
                 <!-- Cancelled Appointments -->
                 <div class="tab-pane fade" id="cancelled">
                     <h3 class="section-title">Cancelled Appointments</h3>
                     <div class="date-separator">Morning</div>
-                    <div class="appointment-card">
-                        <div class="appointment-header">
-                            <div class="appointment-time">
-                                <i class="material-icons-sharp">schedule</i>
-                                09:00 AM
-                            </div>
-                            <span class="appointment-status status-confirmed">Confirmed</span>
-                        </div>
-                        <div class="appointment-patient">
-                            <div class="patient-avatar">
-                                <img src="<?= asset('img/avatars/chris.jpg'); ?>" alt="Pet">
-                            </div>
-                            <div class="patient-info">
-                                <h4>Max (Golden Retriever)</h4>
-                                <p>Owner: John Smith</p>
-                            </div>
-                        </div>
-                        <div class="appointment-service">
-                            <strong>Service:</strong> Vaccination
-                        </div>
-                        <div class="appointment-actions">
-                            <button class="ui action-btn green button">Confirm</button>
-                            <button class="ui action-btn blue button">Reschedule</button>
-                            <button class="ui action-btn red button">Cancel</button>
-                        </div>
-                    </div>
+                    <div id="appointmentsCardsCancelled"></div>
                 </div>
             </div>
         </div>

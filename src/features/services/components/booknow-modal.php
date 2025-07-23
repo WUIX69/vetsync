@@ -67,26 +67,26 @@
                         <input type="text" name="phone" placeholder="123-456-7890" />
                     </div>
                     <div class="field">
-                        <label for="persons">Number of persons</label>
-                        <input type="number" name="persons" placeholder="12 persons" min="1" />
-                    </div>
-                </div>
-                <div class="two fields">
-                    <div class="field">
                         <label for="date">Date</label>
                         <input type="date" name="date" placeholder="mm/dd/yyyy" />
                     </div>
+                    <!-- <div class="field">
+                        <label for="persons">Number of persons</label>
+                        <input type="number" name="persons" placeholder="12 persons" min="1" />
+                    </div> -->
+                </div>
+                <div class="two fields">
                     <div class="field">
-                        <label for="time">Time</label>
-                        <select name="time">
-                            <option value="">Select Time</option>
-                            <option value="17:00">5:00 PM</option>
-                            <option value="17:30">5:30 PM</option>
-                            <option value="18:00">6:00 PM</option>
-                            <option value="18:30">6:30 PM</option>
-                            <option value="19:00">7:00 PM</option>
-                            <option value="19:30">7:30 PM</option>
-                            <option value="20:00">8:00 PM</option>
+                        <label for="pet_uuid">Select Pet</label>
+                        <select name="pet_uuid" id="bookNowPetDropdown" class="ui dropdown" required>
+                            <option value="">Select your pet</option>
+                            <!-- Pets will be loaded here by JS -->
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="service_uuid">Select Service</label>
+                        <select name="service_uuid" id="bookNowServiceDropdown" class="ui dropdown" required>
+                            <!-- Services will be loaded here by JS -->
                         </select>
                     </div>
                 </div>
