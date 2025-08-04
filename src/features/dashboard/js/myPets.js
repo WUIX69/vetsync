@@ -7,6 +7,68 @@ const petsList = myPetsSection.find(".pet-items");
 const petModal = $("#addPetModal");
 const petModalForm = petModal.find("form");
 
+// Filepond Flags (Required)
+let isModalHide = false;
+let isPondRender = false;
+
+// Pet Image FilePond
+const petImagePond = FilePond.create(document.querySelector(".pet-pond"), {
+    maxFiles: 2,
+    maxFileSize: "2MB",
+    allowMultiple: true,
+    allowFileTypes: ["image/*"],
+    labelIdle: `Drag & Drop your pet image or <span class="filepond--label-action">Browse</span>`,
+    imagePreviewHeight: 170,
+    imageCropAspectRatio: "1:1",
+    imageResizeTargetWidth: 200,
+    imageResizeTargetHeight: 200,
+    onprocessfile: function (error, file) {
+        // console.log("On Process Files:", file);
+    },
+    onaddfile: function (error, file) {
+        // console.log("On Add File:", file);
+    },
+    onremovefile: function (error, file) {
+        // console.log("On Remove File:", file);
+
+        // Only handle "local" files (already on server) and only if not modal hide
+        if (file.origin === 3 && !isModalHide) {
+            console.log("is local delete");
+            $.ajax({
+                url: apiUrl("shared") + "filepond.php",
+                headers: {
+                    "X-Reference-Model": "pets",
+                },
+                method: "DELETE",
+                data: file.serverId,
+                processData: false,
+                contentType: false,
+                error: ajaxErrorHandler,
+            });
+        }
+    },
+    onupdatefiles: function (files) {
+        // Optional: Handle file updates
+    },
+    server: {
+        url: apiUrl() + "filepond.php",
+        headers: {
+            "X-Reference-Model": "pets",
+        },
+        timeout: 7000,
+        withCredentials: false,
+        process: {
+            url: "",
+        },
+        revert: {
+            url: "",
+        },
+        load: {
+            url: "?folder=",
+        },
+    },
+});
+
 // Helper for AJAX to pets API
 function petsAjax(options) {
     let url = apiUrl("dashboard") + "pets.php";
@@ -79,10 +141,36 @@ function getSinglePet(petUuid = null) {
                 return false;
             }
             const pet = response.data || {};
+
             // Populate the form fields
             $.each(pet, function (key, value) {
-                petModalForm.find('[name="' + key + '"]').val(value);
+                if (key === "files") {
+                    // Prevent FilePond from deleting files when modal is hidden and !empty files
+                    if (value.length > 0) isPondRender = true;
+
+                    // Add files to FilePond
+                    value.forEach(function (file) {
+                        petImagePond
+                            .addFile(file.folder, {
+                                type: "local",
+                                options: {
+                                    file: {
+                                        name: file.filename,
+                                    },
+                                    metadata: {
+                                        serverId: file.folder,
+                                    },
+                                },
+                            })
+                            .then(function (fileItem) {
+                                // console.log("Added fileItem:", fileItem);
+                            });
+                    });
+                } else {
+                    petModalForm.find('[name="' + key + '"]').val(value);
+                }
             });
+
             petModal.modal("show");
         },
     });
@@ -91,17 +179,32 @@ function getSinglePet(petUuid = null) {
 // Delete a pet
 function deletePet(petUuid = null) {
     if (!petUuid) return false;
-    if (!confirm("Are you sure you want to delete this pet?")) return false;
+    if (
+        !confirm(
+            "Are you sure you want to delete this pet? This action cannot be undone."
+        )
+    )
+        return false;
 
     petsAjax({
         urlParams: { uuid: petUuid },
         method: "DELETE",
         success: function (response) {
-            alert(response.message);
-            if (!response.success) return false;
-            getAllPets();
-            // Also hide the flyout if open
-            $("#petFlyout").flyout("hide");
+            if (response.success) {
+                alert("✅ " + response.message);
+                getAllPets();
+                $("#petFlyout").flyout("hide");
+            } else {
+                // Show more informative error message
+                alert(
+                    "⚠️ " +
+                        response.message +
+                        "\n\nTip: Cancel or complete the pet's appointments first, then try deleting again."
+                );
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("❌ Error deleting pet: " + error);
         },
     });
 }
@@ -123,19 +226,28 @@ function showPetFlyout(petUuid = null) {
             }
             const pet = response.data || {};
             const petFlyout = $("#petFlyout");
-            // Fill in the flyout fields
+
+            console.log("Pet data:", pet); // Debug log
+
+            // Fill in the flyout fields properly
             $.each(pet, function (name, value) {
                 if (name === "image") {
+                    // Use the image field directly - it's already formatted by the media() function
                     petFlyout
                         .find(`.pet-profile-img`)
                         .attr(
                             "src",
-                            value || "https://placehold.co/100x100?text=Pet"
+                            value || "https://placehold.co/110x110?text=Pet"
                         );
-                } else {
-                    petFlyout.find(`.pet-profile-${name}`).text(value);
+                } else if (name !== "files") {
+                    // Set other pet profile fields (skip files array)
+                    const fieldElement = petFlyout.find(`.pet-profile-${name}`);
+                    if (fieldElement.length) {
+                        fieldElement.text(value || "Not specified");
+                    }
                 }
             });
+
             // Store the uuid on the flyout for later use (update/delete)
             petFlyout.data("pet-uuid", pet.uuid);
             petFlyout.flyout("show");
@@ -154,7 +266,7 @@ $(function () {
 
     // Open modal for adding a new pet
     $("body").on("click", ".add-pet-btn", function () {
-        // Only reset if form exists
+        // Reset form and FilePond
         if (
             petModalForm.length &&
             typeof petModalForm[0].reset === "function"
@@ -188,28 +300,9 @@ $(function () {
         const petUuid = $("#petFlyout").data("pet-uuid");
         if (!petUuid) return;
         // Fetch pet data and open modal for editing
-        petsAjax({
-            method: "GET",
-            data: {
-                action: "single",
-                uuid: petUuid,
-            },
-            success: function (response) {
-                if (!response.success) {
-                    alert(response.message);
-                    return false;
-                }
-                const pet = response.data || {};
-                // Populate the form fields
-                $.each(pet, function (key, value) {
-                    petModalForm.find('[name="' + key + '"]').val(value);
-                });
-                petModalForm.find('[name="uuid"]').val(petUuid);
-                petModal.modal("show");
-                // Hide the flyout
-                $("#petFlyout").flyout("hide");
-            },
-        });
+        getSinglePet(petUuid);
+        // Hide the flyout
+        $("#petFlyout").flyout("hide");
     });
 
     // Delete button in flyout: delete pet
@@ -219,7 +312,21 @@ $(function () {
         deletePet(petUuid);
     });
 
-    // Validate and submit pet form (add/edit)
+    // Remove files from FilePond when modal is hidden
+    petModal.modal("setting", "onHide", function () {
+        isModalHide = true;
+        if (!isPondRender) {
+            // Delete files from storage and FilePond
+            petImagePond.removeFiles({ revert: true });
+        } else {
+            // Delete files from FilePond UI
+            petImagePond.removeFiles();
+            // Reset the flag for next time
+            isPondRender = false;
+        }
+    });
+
+    // Validate and submit pet form (add/edit) - EXACT SAME PATTERN AS SERVICES
     petModalForm.form({
         fields: {
             name: {
@@ -260,16 +367,20 @@ $(function () {
             },
         },
         inline: true,
-        on: "blur",
+        on: "submit",
         onSuccess: function (event, fields) {
             event.preventDefault();
             const $submitBtn = $(this).find("button[type=submit]");
-            const isUpdate = !!fields.uuid;
-
-            // Prepare form data for file upload
             const formData = new FormData(petModalForm[0]);
-            formData.append("action", isUpdate ? "update" : "store");
-            // formData.append("user_uuid", userData()["uuid"]); // <-- KEEP THIS REMOVED/COMMENTED
+
+            let action = "store";
+            if (formData.get("uuid")) action = "update";
+            formData.append("action", action);
+
+            // Collect all FilePond serverIds (folder names)
+            let files = petImagePond.getFiles().map((f) => f.serverId);
+            formData.set("files", files.join(","));
+            formData.delete("file");
 
             petsAjax({
                 method: "POST",
@@ -282,7 +393,8 @@ $(function () {
                 success: function (response) {
                     alert(response.message);
                     if (response.success) {
-                        getAllPets();
+                        getAllPets(); // Refresh the pets data
+                        isPondRender = true; // Set the flag BEFORE hiding the modal
                         petModal.modal("hide");
                     }
                 },

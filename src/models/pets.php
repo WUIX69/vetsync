@@ -149,20 +149,30 @@ class Pets
         try {
             self::conn()->beginTransaction();
 
+            // Check for existing appointments
+            $appointmentCheck = \VetSync\Models\Appointments::getByPetUuid($uuid);
+            if ($appointmentCheck['success'] && $appointmentCheck['data']['appointment_count'] > 0) {
+                self::conn()->rollBack();
+                return [
+                    'success' => false,
+                    'message' => 'Cannot delete pet with active appointments. Please cancel or complete appointments first.',
+                ];
+            }
+
             $stmt = self::conn()->prepare('DELETE FROM pets WHERE uuid=?');
             $stmt->execute([$uuid]);
 
             self::conn()->commit();
             return [
                 'success' => true,
-                'message' => 'Pets deleted successfully.',
+                'message' => 'Pet deleted successfully.',
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
             self::conn()->rollBack();
             return [
                 'success' => false,
-                'message' => 'Pets deletion failed: ' . $e->getMessage(),
+                'message' => 'Pet deletion failed: ' . $e->getMessage(),
             ];
         }
     }

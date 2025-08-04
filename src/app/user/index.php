@@ -6,6 +6,7 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>User Dashboard - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
+    <?= shared('elements/filepond/styles') ?> <!-- FilePond CSS -->
     <link rel="stylesheet" href="<?= featured('dashboard/css/overview.css', true) ?>">
 </head>
 
@@ -14,8 +15,8 @@
     <div class="shared-standalone-content">
         <?= shared('layouts/loader/window'); ?> <!-- Window Spinner -->
         <?= shared('layouts/top-redirect-btn'); ?> <!-- Top Redirect Button -->
-        <?= featured('dashboard/components/modal/pet-flyout'); ?> <!-- Top Redirect Button -->
-        <?= featured('dashboard/components/modal/add-pet-modal'); ?> <!-- Top Redirect Button -->
+        <?= featured('dashboard/components/modal/pet-flyout'); ?> <!-- Pet Flyout -->
+        <?= featured('dashboard/components/modal/add-pet-modal'); ?> <!-- Add Pet Modal -->
     </div>
 
     <div class="container-body">
@@ -45,6 +46,7 @@
 
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+    <?= shared('elements/filepond/scripts') ?> <!-- FilePond JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="<?= featured('dashboard/js/main.js', true); ?>"></script>
     <script src="<?= featured('dashboard/js/myPets.js', true); ?>"></script>

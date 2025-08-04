@@ -31,34 +31,28 @@ try {
             'name' => $_POST['name'] ?? '',
             'dob' => $_POST['dob'] ?? '',
             'species' => $_POST['species'] ?? '',
-            // $price = $_POST['price'];
             'breed' => $_POST['breed'] ?? '',
-            // 'faqs' => $_POST['faqs'] ? $_POST['faqs'] : null,
-            // 'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
+            'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
         ];
 
-        // if (empty($data['user_uuid'])) {
-        //     echo json_encode(['success' => false, 'message' => 'User UUID is required.']);
-        //     exit;
-        // }
-
         if ($action === 'store') {
-
             $data['uuid'] = uuid();
             $response = Pets::store($data);
-            if (isset($_FILES['files']) && is_array($_FILES['files']['tmp_name'])) {
-                foreach ($_FILES['files']['tmp_name'] as $tmpName) {
-                    $fileManager->storeWherePermanent($tmpName, $reference_model, $data['uuid']);
-                }
+
+            // Handle FilePond files (same pattern as services)
+            foreach ($data['files'] as $file) {
+                $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
             }
+
         } else if ($action === 'update') {
-            $data['uuid'] = $_POST['uuid'] ?? null; // add service uuid to data, required for update
+            $data['uuid'] = $_POST['uuid'] ?? null; // add pet uuid to data, required for update
             $response = Pets::update($data);
-            if (isset($_FILES['files']) && is_array($_FILES['files']['tmp_name'])) {
-                foreach ($_FILES['files']['tmp_name'] as $tmpName) {
-                    $fileManager->storeWherePermanent($tmpName, $reference_model, $data['uuid']);
-                }
+
+            // Handle FilePond files (same pattern as services)
+            foreach ($data['files'] as $file) {
+                $fileManager->storeWherePermanent($file, $reference_model, $data['uuid']);
             }
+
         } else {
             $response['message'] = 'Invalid POST action';
         }
@@ -75,10 +69,7 @@ try {
                 // Format correct data
                 $formattedData = [
                     'image' => media($item['uuid']),
-                    // 'category' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
-                    // 'status' => Helpers::serviceStatus($item['status']),
                     'created_at' => Formatters::dateToMDY($item['created_at']),
-                    // 'updated_at' => Formatters::dateToMDY($item['updated_at']),
                 ];
 
                 // Remove unnecessary data
@@ -90,19 +81,25 @@ try {
             $response = $result;
 
         } else if ($action === 'single') {
-            $product_uuid = $_GET['uuid'] ?? null;
-            $response = Pets::single($product_uuid);
-            $response['data']['files'] = Attachments::all($product_uuid)['data'] ?? []; // Get product files
+            $pet_uuid = $_GET['uuid'] ?? null;
+            $response = Pets::single($pet_uuid);
+
+            // Add formatted image and files data (same as the 'all' action)
+            if ($response['success'] && !empty($response['data'])) {
+                $response['data']['image'] = media($response['data']['uuid']);
+                $response['data']['files'] = Attachments::all($pet_uuid)['data'] ?? [];
+                $response['data']['created_at'] = Formatters::dateToMDY($response['data']['created_at']);
+            }
         } else {
             $response['message'] = 'Invalid GET action';
         }
     }
 
     if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-        $product_uuid = $_GET['uuid'] ?? null;
-        $response = Pets::delete($product_uuid);
+        $pet_uuid = $_GET['uuid'] ?? null;
+        $response = Pets::delete($pet_uuid);
         if ($response['success']) {
-            $fileManager->deleteWhereReferencePermanent($product_uuid, $reference_model);
+            $fileManager->deleteWhereReferencePermanent($pet_uuid, $reference_model);
         }
     }
 

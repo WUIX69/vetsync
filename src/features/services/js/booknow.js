@@ -106,33 +106,100 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 $(function () {
-    $("#bookNowForm").on("submit", function (e) {
-        e.preventDefault();
-        const $form = $(this);
-        const $submitBtn = $form.find("button[type=submit]");
-        $submitBtn.addClass("loading");
+    $("#bookNowForm").form({
+        fields: {
+            full_name: {
+                identifier: "full_name",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Full name is required",
+                    },
+                ],
+            },
+            email: {
+                identifier: "email",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Email is required",
+                    },
+                    {
+                        type: "email",
+                        prompt: "Please enter a valid email",
+                    },
+                ],
+            },
+            phone: {
+                identifier: "phone",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Phone number is required",
+                    },
+                ],
+            },
+            date: {
+                identifier: "date",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select an appointment date",
+                    },
+                ],
+            },
+            pet_uuid: {
+                identifier: "pet_uuid",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select a pet",
+                    },
+                ],
+            },
+            service_uuid: {
+                identifier: "service_uuid",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select a service",
+                    },
+                ],
+            },
+        },
+        onSuccess: function () {
+            const $form = $(this);
+            const $submitBtn = $form.find("button[type=submit]");
+            $submitBtn.addClass("loading");
 
-        // Collect form data
-        const formData = $form.serialize();
+            const formData = $form.serialize();
 
-        $.ajax({
-            url: "/src/features/appointments/api/appointments.php",
-            method: "POST",
-            data: formData,
-            dataType: "json",
-            success: function (response) {
-                alert(response.message);
-                if (response.success) {
-                    $("#bookNowModal").modal("hide");
-                    $form[0].reset();
-                }
-            },
-            complete: function () {
-                $submitBtn.removeClass("loading");
-            },
-            error: function (xhr, status, error) {
-                alert("Failed to book appointment: " + error);
-            },
-        });
+            $.ajax({
+                url: "/src/features/appointments/api/appointments.php",
+                method: "POST",
+                data: formData,
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $("#bookNowModal").modal("hide");
+                        $form[0].reset();
+                        $form.find(".ui.dropdown").dropdown("clear");
+                    } else {
+                        alert(
+                            "Failed to book appointment: " + response.message
+                        );
+                    }
+                },
+                complete: function () {
+                    $submitBtn.removeClass("loading");
+                },
+                error: function (xhr, status, error) {
+                    alert("Failed to book appointment. Please try again.");
+                },
+            });
+
+            return false; // Prevent default form submission
+        },
     });
 });

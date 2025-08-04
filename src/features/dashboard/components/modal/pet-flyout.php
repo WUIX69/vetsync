@@ -86,7 +86,7 @@
         margin-left: 6px;
     }
 
-    .pet-flyout .pet-profile-info .pet-profile-breed {
+    .pet-flyout .pet-profile-info .pet-profile-value {
         font-size: 1.1rem;
         font-weight: 600;
         margin-left: 6px;
@@ -156,33 +156,32 @@
                     <!-- Profile Tab -->
                     <div class="pet-flyout-panel">
                         <div class="pet-profile-row">
-                            <img src="" alt="Pet" class="pet-profile-img rounded-circle ui image">
+                            <img src="https://placehold.co/110x110?text=Pet" alt="Pet"
+                                class="pet-profile-img rounded-circle ui image">
                             <div class="pet-profile-info">
                                 <div class="pet-profile-section">
                                     <label>Name:</label>
                                     <span class="pet-profile-name"></span>
                                 </div>
+                                <div class="pet-profile-section">
+                                    <label>Species:</label>
+                                    <span class="pet-profile-species pet-profile-value"></span>
+                                </div>
                                 <div class="pet-profile-section breed">
                                     <label>Breed:</label>
-                                    <span class="pet-profile-breed"></span>
+                                    <span class="pet-profile-breed pet-profile-value"></span>
                                 </div>
-                                <div class="pet-profile-row">
-                                    <div>
-                                        <label>Weight:</label>
-                                        <span style="font-weight:500;"></span>
-                                    </div>
-                                    <div>
-                                        <label>Height:</label>
-                                        <span style="font-weight:500;"></span>
-                                    </div>
+                                <div class="pet-profile-section">
+                                    <label>Date of Birth:</label>
+                                    <span class="pet-profile-dob pet-profile-value"></span>
                                 </div>
-                                <div>
-                                    <label>Vaccination take:</label>
-                                    <span style="font-weight:500;"></span>
+                                <div class="pet-profile-section">
+                                    <label>Created:</label>
+                                    <span class="pet-profile-created_at pet-profile-value"></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="actions">
+                        <div class="actions" style="margin-top: 20px;">
                             <button id="updatePetBtn" class="ui green button" type="button" style="margin-right:10px;">
                                 <i class="edit icon"></i> Update
                             </button>
@@ -196,7 +195,7 @@
                     <!-- Service Tab -->
                     <div class="pet-flyout-panel">
                         <div style="font-size:17px; margin-top:30px;">
-                            Grooming : <span class="grooming"></span>
+                            <p>Pet services and appointment history will be shown here.</p>
                         </div>
                     </div>
                 </div>
