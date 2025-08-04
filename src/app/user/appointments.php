@@ -217,6 +217,51 @@
         }
 
         /* Appointment Nav END */
+        .cancellation-info {
+            margin: 0.5rem 0;
+        }
+
+        .cancellation-info .alert {
+            padding: 0.75rem;
+            margin-bottom: 0;
+            border-radius: 0.375rem;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        /* Reason Info Styling */
+        /* Simple Yellow Banner Design */
+        .reason-info {
+            margin: 0.75rem 0;
+        }
+
+        .reason-info .alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 0;
+            font-size: 0.85rem;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reason-info .alert i {
+            color: #f39c12;
+            font-size: 1rem;
+        }
+
+        /* Remove different colors - all use same yellow design */
+        .admin-reason .alert,
+        .user-reason .alert,
+        .reschedule-reason .alert {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
     </style>
 </head>
 
@@ -259,20 +304,24 @@
                     </div> -->
                     <div class="row">
                         <div class="col-md-3">
-                            <div class="card">
-                                <div class="nav flex-column nav-pills card-body appointments-nav" role="tablist">
-                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#all">
-                                        <i class="bx bx-user-circle"></i>All
-                                    </button>
-                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#upcoming">
-                                        <i class="bx bx-shield-alt"></i>Upcoming
-                                    </button>
-                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#completed">
-                                        <i class="bx bx-bell"></i>Completed
-                                    </button>
-                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#cancelled">
-                                        <i class="bx bx-cog"></i>Cancelled
-                                    </button>
+                            <div class="card appointments-nav">
+                                <div class="card-body nav flex-column nav-pills">
+                                    <a href="#" class="nav-link active" data-filter="all">
+                                        <i class="list icon"></i>
+                                        <span>All</span>
+                                    </a>
+                                    <a href="#" class="nav-link" data-filter="upcoming">
+                                        <i class="clock outline icon"></i>
+                                        <span>Upcoming</span>
+                                    </a>
+                                    <a href="#" class="nav-link" data-filter="completed">
+                                        <i class="check circle icon"></i>
+                                        <span>Completed</span>
+                                    </a>
+                                    <a href="#" class="nav-link" data-filter="cancelled">
+                                        <i class="times circle icon"></i>
+                                        <span>Cancelled</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -281,271 +330,21 @@
                         <div class="col-md-9">
                             <div class="card appointment-grid-list">
                                 <div class="tab-content card-body">
-                                    <!-- All Appoinments -->
+                                    <!-- Dynamic Appointments Container -->
                                     <div class="tab-pane fade show active" id="all">
                                         <div class="appointments-list">
-                                            <!-- Appointment Card 1 -->
-                                            <div class="appointment-listing">
-                                                <div class="appointment-header">
-                                                    <h3>Regular Check-up</h3>
-                                                    <span class="appointment-status status-upcoming">Upcoming</span>
+                                            <!-- JavaScript will populate appointments here -->
+                                            <div class="loading-state text-center py-5">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading appointments...</span>
                                                 </div>
-                                                <div class="appointment-description">
-                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe quod
-                                                    omnis consequatur dolor ad libero facilis animi earum ratione eaque
-                                                    aperiam officia obcaecati, sapiente est distinctio? Quibusdam
-                                                    blanditiis ullam dolorem atque facilis, voluptatum nobis labore a
-                                                    exercitationem reiciendis consequatur accusamus totam molestiae
-                                                    deleniti ea mollitia libero doloremque quasi aut cum.
-                                                </div>
-                                                <div class="appointment-details">
-                                                    <div class="detail-item">
-                                                        <i class="teal calendar icon"></i>
-                                                        <span>Date: March 15, 2024</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="blue clock icon"></i>
-                                                        <span>Time: 10:30 AM</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="green user md icon"></i>
-                                                        <span>Dr. Sarah Johnson</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="brown paw icon"></i>
-                                                        <span>Max (Golden Retriever)</span>
-                                                    </div>
-                                                </div>
-                                                <div class="appointment-actions">
-                                                    <button class="ui basic button">
-                                                        <i class="edit icon"></i>
-                                                        Reschedule
-                                                    </button>
-                                                    <button class="ui red basic button">
-                                                        <i class="cancel icon"></i>
-                                                        Cancel
-                                                    </button>
-                                                </div>
+                                                <p class="mt-3 text-muted">Loading your appointments...</p>
                                             </div>
-
-                                            <!-- Appointment Card 2 -->
-                                            <div class="appointment-listing">
-                                                <div class="appointment-header">
-                                                    <h3>Vaccination</h3>
-                                                    <span class="appointment-status status-completed">Completed</span>
-                                                </div>
-                                                <div class="appointment-description">
-                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe quod
-                                                    omnis consequatur dolor ad libero facilis animi earum ratione eaque
-                                                    aperiam officia obcaecati, sapiente est distinctio? Quibusdam
-                                                    blanditiis ullam dolorem atque facilis, voluptatum nobis labore a
-                                                    exercitationem reiciendis consequatur accusamus totam molestiae
-                                                    deleniti ea mollitia libero doloremque quasi aut cum.
-                                                </div>
-                                                <div class="appointment-details">
-                                                    <div class="detail-item">
-                                                        <i class="teal calendar icon"></i>
-                                                        <span>Date: March 10, 2024</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="blue clock icon"></i>
-                                                        <span>Time: 2:00 PM</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="green user md icon"></i>
-                                                        <span>Dr. Michael Chen</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="brown paw icon"></i>
-                                                        <span>Pet: Luna (Persian Cat)</span>
-                                                    </div>
-                                                </div>
-                                                <div class="appointment-actions">
-                                                    <button class="ui teal basic button">
-                                                        <i class="file icon"></i>
-                                                        View Report
-                                                    </button>
-                                                    <button class="ui basic button">
-                                                        <i class="calendar plus icon"></i>
-                                                        Book Follow-up
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Appointment Card 3 -->
-                                            <div class="appointment-listing">
-                                                <div class="appointment-header">
-                                                    <h3>Dental Cleaning</h3>
-                                                    <span class="appointment-status status-cancelled">Cancelled</span>
-                                                </div>
-                                                <div class="appointment-description">
-                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Saepe quod
-                                                    omnis consequatur dolor ad libero facilis animi earum ratione eaque
-                                                    aperiam officia obcaecati, sapiente est distinctio? Quibusdam
-                                                    blanditiis ullam dolorem atque facilis, voluptatum nobis labore a
-                                                    exercitationem reiciendis consequatur accusamus totam molestiae
-                                                    deleniti ea mollitia libero doloremque quasi aut cum.
-                                                </div>
-                                                <div class="appointment-details">
-                                                    <div class="detail-item">
-                                                        <i class="teal calendar icon"></i>
-                                                        <span>Date: March 8, 2024</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="blue clock icon"></i>
-                                                        <span>Time: 11:00 AM</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="green user md icon"></i>
-                                                        <span>Dr. Emily Wilson</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="brown paw icon"></i>
-                                                        <span>Pet: Charlie (Poodle)</span>
-                                                    </div>
-                                                </div>
-                                                <div class="appointment-actions">
-                                                    <button class="ui teal basic button">
-                                                        <i class="redo icon"></i>
-                                                        Reschedule
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Upcoming -->
-                                    <div class="tab-pane fade" id="upcoming">
-                                        <div class="appointments-list">
-                                            <!-- Appointment Card 1 -->
-                                            <div class="appointment-listing">
-                                                <div class="appointment-header">
-                                                    <h3>Regular Check-up</h3>
-                                                    <span class="appointment-status status-upcoming">Upcoming</span>
-                                                </div>
-                                                <div class="appointment-details">
-                                                    <div class="detail-item">
-                                                        <i class="teal calendar icon"></i>
-                                                        <span>Date: March 15, 2024</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="blue clock icon"></i>
-                                                        <span>Time: 10:30 AM</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="green user md icon"></i>
-                                                        <span>Dr. Sarah Johnson</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="brown paw icon"></i>
-                                                        <span>Pet: Max (Golden Retriever)</span>
-                                                    </div>
-                                                </div>
-                                                <div class="appointment-actions">
-                                                    <button class="ui basic button">
-                                                        <i class="edit icon"></i>
-                                                        Reschedule
-                                                    </button>
-                                                    <button class="ui red basic button">
-                                                        <i class="cancel icon"></i>
-                                                        Cancel
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Completed -->
-                                    <div class="tab-pane fade" id="completed">
-                                        <div class="appointments-list">
-                                            <!-- Appointment Card 1 -->
-                                            <div class="appointment-listing">
-                                                <div class="appointment-header">
-                                                    <h3>Regular Check-up</h3>
-                                                    <span class="appointment-status status-upcoming">Upcoming</span>
-                                                </div>
-                                                <div class="appointment-details">
-                                                    <div class="detail-item">
-                                                        <i class="teal calendar icon"></i>
-                                                        <span>Date: March 15, 2024</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="blue clock icon"></i>
-                                                        <span>Time: 10:30 AM</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="green user md icon"></i>
-                                                        <span>Dr. Sarah Johnson</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="brown paw icon"></i>
-                                                        <span>Pet: Max (Golden Retriever)</span>
-                                                    </div>
-                                                </div>
-                                                <div class="appointment-actions">
-                                                    <button class="ui basic button">
-                                                        <i class="edit icon"></i>
-                                                        Reschedule
-                                                    </button>
-                                                    <button class="ui red basic button">
-                                                        <i class="cancel icon"></i>
-                                                        Cancel
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <!-- Cancelled -->
-                                    <div class="tab-pane fade" id="cancelled">
-                                        <div class="appointments-list">
-                                            <!-- Appointment Card 1 -->
-                                            <div class="appointment-listing">
-                                                <div class="appointment-header">
-                                                    <h3>Regular Check-up</h3>
-                                                    <span class="appointment-status status-upcoming">Upcoming</span>
-                                                </div>
-                                                <div class="appointment-details">
-                                                    <div class="detail-item">
-                                                        <i class="teal calendar icon"></i>
-                                                        <span>Date: March 15, 2024</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="blue clock icon"></i>
-                                                        <span>Time: 10:30 AM</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="green user md icon"></i>
-                                                        <span>Dr. Sarah Johnson</span>
-                                                    </div>
-                                                    <div class="detail-item">
-                                                        <i class="brown paw icon"></i>
-                                                        <span>Pet: Max (Golden Retriever)</span>
-                                                    </div>
-                                                </div>
-                                                <div class="appointment-actions">
-                                                    <button class="ui basic button">
-                                                        <i class="edit icon"></i>
-                                                        Reschedule
-                                                    </button>
-                                                    <button class="ui red basic button">
-                                                        <i class="cancel icon"></i>
-                                                        Cancel
-                                                    </button>
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Pagination START -->
-                        <?= shared('components/pagination'); ?>
-                        <!-- Pagination END -->
                     </div>
                 </div>
             </section>
@@ -553,6 +352,7 @@
     </div>
 
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+    <script src="/src/features/appointments/js/user-appointments.js"></script>
 </body>
 
 </html>
