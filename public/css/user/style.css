@@ -1,0 +1,187 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+} */
+
+.container-body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+a {
+    text-decoration: none;
+    color: #f1f3f2;
+    font-size: 14px;
+}
+
+canvas {
+    width: 100% !important;
+}
+
+img {
+    object-fit: cover;
+}
+
+body {
+    background: #f1f3f2;
+}
+
+header.site-header {
+    background: #006a71;
+}
+
+header.site-header .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 14px;
+    border-bottom: 2px solid #48a6a7 !important;
+}
+
+header.site-header .nav .logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+header.site-header .nav .logo i {
+    color: #f1f3f2;
+    font-size: 24px;
+}
+
+header.site-header .nav .logo a {
+    font-size: 16px;
+}
+
+header.site-header .nav .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+header.site-header .nav .nav-links a {
+    color: #ccc;
+    transition: all 0.3s ease;
+}
+
+header.site-header .nav .nav-links a:hover {
+    color: #fff;
+}
+
+header.site-header .nav .nav-links a.active {
+    color: #fff;
+    font-weight: 600;
+}
+
+header.site-header .nav .right-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+header.site-header .nav .right-section > i {
+    color: #f1f3f2;
+    background: #48a6a7;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+header.site-header .nav .right-section .profile {
+    display: flex;
+    align-items: center;
+    background: #48a6a7;
+    padding: 5px 10px;
+    border-radius: 50px;
+    gap: 10px;
+}
+
+header.site-header .nav .right-section .profile .profile-menu-dropdown {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: inherit !important;
+    border: none !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header.site-header
+    .nav
+    .right-section
+    .profile
+    .profile-menu-dropdown
+    .text
+    .info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+header.site-header
+    .nav
+    .right-section
+    .profile
+    .profile-menu-dropdown
+    .info
+    img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #f1f3f2 !important;
+}
+
+header.site-header .nav .right-section .profile .profile-menu-dropdown .info a {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+header.site-header .nav .right-section .profile .profile-menu-dropdown .info p {
+    font-size: 11px;
+    color: #ccc;
+}
+
+header.site-header
+    .nav
+    .right-section
+    .profile
+    .profile-menu-dropdown
+    .info
+    > i {
+    color: #f1f3f2;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+header.site-header .nav .right-section .profile .profile-menu-dropdown .menu {
+    background: inherit;
+}
+
+main.site-main {
+    margin: 0;
+    padding: 0;
+    position: relative;
+
+    /* background: #f2efe7; */
+}
+
+main .site-main section {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+main section.header h1 {
+    font-size: 2.7rem !important;
+    margin: 0;
+    margin-bottom: 0.3rem;
+}
+
+main section.header h1 .emoji {
+    position: relative;
+    top: -0.3rem;
+}

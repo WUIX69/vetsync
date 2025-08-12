@@ -1,4 +1,12 @@
+.env
 composer.lock
-vendor/
 
-logs/
+/vendor
+vendor
+
+/logs
+/logs/*
+logs
+
+/src/uploads
+/src/uploads/*

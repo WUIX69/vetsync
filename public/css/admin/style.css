@@ -1,0 +1,688 @@
+/*######################### SIDEBAR #########################*/
+aside.sidebar {
+    height: 100% !important;
+    position: relative;
+    margin-bottom: 3rem;
+
+    position: fixed;
+    top: 1.75rem;
+    left: 1.8rem;
+    width: 168px;
+    height: 100%;
+    z-index: 1000;
+}
+
+aside.sidebar .sidebar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.3rem;
+    margin-bottom: 1.75rem;
+    /* margin-top: 1.4rem; */
+}
+
+aside.sidebar .sidebar-logo img {
+    width: 28px;
+    height: 28px;
+}
+
+aside.sidebar .sidebar-menu {
+    border-radius: 15px;
+    transition: all 0.4s ease-in-out;
+    box-shadow: var(--box-shadow);
+    background-color: var(--color-white);
+    height: 88% !important;
+    min-width: 168px;
+    width: fit-content !important;
+    position: relative;
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+aside.sidebar .sidebar-menu .nav {
+    padding: 0;
+    margin: 0;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item:last-child {
+    position: absolute;
+    bottom: 0.7rem;
+
+    margin-top: auto;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item .nav-link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    color: var(--color-dark-variant);
+    white-space: nowrap;
+    padding: 1rem;
+    padding-left: 1.8rem;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item a.nav-link {
+    height: 3.7rem;
+    padding: 0 1.8rem;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item .nav-link .nav-content,
+aside.sidebar
+    .sidebar-menu
+    .menu-nav
+    .menu-nav-item
+    .menu-nav-link
+    .menu-nav-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item .nav-link .nav-content span {
+    font-size: 1.6rem;
+    width: 24px;
+    line-height: 1;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item .nav-link .nav-content h3 {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: inherit;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item:hover .nav-link .nav-content {
+    color: #6c9bcf;
+    margin-left: 0.5rem;
+}
+
+/* SIDEBAR (Active states) */
+aside.sidebar .sidebar-menu .nav .nav-item.active {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-light);
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item.active .nav-content {
+    color: #6c9bcf;
+}
+
+aside.sidebar .sidebar-menu .nav .nav-item.active a.nav-link::before,
+aside.sidebar
+    .sidebar-menu
+    .nav
+    .nav-item.active
+    .nav-link
+    .nav-content
+    .accordion
+    .title::before {
+    content: "";
+    width: 6px;
+    height: 18px;
+    background-color: #6c9bcf;
+    position: absolute;
+    left: 0;
+}
+
+/* SIDEBAR (SUBMENU) */
+aside.sidebar .sidebar-menu .menu-nav {
+    padding: 0;
+    margin: 0;
+    /* position: relative; */
+}
+
+aside.sidebar .sidebar-menu .menu-nav .menu-nav-item a.menu-nav-link {
+    /* position: relative; */
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    transition: all 0.3s ease;
+    color: inherit;
+    white-space: nowrap;
+    height: 2.8rem;
+}
+
+aside.sidebar
+    .sidebar-menu
+    .menu-nav
+    .menu-nav-item
+    .menu-nav-link
+    .menu-nav-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    padding-left: 0.2rem;
+}
+
+aside.sidebar
+    .sidebar-menu
+    .menu-nav
+    .menu-nav-item
+    .menu-nav-link
+    .menu-nav-content
+    *:not(span) {
+    font-size: 0.71rem !important;
+}
+
+aside.sidebar
+    .sidebar-menu
+    .menu-nav
+    .menu-nav-item
+    .menu-nav-link
+    .menu-nav-content
+    span {
+    font-size: 1.3rem;
+}
+
+aside.sidebar
+    .sidebar-menu
+    .menu-nav
+    .menu-nav-item:hover
+    .menu-nav-link
+    .menu-nav-content {
+    color: #00ba88;
+    margin-left: 0.5rem;
+}
+
+/* SUBMENU (Accordion) */
+aside.sidebar .sidebar-menu .ui.accordion {
+    width: 100%;
+    background: transparent;
+}
+
+aside.sidebar .sidebar-menu .ui.accordion .title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: inherit;
+    gap: 0.5rem;
+}
+
+aside.sidebar .sidebar-menu .ui.accordion .title .dropdown.icon {
+    float: none;
+    margin: 0 1rem 0 0;
+    color: inherit !important;
+}
+
+aside.sidebar .sidebar-menu .ui.accordion .content {
+    padding: 0;
+    margin: 0;
+}
+
+/* SUBMENU (Active states) */
+aside.sidebar .sidebar-menu .menu-nav .menu-nav-item.active .menu-nav-content {
+    color: #00ba88;
+}
+
+aside.sidebar
+    .sidebar-menu
+    .menu-nav
+    .menu-nav-item.active
+    .menu-nav-link::before {
+    content: "";
+    width: 6px;
+    height: 18px;
+    background-color: #00ba88;
+    position: absolute;
+    right: 0;
+}
+/*######################### SIDEBAR END #########################*/
+
+/*#######--------- NAVBAR ---------#######*/
+nav.navbar {
+    margin: 0;
+    padding: 0;
+
+    left: 190px;
+    width: calc(100% - 190px);
+}
+
+nav.navbar h1 {
+    margin: 0;
+}
+
+nav.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0;
+    margin: 0;
+    margin-top: -0.45rem;
+
+    width: 100%;
+    min-width: 100%;
+}
+
+nav.navbar .nav {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 2rem;
+    /* margin-bottom: 1.2rem; */
+}
+
+nav.navbar .nav .dark-mode-toggle {
+    background-color: var(--color-light);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-radius: 0.4rem;
+    margin: 0;
+}
+
+nav.navbar .nav .dark-mode-toggle span {
+    font-size: 1rem;
+    padding: 3px 7px;
+}
+
+nav.navbar .nav .dark-mode-toggle span.active {
+    background-color: #6c9bcf;
+    color: white;
+    border-radius: 0.4rem;
+}
+
+nav.navbar .nav .profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.8rem;
+}
+
+nav.navbar .nav .profile .info {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: center;
+}
+
+nav.navbar .nav .profile .info * {
+    color: var(--color-dark) !important;
+}
+
+nav.navbar .nav .profile span {
+    font-size: 0.76rem;
+}
+/*#######--------- NAVBAR END ---------#######*/
+
+/*######################### MAIN CONTENT #########################*/
+main.container-main {
+    position: relative;
+    left: 190px;
+    width: calc(100% - 190px);
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+main section {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+main section .container {
+    position: relative;
+    padding: 0;
+    margin: 0;
+
+    width: 100%;
+    min-width: 100%;
+}
+
+main section:has(.title) .container {
+    margin-top: 1rem;
+}
+
+main section * label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-dark) !important;
+}
+
+main section .ui.form .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+main section .ui.form .field .url-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+main section .ui.form .field input,
+main section .ui.form .field textarea,
+main section .ui.form .field .ui.dropdown {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 0.83rem;
+}
+
+main section .ui.form .field .description {
+    font-size: 0.82rem;
+    color: var(--color-dark-variant) !important;
+}
+
+/*#######--------- SECTION STATS ---------#######*/
+main section.stats {
+    margin-top: 1.3rem;
+}
+
+main section.stats .stat-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+main section.stats .stat-card h6 {
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: var(--color-dark) !important;
+}
+
+main section.stats .stat-card h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+main section.stats .stat-card .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+main section.stats .stat-card .circular-chart {
+    width: 100%;
+    height: 100%;
+}
+
+main section.stats .stat-card .circular-chart path {
+    stroke-linecap: round;
+}
+
+main section.stats .stat-card .circular-chart text {
+    fill: #666;
+    font-family: "Poppins", sans-serif;
+    font-size: 5.5px !important;
+    text-anchor: middle;
+}
+
+main section.stats .stat-card .progress-circle {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main section.new-users .user small {
+    color: var(--color-dark-variant) !important;
+}
+/*#######--------- SECTION STATS END ---------#######*/
+
+/*#######--------- SECTION TABLE LIST DESIGN ---------#######*/
+main section .table-list {
+    overflow: visible;
+}
+
+main section .table-list .table-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+main section .table-list .table-filters .base-filters {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* flex: 1; */
+}
+
+main section .table-list .table-filters .ui.search .input .search.icon {
+    color: var(--color-dark-variant) !important;
+}
+
+main section .table-list .table-filters .ui.search .input input:focus {
+    border-color: var(--color-dark-variant) !important;
+    transition: all 0.3s ease-in-out;
+}
+
+main
+    section
+    .table-list
+    .table-filters
+    .base-filters
+    .quick-filters
+    .ui.dropdown {
+    padding-right: 1rem !important;
+}
+
+main
+    section
+    .table-list
+    .table-filters
+    .base-filters
+    .quick-filters
+    .ui.compact.selection.labeled.icon.dropdown {
+    border: none !important;
+    background-color: transparent !important;
+}
+
+main
+    section
+    .table-list
+    .table-filters
+    .base-filters
+    .quick-filters
+    .filter-reset-btn {
+    font-size: 0.6rem;
+    padding: 0.5rem 0.8rem;
+    margin: 0;
+    display: none;
+}
+
+main section .table-list .table-container {
+    position: relative !important;
+}
+
+main section .table-list .table-container .table {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    /* table-layout: fixed !important; */
+    height: 100% !important;
+    background-color: transparent !important;
+}
+
+main section .table-list .table-container .table * {
+    font-size: 0.75rem !important;
+}
+
+main section .table-list .table-container .table th {
+    color: var(--color-dark);
+}
+
+main section .table-list .table-container .table td {
+    color: var(--color-dark-variant);
+}
+
+main section .table-list .table-container .table td:has(.ui.dropdown) {
+    overflow: visible !important;
+}
+
+main section .table-list .table-container .table .ui.dropdown {
+    border: 1px solid var(--color-dark-variant) !important;
+    color: var(--color-dark-variant) !important;
+    background-color: var(--color-white) !important;
+}
+
+main section .table-list .table-container .table .ui.dropdown .div.text {
+    color: var(--color-dark-variant) !important;
+}
+
+main section .table-list .table-container .table .ui.dropdown .icon {
+    margin-top: -0.75rem;
+}
+/*#######--------- SECTION TABLE LIST DESIGN END ---------#######*/
+/*######################### MAIN CONTENT END #########################*/
+
+/*######################### DATA TABLES CUSTOM STYLES (.dt-container) #########################*/
+main section:has(.table-list .table-container .dt-container) {
+    width: 100% !important; /* Alternative: fit-content */
+}
+
+main section .table-list .table-container .dt-container th {
+    padding-top: 0.8rem !important;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    th
+    span.dt-column-order {
+    width: 0 !important;
+}
+
+main section .table-list .table-container .dt-container th:first-child {
+    padding-left: 0.3rem !important;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    * {
+    font-size: 0.8rem;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-length {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-paging
+    .ui.pagination.menu {
+    background: var(--color-background) !important;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-paging
+    .ui.pagination.menu
+    .item {
+    color: var(--color-dark) !important;
+}
+
+main
+    section
+    .table-list
+    .table-container
+    .dt-container
+    .dt-layout-row:not(.dt-layout-table)
+    .dt-layout-end
+    .dt-paging
+    .ui.pagination.menu
+    .item.active {
+    background-color: var(--color-dark-variant);
+    color: var(--color-white) !important;
+}
+
+/* DataTables Custom Styles (.dt-container) fixing serverside processing */
+main
+    section
+    .dt-container.dt-semanticUI
+    .dt-scroll-body
+    table
+    th
+    span.dt-column-order {
+    /* Fix DataTables extra span.dt-column-order when using scrollX or ScrollY */
+    display: none !important;
+}
+
+main section .dt-container.dt-semanticUI .dt-processing {
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+}
+
+main section .dt-container.dt-semanticUI .dt-processing div.ui.loader {
+    position: relative;
+    top: -5.2rem;
+}
+
+main section .dt-container.dt-semanticUI .dt-processing div:last-child {
+    /* Disabled DataTables default processing indicator */
+    display: none;
+}
+
+main section .dt-container.dt-semanticUI table colgroup {
+    display: none !important;
+}
+
+main section .dt-container.dt-semanticUI .dt-scroll:has(table.quick-view) {
+    /* Table custom width fix for quick-view table */
+    /* max-width: 840px; */
+    position: relative;
+    /* overflow: hidden; */
+}
+/*######################### DATA TABLES CUSTOM STYLES END #########################*/
