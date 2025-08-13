@@ -334,12 +334,6 @@
                                     <div class="tab-pane fade show active" id="all">
                                         <div class="appointments-list">
                                             <!-- JavaScript will populate appointments here -->
-                                            <div class="loading-state text-center py-5">
-                                                <div class="spinner-border text-primary" role="status">
-                                                    <span class="sr-only">Loading appointments...</span>
-                                                </div>
-                                                <p class="mt-3 text-muted">Loading your appointments...</p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

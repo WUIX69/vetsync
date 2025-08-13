@@ -24,7 +24,6 @@ $activeLink = uriPagePath();
         </div>
         <div class="right-section">
             <i class='bx bx-bell'></i>
-            <i class='bx bx-search'></i>
             <div class="profile">
                 <div class="ui floating compact selection dropdown profile-menu-dropdown">
                     <!-- <i class="dropdown icon"></i> -->
