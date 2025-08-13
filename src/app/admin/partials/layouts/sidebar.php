@@ -109,7 +109,7 @@ $activeLink = uriPagePath();
                 </div>
             </li>
             <li class="nav-item <?= $activeLink == 'logout' ? 'active' : ''; ?>">
-                <a class="nav-link" href="javascript:void(0);">
+                <a class="nav-link" href="<?= app('landing') ?>">
                     <div class="nav-content">
                         <span class="material-icons-sharp">logout</span>
                         <h3>Logout</h3>
