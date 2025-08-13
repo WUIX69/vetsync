@@ -44,9 +44,29 @@ $(document).ready(function () {
 
         let filteredAppointments = userAppointments;
 
+        // Sort appointments by date (newest first)
+        filteredAppointments.sort((a, b) => {
+            // Try to parse the date in multiple formats
+            const dateA = new Date(
+                a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+            ).getTime();
+            const dateB = new Date(
+                b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+            ).getTime();
+
+            if (dateA === dateB) {
+                // If dates are the same, sort by created_at (newest first)
+                const createdAtA = new Date(a.created_at).getTime();
+                const createdAtB = new Date(b.created_at).getTime();
+                return createdAtB - createdAtA;
+            }
+
+            return dateB - dateA; // Sort by appointment date (newest first)
+        });
+
         // Filter appointments based on status
         if (filter !== "all") {
-            filteredAppointments = userAppointments.filter((app) => {
+            filteredAppointments = filteredAppointments.filter((app) => {
                 if (filter === "upcoming") {
                     return (
                         app.status === "pending" || app.status === "accepted"
@@ -74,19 +94,19 @@ $(document).ready(function () {
             appointment.status === "accepted";
         const canDelete = appointment.status === "cancelled";
 
-        // USER SIDE: Show ONLY reschedule reasons when admin reschedules (but NOT for cancelled appointments)
+        // USER SIDE: Show both admin cancellation and reschedule reasons
         let reasonInfo = "";
 
-        // Check for reschedule messages, but exclude cancelled appointments
+        // Check for reschedule messages
         if (
             appointment.note &&
             appointment.note.includes("[RESCHEDULED BY ADMIN]") &&
-            appointment.status !== "cancelled" // Add this condition
+            appointment.status !== "cancelled"
         ) {
-            // Split by the marker and get the reason part
             const parts = appointment.note.split("[RESCHEDULED BY ADMIN]");
             if (parts.length > 1) {
-                const reason = parts[1].trim() || "No reason provided";
+                const reason =
+                    parts[1].split("[")[0].trim() || "No reason provided";
                 reasonInfo = `
                     <div class="reason-info reschedule-reason">
                         <div class="alert">
@@ -95,6 +115,28 @@ $(document).ready(function () {
                     </div>`;
             }
         }
+
+        // Check for admin cancellation messages (keep this to show admin cancellations)
+        if (
+            !reasonInfo && // Only show if no reschedule message
+            appointment.note &&
+            appointment.note.includes("[CANCELLED BY ADMIN]")
+        ) {
+            const parts = appointment.note.split("[CANCELLED BY ADMIN]");
+            if (parts.length > 1) {
+                const reason =
+                    parts[1].split("[")[0].trim() || "No reason provided";
+                reasonInfo = `
+                    <div class="reason-info cancellation-reason">
+                        <div class="alert">
+                            ❌ <strong>Cancelled by Admin:</strong> ${reason}
+                        </div>
+                    </div>`;
+            }
+        }
+
+        // Don't show user's own cancellation reason
+        // But DO show admin cancellation reasons
 
         return `
             <div class="appointment-listing" data-uuid="${appointment.uuid}">
@@ -248,23 +290,24 @@ $(document).ready(function () {
             return "No special instructions provided.";
         }
 
-        // Remove admin messages and get original instructions
+        // Get the original note (everything before any admin messages)
         let originalNote = note;
 
-        // Remove admin cancellation messages
-        if (originalNote.includes("[CANCELLED BY ADMIN]")) {
-            originalNote = originalNote.split("[CANCELLED BY ADMIN]")[0];
-        }
+        // Remove all admin messages
+        const adminMessages = [
+            "[CANCELLED BY ADMIN]",
+            "[RESCHEDULED BY ADMIN]",
+        ];
 
-        // Remove admin reschedule messages
-        if (originalNote.includes("[RESCHEDULED BY ADMIN]")) {
-            originalNote = originalNote.split("[RESCHEDULED BY ADMIN]")[0];
+        for (const message of adminMessages) {
+            if (originalNote.includes(message)) {
+                originalNote = originalNote.split(message)[0];
+            }
         }
 
         // Clean up whitespace and newlines
-        originalNote = originalNote.trim().replace(/\n\n$/, "");
+        originalNote = originalNote.trim();
 
-        // Return original instructions or default message
         return originalNote || "No special instructions provided.";
     }
 });
