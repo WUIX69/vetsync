@@ -1,6 +1,9 @@
 // User Appointments Management
 $(document).ready(function () {
     let userAppointments = [];
+    let hiddenAppointments = JSON.parse(
+        localStorage.getItem("hiddenAppointments") || "[]"
+    );
 
     // Load user appointments on page load
     loadUserAppointments();
@@ -42,7 +45,11 @@ $(document).ready(function () {
         const container = $(".appointments-list");
         container.empty();
 
-        let filteredAppointments = userAppointments;
+        let filteredAppointments = userAppointments.filter(
+            (app) =>
+                // Don't show appointments that user has hidden
+                !hiddenAppointments.includes(app.uuid)
+        );
 
         // Sort appointments by date (newest first)
         filteredAppointments.sort((a, b) => {
@@ -116,20 +123,28 @@ $(document).ready(function () {
             }
         }
 
-        // Check for admin cancellation messages (keep this to show admin cancellations)
-        if (
-            !reasonInfo && // Only show if no reschedule message
-            appointment.note &&
-            appointment.note.includes("[CANCELLED BY ADMIN]")
-        ) {
-            const parts = appointment.note.split("[CANCELLED BY ADMIN]");
-            if (parts.length > 1) {
-                const reason =
-                    parts[1].split("[")[0].trim() || "No reason provided";
+        // Update the cancellation message check
+        if (!reasonInfo && appointment.note) {
+            if (appointment.note.includes("[CANCELLED BY ADMIN]")) {
+                const parts = appointment.note.split("[CANCELLED BY ADMIN]");
+                if (parts.length > 1) {
+                    const reason =
+                        parts[1].split("[")[0].trim() || "No reason provided";
+                    if (!reason.toLowerCase().includes("cancelled by client")) {
+                        reasonInfo = `
+                            <div class="reason-info cancellation-reason">
+                                <div class="alert">
+                                    ❌ <strong>Cancelled by Admin:</strong> ${reason}
+                                </div>
+                            </div>`;
+                    }
+                }
+            } else if (appointment.status === "cancelled") {
+                // This is a client cancellation
                 reasonInfo = `
                     <div class="reason-info cancellation-reason">
                         <div class="alert">
-                            ❌ <strong>Cancelled by Admin:</strong> ${reason}
+                            ❌ <strong>Cancelled by Client</strong>
                         </div>
                     </div>`;
             }
@@ -227,7 +242,7 @@ $(document).ready(function () {
                     action: "cancel",
                     uuid: uuid,
                     cancellation_reason:
-                        "Cancelled by patient - no reason provided",
+                        "Cancelled by client - no reason provided",
                 },
                 dataType: "json",
                 success: function (response) {
@@ -257,30 +272,20 @@ $(document).ready(function () {
 
         if (
             confirm(
-                `Are you sure you want to remove "${appointmentTitle}" from your appointments? This action cannot be undone.`
+                `Are you sure you want to remove "${appointmentTitle}" from your appointments? You won't see this appointment anymore.`
             )
         ) {
-            $.ajax({
-                url: "/src/features/appointments/api/user-appointments.php",
-                method: "POST",
-                data: {
-                    action: "delete",
-                    uuid: uuid,
-                },
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        loadUserAppointments(); // Reload appointments
-                    } else {
-                        alert(
-                            "Failed to remove appointment: " + response.message
-                        );
-                    }
-                },
-                error: function () {
-                    alert("Failed to remove appointment");
-                },
-            });
+            // Add to hidden appointments in localStorage
+            hiddenAppointments.push(uuid);
+            localStorage.setItem(
+                "hiddenAppointments",
+                JSON.stringify(hiddenAppointments)
+            );
+
+            // Refresh the display
+            renderAppointments(
+                $(".appointments-nav .nav-link.active").data("filter")
+            );
         }
     });
 
