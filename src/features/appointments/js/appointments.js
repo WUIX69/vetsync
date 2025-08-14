@@ -343,12 +343,13 @@ function cardHtml(app, statusClass, statusLabel, isCompleted = false) {
     if (
         app.status === "cancelled" &&
         app.note &&
-        app.note.includes("Cancelled by patient")
+        (app.note.includes("Cancelled by client") ||
+            app.note.includes("Cancelled by patient")) // Check for both client and patient
     ) {
         reasonInfo = `
             <div class="reason-info patient-cancelled">
                 <div class="alert">
-                    ⚠️ <strong>Patient Cancelled</strong>
+                    ⚠️ <strong>Client Cancelled</strong>
                 </div>
             </div>`;
     }
