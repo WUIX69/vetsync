@@ -23,7 +23,22 @@ $activeLink = uriPagePath();
 
         </div>
         <div class="right-section">
-            <i class='bx bx-bell'></i>
+            <div class="notification-icon" id="notificationDropdown">
+                <i class='bx bx-bell'></i>
+                <span class="notification-badge" style="display: none">0</span>
+                <div class="notification-menu">
+                    <div class="notification-header">
+                        <span>Notifications</span>
+                        <button class="ui mini basic button mark-all-read">Clear all</button>
+                    </div>
+                    <div class="notifications-list">
+                        <!-- Notifications will be loaded here -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="<?= app('appointments') ?>">View all appointments</a>
+                    </div>
+                </div>
+            </div>
             <div class="profile">
                 <div class="ui floating compact selection dropdown profile-menu-dropdown">
                     <!-- <i class="dropdown icon"></i> -->
