@@ -7,6 +7,8 @@
     <?= shared('elements/meta'); ?> <!-- rcs Meta -->
     <title>Services - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
+    <!-- Add Boxicons CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
@@ -33,6 +35,7 @@
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
 
     <script src="/src/features/services/js/booknow.js"></script>
+    <script src="/src/features/services/js/user-services-list.js"></script>
 
 </body>
 
