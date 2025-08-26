@@ -1,106 +1,8 @@
 <?php
-$services = [
-    [
-        'uuid' => 'service-1',
-        'name' => 'Vaccination',
-        'description' => 'Essential vaccinations to protect your pet against common diseases. 
-                            Includes consultation and vaccine administration.',
-        'duration' => '20-30 minutes',
-        'price' => '₱75.00',
-        'status' => [
-            'label' => 'Available',
-            'color' => 'green',
-            'icon' => 'bx-check-circle',
-        ],
-        'tag' => [
-            'label' => 'Hot',
-            'color' => 'red'
-        ],
-        'icon' => 'bx-injection',
-        'image' => asset('img/contents/services/vaccination.jpg'),
-    ],
-    [
-        'uuid' => 'service-2',
-        'name' => 'Surgery',
-        'description' => 'Professional surgical procedures performed by experienced 
-                            veterinarians in a state-of-the-art facility.',
-        'duration' => 'Varies by procedure',
-        'price' => 'From ₱200.00',
-        'status' => [
-            'label' => 'Unavailable',
-            'color' => 'red',
-            'icon' => 'bx-x-circle',
-        ],
-        'tag' => [
-            'label' => 'Featured',
-            'color' => 'primary',
-        ],
-        'icon' => 'bx-plus-medical',
-        'image' => asset('img/contents/services/surgery.jpg'),
-    ],
-    [
-        'uuid' => 'service-3',
-        'name' => 'Grooming',
-        'description' => 'Professional grooming services including bath, haircut, 
-                            nail trimming, and ear cleaning.',
-        'duration' => '60-120 minutes',
-        'price' => 'From ₱65.00',
-        'status' => [
-            'label' => 'Busy',
-            'color' => 'orange',
-            'icon' => 'bx-time',
-        ],
-        'tag' => [
-            'label' => 'Popular',
-            'color' => 'green'
-        ],
-        'icon' => 'bx-cut',
-        'image' => asset('img/contents/services/grooming.jpg'),
-    ],
-    [
-        'uuid' => 'service-4',
-        'name' => 'Foods & Accessories',
-        'description' => 'Premium quality pet foods, nutritional supplements, and a wide range 
-                            of accessories including collars, leashes, beds, toys, and care products.',
-        'duration' => 'In-store & Online Shopping Available',
-        'price' => 'Varies',
-        'status' => [
-            'label' => 'Available',
-            'color' => 'green',
-            'icon' => 'bx-check-circle',
-        ],
-        'tag' => [
-            'label' => 'Hot',
-            'color' => 'red'
-        ],
-        'icon' => 'bx-store',
-        'image' => asset('img/contents/services/accessories.jpg'),
-    ],
-    [
-        'uuid' => 'service-5',
-        'name' => 'Boarding',
-        'description' => 'Safe and comfortable boarding facilities for your pets while you\'re away. 
-                            Includes feeding, daily exercise, and medical monitoring if needed.',
-        'duration' => 'Coming in September 2023',
-        'price' => 'From ₱45.00/night',
-        'status' => [
-            'label' => 'Soon',
-            'color' => 'teal',
-            'icon' => 'bx-time-five',
-        ],
-        'tag' => [
-            'label' => 'New',
-            'color' => 'black'
-        ],
-        'icon' => 'bx-home-heart',
-        'image' => asset('img/contents/services/boarding.jpg'),
-    ],
-];
 ?>
 <style>
     main section.services {
         position: relative;
-        /* padding-top: 0.3rem; */
         padding-bottom: 3rem;
         margin: 0;
     }
@@ -117,7 +19,6 @@ $services = [
 
     @media screen and (max-width: 768px) {
         main section.services .header {
-            /* flex-wrap: wrap; */
             flex-direction: column;
         }
     }
@@ -130,8 +31,7 @@ $services = [
         background: var(--color-white) !important;
     }
 
-    /* Header END */
-
+    /* Card Styles */
     main section.services .service-card {
         background: var(--color-white);
         padding: 0 !important;
@@ -160,7 +60,6 @@ $services = [
         border-radius: 60px;
         background: var(--bs-primary);
         color: var(--bs-white);
-
         display: flex;
         justify-content: center;
         align-items: center;
@@ -191,7 +90,6 @@ $services = [
     main section.services .service-card .card-body {
         padding: 1.6rem;
         font-size: 0.95rem;
-
         display: flex;
         flex-direction: column;
     }
@@ -223,14 +121,12 @@ $services = [
 
     main section.services .service-card .card-body .service-details p {
         color: #667;
-        /* font-size: 14px; */
         line-height: 1.5;
         margin-bottom: 15px;
     }
 
     main section.services .service-card .card-body .service-meta {
         flex: 1;
-
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -297,10 +193,60 @@ $services = [
         align-items: center;
         width: 100%;
     }
+
+    /* Status badge styles */
+    .available {
+        background: rgb(2, 216, 95);
+        /* Your original blue color */
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.9em;
+    }
+
+    .unavailable {
+        background: #d9534f;
+        /* Your original red color */
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.9em;
+    }
+
+    .busy {
+        background: #f0ad4e;
+        /* Your original orange color */
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.9em;
+    }
+
+    main section.services .service-card .card-body .service-details .duration {
+        color: #031224;
+        /* Dark color like your price */
+        font-weight: 500;
+        /* Semi-bold for better readability */
+    }
+
+    main section.services .service-card .card-body .service-details .duration strong {
+        font-weight: 600;
+        /* Make "Duration:" text bolder */
+        color: #031224;
+    }
 </style>
+
 <section class="services">
     <div class="container-xl">
-
         <!-- Only section-title if its /landing -->
         <?php if (uriAppPath('landing')): ?>
             <div class="section-title">
@@ -371,61 +317,14 @@ $services = [
             </div>
         </div>
 
-        <!-- Services -->
+        <!-- Services Grid - Will be populated by JavaScript -->
         <div class="row g-4">
-            <!-- Display Services -->
-            <?php foreach ($services as $service): ?>
-                <div class="col-lg-4">
-                    <div class="service-card card">
-                        <div class="card-img">
-                            <div class="service-status">
-                                <span class="ui <?= $service['status']['color']; ?> label status-avail">
-                                    <i class='bx <?= $service['status']['icon']; ?>'></i>
-                                    <?= $service['status']['label']; ?>
-                                </span>
-                            </div>
-                            <img src="<?= $service['image']; ?>" alt="<?= $service['name']; ?>">
-                            <div class="service-tag">
-                                <span class="ui <?= $service['tag']['color']; ?> tag label">
-                                    <?= $service['tag']['label']; ?>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="service-header">
-                                <h4><?= $service['name']; ?></h4>
-                                <i class='bx <?= $service['icon']; ?>'></i>
-                            </div>
-                            <div class="service-details">
-                                <p><?= $service['description']; ?></p>
-                                <p>Duration: <?= $service['duration']; ?></p>
-                            </div>
-                            <div class="service-meta">
-                                <span class="price"><?= $service['price']; ?></span>
-                                <div class="actions">
-
-                                    <div class="service-view-btn-wrapper">
-                                        <a href="<?= app('user/service-single-view') ?>"
-                                            class="service-view-btn ui eye icon" title="View Service">
-                                            <i class="eye icon"></i>View
-                                        </a>
-                                    </div>
-
-                                    <button type="button" class="book-now-btn" data-open-modal="#bookNowModal"
-                                        data-service-uuid="<?= $service['uuid'] ?>">
-                                        Book Now <i class='bx bx-right-arrow-alt'></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+            <!-- Services will be loaded dynamically -->
         </div>
 
-        <!-- Pagination START -->
+        <!-- Pagination -->
         <?= shared('components/pagination'); ?>
-        <!-- Pagination END -->
     </div>
 </section>
+
 <?= featured('services/components/booknow-modal'); ?> <!-- Book Now Modal -->

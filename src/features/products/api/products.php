@@ -72,8 +72,10 @@ try {
                     'image' => media($item['uuid']),
                     'category' => Helpers::categoryName(Categories::single($item['category_id'], $reference_model)['data']),
                     'status' => Helpers::productStatus($item['status']),
-                    'tags' => $item['tags'] ? count(explode(',', $item['tags'])) : 0,
-                    'specs' => $item['specs'] ? count(explode(',', $item['specs'])) : 0,
+                    'tagsCount' => $item['tags'] ? count(explode(',', $item['tags'])) : 0,
+                    'tags' => $item['tags'] ? explode(',', $item['tags']) : [],
+                    'specsCount' => $item['specs'] ? count(explode(',', $item['specs'])) : 0,
+                    'specs' => $item['specs'] ? explode(',', $item['specs']) : [],
                     'created_at' => Formatters::dateToMDY($item['created_at']),
                     'updated_at' => Formatters::dateToMDY($item['updated_at']),
                 ];
