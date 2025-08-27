@@ -129,6 +129,16 @@ $(document).on("click", ".appointment-actions .action-btn", function (e) {
     }
 
     // Confirmation for completion
+    if (newStatus === "accepted") {
+        if (
+            !confirm(
+                "Mark this appointment as confirmed? This will move it to the confirmed list."
+            )
+        ) {
+            return;
+        }
+    }
+    // Confirmation for completion
     if (newStatus === "completed") {
         if (
             !confirm(
