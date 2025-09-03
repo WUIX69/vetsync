@@ -30,6 +30,9 @@ function rcsScripts()
         $moduleAttr = $script['module'] ? ' type="module"' : '';
         echo '<script' . $moduleAttr . ' src="' . asset($script['src']) . '"></script>';
     }
+
+    // Add notification system script
+    echo '<script src="/src/shared/js/notifications.js"></script>';
 }
 
 
