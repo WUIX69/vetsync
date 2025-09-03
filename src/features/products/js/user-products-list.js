@@ -108,7 +108,7 @@ const productsList = {
 
             html += `
                 <div class="col-md-4">
-                    <div class="product-listing card">
+                    <div class="product-listing card" data-product-uuid="${product.uuid}">
                         <div class="card-body">
                             <div class="content-1">
                                 <img src="${product.image}" alt="${product.name}" class="product-image">
