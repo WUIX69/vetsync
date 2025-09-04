@@ -132,7 +132,6 @@
 </style>
 <section class="status">
     <div class="header">
-        <h4 id="big">Your favorites</h4>
         <!-- <h4 id="small">Weekly Activity</h4> -->
     </div>
     <div class="items-list">
