@@ -41,13 +41,38 @@ $activeLink = uriPagePath();
                     </div>
                 </a>
             </li>
-            <li class="nav-item <?= $activeLink == 'products' ? 'active' : ''; ?>">
-                <a class="nav-link" href="products.php">
-                    <div class="nav-content">
-                        <span class="material-icons-sharp">shopping_cart</span>
-                        <h3>Products</h3>
+            <li class="nav-item <?= (in_array($activeLink, ['products', 'reservations'])) ? 'active' : ''; ?>">
+                <div class="nav-link">
+                    <div class="ui accordion">
+                        <div class="title">
+                            <span class="material-icons-sharp">shopping_cart</span>
+                            <h3>Products</h3>
+                            <i class="dropdown icon"></i>
+                        </div>
+                        <div class="content">
+                            <div class="transition hidden">
+                                <ul class="menu-nav navbar-nav">
+                                    <li class="menu-nav-item">
+                                        <a class="menu-nav-link" href="products.php">
+                                            <div class="menu-nav-content">
+                                                <span class="material-icons-sharp">inventory</span>
+                                                <h3>Products</h3>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="menu-nav-item">
+                                        <a class="menu-nav-link" href="reservations.php">
+                                            <div class="menu-nav-content">
+                                                <span class="material-icons-sharp">book_online</span>
+                                                <h3>Reservations</h3>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </a>
+                </div>
             </li>
             <li class="nav-item <?= $activeLink == 'analytics' ? 'active' : ''; ?>">
                 <a class="nav-link" href="analytics.php">
