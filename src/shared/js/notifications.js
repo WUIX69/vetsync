@@ -112,38 +112,10 @@ const NotificationSystem = {
                         let lastViewed =
                             localStorage.getItem("appointmentsLastViewed") || 0;
 
-                        // Check if there are any reschedule notifications
-                        const hasRecentReschedules = appointments.some(
-                            (appointment) => {
-                                const updateTime = new Date(
-                                    appointment.updated_at ||
-                                        appointment.created_at
-                                ).getTime();
-                                const hasRescheduleNote =
-                                    appointment.note &&
-                                    appointment.note.includes(
-                                        "[RESCHEDULED BY ADMIN]"
-                                    );
-
-                                if (hasRescheduleNote) {
-                                    // If there's a reschedule in the last hour, reset lastViewed to show it
-                                    const oneHourAgo =
-                                        Date.now() - 60 * 60 * 1000;
-                                    if (updateTime > oneHourAgo) {
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            }
+                        // Get the last reschedule timestamp for each appointment
+                        const lastRescheduleTimes = JSON.parse(
+                            localStorage.getItem("lastRescheduleTimes") || "{}"
                         );
-
-                        // If there are recent reschedules, show them by adjusting lastViewed
-                        if (hasRecentReschedules) {
-                            lastViewed = Math.min(
-                                lastViewed,
-                                Date.now() - 2 * 60 * 60 * 1000
-                            ); // Show notifications from last 2 hours
-                        }
 
                         const notifications = appointments
                             .filter((appointment) => {
@@ -159,21 +131,78 @@ const NotificationSystem = {
                                         "[RESCHEDULED BY ADMIN]"
                                     );
 
-                                // For reschedule notifications, check if the reschedule happened recently
                                 if (hasRescheduleNote) {
-                                    // Get the timestamp from the reschedule note
+                                    // Extract reschedule timestamp from note (new format with timestamp)
                                     const rescheduleMatch =
                                         appointment.note.match(
                                             /\[RESCHEDULED BY ADMIN\][\s\S]*?(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/
                                         );
+
                                     if (rescheduleMatch) {
                                         const rescheduleTime = new Date(
                                             rescheduleMatch[1]
                                         ).getTime();
-                                        return rescheduleTime > lastViewed;
+
+                                        const appointmentKey = `appointment_${appointment.uuid}`;
+                                        const lastRescheduleTime =
+                                            lastRescheduleTimes[
+                                                appointmentKey
+                                            ] || 0;
+
+                                        // Show notification if this reschedule is newer than the last known reschedule
+                                        // OR if it's newer than lastViewed (for first-time reschedules)
+                                        if (
+                                            rescheduleTime >
+                                                lastRescheduleTime ||
+                                            rescheduleTime > lastViewed
+                                        ) {
+                                            // Only update the stored reschedule time if this is actually newer
+                                            if (
+                                                rescheduleTime >
+                                                lastRescheduleTime
+                                            ) {
+                                                lastRescheduleTimes[
+                                                    appointmentKey
+                                                ] = rescheduleTime;
+                                                localStorage.setItem(
+                                                    "lastRescheduleTimes",
+                                                    JSON.stringify(
+                                                        lastRescheduleTimes
+                                                    )
+                                                );
+                                            }
+                                            return true;
+                                        }
+                                    } else {
+                                        // Fallback: if no timestamp in note, use updated_at
+                                        const appointmentKey = `appointment_${appointment.uuid}`;
+                                        const lastRescheduleTime =
+                                            lastRescheduleTimes[
+                                                appointmentKey
+                                            ] || 0;
+
+                                        if (
+                                            updateTime > lastRescheduleTime ||
+                                            updateTime > lastViewed
+                                        ) {
+                                            if (
+                                                updateTime > lastRescheduleTime
+                                            ) {
+                                                lastRescheduleTimes[
+                                                    appointmentKey
+                                                ] = updateTime;
+                                                localStorage.setItem(
+                                                    "lastRescheduleTimes",
+                                                    JSON.stringify(
+                                                        lastRescheduleTimes
+                                                    )
+                                                );
+                                            }
+                                            return true;
+                                        }
                                     }
-                                    // Fallback to updated_at if no timestamp in note
-                                    return updateTime > lastViewed;
+
+                                    return false;
                                 }
 
                                 return (
@@ -249,9 +278,23 @@ const NotificationSystem = {
             return null;
         }
 
+        // Split by [RESCHEDULED BY ADMIN] and get the last occurrence
         const parts = note.split("[RESCHEDULED BY ADMIN]");
         if (parts.length > 1) {
-            return parts[1].trim();
+            // Get the last reschedule reason (most recent)
+            const lastReschedule = parts[parts.length - 1].trim();
+
+            // Extract just the reason part (before the timestamp)
+            // Format: "reason - 2024-01-15 14:30:00"
+            const reasonMatch = lastReschedule.match(
+                /^(.+?)\s*-\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/
+            );
+            if (reasonMatch) {
+                return reasonMatch[1].trim();
+            }
+
+            // Fallback: return the whole text if no timestamp format found
+            return lastReschedule;
         }
         return null;
     },
@@ -432,8 +475,8 @@ const NotificationSystem = {
         localStorage.setItem("reservationsLastViewed", currentTime);
         $(".notification-badge").hide();
 
-        // Reload notifications to update the display
-        this.loadNotifications();
+        // Don't reload notifications here - just hide the badge
+        // this.loadNotifications(); // Remove this line
     },
 
     clearAllNotifications() {
@@ -446,6 +489,7 @@ const NotificationSystem = {
                 </div>
             </div>
         `);
+        // Don't call loadNotifications() here as it will reload the notifications
     },
 
     startPeriodicCheck() {

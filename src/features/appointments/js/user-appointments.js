@@ -110,14 +110,14 @@ $(document).ready(function () {
             appointment.note.includes("[RESCHEDULED BY ADMIN]") &&
             appointment.status !== "cancelled"
         ) {
-            const parts = appointment.note.split("[RESCHEDULED BY ADMIN]");
-            if (parts.length > 1) {
-                const reason =
-                    parts[1].split("[")[0].trim() || "No reason provided";
+            const rescheduleReason = extractLatestRescheduleReason(
+                appointment.note
+            );
+            if (rescheduleReason) {
                 reasonInfo = `
                     <div class="reason-info reschedule-reason">
                         <div class="alert">
-                            ⚠️ <strong>Reschedule Reason:</strong> ${reason}
+                            ⚠️ <strong>Reschedule Reason:</strong> ${rescheduleReason}
                         </div>
                     </div>`;
             }
@@ -314,5 +314,32 @@ $(document).ready(function () {
         originalNote = originalNote.trim();
 
         return originalNote || "No special instructions provided.";
+    }
+
+    // Helper function to extract the latest reschedule reason from note
+    function extractLatestRescheduleReason(note) {
+        if (!note || !note.includes("[RESCHEDULED BY ADMIN]")) {
+            return null;
+        }
+
+        // Split by [RESCHEDULED BY ADMIN] and get the last occurrence
+        const parts = note.split("[RESCHEDULED BY ADMIN]");
+        if (parts.length > 1) {
+            // Get the last reschedule reason (most recent)
+            const lastReschedule = parts[parts.length - 1].trim();
+
+            // Extract just the reason part (before the timestamp)
+            // Format: "reason - 2024-01-15 14:30:00"
+            const reasonMatch = lastReschedule.match(
+                /^(.+?)\s*-\s*\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}$/
+            );
+            if (reasonMatch) {
+                return reasonMatch[1].trim();
+            }
+
+            // Fallback: return the whole text if no timestamp format found
+            return lastReschedule;
+        }
+        return null;
     }
 });

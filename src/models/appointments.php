@@ -194,7 +194,8 @@ class Appointments
                             WHEN note IS NULL OR note = '' THEN ''
                             ELSE '\n\n'
                         END,
-                        '[RESCHEDULED BY ADMIN] ', ?)
+                        '[RESCHEDULED BY ADMIN] ', ?, ' - ', NOW()),
+                    updated_at = NOW()
                 WHERE uuid = ?
             ");
             $stmt->execute([$new_date, $reason, $uuid]);
