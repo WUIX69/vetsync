@@ -324,7 +324,8 @@ const NotificationSystem = {
                                 return (
                                     updateTime > lastViewed &&
                                     (reservation.status === "accepted" ||
-                                        reservation.status === "rejected")
+                                        reservation.status === "rejected" ||
+                                        reservation.status === "completed")
                                 );
                             })
                             .map((reservation) => {
@@ -335,25 +336,35 @@ const NotificationSystem = {
                                     .map((p) => p.name)
                                     .join(", ");
 
+                                let title, message, icon, color;
+
+                                if (reservation.status === "completed") {
+                                    title = "Product Ready for Pickup";
+                                    message = `Your products (${productNames}) are ready for pickup at the clinic!`;
+                                    icon = "package";
+                                    color = "blue";
+                                } else if (reservation.status === "accepted") {
+                                    title = "Product Reservation Accepted";
+                                    message = `Your reservation for ${productNames} has been accepted`;
+                                    icon = "shopping-bag";
+                                    color = "green";
+                                } else {
+                                    title = "Product Reservation Rejected";
+                                    message = `Your reservation for ${productNames} has been rejected`;
+                                    icon = "x-circle";
+                                    color = "red";
+                                }
+
                                 return {
                                     id: `reservation_${reservation.id}`,
                                     type: "reservation",
-                                    title:
-                                        reservation.status === "accepted"
-                                            ? "Product Reservation Accepted"
-                                            : "Product Reservation Rejected",
-                                    message: `Your reservation for ${productNames} has been ${reservation.status}`,
+                                    title: title,
+                                    message: message,
                                     time:
                                         reservation.updated_at ||
                                         reservation.created_at,
-                                    icon:
-                                        reservation.status === "accepted"
-                                            ? "shopping-bag"
-                                            : "x-circle",
-                                    color:
-                                        reservation.status === "accepted"
-                                            ? "green"
-                                            : "red",
+                                    icon: icon,
+                                    color: color,
                                     link: "/src/app/user/cart.php",
                                     rejectionReason:
                                         reservation.rejection_reason,

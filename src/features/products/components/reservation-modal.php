@@ -27,15 +27,20 @@
 
             <div class="field">
                 <label>Pickup Method</label>
-                <div class="ui selection dropdown disabled">
-                    <input type="hidden" name="delivery_method" value="pickup">
-                    <i class="dropdown icon"></i>
-                    <div class="text">
-                        <i class="warehouse icon"></i>Clinic Pickup
-                    </div>
-                    <div class="menu">
-                        <div class="item active selected" data-value="pickup">
-                            <i class="warehouse icon"></i>Clinic Pickup
+                <!-- Hidden input to ensure delivery_method is sent with correct ENUM value -->
+                <input type="hidden" name="delivery_method" value="pickup">
+
+                <!-- Simple text display instead of UI message -->
+                <div
+                    style="background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; padding: 12px; margin-top: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i class="info circle icon" style="color: #2196f3;"></i>
+                        <div>
+                            <div style="font-weight: bold; color: #1976d2;">Clinic Pickup Only</div>
+                            <div style="font-size: 0.9em; color: #424242; margin-top: 4px;">
+                                All product reservations must be picked up at our clinic. We'll notify you when your
+                                products are ready for pickup.
+                            </div>
                         </div>
                     </div>
                 </div>

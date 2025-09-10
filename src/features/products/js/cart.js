@@ -253,19 +253,191 @@ const Cart = {
         $(".tab-content").removeClass("active");
         $(`#${tab}Tab`).addClass("active");
 
-        // Update summary title based on active tab
+        // Update summary based on active tab
         if (tab === "active") {
-            $("#summaryTitle").text("Order Summary");
-        } else {
             $("#summaryTitle").text("Reservation Summary");
-            this.updateReservationSummary(tab);
+            this.updateCartSummary(); // Show cart summary for making reservations
+        } else {
+            $("#summaryTitle").text("Order Summary");
+            this.updateOrderSummary(tab); // Show order summary for reservations
+        }
+    },
+
+    // NEW: Update cart summary for Active Cart tab (for making reservations)
+    updateCartSummary() {
+        const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+
+        let totalAmount = 0;
+        let totalItems = 0;
+        const selectedItems = [];
+
+        cartItems.forEach((item) => {
+            if (item.selected) {
+                const itemTotal =
+                    parseFloat(item.price) * parseInt(item.quantity);
+                totalAmount += itemTotal;
+                totalItems += parseInt(item.quantity);
+
+                selectedItems.push({
+                    name: item.name,
+                    size: item.size,
+                    quantity: parseInt(item.quantity),
+                    price: parseFloat(item.price),
+                    total: itemTotal,
+                });
+            }
+        });
+
+        const summaryHtml = `
+            <div class="summary-row">
+                <span>Selected Items:</span>
+                <span>${totalItems}</span>
+            </div>
+            <div class="summary-row">
+                <span>Total Amount:</span>
+                <span>₱${totalAmount.toFixed(2)}</span>
+            </div>
+            ${
+                selectedItems.length > 0
+                    ? `
+            <div class="selected-items">
+                <h6><i class='bx bx-package'></i> Selected Products</h6>
+                <div class="items-list">
+                    ${selectedItems
+                        .map(
+                            (item) => `
+                        <div class="summary-item">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">
+                                <span>Size: ${item.size}</span>
+                                <span>Qty: ${item.quantity}</span>
+                                <span>₱${item.total.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `
+                        )
+                        .join("")}
+                </div>
+            </div>
+            `
+                    : ""
+            }
+            <button class="reserve-btn ${totalItems === 0 ? "disabled" : ""}" 
+                    ${totalItems === 0 ? "disabled" : ""} 
+                    onclick="Cart.openReservationModal()">
+                <i class='bx bx-calendar-check'></i>
+                MAKE RESERVATION (${totalItems} ITEMS)
+            </button>
+        `;
+
+        $("#cartSummary .summary-content").html(summaryHtml);
+    },
+
+    // ENHANCED: Update reservation summary for reservation tabs (showing order details)
+    updateOrderSummary(status) {
+        // Get reservations from localStorage
+        const reservations = this.getReservationsByStatus(status);
+
+        let totalAmount = 0;
+        let totalItems = 0;
+        const allProducts = [];
+
+        reservations.forEach((reservation) => {
+            totalAmount += parseFloat(reservation.total_amount || 0);
+            const products = JSON.parse(reservation.products || "[]");
+            totalItems += products.length;
+
+            // Add products to the list
+            products.forEach((product) => {
+                allProducts.push({
+                    name: product.name,
+                    size: product.size,
+                    quantity: product.qty,
+                    price: product.total_price,
+                    reservationId: reservation.id,
+                    status: reservation.status,
+                });
+            });
+        });
+
+        // FIXED: Handle all status types including "ready"
+        const statusLabel =
+            status === "ready"
+                ? "Ready for Pickup"
+                : status.charAt(0).toUpperCase() + status.slice(1);
+        const statusIcon =
+            status === "pending"
+                ? "bx-time"
+                : status === "accepted"
+                ? "bx-check-circle"
+                : status === "ready"
+                ? "bx-package"
+                : "bx-x-circle";
+
+        const summaryHtml = `
+            <div class="summary-row">
+                <span>${statusLabel} Reservations:</span>
+                <span>${reservations.length}</span>
+            </div>
+            <div class="summary-row">
+                <span>Total Items:</span>
+                <span>${totalItems}</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total Amount:</span>
+                <span>₱${totalAmount.toFixed(2)}</span>
+            </div>
+            ${
+                allProducts.length > 0
+                    ? `
+            <div class="order-items">
+                <h6><i class='bx ${statusIcon}'></i> ${statusLabel} Products</h6>
+                <div class="items-list">
+                    ${allProducts
+                        .map(
+                            (item) => `
+                        <div class="summary-item">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">
+                                <span>Size: ${item.size}</span>
+                                <span>Qty: ${item.quantity}</span>
+                                <span>₱${item.price}</span>
+                            </div>
+                            <div class="item-status">
+                                <span class="status-badge ${
+                                    item.status
+                                }">${item.status.toUpperCase()}</span>
+                            </div>
+                        </div>
+                    `
+                        )
+                        .join("")}
+                </div>
+            </div>
+            `
+                    : ""
+            }
+        `;
+
+        $("#cartSummary .summary-content").html(summaryHtml);
+    },
+
+    // Helper function to get reservations by status
+    getReservationsByStatus(status) {
+        const allReservations = JSON.parse(
+            localStorage.getItem("allReservations") || "[]"
+        );
+
+        // FIXED: Handle "ready" status by mapping it to "completed"
+        if (status === "ready") {
+            return allReservations.filter(
+                (reservation) => reservation.status === "completed"
+            );
         }
 
-        // Mark reservations as viewed when switching to reservation tabs
-        if (tab !== "active") {
-            localStorage.setItem("reservationsLastViewed", Date.now());
-            this.updateCartBadge(); // Refresh badge
-        }
+        return allReservations.filter(
+            (reservation) => reservation.status === status
+        );
     },
 
     // Load user reservations
@@ -286,25 +458,50 @@ const Cart = {
 
     // Render reservations in tabs
     renderReservations(reservations) {
+        // Store all reservations in localStorage for summary calculations
+        localStorage.setItem("allReservations", JSON.stringify(reservations));
+
         const pendingReservations = reservations.filter(
             (r) => r.status === "pending"
         );
         const acceptedReservations = reservations.filter(
             (r) => r.status === "accepted"
         );
-        // FIXED: Include user-cancelled reservations in rejected tab
+        const readyReservations = reservations.filter(
+            (r) => r.status === "completed"
+        );
         const rejectedReservations = reservations.filter(
             (r) => r.status === "rejected"
+        );
+
+        // Store individual status arrays
+        localStorage.setItem(
+            "pendingReservations",
+            JSON.stringify(pendingReservations)
+        );
+        localStorage.setItem(
+            "acceptedReservations",
+            JSON.stringify(acceptedReservations)
+        );
+        localStorage.setItem(
+            "readyReservations",
+            JSON.stringify(readyReservations)
+        );
+        localStorage.setItem(
+            "rejectedReservations",
+            JSON.stringify(rejectedReservations)
         );
 
         // Update counts
         $("#pendingCount").text(pendingReservations.length);
         $("#acceptedCount").text(acceptedReservations.length);
+        $("#readyCount").text(readyReservations.length);
         $("#rejectedCount").text(rejectedReservations.length);
 
         // Render each tab
         this.renderReservationTab("pending", pendingReservations);
         this.renderReservationTab("accepted", acceptedReservations);
+        this.renderReservationTab("ready", readyReservations);
         this.renderReservationTab("rejected", rejectedReservations);
     },
 
@@ -323,7 +520,7 @@ const Cart = {
         });
     },
 
-    // ENHANCED: Create reservation card with cancel button for pending and proper display for cancelled items
+    // ENHANCED: Create reservation card with Ready for Pickup status
     createReservationCard(reservation) {
         const products = JSON.parse(reservation.products || "[]");
         const statusClass = reservation.status.toLowerCase();
@@ -377,21 +574,29 @@ const Cart = {
             </div>`
                 : "";
 
-        // FIXED: Show appropriate status badge
+        // ENHANCED: Show appropriate status badge
         const displayStatus =
             reservation.status === "rejected" &&
             reservation.rejection_reason === "Cancelled by user"
                 ? "CANCELLED"
+                : reservation.status === "completed"
+                ? "READY FOR PICKUP"
                 : reservation.status.toUpperCase();
 
         const displayStatusClass =
             reservation.status === "rejected" &&
             reservation.rejection_reason === "Cancelled by user"
                 ? "cancelled"
+                : reservation.status === "completed"
+                ? "ready-for-pickup"
                 : statusClass;
 
         return $(`
-            <div class="reservation-item">
+            <div class="reservation-item ${
+                reservation.status === "completed"
+                    ? "ready-for-pickup-item"
+                    : ""
+            }">
                 <div class="reservation-header">
                     <div>
                         <div class="reservation-id">Reservation #${
@@ -406,30 +611,32 @@ const Cart = {
                     </div>
                     <div class="status-badge ${displayStatusClass}">${displayStatus}</div>
                 </div>
-                
+
                 <div class="reservation-details">
                     <div class="detail-item">
                         <i class='bx bx-package'></i>
-                        <span>Products: ${products.length} item(s)</span>
+                        <div>
+                            <strong>Delivery:</strong>
+                            <span>${reservation.delivery_method.toUpperCase()}</span>
+                        </div>
                     </div>
                     <div class="detail-item">
                         <i class='bx bx-money'></i>
-                        <span>₱${parseFloat(
-                            reservation.total_amount || 0
-                        ).toFixed(2)}</span>
+                        <div>
+                            <strong>Total Amount:</strong>
+                            <span>₱${reservation.total_amount}</span>
+                        </div>
                     </div>
                     ${rejectionReason}
                 </div>
-                
+
                 <div class="reservation-products">
-                    <h6><i class='bx bx-package'></i> Products (${
-                        products.length
-                    })</h6>
+                    <h6><i class='bx bx-package'></i> Products</h6>
                     <div class="product-list">
                         ${productsHtml}
                     </div>
                 </div>
-                
+
                 ${cancelButton}
             </div>
         `);

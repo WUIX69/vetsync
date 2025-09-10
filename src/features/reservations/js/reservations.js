@@ -127,160 +127,231 @@ const ReservationsManager = {
     },
 
     createReservationCard(reservation) {
-        const products = reservation.products_array || [];
-        const productsHtml = products
-            .map(
-                (product) => `
-            <div class="product-item">
-                <div class="product-info">
-                    <div class="product-name">${product.name || "Product"}</div>
-                    <div class="product-details">
-                        <span class="product-size">Size: ${
-                            product.size || "M"
-                        }</span>
-                        <span class="product-qty">Qty: ${
-                            product.quantity || 1
-                        }</span>
-                    </div>
-                </div>
-                <div class="product-price">₱${product.price || 0}</div>
-            </div>
-        `
-            )
-            .join("");
+        const statusInfo = this.getStatusInfo(reservation.status);
+        const products = JSON.parse(reservation.products || "[]");
+        const productNames = products.map((p) => p.name).join(", ");
 
-        const actionsHtml =
-            reservation.status === "pending"
-                ? `
-            <div class="reservation-actions">
-                <button class="btn btn-accept" data-reservation-id="${reservation.id}">
-                    <i class="material-icons-sharp">check_circle</i>
-                    <span>Accept</span>
-                </button>
-                <button class="btn btn-reject" data-reservation-id="${reservation.id}">
-                    <i class="material-icons-sharp">cancel</i>
-                    <span>Reject</span>
-                </button>
-            </div>
-        `
-                : `
-            <div class="status-info">
-                <i class="material-icons-sharp">${
-                    reservation.status === "accepted"
-                        ? "check_circle"
-                        : "cancel"
-                }</i>
-                <span>This reservation has been ${reservation.status}</span>
-            </div>
-        `;
+        // FIXED: Calculate total amount using correct field names
+        const totalAmount = products.reduce((sum, product) => {
+            // Use total_price if available, otherwise calculate from price and qty
+            const price =
+                parseFloat(product.total_price) ||
+                parseFloat(product.price) ||
+                0;
+            const quantity =
+                parseInt(product.qty) || parseInt(product.quantity) || 0;
 
-        const rejectionReason = reservation.rejection_reason
-            ? `
-            <div class="rejection-reason">
-                <i class="material-icons-sharp">error_outline</i>
-                <div>
-                    <strong>Rejection Reason:</strong>
-                    <p>${reservation.rejection_reason}</p>
-                </div>
-            </div>
-        `
-            : "";
+            // If total_price exists, use it directly; otherwise calculate
+            if (product.total_price) {
+                return sum + parseFloat(product.total_price);
+            } else {
+                return sum + price * quantity;
+            }
+        }, 0);
 
         return $(`
-            <div class="reservation-card modern ${
-                reservation.status
-            }" data-reservation-id="${reservation.id}">
+            <div class="reservation-card" data-id="${reservation.id}">
                 <div class="reservation-header">
-                    <div class="customer-info">
-                        <div class="avatar">${reservation.firstname.charAt(
-                            0
-                        )}${reservation.lastname.charAt(0)}</div>
-                        <div class="customer-details">
-                            <h4 class="customer-name">${
-                                reservation.firstname
-                            } ${reservation.lastname}</h4>
-                            <small class="customer-email">${
-                                reservation.email
-                            }</small>
-                        </div>
-                    </div>
-                    <div class="status-badge ${reservation.status}">
-                        <i class="material-icons-sharp">${this.getStatusIcon(
-                            reservation.status
-                        )}</i>
-                        <span>${
-                            reservation.status.charAt(0).toUpperCase() +
-                            reservation.status.slice(1)
-                        }</span>
-                    </div>
+                    <h4>Reservation #${reservation.id}</h4>
+                    <span class="reservation-status ${reservation.status}">${
+            statusInfo.label
+        }</span>
                 </div>
                 
-                <div class="reservation-details">
-                    <div class="detail-grid">
-                        <div class="detail-item">
-                            <i class="material-icons-sharp">event</i>
-                            <div>
-                                <label>Preferred Date</label>
-                                <value>${reservation.formatted_date}</value>
-                            </div>
-                        </div>
-                        <div class="detail-item">
-                            <i class="material-icons-sharp">schedule</i>
-                            <div>
-                                <label>Preferred Time</label>
-                                <value>${reservation.formatted_time}</value>
-                            </div>
-                        </div>
-                        <div class="detail-item">
-                            <i class="material-icons-sharp">local_shipping</i>
-                            <div>
-                                <label>Method</label>
-                                <value>${reservation.delivery_method}</value>
-                            </div>
-                        </div>
-                        <div class="detail-item">
-                            <i class="material-icons-sharp">payments</i>
-                            <div>
-                                <label>Total Amount</label>
-                                <value>₱${reservation.total_amount}</value>
-                            </div>
-                        </div>
+                <div class="reservation-info">
+                    <div>
+                        <strong>Customer:</strong> ${reservation.firstname} ${
+            reservation.lastname
+        }
+                    </div>
+                    <div>
+                        <strong>Date:</strong> ${reservation.formatted_date}
+                    </div>
+                    <div>
+                        <strong>Time:</strong> ${reservation.formatted_time}
+                    </div>
+                    <div>
+                        <strong>Total Amount:</strong> ₱${totalAmount.toFixed(
+                            2
+                        )}
                     </div>
                 </div>
 
-                <div class="products-section">
-                    <h5 class="section-title">
-                        <i class="material-icons-sharp">shopping_bag</i>
-                        Products (${reservation.products_count})
-                    </h5>
-                    <div class="products-list">
-                        ${productsHtml}
+                <div class="reservation-products">
+                    <h5>Products (${products.length})</h5>
+                    ${products
+                        .map((product) => {
+                            // FIXED: Use correct field names for price and quantity
+                            const price = parseFloat(product.price) || 0;
+                            const quantity =
+                                parseInt(product.qty) ||
+                                parseInt(product.quantity) ||
+                                0;
+                            const subtotal = product.total_price
+                                ? parseFloat(product.total_price)
+                                : price * quantity;
+
+                            return `
+                        <div class="product-item">
+                            <i class="box icon"></i>
+                            <div class="product-details">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-info">
+                                    <span class="quantity">Qty: ${quantity}</span>
+                                    <span class="price">₱${price.toFixed(
+                                        2
+                                    )} each</span>
+                                    <span class="subtotal">Subtotal: ₱${subtotal.toFixed(
+                                        2
+                                    )}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                        })
+                        .join("")}
+                </div>
+
+                <div class="reservation-footer">
+                    <div class="reservation-actions">
+                        ${this.getActionButtons(reservation)}
+                    </div>
+                </div>
+            </div>
+        `);
+    },
+
+    getStatusInfo(status) {
+        const statusMap = {
+            pending: { label: "Pending", class: "pending" },
+            accepted: { label: "Accepted", class: "accepted" },
+            rejected: { label: "Rejected", class: "rejected" },
+            completed: { label: "Ready for Pickup", class: "completed" },
+        };
+        return statusMap[status] || { label: "Unknown", class: "unknown" };
+    },
+
+    // Add new method to create summary card
+    createSummaryCard() {
+        const allReservations = this.reservations || [];
+        const acceptedReservations = allReservations.filter(
+            (r) => r.status === "accepted"
+        );
+        const completedReservations = allReservations.filter(
+            (r) => r.status === "completed"
+        );
+
+        // Calculate totals for accepted reservations
+        let totalAcceptedAmount = 0;
+        let totalAcceptedItems = 0;
+        const acceptedProducts = [];
+
+        acceptedReservations.forEach((reservation) => {
+            const products = JSON.parse(reservation.products || "[]");
+            products.forEach((product) => {
+                const price = parseFloat(product.price) || 0;
+                const quantity = parseInt(product.quantity) || 0;
+                const subtotal = price * quantity;
+
+                totalAcceptedAmount += subtotal;
+                totalAcceptedItems += quantity;
+
+                // Add to accepted products list
+                const existingProduct = acceptedProducts.find(
+                    (p) => p.name === product.name
+                );
+                if (existingProduct) {
+                    existingProduct.quantity += quantity;
+                    existingProduct.total += subtotal;
+                } else {
+                    acceptedProducts.push({
+                        name: product.name,
+                        quantity: quantity,
+                        price: price,
+                        total: subtotal,
+                    });
+                }
+            });
+        });
+
+        // Calculate totals for completed reservations
+        let totalCompletedAmount = 0;
+        let totalCompletedItems = 0;
+
+        completedReservations.forEach((reservation) => {
+            const products = JSON.parse(reservation.products || "[]");
+            products.forEach((product) => {
+                const price = parseFloat(product.price) || 0;
+                const quantity = parseInt(product.quantity) || 0;
+                const subtotal = price * quantity;
+
+                totalCompletedAmount += subtotal;
+                totalCompletedItems += quantity;
+            });
+        });
+
+        return $(`
+            <div class="summary-card">
+                <div class="summary-header">
+                    <h4><i class="chart bar icon"></i> Reservation Summary</h4>
+                </div>
+                
+                <div class="summary-stats">
+                    <div class="stat-item accepted">
+                        <div class="stat-icon">
+                            <i class="clock icon"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Accepted</div>
+                            <div class="stat-value">${
+                                acceptedReservations.length
+                            } reservations</div>
+                            <div class="stat-amount">₱${totalAcceptedAmount.toFixed(
+                                2
+                            )}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item completed">
+                        <div class="stat-icon">
+                            <i class="check circle icon"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-label">Ready for Pickup</div>
+                            <div class="stat-value">${
+                                completedReservations.length
+                            } reservations</div>
+                            <div class="stat-amount">₱${totalCompletedAmount.toFixed(
+                                2
+                            )}</div>
+                        </div>
                     </div>
                 </div>
 
                 ${
-                    reservation.notes
-                        ? `<div class="notes-section">
-                    <h5 class="section-title">
-                        <i class="material-icons-sharp">note</i>
-                        Special Instructions
-                    </h5>
-                    <p class="notes-text">${reservation.notes}</p>
-                </div>`
+                    acceptedProducts.length > 0
+                        ? `
+                <div class="accepted-products">
+                    <h5><i class="box icon"></i> Accepted Products</h5>
+                    <div class="products-list">
+                        ${acceptedProducts
+                            .map(
+                                (product) => `
+                            <div class="summary-product-item">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-details">
+                                    <span>Qty: ${product.quantity}</span>
+                                    <span>₱${product.total.toFixed(2)}</span>
+                                </div>
+                            </div>
+                        `
+                            )
+                            .join("")}
+                    </div>
+                </div>
+                `
                         : ""
                 }
-
-                ${rejectionReason}
-                
-                <div class="reservation-footer">
-                    <div class="created-info">
-                        <i class="material-icons-sharp">schedule</i>
-                        <span>Created: ${new Date(
-                            reservation.created_at
-                        ).toLocaleDateString()}</span>
-                    </div>
-                    ${actionsHtml}
-                </div>
             </div>
         `);
     },
