@@ -259,6 +259,18 @@
 <!-- Products Section -->
 <section class="products">
     <div class="container-xl">
+        <div class="products-title">
+            <!-- Only section-title if its /landing -->
+            <?php if (uriAppPath('landing')): ?>
+                <div class="section-title">
+                    <span class="sub-title">Products</span>
+                    <h2>What We Offer</h2>
+                    <p>Quality pet products for your beloved companions</p>
+                </div>
+            <?php endif; ?>
+
+        </div>
+
         <!-- Header with filters -->
         <div class="header">
             <!-- Sort -->

@@ -203,7 +203,7 @@
                             exercitationem voluptas excepturi, aliquid sit ad magni quidem illo.
                         </p>
                         <div class="cta-buttons">
-                            <a href="#" class="cta-button primary">
+                            <a href="../../app/auth/index.php" class="cta-button primary">
                                 <span class="material-icons-sharp">pets</span>
                                 Book Now
                             </a>

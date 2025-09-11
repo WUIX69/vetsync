@@ -45,10 +45,10 @@
                     <div class="info-col">
                         <h4 class="ui header">Information</h4>
                         <div class="ui link list">
-                            <a href="#" class="item">About</a>
-                            <a href="#" class="item">Services</a>
+                            <a href="services.php" class="item">Services</a>
+                            <a href="products.php" class="item">Products</a>
+                            <a href="about.php" class="item">About</a>
                             <a href="#" class="item">Term and Conditions</a>
-                            <a href="#" class="item">Best Price Guarantee</a>
                             <a href="#" class="item">Privacy & Cookies Policy</a>
                         </div>
                     </div>
@@ -60,10 +60,7 @@
                         <h4 class="ui header">Customer Support</h4>
                         <div class="ui link list">
                             <a href="#" class="item">FAQ</a>
-                            <a href="#" class="item">Payment Option</a>
-                            <a href="#" class="item">Booking Tips</a>
-                            <a href="#" class="item">How it works</a>
-                            <a href="#" class="item">Contact Us</a>
+                            <a href="contact.php" class="item">Contact Us</a>
                         </div>
                     </div>
                 </div>
@@ -80,11 +77,11 @@
                             </div>
                             <div class="item">
                                 <i class="phone icon"></i>
-                                <div class="content">+63 927-8870-270</div>
+                                <div class="content">+12 345-6789-00</div>
                             </div>
                             <div class="item">
                                 <i class="mail icon"></i>
-                                <div class="content">wuix69.github.io</div>
+                                <div class="content">vetsync_sample@gmail.com</div>
                             </div>
                         </div>
                     </div>

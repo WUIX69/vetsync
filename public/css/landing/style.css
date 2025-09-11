@@ -276,7 +276,7 @@ footer.site-footer {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 4rem 0;
+    padding: 5rem 0 3rem 0;
 }
 
 footer.site-footer::before {
@@ -311,6 +311,13 @@ footer .list .item:hover {
 }
 
 /*------ FOOTER (Description Column) ------*/
+footer .desc-col {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 footer .desc-col span {
     color: #00b5ad !important;
 }
@@ -318,14 +325,19 @@ footer .desc-col span {
 footer .desc-col .footer-description {
     margin: 1.7rem 0;
     line-height: 1.6;
+    text-align: center;
+    max-width: 280px;
 }
 
 footer .desc-col .schedule {
     margin-top: 1.5rem;
+    width: 100%;
+    max-width: 280px;
 }
 
 footer .desc-col .schedule h5 {
     margin-bottom: 0.6rem !important;
+    text-align: center;
 }
 
 footer .desc-col .schedule .schedule-items {
@@ -356,13 +368,105 @@ footer .desc-col .schedule .schedule-items .wrapper .line {
 
 footer .desc-col .schedule .schedule-items .wrapper .time {
     font-weight: 400;
-    text-align: left;
+    text-align: right;
     width: 100%;
 }
 
+footer .desc-col .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/*------ FOOTER (Information Column) ------*/
+footer .info-col {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer .info-col .header {
+    text-align: center;
+    margin-bottom: 1.5rem !important;
+}
+
+footer .info-col .ui.link.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+footer .info-col .ui.link.list .item {
+    text-align: center;
+    padding: 0.5rem 0 !important;
+    transition: all 0.3s ease;
+}
+
+/*------ FOOTER (Customer Support Column) ------*/
+footer .supp-col {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer .supp-col .header {
+    text-align: center;
+    margin-bottom: 1.5rem !important;
+}
+
+footer .supp-col .ui.link.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+footer .supp-col .ui.link.list .item {
+    text-align: center;
+    padding: 0.5rem 0 !important;
+    transition: all 0.3s ease;
+}
+
 /*------ FOOTER (Contact Information Column) ------*/
+footer .contact-col {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+footer .contact-col .header {
+    text-align: center;
+    margin-bottom: 1.5rem !important;
+}
+
+footer .contact-col .ui.list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+footer .contact-col .ui.list .item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    text-align: center;
+    max-width: 280px;
+}
+
 footer .contact-col .item i.icon {
     font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+footer .contact-col .item .content {
+    text-align: center;
+    line-height: 1.4;
 }
 
 /*------ FOOTER (Bottom Column) ------*/
@@ -373,4 +477,57 @@ footer .bot-col {
 
 footer .bot-col p {
     margin: 0;
+}
+
+/*------ FOOTER (Responsive Improvements) ------*/
+@media (max-width: 768px) {
+    footer .desc-col,
+    footer .info-col,
+    footer .supp-col,
+    footer .contact-col {
+        margin-bottom: 2rem;
+    }
+
+    footer .desc-col .footer-description,
+    footer .contact-col .ui.list .item {
+        max-width: 100%;
+    }
+
+    footer .desc-col .schedule {
+        max-width: 100%;
+    }
+}
+
+/*------ FOOTER (Enhanced Visual Hierarchy) ------*/
+footer .header {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+footer .header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: #00b5ad;
+    border-radius: 1px;
+}
+
+footer .desc-col .header::after {
+    display: none;
+}
+
+/*------ FOOTER (Hover Effects) ------*/
+footer .info-col .ui.link.list .item:hover,
+footer .supp-col .ui.link.list .item:hover {
+    color: #00b5ad !important;
+    transform: translateX(5px);
+}
+
+footer .contact-col .ui.list .item:hover {
+    color: #00b5ad !important;
+    transform: scale(1.02);
 }

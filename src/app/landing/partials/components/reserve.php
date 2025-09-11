@@ -25,7 +25,7 @@ if (!empty($reserveImages)) {
         <div class="row">
             <div class="col-md-6">
                 <div class="header">
-                    <h2>Do You Want To Earn With Us? <br> So Don't Be Late.</h2>
+                    <h2>Let`s make your pet Healthy, <br> Book An Appointment Now.</h2>
                     <?= partial('components/ui/booknow-btn') ?>
                 </div>
             </div>

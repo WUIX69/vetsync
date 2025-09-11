@@ -29,7 +29,10 @@
                     <?= featured('home/components/features'); ?>
 
                     <!-- Services -->
-                    <?= featured('home/components/services'); ?>
+                    <?= featured('services/components/services'); ?>
+
+                    <!-- Products -->
+                    <?= featured('products/components/products'); ?>
 
                     <!-- Testimonials -->
                     <?= partial('components/testimonials'); ?>
@@ -54,6 +57,10 @@
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
     <script src="<?= asset('lib/swiper/swiper-bundle.min.js'); ?>"></script><!-- Swiper JS -->
     <script src="<?= featured('home/js/main.js', true); ?>"></script>
+    <script src="<?= featured('services/js/landing-lock.js', true); ?>"></script>
+    <script src="<?= featured('services/js/user-services-list.js', true); ?>"></script>
+    <script src="<?= featured('products/js/landing-lock.js', true); ?>"></script>
+    <script src="<?= featured('products/js/user-products-list.js', true); ?>"></script>
     <!-- More scripts to be added for home page here -->
 </body>
 

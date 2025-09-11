@@ -39,6 +39,8 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?>
+    <script src="/src/features/products/js/user-products-list.js"></script>
+    <script src="/src/features/products/js/landing-lock.js"></script>
 </body>
 
 </html>
