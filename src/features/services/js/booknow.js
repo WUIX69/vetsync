@@ -1,5 +1,63 @@
 // src/features/services/js/booknow.js
 
+// Date validation notification function
+function showDateNotification(type, title, message) {
+    // Create notification element
+    const notification = $(`
+        <div class="ui ${type} message date-notification" style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <div class="header">
+                <i class="calendar times icon"></i>
+                ${title}
+            </div>
+            <p>${message}</p>
+            <button class="ui mini button" onclick="$(this).closest('.date-notification').fadeOut()">
+                <i class="close icon"></i>
+                Dismiss
+            </button>
+        </div>
+    `);
+
+    // Add to page and animate
+    $("body").append(notification);
+    notification.hide().fadeIn(300);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        notification.fadeOut(300, function () {
+            $(this).remove();
+        });
+    }, 5000);
+}
+
+// Real-time date validation
+function validateDateInput(inputElement) {
+    const selectedDate = $(inputElement).val();
+    if (selectedDate) {
+        const today = new Date();
+        const appointmentDate = new Date(selectedDate);
+        today.setHours(0, 0, 0, 0);
+        appointmentDate.setHours(0, 0, 0, 0);
+
+        if (appointmentDate < today) {
+            showDateNotification(
+                "error",
+                "Past Date Selected",
+                "You cannot book an appointment for a past date. Please select today or a future date."
+            );
+            $(inputElement).val(""); // Clear the invalid date
+            return false;
+        } else {
+            // Show success notification for valid future date
+            showDateNotification(
+                "success",
+                "Date Selected",
+                "Great! You have selected a valid appointment date."
+            );
+        }
+    }
+    return true;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     $(document).on("click", "[data-open-modal]", function () {
         const modalSelector = $(this).data("open-modal");
@@ -98,6 +156,11 @@ document.addEventListener("DOMContentLoaded", function () {
                                 );
                             },
                         });
+
+                        // Add real-time date validation
+                        $('input[name="date"]').on("change", function () {
+                            validateDateInput(this);
+                        });
                     }
                 },
             })
@@ -146,6 +209,10 @@ $(function () {
                         type: "empty",
                         prompt: "Please select an appointment date",
                     },
+                    {
+                        type: "regExp[/^\\d{4}-\\d{2}-\\d{2}$/]",
+                        prompt: "Please enter a valid date format",
+                    },
                 ],
             },
             pet_uuid: {
@@ -170,6 +237,26 @@ $(function () {
         onSuccess: function () {
             const $form = $(this);
             const $submitBtn = $form.find("button[type=submit]");
+
+            // Validate date before submission
+            const selectedDate = $form.find('input[name="date"]').val();
+            if (selectedDate) {
+                const today = new Date();
+                const appointmentDate = new Date(selectedDate);
+                today.setHours(0, 0, 0, 0); // Reset time to start of day
+                appointmentDate.setHours(0, 0, 0, 0); // Reset time to start of day
+
+                if (appointmentDate < today) {
+                    // Show notification for past date selection
+                    showDateNotification(
+                        "error",
+                        "Past Date Selected",
+                        "You cannot book an appointment for a past date. Please select today or a future date."
+                    );
+                    return false;
+                }
+            }
+
             $submitBtn.addClass("loading");
 
             const formData = $form.serialize();

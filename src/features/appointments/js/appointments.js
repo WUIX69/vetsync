@@ -1,3 +1,61 @@
+// Date validation notification function for appointments
+function showAppointmentDateNotification(type, title, message) {
+    // Create notification element
+    const notification = $(`
+        <div class="ui ${type} message appointment-date-notification" style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <div class="header">
+                <i class="calendar times icon"></i>
+                ${title}
+            </div>
+            <p>${message}</p>
+            <button class="ui mini button" onclick="$(this).closest('.appointment-date-notification').fadeOut()">
+                <i class="close icon"></i>
+                Dismiss
+            </button>
+        </div>
+    `);
+
+    // Add to page and animate
+    $("body").append(notification);
+    notification.hide().fadeIn(300);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        notification.fadeOut(300, function () {
+            $(this).remove();
+        });
+    }, 5000);
+}
+
+// Real-time date validation for reschedule
+function validateRescheduleDate(inputElement) {
+    const selectedDate = $(inputElement).val();
+    if (selectedDate) {
+        const today = new Date();
+        const appointmentDate = new Date(selectedDate);
+        today.setHours(0, 0, 0, 0);
+        appointmentDate.setHours(0, 0, 0, 0);
+
+        if (appointmentDate < today) {
+            showAppointmentDateNotification(
+                "error",
+                "Past Date Selected",
+                "You cannot reschedule an appointment to a past date. Please select today or a future date."
+            );
+            $(inputElement).val(""); // Clear the invalid date
+            return false;
+        } else {
+            // Show success notification for valid future date
+            showAppointmentDateNotification(
+                "success",
+                "Reschedule Date Selected",
+                "Great! You have selected a valid reschedule date."
+            );
+        }
+    }
+    return true;
+}
+
 // Helper function to extract original user instructions from note (for admin side)
 function getOriginalInstructions(note) {
     if (!note) {
@@ -281,6 +339,13 @@ function openRescheduleModal($card) {
     const today = new Date().toISOString().split("T")[0];
     $("#reschedule-new-date").attr("min", today);
 
+    // Add real-time date validation for reschedule
+    $("#reschedule-new-date")
+        .off("change")
+        .on("change", function () {
+            validateRescheduleDate(this);
+        });
+
     // Show modal
     $("#rescheduleModal").modal("show");
 }
@@ -294,7 +359,26 @@ $(document).on("submit", "#rescheduleForm", function (e) {
     const reason = $("[name='reschedule_reason']").val();
 
     if (!newDate) {
-        alert("Please select a new date.");
+        showAppointmentDateNotification(
+            "error",
+            "Date Required",
+            "Please select a new date for rescheduling."
+        );
+        return;
+    }
+
+    // Validate date before submission
+    const today = new Date();
+    const appointmentDate = new Date(newDate);
+    today.setHours(0, 0, 0, 0);
+    appointmentDate.setHours(0, 0, 0, 0);
+
+    if (appointmentDate < today) {
+        showAppointmentDateNotification(
+            "error",
+            "Past Date Selected",
+            "You cannot reschedule an appointment to a past date. Please select today or a future date."
+        );
         return;
     }
 
