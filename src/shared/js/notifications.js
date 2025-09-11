@@ -52,7 +52,10 @@ const NotificationSystem = {
 
         // Handle View button clicks specifically
         $(document).on("click", ".notification-item .ui.button", (e) => {
-            // Allow the link to work normally, but don't clear notifications immediately
+            // Mark notifications as viewed when user clicks View
+            this.markNotificationsAsViewed();
+
+            // Allow the link to work normally
             // The user will see the page they're navigating to
         });
 
@@ -106,8 +109,41 @@ const NotificationSystem = {
 
                     if (response.success) {
                         const appointments = response.data || [];
-                        const lastViewed =
+                        let lastViewed =
                             localStorage.getItem("appointmentsLastViewed") || 0;
+
+                        // Check if there are any reschedule notifications
+                        const hasRecentReschedules = appointments.some(
+                            (appointment) => {
+                                const updateTime = new Date(
+                                    appointment.updated_at ||
+                                        appointment.created_at
+                                ).getTime();
+                                const hasRescheduleNote =
+                                    appointment.note &&
+                                    appointment.note.includes(
+                                        "[RESCHEDULED BY ADMIN]"
+                                    );
+
+                                if (hasRescheduleNote) {
+                                    // If there's a reschedule in the last hour, reset lastViewed to show it
+                                    const oneHourAgo =
+                                        Date.now() - 60 * 60 * 1000;
+                                    if (updateTime > oneHourAgo) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            }
+                        );
+
+                        // If there are recent reschedules, show them by adjusting lastViewed
+                        if (hasRecentReschedules) {
+                            lastViewed = Math.min(
+                                lastViewed,
+                                Date.now() - 2 * 60 * 60 * 1000
+                            ); // Show notifications from last 2 hours
+                        }
 
                         const notifications = appointments
                             .filter((appointment) => {
@@ -115,33 +151,81 @@ const NotificationSystem = {
                                     appointment.updated_at ||
                                         appointment.created_at
                                 ).getTime();
+
+                                // Check if this is a reschedule notification
+                                const hasRescheduleNote =
+                                    appointment.note &&
+                                    appointment.note.includes(
+                                        "[RESCHEDULED BY ADMIN]"
+                                    );
+
+                                // For reschedule notifications, check if the reschedule happened recently
+                                if (hasRescheduleNote) {
+                                    // Get the timestamp from the reschedule note
+                                    const rescheduleMatch =
+                                        appointment.note.match(
+                                            /\[RESCHEDULED BY ADMIN\][\s\S]*?(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/
+                                        );
+                                    if (rescheduleMatch) {
+                                        const rescheduleTime = new Date(
+                                            rescheduleMatch[1]
+                                        ).getTime();
+                                        return rescheduleTime > lastViewed;
+                                    }
+                                    // Fallback to updated_at if no timestamp in note
+                                    return updateTime > lastViewed;
+                                }
+
                                 return (
                                     updateTime > lastViewed &&
                                     (appointment.status === "accepted" ||
                                         appointment.status === "rejected")
                                 );
                             })
-                            .map((appointment) => ({
-                                id: `appointment_${appointment.uuid}`,
-                                type: "appointment",
-                                title:
-                                    appointment.status === "accepted"
-                                        ? "Appointment Accepted"
-                                        : "Appointment Rejected",
-                                message: `Your appointment for ${appointment.service_name} has been ${appointment.status}`,
-                                time:
-                                    appointment.updated_at ||
-                                    appointment.created_at,
-                                icon:
-                                    appointment.status === "accepted"
-                                        ? "check-circle"
-                                        : "x-circle",
-                                color:
-                                    appointment.status === "accepted"
-                                        ? "green"
-                                        : "red",
-                                link: "/src/app/user/appointments.php",
-                            }));
+                            .map((appointment) => {
+                                const hasRescheduleNote =
+                                    appointment.note &&
+                                    appointment.note.includes(
+                                        "[RESCHEDULED BY ADMIN]"
+                                    );
+
+                                let title, message, icon, color;
+
+                                if (hasRescheduleNote) {
+                                    title = "Appointment Rescheduled";
+                                    message = `Your appointment for ${appointment.service_name} has been rescheduled by the clinic. Please check your new appointment details.`;
+                                    icon = "calendar-edit";
+                                    color = "orange";
+                                } else if (appointment.status === "accepted") {
+                                    title = "Appointment Accepted";
+                                    message = `Your appointment for ${appointment.service_name} has been accepted`;
+                                    icon = "check-circle";
+                                    color = "green";
+                                } else {
+                                    title = "Appointment Rejected";
+                                    message = `Your appointment for ${appointment.service_name} has been rejected`;
+                                    icon = "x-circle";
+                                    color = "red";
+                                }
+
+                                return {
+                                    id: `appointment_${appointment.uuid}`,
+                                    type: "appointment",
+                                    title: title,
+                                    message: message,
+                                    time:
+                                        appointment.updated_at ||
+                                        appointment.created_at,
+                                    icon: icon,
+                                    color: color,
+                                    link: "/src/app/user/appointments.php",
+                                    rescheduleReason: hasRescheduleNote
+                                        ? this.extractRescheduleReason(
+                                              appointment.note
+                                          )
+                                        : null,
+                                };
+                            });
 
                         resolve(notifications);
                     } else {
@@ -157,6 +241,19 @@ const NotificationSystem = {
                 },
             });
         });
+    },
+
+    // Helper function to extract reschedule reason from note
+    extractRescheduleReason(note) {
+        if (!note || !note.includes("[RESCHEDULED BY ADMIN]")) {
+            return null;
+        }
+
+        const parts = note.split("[RESCHEDULED BY ADMIN]");
+        if (parts.length > 1) {
+            return parts[1].trim();
+        }
+        return null;
     },
 
     fetchReservationNotifications() {
@@ -269,6 +366,11 @@ const NotificationSystem = {
     createNotificationElement(notification) {
         const timeAgo = this.getTimeAgo(notification.time);
 
+        // Debug logging for timestamp issues
+        console.log("Notification timestamp:", notification.time);
+        console.log("Parsed time:", new Date(notification.time));
+        console.log("Time ago:", timeAgo);
+
         return $(`
             <div class="notification-item" data-notification-id="${
                 notification.id
@@ -285,6 +387,11 @@ const NotificationSystem = {
                     ${
                         notification.rejectionReason
                             ? `<p class="rejection-reason">Reason: ${notification.rejectionReason}</p>`
+                            : ""
+                    }
+                    ${
+                        notification.rescheduleReason
+                            ? `<p class="reschedule-reason">Reschedule Reason: ${notification.rescheduleReason}</p>`
                             : ""
                     }
                 </div>
@@ -324,6 +431,9 @@ const NotificationSystem = {
         localStorage.setItem("appointmentsLastViewed", currentTime);
         localStorage.setItem("reservationsLastViewed", currentTime);
         $(".notification-badge").hide();
+
+        // Reload notifications to update the display
+        this.loadNotifications();
     },
 
     clearAllNotifications() {
@@ -351,6 +461,12 @@ const NotificationSystem = {
     getTimeAgo(timestamp) {
         const now = new Date();
         const time = new Date(timestamp);
+
+        // Handle invalid timestamps
+        if (isNaN(time.getTime())) {
+            return "Unknown time";
+        }
+
         const diffInSeconds = Math.floor((now - time) / 1000);
 
         if (diffInSeconds < 60) {
@@ -358,14 +474,17 @@ const NotificationSystem = {
         }
 
         if (diffInSeconds < 3600) {
-            return `${Math.floor(diffInSeconds / 60)}m ago`;
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `${minutes}m ago`;
         }
 
         if (diffInSeconds < 86400) {
-            return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `${hours}h ago`;
         }
 
-        return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        const days = Math.floor(diffInSeconds / 86400);
+        return `${days}d ago`;
     },
 };
 
