@@ -861,27 +861,30 @@ const Cart = {
             </div>
         `;
 
+        // ... existing code ...
+
         items.forEach((item) => {
             const price = item.dc_price || item.og_price;
             const totalPrice = (parseFloat(price) * item.qty).toFixed(2);
             const itemKey = `${item.product_uuid}-${item.size}`;
 
             html += `
-                <div class="cart-item">
-                    <div class="row align-items-center">
-                        <div class="col-md-1">
-                            <div class="cart-checkbox-container">
-                                <input type="checkbox" 
-                                       class="cart-item-checkbox" 
-                                       value="${itemKey}"
-                                       data-product-uuid="${item.product_uuid}"
-                                       data-size="${item.size}"
-                                       data-price="${item.total_price}"
-                                       data-qty="${item.qty}"
-                                       data-name="${item.name}"
-                                       checked>
-                            </div>
+            <div class="cart-item">
+                <div class="row align-items-center">
+                    <div class="col-md-1">
+                        <div class="cart-checkbox-container">
+                            <input type="checkbox" 
+                                   class="cart-item-checkbox" 
+                                   value="${itemKey}"
+                                   data-product-uuid="${item.product_uuid}"
+                                   data-size="${item.size}"
+                                   data-price="${price}"
+                                   data-total-price="${item.total_price}"
+                                   data-qty="${item.qty}"
+                                   data-name="${item.name}"
+                                   checked>
                         </div>
+                    </div>
                         <div class="col-md-2">
                             <img src="${item.image}" alt="${
                 item.name
@@ -1063,17 +1066,18 @@ const Cart = {
             return;
         }
 
-        // Get selected items data
-        const selectedItems = [];
-        selectedCheckboxes.each(function () {
-            selectedItems.push({
-                product_uuid: $(this).data("product-uuid"),
-                size: $(this).data("size"),
-                qty: $(this).data("qty"),
-                name: $(this).data("name"),
-                total_price: $(this).data("price"),
-            });
-        });
+                // Get selected items data
+                const selectedItems = [];
+                selectedCheckboxes.each(function () {
+                    selectedItems.push({
+                        product_uuid: $(this).data("product-uuid"),
+                        size: $(this).data("size"),
+                        qty: $(this).data("qty"),
+                        name: $(this).data("name"),
+                        price: $(this).data("price"),
+                        total_price: $(this).data("total-price"),
+                    });
+                });
 
         this.populateReservationModal(selectedItems);
         $("#reservationModal").modal("show");

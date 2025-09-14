@@ -53,6 +53,16 @@ const ReservationsManager = {
             $("#rejectionModal").modal("hide");
             $("#rejectionReason").val("");
         });
+
+        // Mark as Ready (Complete) reservation
+        $(document).on("click", ".btn-complete", function (e) {
+            e.preventDefault();
+            const reservationId = $(this).data("reservation-id");
+
+            if (confirm("Mark this reservation as ready for pickup?")) {
+                ReservationsManager.updateStatus(reservationId, "completed");
+            }
+        });
     },
 
     loadReservations() {
@@ -181,8 +191,15 @@ const ReservationsManager = {
                     <h5>Products (${products.length})</h5>
                     ${products
                         .map((product) => {
+                            // DEBUG: Log the product data to see what's available
+                            console.log("Product data:", product);
+
                             // FIXED: Use correct field names for price and quantity
-                            const price = parseFloat(product.price) || 0;
+                            let price =
+                                parseFloat(product.price) ||
+                                parseFloat(product.dc_price) ||
+                                parseFloat(product.og_price) ||
+                                0;
                             const quantity =
                                 parseInt(product.qty) ||
                                 parseInt(product.quantity) ||
@@ -190,6 +207,20 @@ const ReservationsManager = {
                             const subtotal = product.total_price
                                 ? parseFloat(product.total_price)
                                 : price * quantity;
+
+                            // If price is still 0, calculate it from subtotal and quantity
+                            if (price === 0 && subtotal > 0 && quantity > 0) {
+                                price = subtotal / quantity;
+                            }
+
+                            console.log(
+                                "Calculated price:",
+                                price,
+                                "Quantity:",
+                                quantity,
+                                "Subtotal:",
+                                subtotal
+                            );
 
                             return `
                         <div class="product-item">
@@ -448,6 +479,53 @@ const ReservationsManager = {
             completed: "done_all",
         };
         return icons[status] || "help";
+    },
+
+    getActionButtons(reservation) {
+        const status = reservation.status;
+        let buttons = "";
+
+        switch (status) {
+            case "pending":
+                buttons = `
+                    <button class="btn btn-accept" data-reservation-id="${reservation.id}">
+                        <i class="check icon"></i> Accept
+                    </button>
+                    <button class="btn btn-reject" data-reservation-id="${reservation.id}">
+                        <i class="times icon"></i> Reject
+                    </button>
+                `;
+                break;
+            case "accepted":
+                buttons = `
+                    <button class="btn btn-complete" data-reservation-id="${reservation.id}">
+                        <i class="check circle icon"></i> Mark as Ready
+                    </button>
+                `;
+                break;
+            case "rejected":
+                buttons = `
+                    <span class="status-info">
+                        <i class="info circle icon"></i> Rejected
+                    </span>
+                `;
+                break;
+            case "completed":
+                buttons = `
+                    <span class="ready-status">
+                        <i class="check circle icon"></i> Ready for Pickup
+                    </span>
+                `;
+                break;
+            default:
+                buttons = `
+                    <span class="status-info">
+                        <i class="help circle icon"></i> Unknown Status
+                    </span>
+                `;
+        }
+
+        return buttons;
     },
 };
 
