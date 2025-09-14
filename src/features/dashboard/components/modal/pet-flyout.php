@@ -189,6 +189,17 @@
                                 <i class="trash alternate outline icon"></i> Delete
                             </button>
                         </div>
+                        <div class="archive-actions" style="margin-top: 10px;">
+                            <button class="ui orange button" id="archivePetBtn" style="display: none;">
+                                <i class="archive icon"></i> Archive Pet
+                            </button>
+                            <button class="ui red button" id="deceasedPetBtn">
+                                <i class="heart broken icon"></i> Mark as Deceased
+                            </button>
+                            <button class="ui green button" id="unarchivePetBtn" style="display: none;">
+                                <i class="undo icon"></i> Restore Pet
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="service" role="tabpanel" aria-labelledby="service-tab">

@@ -85,14 +85,19 @@ function petsAjax(options) {
     return $.ajax(finalOptions);
 }
 
+// Global state for current tab
+let currentTab = "active";
+
 // Fetch and render all pets
-function getAllPets() {
+function getAllPets(archiveStatus = "active") {
     petsList.empty();
+    currentTab = archiveStatus;
 
     petsAjax({
         method: "GET",
         data: {
             action: "all",
+            archive_status: archiveStatus,
         },
         success: function (response) {
             if (!response.success) {
@@ -103,8 +108,17 @@ function getAllPets() {
             let petsHTML = "";
 
             pets.forEach((pet) => {
+                const isArchived = pet.archive_status !== "active";
+                const archiveBadge = isArchived
+                    ? `<div class="archive-badge">${pet.archive_status}</div>`
+                    : "";
+                const archivedClass = isArchived ? "archived" : "";
+
                 petsHTML += `
-                    <li class="item view-pet" data-pet-uuid="${pet.uuid}">
+                    <li class="item view-pet ${archivedClass}" data-pet-uuid="${
+                    pet.uuid
+                }">
+                        ${archiveBadge}
                         <img class="avatar-img" src="${
                             pet.image || "https://placehold.co/100x100?text=Pet"
                         }" alt="${pet.name}">
@@ -113,12 +127,14 @@ function getAllPets() {
                 `;
             });
 
-            // Add the "Add Pet" button at the end, using the correct modal id
-            petsHTML += `
-                <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal">
-                    <i class="plus icon"></i> Add Pet
-                </button>
-            `;
+            // Add the "Add Pet" button for active pets
+            if (archiveStatus === "active") {
+                petsHTML += `
+                    <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal">
+                        <i class="plus icon"></i> Add Pet
+                    </button>
+                `;
+            }
 
             petsList.append(petsHTML);
         },
@@ -209,6 +225,92 @@ function deletePet(petUuid = null) {
     });
 }
 
+// Archive a pet
+function archivePet(petUuid, status = "inactive") {
+    if (!petUuid) return false;
+
+    const statusText = status === "deceased" ? "mark as deceased" : "archive";
+    if (!confirm(`Are you sure you want to ${statusText} this pet?`))
+        return false;
+
+    petsAjax({
+        urlParams: { uuid: petUuid, status: status },
+        method: "GET",
+        data: {
+            action: "archive",
+        },
+        success: function (response) {
+            if (response.success) {
+                alert("✅ " + response.message);
+                getAllPets(currentTab);
+                $("#petFlyout").flyout("hide");
+            } else {
+                alert("⚠️ " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("❌ Error archiving pet: " + error);
+        },
+    });
+}
+
+// Unarchive a pet
+function unarchivePet(petUuid) {
+    if (!petUuid) return false;
+    if (!confirm("Are you sure you want to restore this pet?")) return false;
+
+    petsAjax({
+        urlParams: { uuid: petUuid },
+        method: "GET",
+        data: {
+            action: "unarchive",
+        },
+        success: function (response) {
+            if (response.success) {
+                alert("✅ " + response.message);
+                getAllPets(currentTab);
+                $("#petFlyout").flyout("hide");
+            } else {
+                alert("⚠️ " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("❌ Error restoring pet: " + error);
+        },
+    });
+}
+
+// Get inactive pets (pets without appointments for 1 year)
+function getInactivePets() {
+    petsAjax({
+        method: "GET",
+        data: {
+            action: "inactive",
+        },
+        success: function (response) {
+            if (response.success) {
+                const inactivePets = response.data || [];
+                if (inactivePets.length > 0) {
+                    let message = `Found ${inactivePets.length} pets without appointments in the last year:\n\n`;
+                    inactivePets.forEach((pet) => {
+                        message += `• ${pet.name} (${pet.species})\n`;
+                    });
+                    message += "\nWould you like to archive these pets?";
+
+                    if (confirm(message)) {
+                        // Archive all inactive pets
+                        inactivePets.forEach((pet) => {
+                            archivePet(pet.uuid, "inactive");
+                        });
+                    }
+                } else {
+                    alert("No inactive pets found.");
+                }
+            }
+        },
+    });
+}
+
 // Show pet details in flyout (read-only view)
 function showPetFlyout(petUuid = null) {
     if (!petUuid) return false;
@@ -250,13 +352,90 @@ function showPetFlyout(petUuid = null) {
 
             // Store the uuid on the flyout for later use (update/delete)
             petFlyout.data("pet-uuid", pet.uuid);
+
+            // Show/hide archive buttons based on pet status
+            if (pet.archive_status === "active") {
+                // Hide the manual "Archive Pet" button since archiving is automatic
+                // Keep "Mark as Deceased" button for manual use
+                $("#archivePetBtn").hide();
+                $("#deceasedPetBtn").show();
+                $("#unarchivePetBtn").hide();
+            } else {
+                // For archived pets, only show restore button
+                $("#archivePetBtn, #deceasedPetBtn").hide();
+                $("#unarchivePetBtn").show();
+            }
+
             petFlyout.flyout("show");
         },
     });
 }
 
+// Fetch and render all archived pets (both inactive and deceased)
+function getAllArchivedPets() {
+    petsList.empty();
+    currentTab = "archived";
+
+    // Get both inactive and deceased pets
+    const promises = [
+        petsAjax({
+            method: "GET",
+            data: {
+                action: "all",
+                archive_status: "inactive",
+            },
+        }),
+        petsAjax({
+            method: "GET",
+            data: {
+                action: "all",
+                archive_status: "deceased",
+            },
+        }),
+    ];
+
+    Promise.all(promises)
+        .then((responses) => {
+            let allArchivedPets = [];
+
+            responses.forEach((response) => {
+                if (response.success && response.data) {
+                    allArchivedPets = allArchivedPets.concat(response.data);
+                }
+            });
+
+            if (allArchivedPets.length === 0) {
+                petsList.append(
+                    '<li style="text-align: center; padding: 20px; color: #666;">No archived pets found.</li>'
+                );
+                return;
+            }
+
+            let petsHTML = "";
+            allArchivedPets.forEach((pet) => {
+                const archiveBadge = `<div class="archive-badge">${pet.archive_status}</div>`;
+
+                petsHTML += `
+                <li class="item view-pet archived" data-pet-uuid="${pet.uuid}">
+                    ${archiveBadge}
+                    <img class="avatar-img" src="${
+                        pet.image || "https://placehold.co/100x100?text=Pet"
+                    }" alt="${pet.name}">
+                    <div class="avatar-name">${pet.name}</div>
+                </li>
+            `;
+            });
+
+            petsList.append(petsHTML);
+        })
+        .catch((error) => {
+            console.error("Error fetching archived pets:", error);
+            alert("Error loading archived pets");
+        });
+}
+
 $(function () {
-    getAllPets();
+    getAllPets("active");
 
     // View pet details on click
     $("body").on("click", ".view-pet", function (e) {
@@ -403,5 +582,33 @@ $(function () {
                 },
             });
         },
+    });
+
+    // Tab switching
+    $("body").on("click", ".pet-tab", function (e) {
+        e.preventDefault();
+        const tab = $(this).data("tab");
+
+        // Update active tab
+        $(".pet-tab").removeClass("active");
+        $(this).addClass("active");
+
+        // Load pets for selected tab
+        const archiveStatus = tab === "archived" ? "archived" : "active";
+        getAllPets(archiveStatus);
+    });
+
+    // Mark as deceased button in flyout
+    $("body").on("click", "#deceasedPetBtn", function () {
+        const petUuid = $("#petFlyout").data("pet-uuid");
+        if (!petUuid) return;
+        archivePet(petUuid, "deceased");
+    });
+
+    // Unarchive button in flyout
+    $("body").on("click", "#unarchivePetBtn", function () {
+        const petUuid = $("#petFlyout").data("pet-uuid");
+        if (!petUuid) return;
+        unarchivePet(petUuid);
     });
 });

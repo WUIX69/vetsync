@@ -13,6 +13,8 @@
         color: #000;
         border-radius: 20px;
         font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
     }
 
     main section.my-pets .header .tabs a.active {
@@ -36,6 +38,7 @@
         flex-direction: column;
         align-items: center;
         width: 120px;
+        position: relative;
     }
 
     main section.my-pets .pet-items .item .avatar-img {
@@ -49,10 +52,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        /* font-size: 48px; */
         color: #bbb;
         border: 2px solid #e0e0e0;
         transition: box-shadow 0.2s;
+    }
+
+    main section.my-pets .pet-items .item.archived .avatar-img {
+        filter: grayscale(100%);
+        opacity: 0.7;
+        border-color: #999;
+    }
+
+    main section.my-pets .pet-items .item .archive-badge {
+        position: absolute;
+        top: -5px;
+        right: 10px;
+        background: #666;
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 8px;
+        z-index: 1;
     }
 
     main section.my-pets .pet-items .add-pet-btn {
@@ -64,6 +84,10 @@
 <section class="my-pets">
     <div class="header">
         <h4>My pets</h4>
+        <div class="tabs">
+            <a href="#" class="pet-tab active" data-tab="active">Active</a>
+            <a href="#" class="pet-tab" data-tab="archived">Archived</a>
+        </div>
     </div>
     <ul class="pet-items">
         <!-- Dynamic loaded on myPets.js -->

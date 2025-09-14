@@ -63,8 +63,16 @@ try {
 
         if ($action === 'all') {
             $user_uuid = userData()['uuid'] ?? null;
+            $archive_status = $_GET['archive_status'] ?? 'active';
             error_log("User UUID for pets: " . $user_uuid);
-            $result = Pets::all($user_uuid); // Pass user_uuid to the model
+
+            // If requesting archived, get both inactive and deceased
+            if ($archive_status === 'archived') {
+                $result = Pets::getAllArchived($user_uuid);
+            } else {
+                $result = Pets::all($user_uuid, $archive_status);
+            }
+
             $result['data'] = array_map(function ($item) use ($reference_model) {
                 // Format correct data
                 $formattedData = [
@@ -79,6 +87,19 @@ try {
                 return array_merge($item, $formattedData);
             }, $result['data'] ?? []);
             $response = $result;
+
+        } else if ($action === 'archive') {
+            $pet_uuid = $_GET['uuid'] ?? null;
+            $archive_status = $_GET['status'] ?? 'inactive';
+            $response = Pets::archive($pet_uuid, $archive_status);
+
+        } else if ($action === 'unarchive') {
+            $pet_uuid = $_GET['uuid'] ?? null;
+            $response = Pets::unarchive($pet_uuid);
+
+        } else if ($action === 'inactive') {
+            $user_uuid = userData()['uuid'] ?? null;
+            $response = Pets::getInactivePets($user_uuid);
 
         } else if ($action === 'single') {
             $pet_uuid = $_GET['uuid'] ?? null;
