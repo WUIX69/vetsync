@@ -244,4 +244,18 @@
             Yes
         </div>
     </div>
+    <!-- <div class="verification-actions" style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+        <h4>Account Verification</h4>
+        <div class="ui buttons">
+            <button class="ui green button verify-user-btn" data-user-uuid="">
+                <i class="check icon"></i> Verify User
+            </button>
+            <button class="ui red button reject-user-btn" data-user-uuid="">
+                <i class="times icon"></i> Reject User
+            </button>
+        </div>
+        <div class="verification-info" style="margin-top: 10px;">
+            <span class="verification-status-display"></span>
+        </div>
+    </div> -->
 </div>

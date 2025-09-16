@@ -26,6 +26,11 @@ try {
     $columns = array(
         ['db' => 'firstname', 'dt' => 'firstname'],
         ['db' => 'email', 'dt' => 'email'],
+        [
+            'db' => 'verification_status',
+            'dt' => 'verification_status'
+            // Remove the formatter - let frontend handle the rendering
+        ],
         ['db' => null, 'dt' => 'role'],
         ['db' => 'location', 'dt' => 'location'],
         ['db' => 'telephone', 'dt' => 'telephone'],
@@ -73,6 +78,7 @@ try {
             'user_uuid' => $user['uuid'],
             'name' => $user['firstname'] . ' ' . $user['lastname'],
             'email' => $user['email'],
+            'verification_status' => $user['verification_status'] ?? 'pending',
             'role' => 'User',
             'telephone' => $user['telephone'] ? $user['telephone'] : '...',
             'dob' => $user['dob'],

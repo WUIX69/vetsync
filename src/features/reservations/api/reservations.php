@@ -40,6 +40,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
         $userData = $session->get();
+
+        // Check user verification status
+        $isVerified = \VetSync\Models\Users::isUserVerified($userData['uuid']);
+        if (!$isVerified) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Your account is pending for verification. Please wait until verified to complete this action.'
+            ]);
+            exit;
+        }
+
         $reservationId = $_POST['reservation_id'] ?? null;
 
         if (!$reservationId) {
@@ -84,6 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     }
 
     $userData = $session->get();
+
+    // Check user verification status
+    $isVerified = \VetSync\Models\Users::isUserVerified($userData['uuid']);
+    if (!$isVerified) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Your account is pending for verification. Please wait until verified to complete this action.'
+        ]);
+        exit;
+    }
 
     // Validate required fields
     $products = $_POST['products'] ?? null;

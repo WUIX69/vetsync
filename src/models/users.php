@@ -285,4 +285,73 @@ class Users
         }
     }
 
+    public static function updateVerificationStatus($user_uuid, $status, $verified_by = null)
+    {
+        try {
+            self::conn()->beginTransaction();
+
+            $stmt = self::conn()->prepare("
+                UPDATE users SET 
+                    verification_status = ?,
+                    verified_at = ?,
+                    verified_by = ?
+                WHERE uuid = ?
+            ");
+
+            $verified_at = $status === 'verified' ? date('Y-m-d H:i:s') : null;
+
+            $stmt->execute([
+                $status,
+                $verified_at,
+                $verified_by,
+                $user_uuid
+            ]);
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => "User {$status} successfully.",
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Verification status update failed: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function getPendingUsers()
+    {
+        try {
+            $stmt = self::conn()->prepare('SELECT * FROM users WHERE verification_status = "pending" ORDER BY created_at DESC');
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Pending users fetched successfully',
+                'data' => $data
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch pending users: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function isUserVerified($user_uuid)
+    {
+        try {
+            $stmt = self::conn()->prepare('SELECT verification_status FROM users WHERE uuid = ? LIMIT 1');
+            $stmt->execute([$user_uuid]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result && $result['verification_status'] === 'verified';
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return false;
+        }
+    }
 }

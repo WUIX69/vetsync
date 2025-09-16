@@ -3,12 +3,40 @@
         display: flex;
         align-items: center;
         gap: 8px;
+        min-width: 260px;
     }
 
     main section.users-table table .user-details .image {
         height: 35px !important;
         width: 35px !important;
         border: var(--img-border) !important;
+        flex-shrink: 0;
+    }
+
+    /* Fix table layout */
+    #usersTable {
+        table-layout: fixed !important;
+        width: 100% !important;
+    }
+
+    #usersTable th,
+    #usersTable td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 8px 6px !important;
+        vertical-align: middle;
+    }
+
+    /* Actions column specific styling */
+    #usersTable th:last-child,
+    #usersTable td:last-child {
+        text-align: center;
+    }
+
+    /* Status column styling */
+    #usersTable td:nth-child(3) {
+        text-align: center;
     }
 </style>
 <!-- User List -->
@@ -78,13 +106,14 @@
                 id="usersTable">
                 <thead>
                     <tr>
-                        <th width="304">User</th>
-                        <th width="170">Email</th>
-                        <th width="70">Role</th>
-                        <th width="166">Location</th>
-                        <th>Telephone</th>
-                        <th width="120">Birth Date</th>
-                        <th>Created At</th>
+                        <th width="280">User</th>
+                        <th width="200">Email</th>
+                        <th width="100">Status</th>
+                        <th width="80">Role</th>
+                        <th width="150">Location</th>
+                        <th width="120">Telephone</th>
+                        <th width="100">Birth Date</th>
+                        <th width="100">Created At</th>
                         <th width="120">Actions</th>
                     </tr>
                 </thead>
