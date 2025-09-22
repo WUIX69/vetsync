@@ -32,6 +32,19 @@ $(function () {
                     },
                 ],
             },
+            telephone: {
+                identifier: "telephone",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter your phone number",
+                    },
+                    {
+                        type: "regExp[/^[+]?[ds-()]{10,}$/]",
+                        prompt: "Please enter a valid phone number",
+                    },
+                ],
+            },
             password: {
                 identifier: "password",
                 rules: [

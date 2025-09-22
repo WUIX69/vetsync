@@ -18,6 +18,7 @@ try {
         'firstname' => $_POST['firstname'] ?? '',
         'lastname' => $_POST['lastname'] ?? '',
         'email' => $_POST['email'] ?? '',
+        'telephone' => $_POST['telephone'] ?? '',
         'password' => isset($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '',
     ];
 

@@ -176,37 +176,6 @@ document.addEventListener("DOMContentLoaded", function () {
 $(function () {
     $("#bookNowForm").form({
         fields: {
-            full_name: {
-                identifier: "full_name",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Full name is required",
-                    },
-                ],
-            },
-            email: {
-                identifier: "email",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Email is required",
-                    },
-                    {
-                        type: "email",
-                        prompt: "Please enter a valid email",
-                    },
-                ],
-            },
-            phone: {
-                identifier: "phone",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Phone number is required",
-                    },
-                ],
-            },
             date: {
                 identifier: "date",
                 rules: [
@@ -241,25 +210,11 @@ $(function () {
         },
         onSuccess: function () {
             const $form = $(this);
-            const $submitBtn = $form.find("button[type=submit]");
+            const $submitBtn = $form.find(".ui.submit.button");
 
-            // Validate date before submission
-            const selectedDate = $form.find('input[name="date"]').val();
-            if (selectedDate) {
-                const today = new Date();
-                const appointmentDate = new Date(selectedDate);
-                today.setHours(0, 0, 0, 0); // Reset time to start of day
-                appointmentDate.setHours(0, 0, 0, 0); // Reset time to start of day
-
-                if (appointmentDate < today) {
-                    // Show notification for past date selection
-                    showDateNotification(
-                        "error",
-                        "Past Date Selected",
-                        "You cannot book an appointment for a past date. Please select today or a future date."
-                    );
-                    return false;
-                }
+            // Prevent multiple submissions
+            if ($submitBtn.hasClass("loading")) {
+                return false;
             }
 
             $submitBtn.addClass("loading");
