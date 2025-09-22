@@ -132,6 +132,12 @@ const Cart = {
         // Add to cart buttons (for product pages)
         $(document).on("click", ".add-to-cart-btn", (e) => {
             e.preventDefault();
+
+            // Check if button is disabled (for unavailable products)
+            if ($(e.currentTarget).hasClass("disabled")) {
+                return false;
+            }
+
             const productUuid = $(e.currentTarget)
                 .closest(".product-listing")
                 .data("product-uuid");
@@ -1066,18 +1072,18 @@ const Cart = {
             return;
         }
 
-                // Get selected items data
-                const selectedItems = [];
-                selectedCheckboxes.each(function () {
-                    selectedItems.push({
-                        product_uuid: $(this).data("product-uuid"),
-                        size: $(this).data("size"),
-                        qty: $(this).data("qty"),
-                        name: $(this).data("name"),
-                        price: $(this).data("price"),
-                        total_price: $(this).data("total-price"),
-                    });
-                });
+        // Get selected items data
+        const selectedItems = [];
+        selectedCheckboxes.each(function () {
+            selectedItems.push({
+                product_uuid: $(this).data("product-uuid"),
+                size: $(this).data("size"),
+                qty: $(this).data("qty"),
+                name: $(this).data("name"),
+                price: $(this).data("price"),
+                total_price: $(this).data("total-price"),
+            });
+        });
 
         this.populateReservationModal(selectedItems);
         $("#reservationModal").modal("show");

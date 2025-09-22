@@ -60,6 +60,28 @@ const servicesList = {
             // Get category icon - use a default icon if none exists
             const categoryIcon = service.category?.icon || "syringe"; // Default to syringe icon
 
+            // Check if service is available for booking
+            const isAvailable = statusClass === "available";
+
+            // Generate booking button based on availability
+            const bookingButtonHtml = isAvailable
+                ? `
+                <button type="button" 
+                        class="book-now-btn" 
+                        data-open-modal="#bookNowModal"
+                        data-service-uuid="${service.uuid}">
+                    Book Now <i class="arrow right icon"></i>
+                </button>
+            `
+                : `
+                <button type="button" 
+                        class="book-now-btn disabled" 
+                        disabled
+                        title="Service is currently unavailable">
+                    <i class="ban icon"></i> Unavailable
+                </button>
+            `;
+
             html += `
                 <div class="col-lg-4">
                     <div class="service-card card">
@@ -89,12 +111,7 @@ const servicesList = {
                                             <i class="eye icon"></i>View
                                         </a>
                                     </div>
-                                    <button type="button" 
-                                            class="book-now-btn" 
-                                            data-open-modal="#bookNowModal"
-                                            data-service-uuid="${service.uuid}">
-                                        Book Now <i class="arrow right icon"></i>
-                                    </button>
+                                    ${bookingButtonHtml}
                                 </div>
                             </div>
                         </div>

@@ -65,6 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // For Book Now modal, store selected service UUID
         if ($(this).hasClass("book-now-btn")) {
+            // Check if button is disabled (for unavailable services)
+            if ($(this).hasClass("disabled")) {
+                return false;
+            }
+
             const serviceUuid = $(this).data("service-uuid");
             window.selectedServiceUuids = serviceUuid ? [serviceUuid] : [];
         }

@@ -254,6 +254,28 @@
     .status-badge i {
         font-size: 0.8em;
     }
+
+    /* Disabled cart controls and buttons for unavailable products */
+    main section.products .product-listing .content-2 .product-footer .ui.buttons.disabled,
+    main section.products .product-listing .content-2 .product-footer .ui.button.disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.vertical.button.disabled {
+        background-color: #6c757d !important;
+        color: white !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.vertical.button.disabled:hover {
+        background-color: #6c757d !important;
+        transform: none !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.buttons.disabled .ui.button {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+    }
 </style>
 
 <!-- Products Section -->

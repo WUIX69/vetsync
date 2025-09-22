@@ -243,6 +243,19 @@
         /* Make "Duration:" text bolder */
         color: #031224;
     }
+
+    /* Disabled button styles for unavailable services */
+    main section.services .service-card .card-body .service-meta .actions .book-now-btn.disabled {
+        background-color: #6c757d !important;
+        color: white !important;
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
+    }
+
+    main section.services .service-card .card-body .service-meta .actions .book-now-btn.disabled:hover {
+        background-color: #6c757d !important;
+        transform: none !important;
+    }
 </style>
 
 <section class="services">

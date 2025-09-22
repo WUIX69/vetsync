@@ -41,20 +41,9 @@ const productsList = {
                 ? `<span class="original-price">${price}</span> ₱${product.dc_price}`
                 : price;
 
-            // Handle status badge styling
-            const getStatusColor = (status) => {
-                const statusColors = {
-                    available: "green",
-                    unavailable: "red",
-                    busy: "orange",
-                    soon: "blue",
-                };
-                return statusColors[status.toLowerCase()] || "grey";
-            };
-
             const statusClass = product.status.label.toLowerCase();
             const statusBadge = `
-                <div class="status-badge ${getStatusColor(statusClass)}">
+                <div class="status-badge ${statusClass}">
                     <i class="circle icon"></i>
                     ${product.status.label}
                 </div>
@@ -106,6 +95,45 @@ const productsList = {
                 )
                 .join("");
 
+            // Check if product is available for adding to cart
+            const isAvailable = statusClass === "available";
+
+            // Generate quantity controls and add to cart button based on availability
+            const cartControlsHtml = isAvailable
+                ? `
+                <div class="ui mini icon buttons">
+                    <button class="ui button decrease-quantity">
+                        <i class="minus icon"></i>
+                    </button>
+                    <div class="ui disabled button quantity-value">1</div>
+                    <button class="ui button increase-quantity">
+                        <i class="plus icon"></i>
+                    </button>
+                </div>
+                <div class="ui vertical animated button add-to-cart-btn" tabindex="0">
+                    <div class="hidden content">Add to Cart</div>
+                    <div class="visible content">
+                        <i class="shop icon"></i>
+                    </div>
+                </div>
+            `
+                : `
+                <div class="ui mini icon buttons disabled">
+                    <button class="ui button disabled">
+                        <i class="minus icon"></i>
+                    </button>
+                    <div class="ui disabled button quantity-value">1</div>
+                    <button class="ui button disabled">
+                        <i class="plus icon"></i>
+                    </button>
+                </div>
+                <div class="ui vertical button disabled" tabindex="-1" title="Product is currently unavailable">
+                    <div class="visible content">
+                        <i class="ban icon"></i> Unavailable
+                    </div>
+                </div>
+            `;
+
             html += `
                 <div class="col-md-4">
                     <div class="product-listing card" data-product-uuid="${product.uuid}">
@@ -139,21 +167,7 @@ const productsList = {
                                             Learn More
                                         </a>
                                     </div>
-                                    <div class="ui mini icon buttons">
-                                        <button class="ui button decrease-quantity">
-                                            <i class="minus icon"></i>
-                                        </button>
-                                        <div class="ui disabled button quantity-value">1</div>
-                                        <button class="ui button increase-quantity">
-                                            <i class="plus icon"></i>
-                                        </button>
-                                    </div>
-                                    <div class="ui vertical animated button add-to-cart-btn" tabindex="0">
-                                        <div class="hidden content">Add to Cart</div>
-                                        <div class="visible content">
-                                            <i class="shop icon"></i>
-                                        </div>
-                                    </div>
+                                    ${cartControlsHtml}
                                 </div>
                             </div>
                         </div>
