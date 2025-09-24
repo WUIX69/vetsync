@@ -7,6 +7,10 @@
     <title>User Dashboard - VetSync</title>
     <?= shared('elements/styles'); ?> <!-- rcs Styles -->
     <?= shared('elements/filepond/styles') ?> <!-- FilePond CSS -->
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="/public/lib/swiper/swiper-bundle.min.css">
+
     <link rel="stylesheet" href="<?= featured('dashboard/css/overview.css', true) ?>">
 </head>
 
@@ -34,7 +38,7 @@
                         <?= featured('dashboard/components/my-pets'); ?>
                     </div>
                     <div class="col-lg-3">
-                        <?= featured('dashboard/components/popular'); ?>
+                        <?= featured('dashboard/components/pet-facts'); ?>
                     </div>
                     <div class="col-lg-3">
                         <?= featured('dashboard/components/upcoming-events'); ?>
@@ -44,9 +48,12 @@
         </main>
     </div>
 
-
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
     <?= shared('elements/filepond/scripts') ?> <!-- FilePond JS -->
+
+    <!-- Swiper JS -->
+    <script src="/public/lib/swiper/swiper-bundle.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="<?= featured('dashboard/js/main.js', true); ?>"></script>
     <script src="<?= featured('dashboard/js/myPets.js', true); ?>"></script>
