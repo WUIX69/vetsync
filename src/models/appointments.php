@@ -24,13 +24,17 @@ class Appointments
             $stmt = self::conn()->prepare('
                 SELECT 
                     a.*, 
-                    s.name AS service_name, 
+                    s.name AS service_name,
+                    s.description AS service_description,
                     c.name AS category_name,
                     CONCAT(u.firstname, " ", u.lastname) AS user_name,
                     u.email AS user_email,
                     u.telephone AS user_phone,
                     p.name AS pet_name,
-                    p.breed AS pet_breed
+                    p.breed AS pet_breed,
+                    p.species AS pet_species,
+                    p.dob AS pet_dob,
+                    TIMESTAMPDIFF(YEAR, p.dob, CURDATE()) AS pet_age
                 FROM appointments a
                 LEFT JOIN services s ON a.service_uuid = s.uuid
                 LEFT JOIN categories c ON s.category_id = c.id
@@ -320,6 +324,38 @@ class Appointments
             ];
         } catch (PDOException $e) {
             return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    public static function getByUuidWithDetails($uuid)
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT 
+                    a.*, 
+                    s.name AS service_name,
+                    s.description AS service_description,
+                    c.name AS category_name,
+                    CONCAT(u.firstname, " ", u.lastname) AS owner_name,
+                    u.email AS owner_email,
+                    u.telephone AS owner_phone,
+                    p.name AS pet_name,
+                    p.breed AS pet_breed,
+                    p.species AS pet_species,
+                    p.age AS pet_age
+                FROM appointments a
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                LEFT JOIN categories c ON s.category_id = c.id
+                LEFT JOIN users u ON a.user_uuid = u.uuid
+                LEFT JOIN pets p ON a.pet_uuid = p.uuid
+                WHERE a.uuid = :uuid
+            ');
+            $stmt->bindParam(':uuid', $uuid);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching appointment details: " . $e->getMessage());
+            return false;
         }
     }
 }

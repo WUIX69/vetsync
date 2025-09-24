@@ -93,48 +93,89 @@ function getAllAppointments() {
                 alert(response.message);
                 return;
             }
-            // Clear all containers
+
+            // Clear all table bodies instead of card containers
             $(
-                "#appointmentsCardsAll, #appointmentsCardsPending, #appointmentsCardsConfirmed, #appointmentsCardsCompleted, #appointmentsCardsCancelled"
+                "#appointmentsTableAll tbody, #appointmentsTablePending tbody, #appointmentsTableConfirmed tbody, #appointmentsTableCompleted tbody, #appointmentsTableCancelled tbody"
             ).empty();
 
+            // Separate arrays for each status
+            const allAppointments = [];
+            const pendingAppointments = [];
+            const confirmedAppointments = [];
+            const completedAppointments = [];
+            const cancelledAppointments = [];
+
             response.data.forEach(function (app) {
-                // Always append to All Appointments
                 let statusClass = "";
                 let statusLabel = "";
 
                 // Map DB status to UI
                 if (app.status === "pending") {
-                    statusClass = "status-pending";
+                    statusClass = "pending";
                     statusLabel = "Pending";
-                    $("#appointmentsCardsPending").append(
-                        cardHtml(app, statusClass, statusLabel)
-                    );
+                    pendingAppointments.push({ app, statusClass, statusLabel });
                 } else if (app.status === "accepted") {
-                    statusClass = "status-confirmed";
+                    statusClass = "confirmed";
                     statusLabel = "Confirmed";
-                    $("#appointmentsCardsConfirmed").append(
-                        cardHtml(app, statusClass, statusLabel)
-                    );
+                    confirmedAppointments.push({
+                        app,
+                        statusClass,
+                        statusLabel,
+                    });
                 } else if (app.status === "completed") {
-                    statusClass = "status-completed";
+                    statusClass = "completed";
                     statusLabel = "Completed";
-                    $("#appointmentsCardsCompleted").append(
-                        cardHtml(app, statusClass, statusLabel, true) // true = completed
-                    );
+                    completedAppointments.push({
+                        app,
+                        statusClass,
+                        statusLabel,
+                        isCompleted: true,
+                    });
                 } else if (app.status === "cancelled") {
-                    statusClass = "status-cancelled";
+                    statusClass = "cancelled";
                     statusLabel = "Cancelled";
-                    $("#appointmentsCardsCancelled").append(
-                        cardHtml(app, statusClass, statusLabel)
-                    );
+                    cancelledAppointments.push({
+                        app,
+                        statusClass,
+                        statusLabel,
+                    });
                 }
 
-                // Always append to All Appointments
-                $("#appointmentsCardsAll").append(
-                    cardHtml(app, statusClass, statusLabel)
-                );
+                // Add to all appointments array
+                allAppointments.push({
+                    app,
+                    statusClass,
+                    statusLabel,
+                    isCompleted: app.status === "completed",
+                });
             });
+
+            // Render appointments in their respective tables
+            renderAppointments(
+                allAppointments.map((item) => item.app),
+                "all"
+            );
+            renderAppointments(
+                pendingAppointments.map((item) => item.app),
+                "pending"
+            );
+            renderAppointments(
+                confirmedAppointments.map((item) => item.app),
+                "confirmed"
+            );
+            renderAppointments(
+                completedAppointments.map((item) => item.app),
+                "completed"
+            );
+            renderAppointments(
+                cancelledAppointments.map((item) => item.app),
+                "cancelled"
+            );
+        },
+        error: function (xhr, status, error) {
+            console.error("Failed to load appointments:", error);
+            alert("Failed to load appointments. Please try again.");
         },
     });
 }
@@ -428,116 +469,258 @@ function updateAppointmentStatus(uuid, status) {
     });
 }
 
-// Update cardHtml function with better button layout
-function cardHtml(app, statusClass, statusLabel, isCompleted = false) {
+// Update tableRowHtml function to handle different tab layouts
+function tableRowHtml(
+    app,
+    statusClass,
+    statusLabel,
+    isCompleted = false,
+    tabType = "all"
+) {
     let actionButtons = "";
-    let reasonInfo = "";
-
-    // ADMIN SIDE: Only show when PATIENT cancelled
-    if (
-        app.status === "cancelled" &&
-        app.note &&
-        (app.note.includes("Cancelled by client") ||
-            app.note.includes("Cancelled by patient")) // Check for both client and patient
-    ) {
-        reasonInfo = `
-            <div class="reason-info patient-cancelled">
-                <div class="alert">
-                    ⚠️ <strong>Client Cancelled</strong>
-                </div>
-            </div>`;
-    }
-
-    // Remove all other reason display logic for admin side
-    // (No admin cancellation reasons, no reschedule reasons shown to admin)
 
     if (isCompleted) {
-        // Completed appointments show different actions
         actionButtons = `
-            <button class="ui action-btn blue button view-details">
-                <i class="eye icon"></i> View Details
-            </button>
-            <button class="ui action-btn teal button download-report">
-                <i class="download icon"></i> Report
-            </button>
+            <div class="action-buttons">
+                <button class="btn btn-xs btn-success download-report" data-uuid="${app.uuid}">
+                    Report
+                </button>
+            </div>
         `;
     } else if (statusLabel === "Pending") {
-        // Pending appointments
         actionButtons = `
-            <button class="ui action-btn green button btn-confirm" data-uuid="${app.uuid}">
-                <i class="check icon"></i> Confirm
-            </button>
-            <button class="ui action-btn blue button btn-reschedule" data-uuid="${app.uuid}">
-                <i class="calendar icon"></i> Reschedule
-            </button>
-            <button class="ui action-btn red button btn-cancel" data-uuid="${app.uuid}">
-                <i class="times icon"></i> Cancel
-            </button>
+            <div class="action-buttons">
+                <button class="btn btn-xs btn-success confirm-appointment" data-uuid="${app.uuid}">
+                    Confirm
+                </button>
+                <button class="btn btn-xs btn-warning reschedule-appointment" data-uuid="${app.uuid}">
+                    Reschedule
+                </button>
+                <button class="btn btn-xs btn-danger cancel-appointment" data-uuid="${app.uuid}">
+                    Cancel
+                </button>
+            </div>
         `;
     } else if (statusLabel === "Confirmed") {
-        // Confirmed appointments can be completed, rescheduled, or cancelled
         actionButtons = `
-            <button class="ui action-btn green button btn-complete" data-uuid="${app.uuid}">
-                <i class="check icon"></i> Complete
-            </button>
-            <button class="ui action-btn blue button btn-reschedule" data-uuid="${app.uuid}">
-                <i class="calendar icon"></i> Reschedule
-            </button>
-            <button class="ui action-btn red button btn-cancel" data-uuid="${app.uuid}">
-                <i class="times icon"></i> Cancel
-            </button>
+            <div class="action-buttons">
+                <button class="btn btn-xs btn-success complete-appointment" data-uuid="${app.uuid}">
+                    Complete
+                </button>
+                <button class="btn btn-xs btn-warning reschedule-appointment" data-uuid="${app.uuid}">
+                    Reschedule
+                </button>
+                <button class="btn btn-xs btn-danger cancel-appointment" data-uuid="${app.uuid}">
+                    Cancel
+                </button>
+            </div>
         `;
-    } else if (app.status === "cancelled") {
-        // Only show delete button for cancelled appointments
+    } else if (statusLabel === "Cancelled") {
         actionButtons = `
-            <button class="ui action-btn red button btn-delete" data-uuid="${app.uuid}" title="Permanently delete this appointment">
-                <i class="trash icon"></i> Delete
-            </button>
+            <div class="action-buttons">
+                <button class="btn btn-xs btn-primary view-details" data-uuid="${app.uuid}">
+                    View
+                </button>
+                <button class="btn btn-xs btn-secondary delete-appointment" data-uuid="${app.uuid}">
+                    Delete
+                </button>
+            </div>
         `;
     } else {
-        // Default actions for other statuses
         actionButtons = `
-            <button class="ui action-btn blue reschedule-btn button btn-reschedule" data-uuid="${app.uuid}">
-                <i class="calendar icon"></i> Reschedule
-            </button>
+            <div class="action-buttons">
+                <button class="btn btn-xs btn-primary view-details" data-uuid="${app.uuid}">
+                    View
+                </button>
+            </div>
         `;
     }
 
+    // Handle custom service display
+    const serviceName =
+        app.service_name ||
+        (app.note && app.note.includes("CUSTOM SERVICE REQUEST:")
+            ? "Custom Service"
+            : "N/A");
+
+    // Get instructions/notes with proper handling for custom services
+    const instructions = getOriginalInstructions(app.note);
+    const shortInstructions =
+        instructions.length > 80 // Increased from 50 to 80
+            ? instructions.substring(0, 80) + "..."
+            : instructions;
+
+    // Status badge (only show in "all" tab, other tabs are filtered by status)
+    const statusBadge =
+        tabType === "all"
+            ? `<td><span class="badge bg-${getStatusColor(
+                  statusClass
+              )}">${statusLabel}</span></td>`
+            : "";
+
+    // Reason column (only for cancelled tab)
+    const reasonColumn =
+        tabType === "cancelled"
+            ? `<td>
+            <small class="text-muted">
+                ${
+                    app.note && app.note.includes("Cancelled")
+                        ? app.note.replace(/^.*Cancelled[^:]*:\s*/, "")
+                        : "No reason provided"
+                }
+            </small>
+        </td>`
+            : "";
+
     return `
-    <div class="appointment-card" data-uuid="${app.uuid}">
-        <div class="appointment-header">
-            <div class="appointment-time">
-                <i class="material-icons-sharp">schedule</i>
-                ${app.date || ""}
-            </div>
-            <span class="appointment-status ${statusClass}">${statusLabel}</span>
-        </div>
-        <div class="appointment-patient">
-            <div class="patient-avatar">
-                <img src="${
-                    app.pet_image || "/img/placeholders/image.png"
-                }" alt="${
-        app.pet_name || "Pet"
-    }" onerror="this.src='/img/placeholders/image.png'">
-            </div>
-            <div class="patient-info">
-                <h4>${app.pet_name || app.pet_uuid}</h4>
-                <p>Owner: ${app.user_name || app.user_uuid}</p>
-            </div>
-        </div>
-        <div class="appointment-service">
-            <strong>Service:</strong> ${app.service_name || ""}
-        </div>
-        <div class="appointment-description">
-            <strong>Instructions:</strong> ${getOriginalInstructions(app.note)}
-        </div>
-        ${reasonInfo}
-        <div class="appointment-actions">
-            ${actionButtons}
-        </div>
-    </div>
+        <tr data-uuid="${app.uuid}">
+            <td>
+                <div class="fw-bold">${app.date || ""}</div>
+                <small class="text-muted">ID: ${app.uuid.substring(
+                    0,
+                    8
+                )}...</small>
+            </td>
+            <td>
+                <div class="d-flex align-items-center">
+                    <img src="${
+                        app.pet_image || "/public/img/placeholders/image.png"
+                    }" 
+                         alt="Pet" 
+                         class="rounded-circle me-2" 
+                         style="width: 32px; height: 32px; object-fit: cover;"
+                         onerror="this.src='/public/img/placeholders/image.png'">
+                    <div>
+                        <div class="fw-bold">${
+                            app.pet_name || "Unknown Pet"
+                        }</div>
+                        <small class="text-muted">ID: ${
+                            app.pet_uuid ? app.pet_uuid.substring(0, 8) : "N/A"
+                        }</small>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div>${app.user_name || app.user_uuid}</div>
+                <small class="text-muted">${app.user_email || ""}</small>
+            </td>
+            <td>
+                <div class="fw-bold">${serviceName}</div>
+                ${
+                    shortInstructions
+                        ? `<small class="text-muted" title="${instructions}">${shortInstructions}</small>`
+                        : ""
+                }
+            </td>
+            ${reasonColumn}
+            ${statusBadge}
+            <td>${actionButtons}</td>
+        </tr>
     `;
 }
+
+// Helper function to get status color for badges
+function getStatusColor(statusClass) {
+    switch (statusClass) {
+        case "pending":
+            return "warning";
+        case "confirmed":
+            return "info";
+        case "completed":
+            return "success";
+        case "cancelled":
+            return "danger";
+        default:
+            return "secondary";
+    }
+}
+
+// Update the renderAppointments function
+function renderAppointments(data, status = "all") {
+    let tableSelector = "";
+    let colspan = "6"; // Default colspan
+
+    switch (status) {
+        case "all":
+            tableSelector = "#appointmentsTableAll tbody";
+            colspan = "6";
+            break;
+        case "pending":
+            tableSelector = "#appointmentsTablePending tbody";
+            colspan = "5"; // No status column
+            break;
+        case "confirmed":
+            tableSelector = "#appointmentsTableConfirmed tbody";
+            colspan = "5"; // No status column
+            break;
+        case "completed":
+            tableSelector = "#appointmentsTableCompleted tbody";
+            colspan = "5"; // No status column
+            break;
+        case "cancelled":
+            tableSelector = "#appointmentsTableCancelled tbody";
+            colspan = "6"; // Has reason column
+            break;
+    }
+
+    const container = $(tableSelector);
+    container.empty();
+
+    if (!data || data.length === 0) {
+        container.append(`
+            <tr>
+                <td colspan="${colspan}" class="text-center py-4">
+                    <div class="text-muted">
+                        <i class="bx bx-calendar-x" style="font-size: 3rem;"></i>
+                        <p class="mt-2">No ${
+                            status === "all" ? "" : status
+                        } appointments found</p>
+                    </div>
+                </td>
+            </tr>
+        `);
+        return;
+    }
+
+    data.forEach((appointment) => {
+        const statusInfo = getStatusInfo(appointment.status);
+        const row = tableRowHtml(
+            appointment,
+            statusInfo.class,
+            statusInfo.label,
+            appointment.status === "completed",
+            status // Pass the tab type
+        );
+        container.append(row);
+    });
+}
+
+// Helper function to get status info
+function getStatusInfo(status) {
+    switch (status) {
+        case "pending":
+            return { class: "pending", label: "Pending" };
+        case "accepted":
+            return { class: "confirmed", label: "Confirmed" };
+        case "completed":
+            return { class: "completed", label: "Completed" };
+        case "cancelled":
+            return { class: "cancelled", label: "Cancelled" };
+        default:
+            return { class: "secondary", label: "Unknown" };
+    }
+}
+
+// Add search functionality
+$(document).ready(function () {
+    // Simple table search
+    $("#searchTable").on("keyup", function () {
+        const value = $(this).val().toLowerCase();
+        $("#appointmentsTableAll tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+});
 
 // Initialize modals when page loads
 $(document).ready(function () {
@@ -629,4 +812,204 @@ $(document).ready(function () {
             return false; // Prevent default approval
         },
     });
+});
+
+// Add this to ensure Bootstrap pills work properly
+$(document).ready(function () {
+    // Initialize Bootstrap nav pills if needed
+    if (typeof bootstrap !== "undefined") {
+        const triggerTabList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="pill"]')
+        );
+        triggerTabList.forEach(function (triggerEl) {
+            new bootstrap.Tab(triggerEl);
+        });
+    }
+
+    // Replace the Bootstrap pill handler with this simple version
+    $(".nav-btn").on("click", function (e) {
+        e.preventDefault();
+
+        // Remove active class from all buttons
+        $(".nav-btn").removeClass("active");
+
+        // Add active class to clicked button
+        $(this).addClass("active");
+
+        // Hide all tab panes
+        $(".tab-pane").removeClass("show active");
+
+        // Show target tab pane
+        const target = $(this).attr("data-target");
+        $(target).addClass("show active");
+    });
+});
+
+// Handle report modal
+$(document).on("click", ".download-report", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    if (!uuid) {
+        alert("Error: Unable to identify appointment");
+        return;
+    }
+
+    // Show modal and loading state
+    $("#reportModal").modal("show");
+    $("#reportLoading").show();
+    $("#reportContent").hide();
+    $("#reportError").hide();
+
+    // Make AJAX request to the main appointments API
+    $.ajax({
+        url: "/src/features/appointments/api/appointments.php",
+        method: "POST",
+        data: {
+            action: "get_report_data",
+            uuid: uuid,
+        },
+        dataType: "json",
+        success: function (response) {
+            if (response.success && response.data) {
+                populateReportModal(response.data);
+                $("#reportLoading").hide();
+                $("#reportContent").show();
+            } else {
+                showReportError(response.message || "Unknown error occurred");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Report error:", error);
+            console.error("Response text:", xhr.responseText);
+            showReportError("Error loading report: " + error);
+        },
+    });
+});
+
+// Function to populate the report modal with data
+function populateReportModal(data) {
+    // Appointment details
+    $("#reportAppointmentId").text("ID: " + data.uuid);
+    $("#reportDate").text(formatDate(data.appointment_date));
+    $("#reportStatus").html(
+        `<span class="ui ${getStatusClass(data.status)} label">${
+            data.status.charAt(0).toUpperCase() + data.status.slice(1)
+        }</span>`
+    );
+
+    // Pet information
+    $("#reportPetName").text(data.pet_name || "N/A");
+    $("#reportPetSpecies").text(data.pet_species || "N/A");
+    $("#reportPetBreed").text(data.pet_breed || "N/A");
+    $("#reportPetAge").text(data.pet_age || "N/A");
+
+    // Owner information
+    $("#reportOwnerName").text(data.owner_name || "N/A");
+    $("#reportOwnerEmail").text(data.owner_email || "N/A");
+    $("#reportOwnerPhone").text(data.owner_phone || "N/A");
+
+    // Service information
+    $("#reportServiceName").text(data.service_name || "N/A");
+    if (data.service_description) {
+        $("#reportServiceDescription").text(data.service_description);
+        $("#reportServiceDescriptionItem").show();
+    } else {
+        $("#reportServiceDescriptionItem").hide();
+    }
+
+    // Notes and instructions
+    if (data.note && data.note.trim() !== "") {
+        let noteText = data.note;
+
+        // Handle custom service requests
+        if (noteText.includes("CUSTOM SERVICE REQUEST:")) {
+            noteText = noteText.replace(
+                "CUSTOM SERVICE REQUEST:",
+                "Custom Service Request:"
+            );
+        }
+
+        $("#reportNotes").text(noteText);
+        $("#reportNotesSection").show();
+    } else {
+        $("#reportNotesSection").hide();
+    }
+
+    // Generated date
+    $("#reportGeneratedDate").text(new Date().toLocaleString());
+}
+
+// Function to show report error
+function showReportError(message) {
+    $("#reportLoading").hide();
+    $("#reportContent").hide();
+    $("#reportErrorMessage").text(message);
+    $("#reportError").show();
+}
+
+// Function to get status class for styling
+function getStatusClass(status) {
+    switch (status.toLowerCase()) {
+        case "pending":
+            return "yellow";
+        case "confirmed":
+            return "blue";
+        case "completed":
+            return "green";
+        case "cancelled":
+            return "red";
+        default:
+            return "grey";
+    }
+}
+
+// Function to format date
+function formatDate(dateString) {
+    const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
+// Handle print report
+$(document).on("click", "#printReport", function () {
+    const printContent = $("#reportContent").html();
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>VetSync - Appointment Report</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    .ui.header { margin-bottom: 10px; font-weight: bold; }
+                    .ui.list .item { margin-bottom: 5px; }
+                    .ui.segment { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
+                    .ui.divider { border-bottom: 1px solid #ddd; margin: 15px 0; }
+                    .ui.grid { display: flex; flex-wrap: wrap; }
+                    .eight.wide.column { width: 50%; padding: 10px; }
+                    .ui.label { padding: 3px 8px; border-radius: 3px; }
+                    .green.label { background-color: #21ba45; color: white; }
+                    .blue.label { background-color: #2185d0; color: white; }
+                    .yellow.label { background-color: #fbbd08; color: #333; }
+                    .red.label { background-color: #db2828; color: white; }
+                    .grey.label { background-color: #767676; color: white; }
+                    @media print {
+                        body { margin: 0; }
+                        .ui.segment { border: none; box-shadow: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>VetSync - Appointment Report</h1>
+                ${printContent}
+            </body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
 });

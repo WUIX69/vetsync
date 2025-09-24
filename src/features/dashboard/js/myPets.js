@@ -246,8 +246,8 @@ function getAllPets(archiveStatus = "active") {
                 petsHTML += `
                     <li>
                         <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal" style="margin-top: 10px;">
-                            <i class="plus icon"></i> Add Pet
-                        </button>
+                        <i class="plus icon"></i> Add Pet
+                    </button>
                     </li>
                 `;
             }
