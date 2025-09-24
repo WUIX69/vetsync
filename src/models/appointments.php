@@ -183,6 +183,41 @@ class Appointments
         }
     }
 
+    public static function getCompletedByPetUuid($pet_uuid)
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT 
+                    a.*, 
+                    s.name AS service_name, 
+                    s.category_id,
+                    c.name AS category_name,
+                    c.icon AS category_icon,
+                    a.date AS appointment_date,
+                    a.created_at AS appointment_created
+                FROM appointments a
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                LEFT JOIN categories c ON s.category_id = c.id
+                WHERE a.pet_uuid = ? AND a.status = "completed"
+                ORDER BY a.date DESC
+            ');
+            $stmt->execute([$pet_uuid]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+
+            return [
+                'success' => true,
+                'message' => 'Completed appointments fetched successfully.',
+                'data' => $data,
+            ];
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch completed appointments: ' . $e->getMessage(),
+                'data' => []
+            ];
+        }
+    }
+
     public static function reschedule($uuid, $new_date, $reason = '')
     {
         try {

@@ -69,6 +69,73 @@ const petImagePond = FilePond.create(document.querySelector(".pet-pond"), {
     },
 });
 
+// Add this right after the FilePond setup and before the petsAjax function (around line 60-70)
+
+// Original Pet click handler - Use the existing showPetFlyout function
+$(document)
+    .off("click", ".view-pet")
+    .on("click", ".view-pet", function (e) {
+        e.preventDefault();
+        console.log("Pet clicked!");
+
+        const petUuid = $(this).data("pet-uuid");
+        console.log("Pet UUID:", petUuid);
+
+        if (!petUuid) {
+            console.error("No pet UUID found");
+            return;
+        }
+
+        // Use the original showPetFlyout function
+        showPetFlyout(petUuid);
+    });
+
+// Fix the service tab click handler to use the correct data key
+
+// Service tab click handler - load service history
+$(document).on("click", "#service-tab", function (e) {
+    console.log("Service tab clicked!");
+
+    const petFlyout = $("#petFlyout");
+    const petUuid = petFlyout.data("pet-uuid"); // Changed from "current-pet-uuid" to "pet-uuid"
+
+    console.log("Pet UUID for service history:", petUuid);
+
+    if (petUuid) {
+        loadPetServiceHistory(petUuid);
+    } else {
+        console.error("No pet UUID found for service history");
+    }
+});
+
+// Close flyout handler
+$(document).on("click", "#petFlyout .close.icon", function (e) {
+    e.preventDefault();
+    console.log("Close button clicked");
+    $("#petFlyout").flyout("hide");
+});
+
+// Initialize pets when DOM is ready
+$(function () {
+    console.log("DOM ready - Loading pets...");
+
+    // Ensure the pet-items container exists
+    if (petsList.length === 0) {
+        console.error(
+            "Pet items container not found! Make sure .pet-items exists in the HTML."
+        );
+        return;
+    }
+
+    // Load active pets immediately
+    getAllPets("active");
+
+    // Set the active tab
+    currentTab = "active";
+    $(".pet-tab").removeClass("active");
+    $(".pet-tab[data-tab='active']").addClass("active");
+});
+
 // Helper for AJAX to pets API
 function petsAjax(options) {
     let url = apiUrl("dashboard") + "pets.php";
@@ -93,6 +160,14 @@ function getAllPets(archiveStatus = "active") {
     petsList.empty();
     currentTab = archiveStatus;
 
+    // Show loading state
+    petsList.append(`
+        <div class="ui active centered inline loader" style="margin: 2rem 0;"></div>
+        <div style="text-align: center; color: #999; margin-top: 1rem;">
+            Loading pets...
+        </div>
+    `);
+
     petsAjax({
         method: "GET",
         data: {
@@ -100,11 +175,50 @@ function getAllPets(archiveStatus = "active") {
             archive_status: archiveStatus,
         },
         success: function (response) {
+            petsList.empty(); // Clear loading message
+
             if (!response.success) {
-                alert(response.message);
+                petsList.append(`
+                    <div class="ui negative message">
+                        <i class="times circle icon"></i>
+                        ${response.message || "Failed to load pets"}
+                    </div>
+                `);
                 return false;
             }
+
             const pets = response.data || [];
+
+            // Handle empty states
+            if (pets.length === 0) {
+                if (archiveStatus === "active") {
+                    petsList.append(`
+                        <div class="ui placeholder segment" style="text-align: center; padding: 2rem;">
+                            <div class="ui icon header">
+                                <i class="paw icon"></i>
+                                No pets found
+                            </div>
+                            <p>Add your first pet to get started!</p>
+                            <button class="ui primary button add-pet-btn" data-open-modal="#addPetModal">
+                                <i class="plus icon"></i> Add Pet
+                            </button>
+                        </div>
+                    `);
+                } else if (archiveStatus === "archived") {
+                    petsList.append(`
+                        <div class="ui placeholder segment" style="text-align: center; padding: 2rem;">
+                            <div class="ui icon header">
+                                <i class="archive icon"></i>
+                                No archived pets
+                            </div>
+                            <p>Your archived pets will appear here.</p>
+                            <small style="color: #999;">Pets are automatically archived after one year of inactivity.</small>
+                        </div>
+                    `);
+                }
+                return;
+            }
+
             let petsHTML = "";
 
             pets.forEach((pet) => {
@@ -127,16 +241,27 @@ function getAllPets(archiveStatus = "active") {
                 `;
             });
 
-            // Add the "Add Pet" button for active pets
+            // Add the "Add Pet" button for active pets only
             if (archiveStatus === "active") {
                 petsHTML += `
-                    <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal">
-                        <i class="plus icon"></i> Add Pet
-                    </button>
+                    <li>
+                        <button class="ui circular icon button add-pet-btn" data-open-modal="#addPetModal" style="margin-top: 10px;">
+                            <i class="plus icon"></i> Add Pet
+                        </button>
+                    </li>
                 `;
             }
 
             petsList.append(petsHTML);
+        },
+        error: function (xhr, status, error) {
+            petsList.empty();
+            petsList.append(`
+                <div class="ui negative message">
+                    <i class="warning sign icon"></i>
+                    Failed to load pets. Please refresh the page.
+                </div>
+            `);
         },
     });
 }
@@ -434,181 +559,330 @@ function getAllArchivedPets() {
         });
 }
 
-$(function () {
+// Update the Service tab click handler with better debugging
+function loadPetServiceHistory(petUuid) {
+    console.log("Loading service history for pet:", petUuid);
+    const container = $(".service-history-container");
+
+    if (container.length === 0) {
+        console.error("Service history container not found");
+        return;
+    }
+
+    // Show clean loading state
+    container.html(`
+        <div style="text-align: center; padding: 3rem;">
+            <div class="ui active inline loader"></div>
+            <div style="color: #666; margin-top: 1rem; font-size: 1rem;">Loading service history...</div>
+        </div>
+    `);
+
+    // Make API call
+    $.ajax({
+        url: apiUrl("dashboard") + "pet-service-history.php",
+        method: "GET",
+        data: { pet_uuid: petUuid },
+        dataType: "json",
+        success: function (response) {
+            console.log("Service history response:", response);
+            console.log("Services found:", response.data.length);
+
+            if (response.success && response.data.length > 0) {
+                // Create clean service history HTML
+                let historyHTML = `
+                    <div style="padding: 1rem 0;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: #2c3e50; margin: 0; font-size: 1.1rem; font-weight: 600;">
+                                <i class="heartbeat icon" style="color: #21ba45; margin-right: 0.5rem;"></i>
+                                Completed Services
+                            </h4>
+                        </div>
+                `;
+
+                response.data.forEach((service, index) => {
+                    const serviceDate = new Date(
+                        service.appointment_date
+                    ).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                    });
+
+                    historyHTML += `
+                        <div style="background: white; border: 1px solid #e1e8ed; border-radius: 8px; margin-bottom: 1rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <div style="padding: 1.2rem 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.8rem;">
+                                    <div style="flex: 1;">
+                                        <h5 style="margin: 0; color: #2c3e50; font-size: 1.1rem; font-weight: 600;">
+                                            ${service.service_name}
+                                        </h5>
+                                        <div style="color: #7f8c8d; font-size: 0.9rem; margin-top: 0.3rem;">
+                                            ${service.category_name}
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.8rem;">
+                                        <div style="font-size: 0.9rem; color: #666;">
+                                            ${serviceDate}
+                                        </div>
+                                        <div style="background: #e8f5e8; color: #27ae60; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500;">
+                                            ✓ Completed
+                                        </div>
+                                    </div>
+                                </div>
+                                ${
+                                    service.note
+                                        ? `
+                                    <div style="background: #f8f9fa; padding: 0.8rem; border-radius: 6px; border-left: 3px solid #21ba45; margin-top: 0.8rem;">
+                                        <div style="font-size: 0.9rem; color: #555; line-height: 1.4;">
+                                            <strong style="color: #21ba45;">Note:</strong> ${service.note}
+                                        </div>
+                                    </div>
+                                `
+                                        : ""
+                                }
+                            </div>
+                        </div>
+                    `;
+                });
+
+                historyHTML += `</div>`;
+                container.html(historyHTML);
+            } else {
+                // No service history found - clean empty state
+                container.html(`
+                    <div style="text-align: center; padding: 3rem 2rem;">
+                        <div style="color: #bdc3c7; margin-bottom: 1.5rem;">
+                            <i class="clipboard outline icon" style="font-size: 3rem;"></i>
+                        </div>
+                        <div style="color: #7f8c8d; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem;">
+                            No Service History
+                        </div>
+                        <div style="color: #95a5a6; font-size: 0.95rem; line-height: 1.5;">
+                            Completed services will appear here
+                        </div>
+                    </div>
+                `);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error loading service history:", error);
+            container.html(`
+                <div style="text-align: center; padding: 3rem 2rem;">
+                    <div style="color: #e74c3c; margin-bottom: 1rem;">
+                        <i class="exclamation triangle icon" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <div style="color: #e74c3c; font-size: 1rem; font-weight: 500;">
+                        Error loading service history
+                    </div>
+                </div>
+            `);
+        },
+    });
+}
+
+// Helper function to get appropriate icons for categories
+function getCategoryIcon(categoryName) {
+    const iconMap = {
+        vaccination: "syringe",
+        surgery: "cut",
+        treatment: "first aid",
+        checkup: "stethoscope",
+        dental: "tooth",
+        grooming: "shower",
+        emergency: "ambulance",
+        consultation: "user md",
+    };
+
+    const category = categoryName.toLowerCase();
+    return iconMap[category] || "clipboard";
+}
+
+// Validate and submit pet form (add/edit) - EXACT SAME PATTERN AS SERVICES
+petModalForm.form({
+    fields: {
+        name: {
+            identifier: "name",
+            rules: [
+                {
+                    type: "empty",
+                    prompt: "Please enter a pet name",
+                },
+            ],
+        },
+        dob: {
+            identifier: "dob",
+            rules: [
+                {
+                    type: "empty",
+                    prompt: "Please enter date of birth",
+                },
+            ],
+        },
+        species: {
+            identifier: "species",
+            rules: [
+                {
+                    type: "empty",
+                    prompt: "Please enter species",
+                },
+            ],
+        },
+        breed: {
+            identifier: "breed",
+            rules: [
+                {
+                    type: "empty",
+                    prompt: "Please enter breed",
+                },
+            ],
+        },
+    },
+    inline: true,
+    on: "submit",
+    onSuccess: function (event, fields) {
+        event.preventDefault();
+        const $submitBtn = $(this).find("button[type=submit]");
+        const formData = new FormData(petModalForm[0]);
+
+        let action = "store";
+        if (formData.get("uuid")) action = "update";
+        formData.append("action", action);
+
+        // Collect all FilePond serverIds (folder names)
+        let files = petImagePond.getFiles().map((f) => f.serverId);
+        formData.set("files", files.join(","));
+        formData.delete("file");
+
+        petsAjax({
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $submitBtn.addClass("loading");
+            },
+            success: function (response) {
+                alert(response.message);
+                if (response.success) {
+                    getAllPets(); // Refresh the pets data
+                    isPondRender = true; // Set the flag BEFORE hiding the modal
+                    petModal.modal("hide");
+                }
+            },
+            complete: function () {
+                $submitBtn.removeClass("loading");
+            },
+        });
+    },
+});
+
+// Tab switching
+$("body").on("click", ".pet-tab", function (e) {
+    e.preventDefault();
+    const tab = $(this).data("tab");
+
+    // Update active tab
+    $(".pet-tab").removeClass("active");
+    $(this).addClass("active");
+
+    // Load pets for selected tab
+    const archiveStatus = tab === "archived" ? "archived" : "active";
+    getAllPets(archiveStatus);
+});
+
+// Mark as deceased button in flyout
+$("body").on("click", "#deceasedPetBtn", function () {
+    const petUuid = $("#petFlyout").data("pet-uuid");
+    if (!petUuid) return;
+    archivePet(petUuid, "deceased");
+});
+
+// Unarchive button in flyout
+$("body").on("click", "#unarchivePetBtn", function () {
+    const petUuid = $("#petFlyout").data("pet-uuid");
+    if (!petUuid) return;
+    unarchivePet(petUuid);
+});
+
+// Add these button click handlers after the other event handlers (around line 115)
+
+// Delete pet button handler
+$(document).on("click", "#deletePetBtn", function (e) {
+    e.preventDefault();
+    console.log("Delete pet button clicked!");
+
+    const petFlyout = $("#petFlyout");
+    const petUuid = petFlyout.data("pet-uuid");
+
+    console.log("Pet UUID for deletion:", petUuid);
+
+    if (petUuid) {
+        deletePet(petUuid);
+    } else {
+        console.error("No pet UUID found for deletion");
+        alert(
+            "Error: Could not find pet information. Please refresh and try again."
+        );
+    }
+});
+
+// Update pet button handler
+$(document).on("click", "#updatePetBtn", function (e) {
+    e.preventDefault();
+    console.log("Update pet button clicked!");
+
+    const petFlyout = $("#petFlyout");
+    const petUuid = petFlyout.data("pet-uuid");
+
+    console.log("Pet UUID for update:", petUuid);
+
+    if (petUuid) {
+        // Hide the flyout first
+        petFlyout.flyout("hide");
+
+        // Then get the pet data and populate the edit modal
+        getSinglePet(petUuid);
+
+        // Show the pet modal for editing
+        petModal.modal("show");
+    } else {
+        console.error("No pet UUID found for update");
+        alert(
+            "Error: Could not find pet information. Please refresh and try again."
+        );
+    }
+});
+
+// Restore pet button handler (for archived pets)
+$(document).on("click", "#unarchivePetBtn", function (e) {
+    e.preventDefault();
+    console.log("Restore pet button clicked!");
+
+    const petFlyout = $("#petFlyout");
+    const petUuid = petFlyout.data("pet-uuid");
+
+    console.log("Pet UUID for restore:", petUuid);
+
+    if (petUuid) {
+        unarchivePet(petUuid);
+    } else {
+        console.error("No pet UUID found for restore");
+        alert(
+            "Error: Could not find pet information. Please refresh and try again."
+        );
+    }
+});
+
+// Initialize pets when page loads
+$(document).ready(function () {
+    console.log("Initializing My Pets section...");
+
+    // Load active pets on page load
     getAllPets("active");
 
-    // View pet details on click
-    $("body").on("click", ".view-pet", function (e) {
-        const petUuid = $(this).data("pet-uuid");
-        showPetFlyout(petUuid);
-    });
+    // Set active tab
+    $(".pet-tab[data-tab='active']").addClass("active");
+    $(".pet-tab[data-tab='archived']").removeClass("active");
 
-    // Open modal for adding a new pet
-    $("body").on("click", ".add-pet-btn", function () {
-        // Reset form and FilePond
-        if (
-            petModalForm.length &&
-            typeof petModalForm[0].reset === "function"
-        ) {
-            petModalForm[0].reset();
-        } else {
-            // fallback: clear all input fields manually
-            petModalForm.find("input, textarea, select").each(function () {
-                if ($(this).is(":checkbox") || $(this).is(":radio")) {
-                    $(this).prop("checked", false);
-                } else {
-                    $(this).val("");
-                }
-            });
-        }
-        petModalForm.find('[name="uuid"]').val(""); // Clear uuid for new pet
-        petModal.modal("show");
-    });
-
-    // Handle delete (if you add a delete button in the UI)
-    $("body").on("click", ".delete-pet-btn", function (e) {
-        e.stopPropagation();
-        const petUuid = $(this).closest(".item").data("pet-uuid");
-        deletePet(petUuid);
-    });
-
-    // --- Flyout Update and Delete Handlers ---
-
-    // Update button in flyout: open modal with pet data for editing
-    $("body").on("click", "#updatePetBtn", function () {
-        const petUuid = $("#petFlyout").data("pet-uuid");
-        if (!petUuid) return;
-        // Fetch pet data and open modal for editing
-        getSinglePet(petUuid);
-        // Hide the flyout
-        $("#petFlyout").flyout("hide");
-    });
-
-    // Delete button in flyout: delete pet
-    $("body").on("click", "#deletePetBtn", function () {
-        const petUuid = $("#petFlyout").data("pet-uuid");
-        if (!petUuid) return;
-        deletePet(petUuid);
-    });
-
-    // Remove files from FilePond when modal is hidden
-    petModal.modal("setting", "onHide", function () {
-        isModalHide = true;
-        if (!isPondRender) {
-            // Delete files from storage and FilePond
-            petImagePond.removeFiles({ revert: true });
-        } else {
-            // Delete files from FilePond UI
-            petImagePond.removeFiles();
-            // Reset the flag for next time
-            isPondRender = false;
-        }
-    });
-
-    // Validate and submit pet form (add/edit) - EXACT SAME PATTERN AS SERVICES
-    petModalForm.form({
-        fields: {
-            name: {
-                identifier: "name",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please enter a pet name",
-                    },
-                ],
-            },
-            dob: {
-                identifier: "dob",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please enter date of birth",
-                    },
-                ],
-            },
-            species: {
-                identifier: "species",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please enter species",
-                    },
-                ],
-            },
-            breed: {
-                identifier: "breed",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please enter breed",
-                    },
-                ],
-            },
-        },
-        inline: true,
-        on: "submit",
-        onSuccess: function (event, fields) {
-            event.preventDefault();
-            const $submitBtn = $(this).find("button[type=submit]");
-            const formData = new FormData(petModalForm[0]);
-
-            let action = "store";
-            if (formData.get("uuid")) action = "update";
-            formData.append("action", action);
-
-            // Collect all FilePond serverIds (folder names)
-            let files = petImagePond.getFiles().map((f) => f.serverId);
-            formData.set("files", files.join(","));
-            formData.delete("file");
-
-            petsAjax({
-                method: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function () {
-                    $submitBtn.addClass("loading");
-                },
-                success: function (response) {
-                    alert(response.message);
-                    if (response.success) {
-                        getAllPets(); // Refresh the pets data
-                        isPondRender = true; // Set the flag BEFORE hiding the modal
-                        petModal.modal("hide");
-                    }
-                },
-                complete: function () {
-                    $submitBtn.removeClass("loading");
-                },
-            });
-        },
-    });
-
-    // Tab switching
-    $("body").on("click", ".pet-tab", function (e) {
-        e.preventDefault();
-        const tab = $(this).data("tab");
-
-        // Update active tab
-        $(".pet-tab").removeClass("active");
-        $(this).addClass("active");
-
-        // Load pets for selected tab
-        const archiveStatus = tab === "archived" ? "archived" : "active";
-        getAllPets(archiveStatus);
-    });
-
-    // Mark as deceased button in flyout
-    $("body").on("click", "#deceasedPetBtn", function () {
-        const petUuid = $("#petFlyout").data("pet-uuid");
-        if (!petUuid) return;
-        archivePet(petUuid, "deceased");
-    });
-
-    // Unarchive button in flyout
-    $("body").on("click", "#unarchivePetBtn", function () {
-        const petUuid = $("#petFlyout").data("pet-uuid");
-        if (!petUuid) return;
-        unarchivePet(petUuid);
-    });
+    console.log("My Pets initialized successfully");
 });
