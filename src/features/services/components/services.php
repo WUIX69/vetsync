@@ -13,7 +13,8 @@
         justify-content: end;
         gap: 1rem;
         align-items: center;
-        margin-bottom: 2.3rem;
+        margin-bottom: 1rem;
+        /* Reduced from 2.3rem */
         flex-wrap: nowrap;
     }
 

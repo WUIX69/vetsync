@@ -2,7 +2,8 @@
     /*----------- MAIN (Products) -----------*/
     main section.products {
         background: var(--color-background);
-        padding-top: 1rem;
+        padding-top: 0;
+        /* Remove extra top padding */
         padding-bottom: 3rem;
     }
 
@@ -38,7 +39,8 @@
         justify-content: end;
         gap: 1rem;
         align-items: center;
-        margin-bottom: 2.3rem;
+        margin-bottom: 1rem;
+        /* Reduced from 2.3rem */
         flex-wrap: nowrap;
     }
 
@@ -281,17 +283,15 @@
 <!-- Products Section -->
 <section class="products">
     <div class="container-xl">
-        <div class="products-title">
-            <!-- Only section-title if its /landing -->
-            <?php if (uriAppPath('landing')): ?>
+        <?php if (uriAppPath('landing')): ?>
+            <div class="products-title">
                 <div class="section-title">
                     <span class="sub-title">Products</span>
                     <h2>What We Offer</h2>
                     <p>Quality pet products for your beloved companions</p>
                 </div>
-            <?php endif; ?>
-
-        </div>
+            </div>
+        <?php endif; ?>
 
         <!-- Header with filters -->
         <div class="header">
