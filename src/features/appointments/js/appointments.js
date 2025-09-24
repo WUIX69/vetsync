@@ -1013,3 +1013,217 @@ $(document).on("click", "#printReport", function () {
     printWindow.document.close();
     printWindow.print();
 });
+
+// Handle table-based action buttons (NEW HANDLERS)
+$(document).on("click", ".confirm-appointment", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    if (
+        confirm(
+            "Mark this appointment as confirmed? This will move it to the confirmed list."
+        )
+    ) {
+        updateAppointmentStatus(uuid, "accepted");
+    }
+});
+
+$(document).on("click", ".complete-appointment", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    if (
+        confirm(
+            "Mark this appointment as completed? This will move it to the completed list."
+        )
+    ) {
+        updateAppointmentStatus(uuid, "completed");
+    }
+});
+
+$(document).on("click", ".reschedule-appointment", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    // Get appointment info from the table row
+    const $row = $(this).closest("tr");
+    const petName = $row.find("td:nth-child(2)").text().trim();
+    const serviceName = $row.find("td:nth-child(4) .fw-bold").text().trim();
+    const appointmentDate = $row.find("td:nth-child(1)").text().trim();
+
+    // Open reschedule modal
+    openRescheduleModalForTable(uuid, petName, serviceName, appointmentDate);
+});
+
+$(document).on("click", ".cancel-appointment", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    // Get appointment info from the table row
+    const $row = $(this).closest("tr");
+    const petName = $row.find("td:nth-child(2)").text().trim();
+    const serviceName = $row.find("td:nth-child(4) .fw-bold").text().trim();
+
+    // Open cancellation modal
+    openCancellationModalForTable(uuid, petName, serviceName);
+});
+
+$(document).on("click", ".view-details", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    // For now, just show an alert. You can implement a details modal later
+    alert(`View details for appointment: ${uuid}`);
+});
+
+$(document).on("click", ".delete-appointment", function (e) {
+    e.preventDefault();
+    const uuid = $(this).data("uuid");
+
+    const $row = $(this).closest("tr");
+    const petName = $row.find("td:nth-child(2)").text().trim();
+
+    if (
+        confirm(
+            `Are you sure you want to permanently delete the appointment for "${petName}"? This action cannot be undone.`
+        )
+    ) {
+        deleteAppointment(uuid);
+    }
+});
+
+// Function to open reschedule modal for table rows
+function openRescheduleModalForTable(uuid, petName, serviceName, currentDate) {
+    // Populate modal with current appointment details
+    $("#rescheduleUuid").val(uuid);
+
+    // Update modal content - you may need to adjust these selectors based on your modal structure
+    $("#rescheduleModal .header").text(`Reschedule Appointment - ${petName}`);
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split("T")[0];
+    $("#rescheduleDate").attr("min", today).val("");
+    $("#rescheduleReason").val("");
+
+    // Show modal
+    $("#rescheduleModal").modal("show");
+}
+
+// Function to open cancellation modal for table rows
+function openCancellationModalForTable(uuid, petName, serviceName) {
+    // Set the UUID for cancellation
+    appointmentToCancel = uuid;
+
+    // Clear previous reason
+    $("#cancelReason").val("");
+
+    // Update modal title
+    $("#cancellationModal .header").html(`
+        <i class="times circle icon"></i>
+        Cancel Appointment - ${petName}
+    `);
+
+    // Show modal
+    $("#cancellationModal").modal("show");
+}
+
+// Function to handle appointment deletion
+function deleteAppointment(uuid) {
+    $.ajax({
+        url: "/src/features/appointments/api/appointments.php",
+        method: "POST",
+        data: {
+            action: "delete",
+            uuid: uuid,
+        },
+        dataType: "json",
+        success: function (response) {
+            if (response.success) {
+                alert("Appointment deleted successfully");
+                getAllAppointments(); // Reload appointments
+            } else {
+                alert("Failed to delete appointment: " + response.message);
+            }
+        },
+        error: function () {
+            alert("Failed to delete appointment");
+        },
+    });
+}
+
+// Handle reschedule modal confirmation (update existing handler)
+$(document).on("click", "#confirmReschedule", function () {
+    const uuid = $("#rescheduleUuid").val();
+    const newDate = $("#rescheduleDate").val();
+    const reason = $("#rescheduleReason").val();
+
+    if (!newDate) {
+        alert("Please select a new date");
+        return;
+    }
+
+    if (!reason) {
+        alert("Please provide a reason for rescheduling");
+        return;
+    }
+
+    $.ajax({
+        url: "/src/features/appointments/api/appointments.php",
+        method: "POST",
+        data: {
+            action: "reschedule",
+            uuid: uuid,
+            new_date: newDate,
+            reason: reason,
+        },
+        dataType: "json",
+        success: function (response) {
+            if (response.success) {
+                $("#rescheduleModal").modal("hide");
+                alert("Appointment rescheduled successfully");
+                getAllAppointments(); // Reload appointments
+            } else {
+                alert("Failed to reschedule appointment: " + response.message);
+            }
+        },
+        error: function () {
+            alert("Failed to reschedule appointment");
+        },
+    });
+});
+
+// Handle cancellation modal confirmation (update existing handler)
+$(document).on("click", "#confirmCancel", function () {
+    const reason = $("#cancelReason").val().trim();
+
+    if (!reason) {
+        alert("Please provide a reason for cancellation");
+        return;
+    }
+
+    if (appointmentToCancel) {
+        $.ajax({
+            url: "/src/features/appointments/api/appointments.php",
+            method: "POST",
+            data: {
+                action: "update_status",
+                uuid: appointmentToCancel,
+                status: "cancelled",
+                cancellation_reason: reason,
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    $("#cancellationModal").modal("hide");
+                    alert("Appointment cancelled successfully");
+                    getAllAppointments(); // Reload appointments
+                } else {
+                    alert("Failed to cancel appointment: " + response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to cancel appointment");
+            },
+        });
+    }
+});
