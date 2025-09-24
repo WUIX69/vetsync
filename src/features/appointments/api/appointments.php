@@ -79,12 +79,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
 
     // Validate required fields
     $serviceUuid = $_POST['service_uuid'] ?? null;
+    $customServiceRequest = $_POST['custom_service_request'] ?? null;
     $petUuid = $_POST['pet_uuid'] ?? null;
     $date = $_POST['date'] ?? null;
 
     if (!$serviceUuid) {
         echo json_encode(['success' => false, 'message' => 'Please select a service.']);
         exit;
+    }
+
+    // Handle "others" service option
+    if ($serviceUuid === 'others') {
+        if (empty($customServiceRequest)) {
+            echo json_encode(['success' => false, 'message' => 'Please describe the custom service you need.']);
+            exit;
+        }
+        // For "others", we'll set service_uuid to null and store the custom request in the note
+        $serviceUuid = null;
     }
 
     if (!$petUuid) {
@@ -109,13 +120,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
         exit;
     }
 
+    $note = $_POST['special_request'] ?? null;
+
+    // If it's a custom service, prepend the custom request to the note
+    if ($_POST['service_uuid'] === 'others' && !empty($customServiceRequest)) {
+        $note = "CUSTOM SERVICE REQUEST: " . $customServiceRequest .
+            (!empty($note) ? "\n\nSpecial Instructions: " . $note : "");
+    }
+
     $data = [
         'uuid' => uuid(),
-        'service_uuid' => $serviceUuid,
+        'service_uuid' => $serviceUuid, // This will be null for "others"
         'user_uuid' => $userData['uuid'],
         'pet_uuid' => $petUuid,
         'date' => $date,
-        'note' => $_POST['special_request'] ?? null,
+        'note' => $note,
     ];
 
     $response = Appointments::store($data);

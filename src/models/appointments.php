@@ -56,9 +56,9 @@ class Appointments
     public static function store($data = [])
     {
         try {
-            // Validate required fields
+            // Validate required fields - allow service_uuid to be null for custom services
             if (
-                empty($data['uuid']) || empty($data['service_uuid']) || empty($data['user_uuid']) ||
+                empty($data['uuid']) || empty($data['user_uuid']) ||
                 empty($data['pet_uuid']) || empty($data['date'])
             ) {
                 throw new Exception('Missing required appointment data');
@@ -72,7 +72,7 @@ class Appointments
 
             $stmt->execute([
                 $data['uuid'],
-                $data['service_uuid'],
+                $data['service_uuid'], // This can be null for custom services
                 $data['user_uuid'],
                 $data['pet_uuid'],
                 $data['date'],

@@ -143,6 +143,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                             })
                                         );
                                     });
+                                    // Add "Others" option at the end
+                                    $serviceDropdown.append(
+                                        $("<option>", {
+                                            value: "others",
+                                            text: "Others (Custom Service Request)",
+                                        })
+                                    );
                                     if (
                                         window.selectedServiceUuids &&
                                         window.selectedServiceUuids.length
@@ -166,6 +173,31 @@ document.addEventListener("DOMContentLoaded", function () {
                         $('input[name="date"]').on("change", function () {
                             validateDateInput(this);
                         });
+
+                        // Add change event handler for service dropdown
+                        $(document).on(
+                            "change",
+                            "#bookNowServiceDropdown",
+                            function () {
+                                const selectedValue = $(this).val();
+                                const $customServiceField = $(
+                                    "#customServiceField"
+                                );
+                                const $customTextarea =
+                                    $customServiceField.find(
+                                        'textarea[name="custom_service_request"]'
+                                    );
+
+                                if (selectedValue === "others") {
+                                    $customServiceField.show();
+                                    $customTextarea.prop("required", true);
+                                } else {
+                                    $customServiceField.hide();
+                                    $customTextarea.prop("required", false);
+                                    $customTextarea.val(""); // Clear the field when hidden
+                                }
+                            }
+                        );
                     }
                 },
             })
@@ -204,6 +236,16 @@ $(function () {
                     {
                         type: "empty",
                         prompt: "Please select a service",
+                    },
+                ],
+            },
+            // Add validation for custom service request
+            custom_service_request: {
+                identifier: "custom_service_request",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please describe the custom service you need",
                     },
                 ],
             },

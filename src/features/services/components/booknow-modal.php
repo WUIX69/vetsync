@@ -81,6 +81,15 @@ $userFullName = $currentUser['name'] ?? '';
                         <!-- Services will be loaded here by JS -->
                     </select>
                 </div>
+
+                <!-- Add custom service request field (hidden by default) -->
+                <div class="field" id="customServiceField" style="display: none;">
+                    <label for="custom_service_request">Custom Service Request</label>
+                    <textarea rows="3" name="custom_service_request"
+                        placeholder="Please describe the service you need in detail..."></textarea>
+                    <small class="text-muted">Please provide detailed information about the service you require</small>
+                </div>
+
                 <div class="field">
                     <label for="special_request">Special Request</label>
                     <textarea rows="4" name="special_request"
