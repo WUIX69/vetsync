@@ -1,281 +1,156 @@
 <style>
     /**
-     * Reservations Navigation START
+     * Reservations Table Layout (matching appointments)
      */
-    main section.reservations .navigation {
-        padding: 1.6rem !important;
-    }
-
-    main section.reservations .navigation .nav-pills {
-        background: var(--color-white);
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        margin: 0;
-    }
-
-    main section.reservations .navigation .nav-pills .nav-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.7rem;
-        padding: 1rem 1.5rem;
-        border-radius: 1rem;
-        transition: all 0.3s ease;
+    .header-section {
         text-align: center;
-        cursor: pointer;
-        width: 100%;
-        color: var(--color-dark);
+        padding: 2rem 0;
     }
 
-    main section.reservations .navigation .nav-pills .nav-link:hover {
-        background-color: rgba(0, 0, 0, .03);
-    }
-
-    main section.reservations .navigation .nav-pills .nav-link.active {
-        background-color: var(--color-dark-variant);
-        color: var(--color-white);
-        box-shadow: 0 4px 15px rgba(33, 186, 69, 0.2);
-    }
-
-    /**
-     * Reservations Cards START
-     */
-    .reservation-card {
-        background: var(--color-white);
-        border-radius: 1rem;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        border-left: 4px solid var(--color-primary);
-    }
-
-    .reservation-card.pending {
-        border-left-color: #f39c12;
-    }
-
-    .reservation-card.accepted {
-        border-left-color: #27ae60;
-    }
-
-    .reservation-card.rejected {
-        border-left-color: #e74c3c;
-    }
-
-    .reservation-card.completed {
-        border-left-color: #3498db;
-    }
-
-    .reservation-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .reservation-status {
-        padding: 0.4rem 0.8rem;
-        border-radius: 0.5rem;
-        font-size: 0.8rem;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    .reservation-status.pending {
-        background: #f39c12;
-        color: white;
-    }
-
-    .reservation-status.accepted {
-        background: #27ae60;
-        color: white;
-    }
-
-    .reservation-status.rejected {
-        background: #e74c3c;
-        color: white;
-    }
-
-    .reservation-status.completed {
-        background: #3498db;
-        color: white;
-    }
-
-    .reservation-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .reservation-products {
-        margin-bottom: 1rem;
-    }
-
-    .reservation-products h5 {
-        margin-bottom: 0.5rem;
-        color: var(--color-dark);
-    }
-
-    .product-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem;
-        background: var(--color-light);
-        border-radius: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .reservation-actions {
-        display: flex;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    .reservation-actions .btn {
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-        border: none;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: all 0.3s ease;
-    }
-
-    .btn-accept {
-        background: #27ae60;
-        color: white;
-    }
-
-    .btn-reject {
-        background: #e74c3c;
-        color: white;
-    }
-
-    .btn-accept:hover {
-        background: #219a52;
-    }
-
-    .btn-reject:hover {
-        background: #c0392b;
-    }
-
-    .btn-complete {
-        background: #3498db;
-        color: white;
-    }
-
-    .btn-complete:hover {
-        background: #2980b9;
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 3rem;
-        color: var(--color-dark-variant);
-    }
-
-    .empty-state i {
-        font-size: 4rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-
-    /**
-     * Rejection Modal START
-     */
-    .rejection-modal .content {
-        padding: 2rem;
-    }
-
-    .rejection-modal textarea {
-        width: 100%;
-        min-height: 100px;
-        border: 1px solid #ddd;
-        border-radius: 0.5rem;
-        padding: 1rem;
-        resize: vertical;
-    }
-
-    /* Modern Reservation Cards Design */
-    .reservation-card.modern {
-        background: var(--color-white);
-        border-radius: 16px;
-        padding: 0;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border: 1px solid #f0f0f0;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .reservation-card.modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-    }
-
-    .reservation-card.modern.pending {
-        border-top: 4px solid #f39c12;
-    }
-
-    .reservation-card.modern.accepted {
-        border-top: 4px solid #27ae60;
-    }
-
-    .reservation-card.modern.rejected {
-        border-top: 4px solid #e74c3c;
-    }
-
-    /* Header Section */
-    .reservation-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem;
-        border-bottom: 1px solid #f8f9fa;
-        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    }
-
-    .customer-info {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        font-size: 1rem;
-    }
-
-    .customer-details h4 {
-        margin: 0;
+    .header-section h1 {
+        margin: 0 0 0.5rem 0;
         color: #2c3e50;
-        font-size: 1.1rem;
         font-weight: 600;
     }
 
-    .customer-email {
-        color: #7f8c8d;
-        font-size: 0.85rem;
+    .header-section p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 1.1rem;
     }
 
-    .status-badge {
-        display: flex;
-        align-items: center;
+    /* Navigation Pills */
+    .nav-pills {
+        display: flex !important;
+        justify-content: center !important;
+        background: #f8f9fa;
+        border-radius: 50px;
+        padding: 0.5rem;
+        margin-bottom: 2rem;
         gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        border-radius: 25px;
-        font-size: 0.85rem;
+    }
+
+    .nav-pills .nav-link {
+        border-radius: 25px !important;
+        padding: 0.75rem 1.5rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        border: none !important;
+        background: transparent !important;
+        color: #6c757d !important;
+    }
+
+    .nav-pills .nav-link.active {
+        background: #007bff !important;
+        color: white !important;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3) !important;
+    }
+
+    .nav-pills .nav-link:hover {
+        background: #e9ecef !important;
+        color: #495057 !important;
+    }
+
+    .nav-pills .nav-link.active:hover {
+        background: #0056b3 !important;
+        color: white !important;
+    }
+
+    /* Tab Content */
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    /* Search Input */
+    .search-container {
+        margin-bottom: 1rem;
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: 400px;
+        padding: 0.75rem 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    /* Table Styles */
+    .reservations-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+
+    .reservations-table th {
+        background: #f8f9fa;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #dee2e6;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .reservations-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: top;
+        font-size: 0.95rem;
+    }
+
+    .reservations-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    /* Column widths */
+    .reservations-table th:nth-child(1) {
+        width: 12%;
+    }
+
+    /* Date */
+    .reservations-table th:nth-child(2) {
+        width: 18%;
+    }
+
+    /* Customer */
+    .reservations-table th:nth-child(3) {
+        width: 25%;
+    }
+
+    /* Products */
+    .reservations-table th:nth-child(4) {
+        width: 12%;
+    }
+
+    /* Amount */
+    .reservations-table th:nth-child(5) {
+        width: 10%;
+    }
+
+    /* Status */
+    .reservations-table th:nth-child(6) {
+        width: 23%;
+    }
+
+    /* Actions */
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -299,532 +174,347 @@
         border: 1px solid #e17055;
     }
 
-    /* Details Section */
-    .reservation-details {
-        padding: 1.5rem;
-        border-bottom: 1px solid #f8f9fa;
+    .status-badge.completed {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #74c0fc;
     }
 
-    .detail-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-
-    .detail-item {
+    /* Action Buttons */
+    .action-buttons {
         display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        background: #f8f9fa;
-        border-radius: 8px;
-    }
-
-    .detail-item i {
-        color: #6c757d;
-        font-size: 1.2rem;
-    }
-
-    .detail-item label {
-        font-size: 0.75rem;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: block;
-        margin: 0;
-    }
-
-    .detail-item value {
-        font-weight: 600;
-        color: #2c3e50;
-        font-size: 0.9rem;
-    }
-
-    /* Products Section */
-    .products-section,
-    .notes-section {
-        padding: 1.5rem;
-        border-bottom: 1px solid #f8f9fa;
-    }
-
-    .section-title {
-        display: flex;
-        align-items: center;
         gap: 0.5rem;
-        margin: 0 0 1rem 0;
-        color: #2c3e50;
-        font-size: 1rem;
-        font-weight: 600;
+        align-items: center;
+        justify-content: center;
     }
 
-    .section-title i {
-        color: #6c757d;
+    .action-buttons .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-transform: none;
+        white-space: nowrap;
     }
 
-    .products-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
+    .btn-accept {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-accept:hover {
+        background: #218838;
+    }
+
+    .btn-reject {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-reject:hover {
+        background: #c82333;
+    }
+
+    .btn-complete {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .btn-complete:hover {
+        background: #138496;
+    }
+
+    /* Product Items */
+    .product-list {
+        max-height: 120px;
+        overflow-y: auto;
     }
 
     .product-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 8px;
-        border-left: 3px solid #007bff;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.85rem;
     }
 
-    .product-info {
-        flex: 1;
+    .product-item:last-child {
+        border-bottom: none;
     }
 
     .product-name {
         font-weight: 600;
         color: #2c3e50;
-        margin-bottom: 0.25rem;
     }
 
     .product-details {
-        display: flex;
-        gap: 1rem;
-        font-size: 0.85rem;
         color: #6c757d;
-    }
-
-    .product-price {
-        font-weight: 700;
-        color: #27ae60;
-        font-size: 1.1rem;
-    }
-
-    /* Notes Section */
-    .notes-text {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 8px;
-        border-left: 3px solid #17a2b8;
-        margin: 0;
-        color: #495057;
-        line-height: 1.5;
-    }
-
-    /* Rejection Reason */
-    .rejection-reason {
-        padding: 1.5rem;
-        background: #f8d7da;
-        border-bottom: 1px solid #f5c6cb;
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .rejection-reason i {
-        color: #721c24;
         margin-top: 0.25rem;
     }
 
-    .rejection-reason strong {
-        color: #721c24;
-    }
-
-    .rejection-reason p {
-        margin: 0.5rem 0 0 0;
-        color: #721c24;
-    }
-
-    /* Footer Section */
-    .reservation-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.5rem;
-        background: #f8f9fa;
-    }
-
-    .created-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.85rem;
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
         color: #6c757d;
     }
 
-    /* Action Buttons */
-    .reservation-actions {
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state h3 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Customer Info */
+    .customer-info {
         display: flex;
+        align-items: center;
         gap: 0.75rem;
     }
 
-    .reservation-actions .btn {
+    .customer-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        border: none;
-        cursor: pointer;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
         font-size: 0.9rem;
+    }
+
+    .customer-details {
+        flex: 1;
+    }
+
+    .customer-name {
         font-weight: 600;
-        transition: all 0.3s ease;
-        text-transform: none;
+        color: #2c3e50;
+        margin-bottom: 0.25rem;
     }
 
-    .btn-accept {
-        background: #27ae60;
-        color: white;
+    .customer-email {
+        color: #6c757d;
+        font-size: 0.85rem;
     }
 
-    .btn-accept:hover {
-        background: #219a52;
-        transform: translateY(-1px);
+    /* Amount Display */
+    .amount {
+        font-weight: 700;
+        color: #28a745;
+        font-size: 1.1rem;
     }
 
-    .btn-reject {
-        background: #e74c3c;
-        color: white;
-    }
-
-    .btn-reject:hover {
-        background: #c0392b;
-        transform: translateY(-1px);
-    }
-
+    /* Status Info */
     .status-info {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         color: #6c757d;
         font-style: italic;
-    }
-
-    /* Tab Content */
-    .tab-content {
-        display: none;
-        padding: 1rem 0;
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    .tab-content h3 {
-        margin: 0 0 1.5rem 0;
-        color: #2c3e50;
-        font-weight: 600;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #007bff;
-        display: inline-block;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .detail-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .reservation-footer {
-            flex-direction: column;
-            gap: 1rem;
-            align-items: stretch;
-        }
-
-        .reservation-actions {
-            justify-content: center;
-        }
-
-        .product-item {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-    }
-
-    .product-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.75rem;
-        background: #f8f9fa;
-        border-radius: 0.5rem;
-        margin-bottom: 0.5rem;
-        border: 1px solid #e9ecef;
-    }
-
-    .product-details {
-        flex: 1;
-    }
-
-    .product-name {
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 0.25rem;
-    }
-
-    .product-info {
-        display: flex;
-        gap: 1rem;
         font-size: 0.85rem;
-        color: #6c757d;
-    }
-
-    .product-info .quantity {
-        color: #495057;
-    }
-
-    .product-info .price {
-        color: #28a745;
-        font-weight: 500;
-    }
-
-    .product-info .subtotal {
-        color: #007bff;
-        font-weight: 600;
-    }
-
-    .reservation-info {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 0.5rem;
-    }
-
-    .reservation-info div {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .reservation-info strong {
-        color: #495057;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
 
     .ready-status {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background: #d4edda;
-        border: 1px solid #c3e6cb;
-        border-radius: 0.5rem;
         color: #155724;
-    }
-
-    .summary-card {
-        background: var(--color-white);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border: 1px solid #f0f0f0;
-    }
-
-    .summary-header {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f8f9fa;
-    }
-
-    .summary-header h4 {
-        margin: 0;
-        color: #2c3e50;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .summary-stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1rem;
-        border-radius: 0.75rem;
-        border: 1px solid #e9ecef;
-    }
-
-    .stat-item.accepted {
-        background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
-        border-color: #2196f3;
-    }
-
-    .stat-item.completed {
-        background: linear-gradient(135deg, #d4edda 0%, #f8f9fa 100%);
-        border-color: #28a745;
-    }
-
-    .stat-icon {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-    }
-
-    .stat-item.accepted .stat-icon {
-        background: #2196f3;
-        color: white;
-    }
-
-    .stat-item.completed .stat-icon {
-        background: #28a745;
-        color: white;
-    }
-
-    .stat-content {
-        flex: 1;
-    }
-
-    .stat-label {
+        font-weight: 600;
         font-size: 0.85rem;
-        color: #6c757d;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.25rem;
     }
 
-    .stat-value {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 0.25rem;
-    }
+    /* Responsive */
+    @media (max-width: 768px) {
 
-    .stat-amount {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #28a745;
-    }
+        .reservations-table th,
+        .reservations-table td {
+            padding: 0.75rem;
+            font-size: 0.85rem;
+        }
 
-    .accepted-products {
-        border-top: 1px solid #e9ecef;
-        padding-top: 1rem;
-    }
+        .customer-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
 
-    .accepted-products h5 {
-        margin: 0 0 1rem 0;
-        color: #2c3e50;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
+        .action-buttons {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
 
-    .products-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .summary-product-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem;
-        background: #f8f9fa;
-        border-radius: 0.5rem;
-        border: 1px solid #e9ecef;
-    }
-
-    .summary-product-item .product-name {
-        font-weight: 600;
-        color: #2c3e50;
-    }
-
-    .summary-product-item .product-details {
-        display: flex;
-        gap: 1rem;
-        font-size: 0.9rem;
-        color: #6c757d;
-    }
-
-    .summary-product-item .product-details span:last-child {
-        color: #28a745;
-        font-weight: 600;
+        .action-buttons .btn {
+            width: 100%;
+            font-size: 0.8rem;
+        }
     }
 </style>
 
 <section class="reservations">
     <div class="container-xl">
-        <div class="row">
-            <!-- Navigation -->
-            <div class="col-lg-2">
-                <div class="navigation">
-                    <div class="nav nav-pills">
-                        <div class="nav-link active" data-target="#reservationsCardsAll">
-                            <i class="material-icons-sharp">all_inclusive</i>
-                            <span>All</span>
-                        </div>
-                        <div class="nav-link" data-target="#reservationsCardsPending">
-                            <i class="material-icons-sharp">schedule</i>
-                            <span>Pending</span>
-                        </div>
-                        <div class="nav-link" data-target="#reservationsCardsAccepted">
-                            <i class="material-icons-sharp">check_circle</i>
-                            <span>Accepted</span>
-                        </div>
-                        <div class="nav-link" data-target="#reservationsCardsRejected">
-                            <i class="material-icons-sharp">cancel</i>
-                            <span>Rejected</span>
-                        </div>
-                    </div>
-                </div>
+        <!-- Header -->
+        <div class="header-section">
+            <h1>Product Reservations Management</h1>
+            <p>Manage customer product reservations and pickup requests</p>
+        </div>
+
+        <!-- Navigation Pills -->
+        <div class="d-flex justify-content-center mb-4">
+            <ul class="nav nav-pills" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-target="all">
+                        <i class="material-icons-sharp">all_inclusive</i>
+                        All Reservations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target="pending">
+                        <i class="material-icons-sharp">schedule</i>
+                        Pending
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target="accepted">
+                        <i class="material-icons-sharp">check_circle</i>
+                        Accepted
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target="rejected">
+                        <i class="material-icons-sharp">cancel</i>
+                        Rejected
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target="completed">
+                        <i class="material-icons-sharp">done_all</i>
+                        Completed
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- All Reservations Tab -->
+        <div class="tab-content active" id="all-tab">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search reservations..." id="search-all">
             </div>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="all-reservations-table">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
 
-            <!-- Content -->
-            <div class="col-lg-10">
-                <div class="header-section">
-                    <h1>Product Reservations Management</h1>
-                    <p>Manage customer product reservations and pickup requests</p>
-                </div>
-
-                <!-- All Reservations -->
-                <div class="tab-content active" id="reservationsCardsAll">
-                    <h3>All Reservations</h3>
-                    <div class="reservations-container" id="allReservationsContainer">
-                        <!-- Reservations will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Pending Reservations -->
-                <div class="tab-content" id="reservationsCardsPending">
-                    <h3>Pending Reservations</h3>
-                    <div class="reservations-container" id="pendingReservationsContainer">
-                        <!-- Pending reservations will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Accepted Reservations -->
-                <div class="tab-content" id="reservationsCardsAccepted">
-                    <h3>Accepted Reservations</h3>
-                    <div class="reservations-container" id="acceptedReservationsContainer">
-                        <!-- Accepted reservations will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Rejected Reservations -->
-                <div class="tab-content" id="reservationsCardsRejected">
-                    <h3>Rejected Reservations</h3>
-                    <div class="reservations-container" id="rejectedReservationsContainer">
-                        <!-- Rejected reservations will be loaded here -->
-                    </div>
-                </div>
+        <!-- Pending Reservations Tab -->
+        <div class="tab-content" id="pending-tab">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search pending reservations..."
+                    id="search-pending">
             </div>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pending-reservations-table">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Accepted Reservations Tab -->
+        <div class="tab-content" id="accepted-tab">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search accepted reservations..."
+                    id="search-accepted">
+            </div>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="accepted-reservations-table">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Rejected Reservations Tab -->
+        <div class="tab-content" id="rejected-tab">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search rejected reservations..."
+                    id="search-rejected">
+            </div>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="rejected-reservations-table">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Completed Reservations Tab -->
+        <div class="tab-content" id="completed-tab">
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search completed reservations..."
+                    id="search-completed">
+            </div>
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Products</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="completed-reservations-table">
+                    <!-- Data will be loaded here -->
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

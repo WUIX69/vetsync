@@ -1,29 +1,35 @@
-// Reservations Management System
+// Reservations Management System - Table Layout
 const ReservationsManager = {
     init() {
+        // console.log("ReservationsManager initialized");
         this.loadReservations();
         this.bindEvents();
     },
 
     bindEvents() {
+        // console.log("Binding events");
+
         // Tab navigation
-        $(document).on("click", ".navigation .nav-link", function (e) {
+        $(document).on("click", ".nav-pills .nav-link", function (e) {
             e.preventDefault();
+            // console.log("Tab clicked:", $(this).data("target"));
             const target = $(this).data("target");
 
             // Update active nav
-            $(".navigation .nav-link").removeClass("active");
+            $(".nav-pills .nav-link").removeClass("active");
             $(this).addClass("active");
 
             // Show target content
             $(".tab-content").removeClass("active");
-            $(target).addClass("active");
+            $(`#${target}-tab`).addClass("active");
         });
 
         // Accept reservation
         $(document).on("click", ".btn-accept", function (e) {
             e.preventDefault();
+            // console.log("Accept button clicked");
             const reservationId = $(this).data("reservation-id");
+            // console.log("Reservation ID:", reservationId);
 
             if (confirm("Accept this reservation?")) {
                 ReservationsManager.updateStatus(reservationId, "accepted");
@@ -33,7 +39,9 @@ const ReservationsManager = {
         // Reject reservation
         $(document).on("click", ".btn-reject", function (e) {
             e.preventDefault();
+            // console.log("Reject button clicked");
             const reservationId = $(this).data("reservation-id");
+            // console.log("Reservation ID:", reservationId);
 
             $("#rejectionReservationId").val(reservationId);
             $("#rejectionModal").modal("show");
@@ -41,6 +49,7 @@ const ReservationsManager = {
 
         // Confirm rejection
         $("#confirmRejection").on("click", function () {
+            // console.log("Confirm rejection clicked");
             const reservationId = $("#rejectionReservationId").val();
             const reason = $("#rejectionReason").val().trim();
 
@@ -57,20 +66,37 @@ const ReservationsManager = {
         // Mark as Ready (Complete) reservation
         $(document).on("click", ".btn-complete", function (e) {
             e.preventDefault();
+            // console.log("Complete button clicked");
             const reservationId = $(this).data("reservation-id");
+            // console.log("Reservation ID:", reservationId);
 
             if (confirm("Mark this reservation as ready for pickup?")) {
                 ReservationsManager.updateStatus(reservationId, "completed");
             }
         });
+
+        // Search functionality
+        $("input[id^='search-']").on("keyup", function () {
+            const searchTerm = $(this).val().toLowerCase();
+            const tableId =
+                $(this).attr("id").replace("search-", "") +
+                "-reservations-table";
+
+            $(`#${tableId} tr`).each(function () {
+                const text = $(this).text().toLowerCase();
+                $(this).toggle(text.indexOf(searchTerm) > -1);
+            });
+        });
     },
 
     loadReservations() {
+        // console.log("Loading reservations...");
         $.ajax({
             url: "/src/features/reservations/api/reservations.php",
             method: "GET",
             dataType: "json",
             success: function (response) {
+                // console.log("Reservations loaded:", response);
                 if (!response.success) {
                     console.error(
                         "Failed to load reservations:",
@@ -83,19 +109,23 @@ const ReservationsManager = {
             },
             error: function (xhr, status, error) {
                 console.error("Error loading reservations:", error);
+                // console.error("Response:", xhr.responseText);
             },
         });
     },
 
     renderReservations(reservations) {
-        // Clear all containers
+        // console.log("Rendering reservations:", reservations);
+        // Clear all table bodies
         $(
-            "#allReservationsContainer, #pendingReservationsContainer, #acceptedReservationsContainer, #rejectedReservationsContainer"
+            "#all-reservations-table, #pending-reservations-table, #accepted-reservations-table, #rejected-reservations-table, #completed-reservations-table"
         ).empty();
 
         if (reservations.length === 0) {
-            const emptyState = this.getEmptyState("No reservations found");
-            $("#allReservationsContainer").html(emptyState);
+            this.showEmptyState(
+                "all-reservations-table",
+                "No reservations found"
+            );
             return;
         }
 
@@ -110,146 +140,138 @@ const ReservationsManager = {
         const rejectedReservations = reservations.filter(
             (r) => r.status === "rejected"
         );
+        const completedReservations = reservations.filter(
+            (r) => r.status === "completed"
+        );
 
-        // Render each category separately (no cloning)
-        allReservations.forEach((reservation) => {
-            const card = this.createReservationCard(reservation);
-            $("#allReservationsContainer").append(card);
-        });
+        // console.log("Status breakdown:", {
+        //     all: allReservations.length,
+        //     pending: pendingReservations.length,
+        //     accepted: acceptedReservations.length,
+        //     rejected: rejectedReservations.length,
+        //     completed: completedReservations.length,
+        // });
 
-        pendingReservations.forEach((reservation) => {
-            const card = this.createReservationCard(reservation);
-            $("#pendingReservationsContainer").append(card);
-        });
+        // Render each category
+        this.populateTable("all-reservations-table", allReservations);
+        this.populateTable("pending-reservations-table", pendingReservations);
+        this.populateTable("accepted-reservations-table", acceptedReservations);
+        this.populateTable("rejected-reservations-table", rejectedReservations);
+        this.populateTable(
+            "completed-reservations-table",
+            completedReservations
+        );
 
-        acceptedReservations.forEach((reservation) => {
-            const card = this.createReservationCard(reservation);
-            $("#acceptedReservationsContainer").append(card);
-        });
-
-        rejectedReservations.forEach((reservation) => {
-            const card = this.createReservationCard(reservation);
-            $("#rejectedReservationsContainer").append(card);
-        });
-
-        // Show empty state for empty status containers
+        // Show empty states for empty tables
         this.showEmptyStatesIfNeeded();
     },
 
-    createReservationCard(reservation) {
+    populateTable(tableId, reservations) {
+        // console.log(
+        //     `Populating table ${tableId} with ${reservations.length} reservations`
+        // );
+        const $tableBody = $(`#${tableId}`);
+
+        reservations.forEach((reservation) => {
+            const row = this.createTableRow(reservation);
+            $tableBody.append(row);
+        });
+    },
+
+    createTableRow(reservation) {
+        // console.log("Creating row for reservation:", reservation);
         const statusInfo = this.getStatusInfo(reservation.status);
         const products = JSON.parse(reservation.products || "[]");
-        const productNames = products.map((p) => p.name).join(", ");
 
-        // FIXED: Calculate total amount using correct field names
+        // Calculate total amount
         const totalAmount = products.reduce((sum, product) => {
-            // Use total_price if available, otherwise calculate from price and qty
             const price =
                 parseFloat(product.total_price) ||
-                parseFloat(product.price) ||
-                0;
-            const quantity =
-                parseInt(product.qty) || parseInt(product.quantity) || 0;
-
-            // If total_price exists, use it directly; otherwise calculate
-            if (product.total_price) {
-                return sum + parseFloat(product.total_price);
-            } else {
-                return sum + price * quantity;
-            }
+                (parseFloat(product.price) || 0) *
+                    (parseInt(product.qty) || parseInt(product.quantity) || 0);
+            return sum + price;
         }, 0);
 
-        return $(`
-            <div class="reservation-card" data-id="${reservation.id}">
-                <div class="reservation-header">
-                    <h4>Reservation #${reservation.id}</h4>
-                    <span class="reservation-status ${reservation.status}">${
+        // Get customer initials for avatar
+        const initials = `${reservation.firstname?.charAt(0) || ""}${
+            reservation.lastname?.charAt(0) || ""
+        }`.toUpperCase();
+
+        const actionButtons = this.getActionButtons(reservation);
+        // console.log(
+        //     "Action buttons for reservation",
+        //     reservation.id,
+        //     ":",
+        //     actionButtons
+        // );
+
+        return `
+            <tr data-id="${reservation.id}">
+                <td>
+                    <div style="font-weight: 600; color: #2c3e50;">${
+                        reservation.formatted_date
+                    }</div>
+                    <div style="color: #6c757d; font-size: 0.85rem;">${
+                        reservation.formatted_time
+                    }</div>
+                </td>
+                <td>
+                    <div class="customer-info">
+                        <div class="customer-avatar">${initials}</div>
+                        <div class="customer-details">
+                            <div class="customer-name">${
+                                reservation.firstname
+                            } ${reservation.lastname}</div>
+                            <div class="customer-email">${
+                                reservation.email || "No email"
+                            }</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="product-list">
+                        ${products
+                            .map((product) => {
+                                const qty =
+                                    parseInt(product.qty) ||
+                                    parseInt(product.quantity) ||
+                                    0;
+                                const price = parseFloat(product.price) || 0;
+                                const subtotal =
+                                    parseFloat(product.total_price) ||
+                                    price * qty;
+
+                                return `
+                                <div class="product-item">
+                                    <div class="product-name">${
+                                        product.name
+                                    }</div>
+                                    <div class="product-details">
+                                        Qty: ${qty} × ₱${price.toFixed(
+                                    2
+                                )} = ₱${subtotal.toFixed(2)}
+                                    </div>
+                                </div>
+                            `;
+                            })
+                            .join("")}
+                    </div>
+                </td>
+                <td>
+                    <div class="amount">₱${totalAmount.toFixed(2)}</div>
+                </td>
+                <td>
+                    <span class="status-badge ${reservation.status}">${
             statusInfo.label
         }</span>
-                </div>
-                
-                <div class="reservation-info">
-                    <div>
-                        <strong>Customer:</strong> ${reservation.firstname} ${
-            reservation.lastname
-        }
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        ${actionButtons}
                     </div>
-                    <div>
-                        <strong>Date:</strong> ${reservation.formatted_date}
-                    </div>
-                    <div>
-                        <strong>Time:</strong> ${reservation.formatted_time}
-                    </div>
-                    <div>
-                        <strong>Total Amount:</strong> ₱${totalAmount.toFixed(
-                            2
-                        )}
-                    </div>
-                </div>
-
-                <div class="reservation-products">
-                    <h5>Products (${products.length})</h5>
-                    ${products
-                        .map((product) => {
-                            // DEBUG: Log the product data to see what's available
-                            console.log("Product data:", product);
-
-                            // FIXED: Use correct field names for price and quantity
-                            let price =
-                                parseFloat(product.price) ||
-                                parseFloat(product.dc_price) ||
-                                parseFloat(product.og_price) ||
-                                0;
-                            const quantity =
-                                parseInt(product.qty) ||
-                                parseInt(product.quantity) ||
-                                0;
-                            const subtotal = product.total_price
-                                ? parseFloat(product.total_price)
-                                : price * quantity;
-
-                            // If price is still 0, calculate it from subtotal and quantity
-                            if (price === 0 && subtotal > 0 && quantity > 0) {
-                                price = subtotal / quantity;
-                            }
-
-                            console.log(
-                                "Calculated price:",
-                                price,
-                                "Quantity:",
-                                quantity,
-                                "Subtotal:",
-                                subtotal
-                            );
-
-                            return `
-                        <div class="product-item">
-                            <i class="box icon"></i>
-                            <div class="product-details">
-                                <div class="product-name">${product.name}</div>
-                                <div class="product-info">
-                                    <span class="quantity">Qty: ${quantity}</span>
-                                    <span class="price">₱${price.toFixed(
-                                        2
-                                    )} each</span>
-                                    <span class="subtotal">Subtotal: ₱${subtotal.toFixed(
-                                        2
-                                    )}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                        })
-                        .join("")}
-                </div>
-
-                <div class="reservation-footer">
-                    <div class="reservation-actions">
-                        ${this.getActionButtons(reservation)}
-                    </div>
-                </div>
-            </div>
-        `);
+                </td>
+            </tr>
+        `;
     },
 
     getStatusInfo(status) {
@@ -257,137 +279,57 @@ const ReservationsManager = {
             pending: { label: "Pending", class: "pending" },
             accepted: { label: "Accepted", class: "accepted" },
             rejected: { label: "Rejected", class: "rejected" },
-            completed: { label: "Ready for Pickup", class: "completed" },
+            completed: { label: "Ready", class: "completed" },
         };
         return statusMap[status] || { label: "Unknown", class: "unknown" };
     },
 
-    // Add new method to create summary card
-    createSummaryCard() {
-        const allReservations = this.reservations || [];
-        const acceptedReservations = allReservations.filter(
-            (r) => r.status === "accepted"
-        );
-        const completedReservations = allReservations.filter(
-            (r) => r.status === "completed"
-        );
+    getActionButtons(reservation) {
+        const status = reservation.status;
+        let buttons = "";
 
-        // Calculate totals for accepted reservations
-        let totalAcceptedAmount = 0;
-        let totalAcceptedItems = 0;
-        const acceptedProducts = [];
+        // console.log("Getting action buttons for status:", status);
 
-        acceptedReservations.forEach((reservation) => {
-            const products = JSON.parse(reservation.products || "[]");
-            products.forEach((product) => {
-                const price = parseFloat(product.price) || 0;
-                const quantity = parseInt(product.quantity) || 0;
-                const subtotal = price * quantity;
+        switch (status) {
+            case "pending":
+                buttons = `
+                    <button class="btn btn-accept" data-reservation-id="${reservation.id}">Accept</button>
+                    <button class="btn btn-reject" data-reservation-id="${reservation.id}">Reject</button>
+                `;
+                break;
+            case "accepted":
+                buttons = `
+                    <button class="btn btn-complete" data-reservation-id="${reservation.id}">Mark Ready</button>
+                `;
+                break;
+            case "rejected":
+                buttons = `
+                    <span class="status-info">
+                        <i class="material-icons-sharp">info</i> Rejected
+                    </span>
+                `;
+                break;
+            case "completed":
+                buttons = `
+                    <span class="ready-status">
+                        <i class="material-icons-sharp">check_circle</i> Ready for Pickup
+                    </span>
+                `;
+                break;
+            default:
+                buttons = `
+                    <span class="status-info">
+                        <i class="material-icons-sharp">help</i> Unknown
+                    </span>
+                `;
+        }
 
-                totalAcceptedAmount += subtotal;
-                totalAcceptedItems += quantity;
-
-                // Add to accepted products list
-                const existingProduct = acceptedProducts.find(
-                    (p) => p.name === product.name
-                );
-                if (existingProduct) {
-                    existingProduct.quantity += quantity;
-                    existingProduct.total += subtotal;
-                } else {
-                    acceptedProducts.push({
-                        name: product.name,
-                        quantity: quantity,
-                        price: price,
-                        total: subtotal,
-                    });
-                }
-            });
-        });
-
-        // Calculate totals for completed reservations
-        let totalCompletedAmount = 0;
-        let totalCompletedItems = 0;
-
-        completedReservations.forEach((reservation) => {
-            const products = JSON.parse(reservation.products || "[]");
-            products.forEach((product) => {
-                const price = parseFloat(product.price) || 0;
-                const quantity = parseInt(product.quantity) || 0;
-                const subtotal = price * quantity;
-
-                totalCompletedAmount += subtotal;
-                totalCompletedItems += quantity;
-            });
-        });
-
-        return $(`
-            <div class="summary-card">
-                <div class="summary-header">
-                    <h4><i class="chart bar icon"></i> Reservation Summary</h4>
-                </div>
-                
-                <div class="summary-stats">
-                    <div class="stat-item accepted">
-                        <div class="stat-icon">
-                            <i class="clock icon"></i>
-                        </div>
-                        <div class="stat-content">
-                            <div class="stat-label">Accepted</div>
-                            <div class="stat-value">${
-                                acceptedReservations.length
-                            } reservations</div>
-                            <div class="stat-amount">₱${totalAcceptedAmount.toFixed(
-                                2
-                            )}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="stat-item completed">
-                        <div class="stat-icon">
-                            <i class="check circle icon"></i>
-                        </div>
-                        <div class="stat-content">
-                            <div class="stat-label">Ready for Pickup</div>
-                            <div class="stat-value">${
-                                completedReservations.length
-                            } reservations</div>
-                            <div class="stat-amount">₱${totalCompletedAmount.toFixed(
-                                2
-                            )}</div>
-                        </div>
-                    </div>
-                </div>
-
-                ${
-                    acceptedProducts.length > 0
-                        ? `
-                <div class="accepted-products">
-                    <h5><i class="box icon"></i> Accepted Products</h5>
-                    <div class="products-list">
-                        ${acceptedProducts
-                            .map(
-                                (product) => `
-                            <div class="summary-product-item">
-                                <div class="product-name">${product.name}</div>
-                                <div class="product-details">
-                                    <span>Qty: ${product.quantity}</span>
-                                    <span>₱${product.total.toFixed(2)}</span>
-                                </div>
-                            </div>
-                        `
-                            )
-                            .join("")}
-                    </div>
-                </div>
-                `
-                        : ""
-                }
-            </div>
-        `);
+        // console.log("Generated buttons:", buttons);
+        return buttons;
     },
 
     updateStatus(reservationId, status, reason = null) {
+        // console.log("Updating status:", { reservationId, status, reason });
         const data = {
             action: "update_status",
             id: reservationId,
@@ -398,20 +340,21 @@ const ReservationsManager = {
             data.rejection_reason = reason;
         }
 
+        // console.log("Sending data:", data);
+
         $.ajax({
             url: "/src/features/reservations/api/reservations.php",
             method: "POST",
             data: data,
             dataType: "json",
             success: function (response) {
+                // console.log("Update response:", response);
                 if (response.success) {
                     ReservationsManager.showNotification(
                         response.message,
                         "success"
                     );
                     ReservationsManager.loadReservations(); // Reload data
-                    // Trigger a badge update notification (this would need a push notification system)
-                    // For now, the user's badge will update when they next visit the cart page
                 } else {
                     ReservationsManager.showNotification(
                         response.message,
@@ -421,6 +364,7 @@ const ReservationsManager = {
             },
             error: function (xhr, status, error) {
                 console.error("Error updating status:", error);
+                // console.error("Response:", xhr.responseText);
                 ReservationsManager.showNotification(
                     "Failed to update reservation status",
                     "error"
@@ -430,106 +374,57 @@ const ReservationsManager = {
     },
 
     showEmptyStatesIfNeeded() {
-        const containers = [
+        const tables = [
             {
-                id: "#pendingReservationsContainer",
+                id: "pending-reservations-table",
                 message: "No pending reservations",
             },
             {
-                id: "#acceptedReservationsContainer",
+                id: "accepted-reservations-table",
                 message: "No accepted reservations",
             },
             {
-                id: "#rejectedReservationsContainer",
+                id: "rejected-reservations-table",
                 message: "No rejected reservations",
+            },
+            {
+                id: "completed-reservations-table",
+                message: "No completed reservations",
             },
         ];
 
-        containers.forEach((container) => {
-            if ($(container.id).children().length === 0) {
-                $(container.id).html(this.getEmptyState(container.message));
+        tables.forEach((table) => {
+            if ($(`#${table.id} tr`).length === 0) {
+                this.showEmptyState(table.id, table.message);
             }
         });
     },
 
-    getEmptyState(message) {
-        return `
-            <div class="empty-state">
-                <i class="material-icons-sharp">inbox</i>
-                <h3>${message}</h3>
-                <p>Reservations will appear here when available</p>
-            </div>
-        `;
+    showEmptyState(tableId, message) {
+        $(`#${tableId}`).html(`
+            <tr>
+                <td colspan="6">
+                    <div class="empty-state">
+                        <i class="material-icons-sharp">inbox</i>
+                        <h3>${message}</h3>
+                        <p>Reservations will appear here when available</p>
+                    </div>
+                </td>
+            </tr>
+        `);
     },
 
     showNotification(message, type) {
-        // You can integrate with your existing notification system
         if (type === "success") {
             alert("✓ " + message);
         } else {
             alert("✗ " + message);
         }
     },
-
-    getStatusIcon(status) {
-        const icons = {
-            pending: "hourglass_empty",
-            accepted: "check_circle",
-            rejected: "cancel",
-            completed: "done_all",
-        };
-        return icons[status] || "help";
-    },
-
-    getActionButtons(reservation) {
-        const status = reservation.status;
-        let buttons = "";
-
-        switch (status) {
-            case "pending":
-                buttons = `
-                    <button class="btn btn-accept" data-reservation-id="${reservation.id}">
-                        <i class="check icon"></i> Accept
-                    </button>
-                    <button class="btn btn-reject" data-reservation-id="${reservation.id}">
-                        <i class="times icon"></i> Reject
-                    </button>
-                `;
-                break;
-            case "accepted":
-                buttons = `
-                    <button class="btn btn-complete" data-reservation-id="${reservation.id}">
-                        <i class="check circle icon"></i> Mark as Ready
-                    </button>
-                `;
-                break;
-            case "rejected":
-                buttons = `
-                    <span class="status-info">
-                        <i class="info circle icon"></i> Rejected
-                    </span>
-                `;
-                break;
-            case "completed":
-                buttons = `
-                    <span class="ready-status">
-                        <i class="check circle icon"></i> Ready for Pickup
-                    </span>
-                `;
-                break;
-            default:
-                buttons = `
-                    <span class="status-info">
-                        <i class="help circle icon"></i> Unknown Status
-                    </span>
-                `;
-        }
-
-        return buttons;
-    },
 };
 
 // Initialize when document is ready
 $(document).ready(function () {
+    // console.log("Document ready, initializing ReservationsManager");
     ReservationsManager.init();
 });
