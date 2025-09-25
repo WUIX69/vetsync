@@ -239,7 +239,7 @@ $(function () {
                     },
                 ],
             },
-            // Add validation for custom service request
+            // FIXED: Conditional validation for custom service request
             custom_service_request: {
                 identifier: "custom_service_request",
                 rules: [
@@ -248,47 +248,105 @@ $(function () {
                         prompt: "Please describe the custom service you need",
                     },
                 ],
+                // FIXED: Remove problematic depends selector - we'll handle this differently
+                optional: true,
             },
         },
-        onSuccess: function () {
-            const $form = $(this);
-            const $submitBtn = $form.find(".ui.submit.button");
+        onSuccess: function (event, fields) {
+            event.preventDefault();
+            console.log("Form validation passed, submitting...");
 
-            // Prevent multiple submissions
-            if ($submitBtn.hasClass("loading")) {
+            // Custom validation for "Others" service
+            const serviceUuid = fields.service_uuid;
+            const customServiceRequest = fields.custom_service_request;
+
+            if (
+                serviceUuid === "others" &&
+                (!customServiceRequest || customServiceRequest.trim() === "")
+            ) {
+                // Show error for custom service field
+                $("#bookNowForm").form(
+                    "add prompt",
+                    "custom_service_request",
+                    "Please describe the custom service you need"
+                );
                 return false;
             }
 
-            $submitBtn.addClass("loading");
+            const formData = new FormData();
+            formData.append("action", "add");
+            formData.append("service_uuid", fields.service_uuid);
+            formData.append("pet_uuid", fields.pet_uuid);
+            formData.append("date", fields.date);
+            formData.append("note", fields.note || "");
 
-            const formData = $form.serialize();
+            // Add custom service request if "Others" is selected
+            if (fields.service_uuid === "others") {
+                formData.append(
+                    "custom_service_request",
+                    fields.custom_service_request
+                );
+            }
+
+            // Show loading state
+            const submitBtn = $("#bookNowForm .ui.button");
+            submitBtn.addClass("loading disabled");
 
             $.ajax({
-                url: "/src/features/appointments/api/appointments.php",
-                method: "POST",
+                url: "/src/features/appointments/api/user-appointments.php", // FIXED: Use user appointments API
+                type: "POST",
                 data: formData,
-                dataType: "json",
+                processData: false,
+                contentType: false,
                 success: function (response) {
+                    console.log("Booking response:", response);
+                    submitBtn.removeClass("loading disabled");
+
                     if (response.success) {
-                        alert(response.message);
                         $("#bookNowModal").modal("hide");
-                        $form[0].reset();
-                        $form.find(".ui.dropdown").dropdown("clear");
+                        $("#bookNowForm")[0].reset();
+
+                        // Show success notification
+                        showDateNotification(
+                            "success",
+                            "Appointment Booked!",
+                            "Your appointment has been successfully submitted and is pending confirmation."
+                        );
                     } else {
-                        alert(
-                            "Failed to book appointment: " + response.message
+                        showDateNotification(
+                            "error",
+                            "Booking Failed",
+                            response.message ||
+                                "Failed to book appointment. Please try again."
                         );
                     }
                 },
-                complete: function () {
-                    $submitBtn.removeClass("loading");
-                },
                 error: function (xhr, status, error) {
-                    alert("Failed to book appointment. Please try again.");
+                    console.error("Booking error:", error);
+                    submitBtn.removeClass("loading disabled");
+                    showDateNotification(
+                        "error",
+                        "Booking Failed",
+                        "An error occurred while booking your appointment. Please try again."
+                    );
                 },
             });
 
             return false; // Prevent default form submission
+        },
+        onFailure: function () {
+            // Add debug logging for validation failures
+            console.log("Form validation failed");
+            const errors = $(this).find(".error.message .list li");
+            console.log(
+                "Validation errors:",
+                errors
+                    .map(function () {
+                        return $(this).text();
+                    })
+                    .get()
+            );
+            return false;
         },
     });
 });

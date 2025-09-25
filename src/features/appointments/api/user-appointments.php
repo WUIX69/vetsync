@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     exit;
 }
 
-// Handle POST requests (cancel and delete)
+// Handle POST requests 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     // Ensure user is logged in
     if (!$session->has()) {
@@ -49,6 +49,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     $userData = $session->get();
     $userUuid = $userData['uuid'];
+
+    // NEW: Handle appointment booking (add action)
+    if ($_POST['action'] === 'add') {
+        $service_uuid = $_POST['service_uuid'] ?? null;
+        $pet_uuid = $_POST['pet_uuid'] ?? null;
+        $date = $_POST['date'] ?? null;
+        $note = $_POST['note'] ?? '';
+        $custom_service_request = $_POST['custom_service_request'] ?? null;
+
+        // Validate required fields
+        if (!$pet_uuid || !$date) {
+            echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+            exit;
+        }
+
+        // Validate service selection
+        if (!$service_uuid || $service_uuid === '') {
+            echo json_encode(['success' => false, 'message' => 'Please select a service']);
+            exit;
+        }
+
+        // Handle "Others" custom service request
+        if ($service_uuid === 'others') {
+            if (!$custom_service_request || trim($custom_service_request) === '') {
+                echo json_encode(['success' => false, 'message' => 'Please describe the custom service you need']);
+                exit;
+            }
+
+            // Set service_uuid to NULL for custom services
+            $service_uuid = null;
+            // Prepend identifier to note
+            $note = "CUSTOM SERVICE REQUEST: " . trim($custom_service_request) .
+                ($note ? "\n\nAdditional Notes: " . $note : "");
+        }
+
+        // Validate pet belongs to user
+        try {
+            $stmt = $conn->prepare('SELECT user_uuid FROM pets WHERE uuid = ? AND user_uuid = ? LIMIT 1');
+            $stmt->execute([$pet_uuid, $userUuid]);
+            $pet = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$pet) {
+                echo json_encode(['success' => false, 'message' => 'Invalid pet selection']);
+                exit;
+            }
+        } catch (PDOException $e) {
+            echo json_encode(['success' => false, 'message' => 'Database error']);
+            exit;
+        }
+
+        // Generate UUID for the appointment using the correct function
+        $appointmentUuid = uuid(); // FIXED: Use uuid() instead of generateUuid()
+
+        // Create appointment data with all required fields
+        $appointmentData = [
+            'uuid' => $appointmentUuid,
+            'service_uuid' => $service_uuid,      // Can be null for custom services
+            'user_uuid' => $userUuid,
+            'pet_uuid' => $pet_uuid,
+            'date' => $date,
+            'note' => $note
+        ];
+
+        $response = Appointments::store($appointmentData);
+        echo json_encode($response);
+        exit;
+    }
 
     if ($_POST['action'] === 'cancel') {
         $appointmentUuid = $_POST['uuid'] ?? null;

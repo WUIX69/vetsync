@@ -484,7 +484,7 @@ function tableRowHtml(
             <div class="action-buttons">
                 <button class="btn btn-xs btn-success download-report" data-uuid="${app.uuid}">
                     Report
-                </button>
+            </button>
             </div>
         `;
     } else if (statusLabel === "Pending") {
@@ -492,13 +492,13 @@ function tableRowHtml(
             <div class="action-buttons">
                 <button class="btn btn-xs btn-success confirm-appointment" data-uuid="${app.uuid}">
                     Confirm
-                </button>
+            </button>
                 <button class="btn btn-xs btn-warning reschedule-appointment" data-uuid="${app.uuid}">
                     Reschedule
-                </button>
+            </button>
                 <button class="btn btn-xs btn-danger cancel-appointment" data-uuid="${app.uuid}">
                     Cancel
-                </button>
+            </button>
             </div>
         `;
     } else if (statusLabel === "Confirmed") {
@@ -506,13 +506,13 @@ function tableRowHtml(
             <div class="action-buttons">
                 <button class="btn btn-xs btn-success complete-appointment" data-uuid="${app.uuid}">
                     Complete
-                </button>
+            </button>
                 <button class="btn btn-xs btn-warning reschedule-appointment" data-uuid="${app.uuid}">
                     Reschedule
-                </button>
+            </button>
                 <button class="btn btn-xs btn-danger cancel-appointment" data-uuid="${app.uuid}">
                     Cancel
-                </button>
+            </button>
             </div>
         `;
     } else if (statusLabel === "Cancelled") {
@@ -520,7 +520,7 @@ function tableRowHtml(
             <div class="action-buttons">
                 <button class="btn btn-xs btn-primary view-details" data-uuid="${app.uuid}">
                     View
-                </button>
+            </button>
                 <button class="btn btn-xs btn-secondary delete-appointment" data-uuid="${app.uuid}">
                     Delete
                 </button>
@@ -531,7 +531,7 @@ function tableRowHtml(
             <div class="action-buttons">
                 <button class="btn btn-xs btn-primary view-details" data-uuid="${app.uuid}">
                     View
-                </button>
+            </button>
             </div>
         `;
     }
@@ -583,9 +583,9 @@ function tableRowHtml(
             </td>
             <td>
                 <div class="d-flex align-items-center">
-                    <img src="${
-                        app.pet_image || "/public/img/placeholders/image.png"
-                    }" 
+                <img src="${
+                    app.pet_image || "/public/img/placeholders/image.png"
+                }" 
                          alt="Pet" 
                          class="rounded-circle me-2" 
                          style="width: 32px; height: 32px; object-fit: cover;"
@@ -597,8 +597,8 @@ function tableRowHtml(
                         <small class="text-muted">ID: ${
                             app.pet_uuid ? app.pet_uuid.substring(0, 8) : "N/A"
                         }</small>
-                    </div>
-                </div>
+            </div>
+            </div>
             </td>
             <td>
                 <div>${app.user_name || app.user_uuid}</div>

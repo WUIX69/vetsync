@@ -154,16 +154,34 @@ class Pets
         try {
             self::conn()->beginTransaction();
 
-            // Check for existing appointments
-            $appointmentCheck = \VetSync\Models\Appointments::getByPetUuid($uuid);
-            if ($appointmentCheck['success'] && $appointmentCheck['data']['appointment_count'] > 0) {
+            // Check for existing appointments (all statuses)
+            $appointmentStmt = self::conn()->prepare("
+                SELECT COUNT(*) as total_count,
+                       SUM(CASE WHEN status IN ('pending', 'accepted') THEN 1 ELSE 0 END) as active_count,
+                       SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_count
+                FROM appointments 
+                WHERE pet_uuid = ?
+            ");
+            $appointmentStmt->execute([$uuid]);
+            $appointmentCounts = $appointmentStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($appointmentCounts['active_count'] > 0) {
                 self::conn()->rollBack();
                 return [
                     'success' => false,
-                    'message' => 'Cannot delete pet with active appointments. Please cancel or complete appointments first.',
+                    'message' => "Cannot delete pet with {$appointmentCounts['active_count']} active appointment(s). Please cancel them first or mark the pet as deceased instead.",
                 ];
             }
 
+            if ($appointmentCounts['completed_count'] > 0) {
+                self::conn()->rollBack();
+                return [
+                    'success' => false,
+                    'message' => "Cannot delete pet with medical history ({$appointmentCounts['completed_count']} completed appointments). Consider marking as deceased to preserve medical records.",
+                ];
+            }
+
+            // Safe to delete if no appointments exist
             $stmt = self::conn()->prepare('DELETE FROM pets WHERE uuid=?');
             $stmt->execute([$uuid]);
 
@@ -187,6 +205,7 @@ class Pets
         try {
             self::conn()->beginTransaction();
 
+            // Update pet archive status
             $stmt = self::conn()->prepare("
                 UPDATE pets SET 
                     archive_status = ?,
@@ -195,6 +214,50 @@ class Pets
             ");
 
             $stmt->execute([$archive_status, $uuid]);
+
+            // If marking as deceased, cancel all future appointments
+            if ($archive_status === 'deceased') {
+                $cancelStmt = self::conn()->prepare("
+                    UPDATE appointments SET 
+                        status = 'cancelled',
+                        note = CONCAT(
+                            COALESCE(note, ''), 
+                            CASE 
+                                WHEN note IS NULL OR note = '' THEN ''
+                                ELSE '\\n\\n'
+                            END,
+                            '[AUTO-CANCELLED] Pet marked as deceased on ', NOW()
+                        )
+                    WHERE pet_uuid = ? 
+                    AND status IN ('pending', 'accepted') 
+                    AND date >= CURDATE()
+                ");
+
+                $cancelStmt->execute([$uuid]);
+
+                // Get count of cancelled appointments for feedback
+                $countStmt = self::conn()->prepare("
+                    SELECT COUNT(*) as cancelled_count 
+                    FROM appointments 
+                    WHERE pet_uuid = ? 
+                    AND status = 'cancelled' 
+                    AND note LIKE '%Pet marked as deceased%'
+                ");
+                $countStmt->execute([$uuid]);
+                $cancelledCount = $countStmt->fetch(PDO::FETCH_ASSOC)['cancelled_count'];
+
+                self::conn()->commit();
+
+                $message = "Pet marked as deceased.";
+                if ($cancelledCount > 0) {
+                    $message .= " {$cancelledCount} future appointment(s) were automatically cancelled.";
+                }
+
+                return [
+                    'success' => true,
+                    'message' => $message,
+                ];
+            }
 
             self::conn()->commit();
             return [
