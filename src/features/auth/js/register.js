@@ -39,9 +39,10 @@ $(function () {
                         type: "empty",
                         prompt: "Please enter your phone number",
                     },
+                    // Fix the regex - remove problematic regex
                     {
-                        type: "regExp[/^[+]?[ds-()]{10,}$/]",
-                        prompt: "Please enter a valid phone number",
+                        type: "minLength[10]",
+                        prompt: "Please enter at least 10 digits",
                     },
                 ],
             },
@@ -51,6 +52,10 @@ $(function () {
                     {
                         type: "empty",
                         prompt: "Please enter your password",
+                    },
+                    {
+                        type: "minLength[6]",
+                        prompt: "Password must be at least 6 characters",
                     },
                 ],
             },
@@ -78,39 +83,51 @@ $(function () {
             },
         },
         inline: true,
-        on: "blur", // EG: submit, blur
+        on: "blur",
         onSuccess: function (event, fields) {
             event.preventDefault();
-            const $submitBtn = $(this).find("button[type=submit]");
-            // const formData = new FormData(this); // Only use when a file is included
+            console.log("Form validation passed!");
+            console.log("Fields:", fields);
 
-            // console.log(formData);
-            // console.log(fields);
-            // return false;
+            const $submitBtn = $(this).find("button[type=submit]");
+            const apiURL = apiUrl("auth") + "register.php";
+            console.log("API URL:", apiURL);
 
             $.ajax({
-                url: apiUrl("auth") + "register.php",
+                url: apiURL,
                 method: "POST",
                 data: fields,
-                // processData: false, // Only use when FormData is used
-                // contentType: false, // Only use when FormData is used
                 dataType: "json",
-                timeout: 5000,
+                timeout: 10000,
                 beforeSend: function () {
+                    console.log("Sending registration request...");
                     $submitBtn.addClass("loading");
                 },
                 success: function (response) {
                     console.log("API Response:", response);
                     alert(response.message);
 
-                    if (!response.success) return false;
-                    window.location.replace("index.php"); // Redirect to login
+                    if (response.success) {
+                        alert(
+                            "Registration successful! Redirecting to login..."
+                        );
+                        window.location.replace("index.php");
+                    }
                 },
                 complete: function () {
                     $submitBtn.removeClass("loading");
                 },
-                error: ajaxErrorHandler,
+                error: function (xhr, status, error) {
+                    console.log("AJAX Error:", xhr.status, status, error);
+                    console.log("Response Text:", xhr.responseText);
+                    alert("Registration failed: " + error);
+                },
             });
+        },
+        onFailure: function (formErrors, fields) {
+            console.log("Form validation failed!");
+            console.log("Errors:", formErrors);
+            console.log("Fields:", fields);
         },
     });
 });

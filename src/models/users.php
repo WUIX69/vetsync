@@ -89,8 +89,8 @@ class Users
             self::conn()->beginTransaction();
             $stmt = self::conn()->prepare("
                 INSERT INTO users (
-                    uuid, firstname, lastname, email, password
-                ) VALUES (?, ?, ?, ?, ?)
+                    uuid, firstname, lastname, email, telephone, password
+                ) VALUES (?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->execute([
@@ -98,6 +98,7 @@ class Users
                 $data['firstname'],
                 $data['lastname'],
                 $data['email'],
+                $data['telephone'] ?? '', // Add telephone field
                 $data['password']
             ]);
 
@@ -111,7 +112,7 @@ class Users
             self::conn()->rollBack();
             return [
                 'success' => false,
-                'message' => 'User registration failed.',
+                'message' => 'User registration failed: ' . $e->getMessage(), // More detailed error
             ];
         }
     }

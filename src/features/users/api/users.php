@@ -4,6 +4,7 @@ include '../../../core/app.php';
 apiHeaders();
 
 use VetSync\Models\Users;
+use Exception; // Add this line
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'DELETE' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
     $response['message'] = 'Invalid request method';
@@ -42,6 +43,7 @@ try {
         if ($action === 'update_verification') {
             $user_uuid = $_POST['user_uuid'] ?? null;
             $status = $_POST['status'] ?? null;
+            $rejection_reason = $_POST['rejection_reason'] ?? '';
             $user_data = userData();
             $verified_by = 'Admin';
 
@@ -59,6 +61,49 @@ try {
                 ];
             } else {
                 $response = Users::updateVerificationStatus($user_uuid, $status, $verified_by);
+
+                // Send email notification after successful status update
+                if ($response['success']) {
+                    try {
+                        // Get user details for email
+                        global $conn;
+                        $stmt = $conn->prepare("
+                            SELECT firstname, lastname, email 
+                            FROM users 
+                            WHERE uuid = ?
+                        ");
+                        $stmt->execute([$user_uuid]);
+                        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        if ($userData && $userData['email']) {
+                            $emailService = new \VetSync\Services\Email();
+                            $userName = $userData['firstname'] . ' ' . $userData['lastname'];
+
+                            if ($status === 'verified') {
+                                // Send verification success email
+                                $emailResult = $emailService->sendAccountValidated(
+                                    $userData['email'],
+                                    $userName
+                                );
+                            } elseif ($status === 'rejected') {
+                                // Send rejection email
+                                $emailResult = $emailService->sendAccountRejected(
+                                    $userData['email'],
+                                    $userName,
+                                    $rejection_reason
+                                );
+                            }
+
+                            // Log email result (optional)
+                            if (isset($emailResult) && !$emailResult['success']) {
+                                error_log("Failed to send verification notification email: " . $emailResult['message']);
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        error_log("Verification notification email error: " . $e->getMessage());
+                        // Don't fail the verification update if email fails
+                    }
+                }
             }
 
             echo json_encode($response);
@@ -79,6 +124,27 @@ try {
             $data['uuid'] = uuid();
             $data['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
             $response = Users::storeWhereUserAdmin($data) ?? [];
+
+            // Send welcome email for new user registration
+            if ($response['success'] && isset($data['email'])) {
+                try {
+                    $emailService = new \VetSync\Services\Email();
+                    $userName = $data['firstname'] . ' ' . $data['lastname'];
+
+                    $emailResult = $emailService->sendWelcomeEmail(
+                        $data['email'],
+                        $userName
+                    );
+
+                    // Log email result (optional)
+                    if (!$emailResult['success']) {
+                        error_log("Failed to send welcome email: " . $emailResult['message']);
+                    }
+                } catch (\Exception $e) {
+                    error_log("Welcome email error: " . $e->getMessage());
+                    // Don't fail the user creation if email fails
+                }
+            }
         } else if ($action === 'update') {
             $data['uuid'] = $_POST['uuid'] ?? null;
             $response = Users::updateWhereUserAdmin($data) ?? [];

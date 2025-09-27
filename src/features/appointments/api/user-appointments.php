@@ -4,6 +4,8 @@ include '../../../core/app.php';
 apiHeaders();
 
 use VetSync\Models\Appointments;
+use VetSync\Services\SessionManager;
+use Exception; // Add this line
 
 $response = [];
 
@@ -113,6 +115,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         ];
 
         $response = Appointments::store($appointmentData);
+
+        // Send confirmation email after successful booking
+        if ($response['success']) {
+            try {
+                // Get user and pet details for email
+                $emailStmt = $conn->prepare("
+                    SELECT 
+                        u.firstname, u.lastname, u.email,
+                        p.name as pet_name,
+                        s.name as service_name
+                    FROM users u
+                    JOIN pets p ON p.uuid = ? AND p.user_uuid = u.uuid
+                    LEFT JOIN services s ON s.uuid = ?
+                    WHERE u.uuid = ?
+                ");
+                $emailStmt->execute([$pet_uuid, $service_uuid, $userUuid]);
+                $emailData = $emailStmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($emailData && $emailData['email']) {
+                    $emailService = new \VetSync\Services\Email();
+                    $userName = $emailData['firstname'] . ' ' . $emailData['lastname'];
+                    $serviceName = $emailData['service_name'] ?: 'Custom Service Request';
+
+                    $emailResult = $emailService->sendAppointmentConfirmation(
+                        $emailData['email'],
+                        $userName,
+                        $emailData['pet_name'],
+                        $serviceName,
+                        $date,
+                        null // time not set yet
+                    );
+
+                    // Log email result (optional)
+                    if (!$emailResult['success']) {
+                        error_log("Failed to send appointment confirmation email: " . $emailResult['message']);
+                    }
+                }
+            } catch (Exception $e) {
+                error_log("Email notification error: " . $e->getMessage());
+                // Don't fail the appointment booking if email fails
+            }
+        }
+
         echo json_encode($response);
         exit;
     }

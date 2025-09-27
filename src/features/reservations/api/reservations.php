@@ -4,6 +4,7 @@ include '../../../core/app.php';
 apiHeaders();
 
 use VetSync\Models\Reservations;
+use Exception; // Add this line
 
 $response = [];
 
@@ -26,6 +27,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
 
         $response = Reservations::updateStatus($id, $status, $rejectionReason);
+
+        // Send pickup notification email when status is changed to 'completed'
+        if ($response['success'] && $status === 'completed') {
+            try {
+                // Get reservation details for email
+                $reservationDetails = Reservations::getById($id);
+                if ($reservationDetails['success']) {
+                    $reservation = $reservationDetails['data'];
+
+                    // Get user details
+                    global $conn; // Add this line!
+                    $stmt = $conn->prepare("
+                        SELECT u.firstname, u.lastname, u.email 
+                        FROM users u 
+                        WHERE u.uuid = ?
+                    ");
+                    $stmt->execute([$reservation['user_uuid']]);
+                    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                    if ($userData && $userData['email']) {
+                        // Parse products to create a readable list
+                        $products = json_decode($reservation['products'], true);
+                        $productNames = '';
+                        foreach ($products as $product) {
+                            $productNames .= "• " . htmlspecialchars($product['name']) . " (Qty: " . $product['quantity'] . ")<br>";
+                        }
+
+                        $emailService = new \VetSync\Services\Email();
+                        $userName = $userData['firstname'] . ' ' . $userData['lastname'];
+
+                        $emailResult = $emailService->sendPickupNotification(
+                            $userData['email'],
+                            $userName,
+                            $productNames,
+                            $reservation['preferred_date'],
+                            $reservation['total_amount']
+                        );
+
+                        // Log email result (optional)
+                        if (!$emailResult['success']) {
+                            error_log("Failed to send pickup notification email: " . $emailResult['message']);
+                        }
+                    }
+                }
+            } catch (\Exception $e) { // Also use \Exception for the fully qualified name
+                error_log("Pickup notification email error: " . $e->getMessage());
+                // Don't fail the status update if email fails
+            }
+        }
+
         echo json_encode($response);
         exit;
     }

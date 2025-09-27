@@ -4,6 +4,7 @@ namespace VetSync\Models;
 
 use PDO;
 use PDOException;
+use Exception;
 
 class Pets
 {
@@ -205,6 +206,16 @@ class Pets
         try {
             self::conn()->beginTransaction();
 
+            // Get pet and user data before archiving for email notification
+            $petStmt = self::conn()->prepare("
+                SELECT p.name as pet_name, p.user_uuid, u.firstname, u.lastname, u.email 
+                FROM pets p 
+                JOIN users u ON p.user_uuid = u.uuid 
+                WHERE p.uuid = ?
+            ");
+            $petStmt->execute([$uuid]);
+            $petData = $petStmt->fetch(PDO::FETCH_ASSOC);
+
             // Update pet archive status
             $stmt = self::conn()->prepare("
                 UPDATE pets SET 
@@ -214,6 +225,8 @@ class Pets
             ");
 
             $stmt->execute([$archive_status, $uuid]);
+
+            $cancelledCount = 0;
 
             // If marking as deceased, cancel all future appointments
             if ($archive_status === 'deceased') {
@@ -246,9 +259,32 @@ class Pets
                 $countStmt->execute([$uuid]);
                 $cancelledCount = $countStmt->fetch(PDO::FETCH_ASSOC)['cancelled_count'];
 
+                // Send email notification to user
+                if ($petData && $petData['email']) {
+                    try {
+                        $emailService = new \VetSync\Services\Email();
+                        $userName = $petData['firstname'] . ' ' . $petData['lastname'];
+
+                        $emailResult = $emailService->sendPetDeceasedNotification(
+                            $petData['email'],
+                            $userName,
+                            $petData['pet_name'],
+                            $cancelledCount
+                        );
+
+                        // Log email result (optional)
+                        if (!$emailResult['success']) {
+                            error_log("Failed to send pet deceased notification email: " . $emailResult['message']);
+                        }
+                    } catch (Exception $e) {
+                        error_log("Email notification error: " . $e->getMessage());
+                        // Don't fail the operation if email fails
+                    }
+                }
+
                 self::conn()->commit();
 
-                $message = "Pet marked as deceased.";
+                $message = "Pet marked as deceased. Our condolences.";
                 if ($cancelledCount > 0) {
                     $message .= " {$cancelledCount} future appointment(s) were automatically cancelled.";
                 }
