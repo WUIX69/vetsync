@@ -1,430 +1,335 @@
-// Reservations Management System - Table Layout
-const ReservationsManager = {
-    init() {
-        // console.log("ReservationsManager initialized");
-        this.loadReservations();
-        this.bindEvents();
-    },
+$(document).ready(function () {
+    loadReservations();
+    setupTabNavigation();
+    setupSearchFunctionality();
+    setupActionHandlers();
+});
 
-    bindEvents() {
-        // console.log("Binding events");
+let allReservations = [];
 
-        // Tab navigation
-        $(document).on("click", ".nav-pills .nav-link", function (e) {
-            e.preventDefault();
-            // console.log("Tab clicked:", $(this).data("target"));
-            const target = $(this).data("target");
-
-            // Update active nav
-            $(".nav-pills .nav-link").removeClass("active");
-            $(this).addClass("active");
-
-            // Show target content
-            $(".tab-content").removeClass("active");
-            $(`#${target}-tab`).addClass("active");
-        });
-
-        // Accept reservation
-        $(document).on("click", ".btn-accept", function (e) {
-            e.preventDefault();
-            // console.log("Accept button clicked");
-            const reservationId = $(this).data("reservation-id");
-            // console.log("Reservation ID:", reservationId);
-
-            if (confirm("Accept this reservation?")) {
-                ReservationsManager.updateStatus(reservationId, "accepted");
+function loadReservations() {
+    $.get("/src/features/reservations/api/reservations.php")
+        .done(function (response) {
+            if (response.success) {
+                allReservations = response.data;
+                renderReservations("all", allReservations);
+                updateTabCounts();
+            } else {
+                showError("Failed to load reservations: " + response.message);
             }
+        })
+        .fail(function () {
+            showError("Failed to load reservations. Please try again.");
         });
+}
 
-        // Reject reservation
-        $(document).on("click", ".btn-reject", function (e) {
-            e.preventDefault();
-            // console.log("Reject button clicked");
-            const reservationId = $(this).data("reservation-id");
-            // console.log("Reservation ID:", reservationId);
+function setupTabNavigation() {
+    $(".nav-pills .nav-link").click(function (e) {
+        e.preventDefault();
 
-            $("#rejectionReservationId").val(reservationId);
-            $("#rejectionModal").modal("show");
-        });
+        // Update active tab
+        $(".nav-pills .nav-link").removeClass("active");
+        $(this).addClass("active");
 
-        // Confirm rejection
-        $("#confirmRejection").on("click", function () {
-            // console.log("Confirm rejection clicked");
-            const reservationId = $("#rejectionReservationId").val();
-            const reason = $("#rejectionReason").val().trim();
+        // Show corresponding tab content
+        const target = $(this).data("target");
+        $(".tab-content").removeClass("active");
+        $(`#${target}-tab`).addClass("active");
 
-            if (!reason) {
-                alert("Please provide a reason for rejection");
-                return;
-            }
+        // Filter and render reservations
+        const filteredReservations = filterReservationsByStatus(target);
+        renderReservations(target, filteredReservations);
+    });
+}
 
-            ReservationsManager.updateStatus(reservationId, "rejected", reason);
-            $("#rejectionModal").modal("hide");
-            $("#rejectionReason").val("");
-        });
+function filterReservationsByStatus(status) {
+    if (status === "all") {
+        return allReservations;
+    }
 
-        // Mark as Ready (Complete) reservation
-        $(document).on("click", ".btn-complete", function (e) {
-            e.preventDefault();
-            // console.log("Complete button clicked");
-            const reservationId = $(this).data("reservation-id");
-            // console.log("Reservation ID:", reservationId);
+    // Map completed to picked_up for filtering
+    const filterStatus = status === "completed" ? "picked_up" : status;
+    return allReservations.filter(
+        (reservation) => reservation.status === filterStatus
+    );
+}
 
-            if (confirm("Mark this reservation as ready for pickup?")) {
-                ReservationsManager.updateStatus(reservationId, "completed");
-            }
-        });
+function renderReservations(tab, reservations) {
+    const tableBody = $(`#${tab}-reservations-table`);
+    tableBody.empty();
 
-        // Search functionality
-        $("input[id^='search-']").on("keyup", function () {
-            const searchTerm = $(this).val().toLowerCase();
-            const tableId =
-                $(this).attr("id").replace("search-", "") +
-                "-reservations-table";
-
-            $(`#${tableId} tr`).each(function () {
-                const text = $(this).text().toLowerCase();
-                $(this).toggle(text.indexOf(searchTerm) > -1);
-            });
-        });
-    },
-
-    loadReservations() {
-        // console.log("Loading reservations...");
-        $.ajax({
-            url: "/src/features/reservations/api/reservations.php",
-            method: "GET",
-            dataType: "json",
-            success: function (response) {
-                // console.log("Reservations loaded:", response);
-                if (!response.success) {
-                    console.error(
-                        "Failed to load reservations:",
-                        response.message
-                    );
-                    return;
-                }
-
-                ReservationsManager.renderReservations(response.data);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error loading reservations:", error);
-                // console.error("Response:", xhr.responseText);
-            },
-        });
-    },
-
-    renderReservations(reservations) {
-        // console.log("Rendering reservations:", reservations);
-        // Clear all table bodies
-        $(
-            "#all-reservations-table, #pending-reservations-table, #accepted-reservations-table, #rejected-reservations-table, #completed-reservations-table"
-        ).empty();
-
-        if (reservations.length === 0) {
-            this.showEmptyState(
-                "all-reservations-table",
-                "No reservations found"
-            );
-            return;
-        }
-
-        // Separate reservations by status
-        const allReservations = reservations;
-        const pendingReservations = reservations.filter(
-            (r) => r.status === "pending"
-        );
-        const acceptedReservations = reservations.filter(
-            (r) => r.status === "accepted"
-        );
-        const rejectedReservations = reservations.filter(
-            (r) => r.status === "rejected"
-        );
-        const completedReservations = reservations.filter(
-            (r) => r.status === "completed"
-        );
-
-        // console.log("Status breakdown:", {
-        //     all: allReservations.length,
-        //     pending: pendingReservations.length,
-        //     accepted: acceptedReservations.length,
-        //     rejected: rejectedReservations.length,
-        //     completed: completedReservations.length,
-        // });
-
-        // Render each category
-        this.populateTable("all-reservations-table", allReservations);
-        this.populateTable("pending-reservations-table", pendingReservations);
-        this.populateTable("accepted-reservations-table", acceptedReservations);
-        this.populateTable("rejected-reservations-table", rejectedReservations);
-        this.populateTable(
-            "completed-reservations-table",
-            completedReservations
-        );
-
-        // Show empty states for empty tables
-        this.showEmptyStatesIfNeeded();
-    },
-
-    populateTable(tableId, reservations) {
-        // console.log(
-        //     `Populating table ${tableId} with ${reservations.length} reservations`
-        // );
-        const $tableBody = $(`#${tableId}`);
-
-        reservations.forEach((reservation) => {
-            const row = this.createTableRow(reservation);
-            $tableBody.append(row);
-        });
-    },
-
-    createTableRow(reservation) {
-        // console.log("Creating row for reservation:", reservation);
-        const statusInfo = this.getStatusInfo(reservation.status);
-        const products = JSON.parse(reservation.products || "[]");
-
-        // Calculate total amount
-        const totalAmount = products.reduce((sum, product) => {
-            const price =
-                parseFloat(product.total_price) ||
-                (parseFloat(product.price) || 0) *
-                    (parseInt(product.qty) || parseInt(product.quantity) || 0);
-            return sum + price;
-        }, 0);
-
-        // Get customer initials for avatar
-        const initials = `${reservation.firstname?.charAt(0) || ""}${
-            reservation.lastname?.charAt(0) || ""
-        }`.toUpperCase();
-
-        const actionButtons = this.getActionButtons(reservation);
-        // console.log(
-        //     "Action buttons for reservation",
-        //     reservation.id,
-        //     ":",
-        //     actionButtons
-        // );
-
-        return `
-            <tr data-id="${reservation.id}">
-                <td>
-                    <div style="font-weight: 600; color: #2c3e50;">${
-                        reservation.formatted_date
-                    }</div>
-                    <div style="color: #6c757d; font-size: 0.85rem;">${
-                        reservation.formatted_time
-                    }</div>
-                </td>
-                <td>
-                    <div class="customer-info">
-                        <div class="customer-avatar">${initials}</div>
-                        <div class="customer-details">
-                            <div class="customer-name">${
-                                reservation.firstname
-                            } ${reservation.lastname}</div>
-                            <div class="customer-email">${
-                                reservation.email || "No email"
-                            }</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="product-list">
-                        ${products
-                            .map((product) => {
-                                const qty =
-                                    parseInt(product.qty) ||
-                                    parseInt(product.quantity) ||
-                                    0;
-                                const price = parseFloat(product.price) || 0;
-                                const subtotal =
-                                    parseFloat(product.total_price) ||
-                                    price * qty;
-
-                                return `
-                                <div class="product-item">
-                                    <div class="product-name">${
-                                        product.name
-                                    }</div>
-                                    <div class="product-details">
-                                        Qty: ${qty} × ₱${price.toFixed(
-                                    2
-                                )} = ₱${subtotal.toFixed(2)}
-                                    </div>
-                                </div>
-                            `;
-                            })
-                            .join("")}
-                    </div>
-                </td>
-                <td>
-                    <div class="amount">₱${totalAmount.toFixed(2)}</div>
-                </td>
-                <td>
-                    <span class="status-badge ${reservation.status}">${
-            statusInfo.label
-        }</span>
-                </td>
-                <td>
-                    <div class="action-buttons">
-                        ${actionButtons}
-                    </div>
-                </td>
-            </tr>
-        `;
-    },
-
-    getStatusInfo(status) {
-        const statusMap = {
-            pending: { label: "Pending", class: "pending" },
-            accepted: { label: "Accepted", class: "accepted" },
-            rejected: { label: "Rejected", class: "rejected" },
-            completed: { label: "Ready", class: "completed" },
-        };
-        return statusMap[status] || { label: "Unknown", class: "unknown" };
-    },
-
-    getActionButtons(reservation) {
-        const status = reservation.status;
-        let buttons = "";
-
-        // console.log("Getting action buttons for status:", status);
-
-        switch (status) {
-            case "pending":
-                buttons = `
-                    <button class="btn btn-accept" data-reservation-id="${reservation.id}">Accept</button>
-                    <button class="btn btn-reject" data-reservation-id="${reservation.id}">Reject</button>
-                `;
-                break;
-            case "accepted":
-                buttons = `
-                    <button class="btn btn-complete" data-reservation-id="${reservation.id}">Mark Ready</button>
-                `;
-                break;
-            case "rejected":
-                buttons = `
-                    <span class="status-info">
-                        <i class="material-icons-sharp">info</i> Rejected
-                    </span>
-                `;
-                break;
-            case "completed":
-                buttons = `
-                    <span class="ready-status">
-                        <i class="material-icons-sharp">check_circle</i> Ready for Pickup
-                    </span>
-                `;
-                break;
-            default:
-                buttons = `
-                    <span class="status-info">
-                        <i class="material-icons-sharp">help</i> Unknown
-                    </span>
-                `;
-        }
-
-        // console.log("Generated buttons:", buttons);
-        return buttons;
-    },
-
-    updateStatus(reservationId, status, reason = null) {
-        // console.log("Updating status:", { reservationId, status, reason });
-        const data = {
-            action: "update_status",
-            id: reservationId,
-            status: status,
-        };
-
-        if (reason) {
-            data.rejection_reason = reason;
-        }
-
-        // console.log("Sending data:", data);
-
-        $.ajax({
-            url: "/src/features/reservations/api/reservations.php",
-            method: "POST",
-            data: data,
-            dataType: "json",
-            success: function (response) {
-                // console.log("Update response:", response);
-                if (response.success) {
-                    ReservationsManager.showNotification(
-                        response.message,
-                        "success"
-                    );
-                    ReservationsManager.loadReservations(); // Reload data
-                } else {
-                    ReservationsManager.showNotification(
-                        response.message,
-                        "error"
-                    );
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error updating status:", error);
-                // console.error("Response:", xhr.responseText);
-                ReservationsManager.showNotification(
-                    "Failed to update reservation status",
-                    "error"
-                );
-            },
-        });
-    },
-
-    showEmptyStatesIfNeeded() {
-        const tables = [
-            {
-                id: "pending-reservations-table",
-                message: "No pending reservations",
-            },
-            {
-                id: "accepted-reservations-table",
-                message: "No accepted reservations",
-            },
-            {
-                id: "rejected-reservations-table",
-                message: "No rejected reservations",
-            },
-            {
-                id: "completed-reservations-table",
-                message: "No completed reservations",
-            },
-        ];
-
-        tables.forEach((table) => {
-            if ($(`#${table.id} tr`).length === 0) {
-                this.showEmptyState(table.id, table.message);
-            }
-        });
-    },
-
-    showEmptyState(tableId, message) {
-        $(`#${tableId}`).html(`
+    if (reservations.length === 0) {
+        tableBody.append(`
             <tr>
-                <td colspan="6">
-                    <div class="empty-state">
-                        <i class="material-icons-sharp">inbox</i>
-                        <h3>${message}</h3>
-                        <p>Reservations will appear here when available</p>
-                    </div>
+                <td colspan="6" class="empty-state">
+                    <i class="material-icons-sharp">inbox</i>
+                    <h3>No ${tab === "all" ? "" : tab} reservations found</h3>
+                    <p>There are no reservations to display at the moment.</p>
                 </td>
             </tr>
         `);
-    },
+        return;
+    }
 
-    showNotification(message, type) {
-        if (type === "success") {
-            alert("✓ " + message);
-        } else {
-            alert("✗ " + message);
+    reservations.forEach((reservation) => {
+        const row = createReservationRow(reservation);
+        tableBody.append(row);
+    });
+}
+
+function createReservationRow(reservation) {
+    const products = reservation.products_array || [];
+    const statusBadge = getStatusBadge(reservation.status);
+    const actionButtons = getActionButtons(reservation);
+
+    // Get customer initial for avatar
+    const customerName = `${reservation.firstname || ""} ${
+        reservation.lastname || ""
+    }`.trim();
+    const customerInitial = customerName.charAt(0).toUpperCase() || "U";
+
+    // Create products list
+    let productsList = "";
+    products.forEach((product) => {
+        productsList += `
+            <div class="product-item">
+                <div class="product-name">${product.name}</div>
+                <div class="product-details">Qty: ${
+                    product.quantity
+                } | ₱${parseFloat(product.price).toFixed(2)}</div>
+            </div>
+        `;
+    });
+
+    return `
+        <tr data-reservation-id="${reservation.id}">
+            <td>
+                <div>${reservation.formatted_date}</div>
+                <div style="color: #6c757d; font-size: 0.85rem;">${
+                    reservation.formatted_time
+                }</div>
+            </td>
+            <td>
+                <div class="customer-info">
+                    <div class="customer-avatar">${customerInitial}</div>
+                    <div class="customer-details">
+                        <div class="customer-name">${customerName}</div>
+                        <div class="customer-email">${
+                            reservation.email || ""
+                        }</div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="product-list">
+                    ${productsList}
+                </div>
+            </td>
+            <td>
+                <div class="amount">₱${parseFloat(
+                    reservation.total_amount
+                ).toFixed(2)}</div>
+            </td>
+            <td>${statusBadge}</td>
+            <td>
+                <div class="action-buttons">
+                    ${actionButtons}
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
+function getStatusBadge(status) {
+    const statusMap = {
+        pending: { class: "pending", text: "Pending" },
+        accepted: { class: "accepted", text: "Ready for Pickup" },
+        rejected: { class: "rejected", text: "Rejected" },
+        picked_up: { class: "completed", text: "Picked Up" },
+    };
+
+    const statusInfo = statusMap[status] || { class: "pending", text: status };
+    return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
+}
+
+function getActionButtons(reservation) {
+    let buttons = "";
+
+    switch (reservation.status) {
+        case "pending":
+            buttons = `
+                <button class="btn btn-accept" onclick="updateReservationStatus(${reservation.id}, 'accepted')">
+                    Accept
+                </button>
+                <button class="btn btn-reject" onclick="showRejectionModal(${reservation.id})">
+                    Reject
+                </button>
+            `;
+            break;
+        case "accepted":
+            buttons = `
+                <button class="btn btn-complete" onclick="markAsPickedUp(${reservation.id})">
+                    Mark as Picked Up
+                </button>
+            `;
+            break;
+        case "picked_up":
+            buttons = `
+                <span class="ready-status">
+                    <i class="material-icons-sharp">done_all</i>
+                    Completed
+                </span>
+            `;
+            break;
+        case "rejected":
+            buttons = `
+                <span class="status-info">
+                    <i class="material-icons-sharp">info</i>
+                    Rejected
+                </span>
+            `;
+            break;
+    }
+
+    return buttons;
+}
+
+function setupActionHandlers() {
+    // Rejection modal handlers
+    $("#confirmRejection").click(function () {
+        const reservationId = $("#rejectionReservationId").val();
+        const reason = $("#rejectionReason").val().trim();
+
+        if (!reason) {
+            showError("Please provide a reason for rejection.");
+            return;
         }
-    },
-};
 
-// Initialize when document is ready
-$(document).ready(function () {
-    // console.log("Document ready, initializing ReservationsManager");
-    ReservationsManager.init();
-});
+        updateReservationStatus(reservationId, "rejected", reason);
+        $("#rejectionModal").modal("hide");
+    });
+}
+
+function updateReservationStatus(reservationId, status, reason = null) {
+    const data = {
+        action: "update_status",
+        id: reservationId,
+        status: status,
+    };
+
+    if (reason) {
+        data.rejection_reason = reason;
+    }
+
+    $.post("/src/features/reservations/api/reservations.php", data)
+        .done(function (response) {
+            if (response.success) {
+                showSuccess(response.message);
+                loadReservations(); // Reload data
+            } else {
+                showError(response.message);
+            }
+        })
+        .fail(function () {
+            showError("Failed to update reservation status. Please try again.");
+        });
+}
+
+function markAsPickedUp(reservationId) {
+    // Show confirmation dialog
+    if (
+        confirm(
+            "Mark this reservation as picked up? This action cannot be undone."
+        )
+    ) {
+        const data = {
+            action: "update_status",
+            id: reservationId,
+            status: "picked_up",
+            pickup_notes: "Product picked up by customer",
+        };
+
+        $.post("/src/features/reservations/api/reservations.php", data)
+            .done(function (response) {
+                if (response.success) {
+                    showSuccess(
+                        "Reservation marked as picked up successfully!"
+                    );
+                    loadReservations(); // Reload data
+                } else {
+                    showError(response.message);
+                }
+            })
+            .fail(function () {
+                showError("Failed to mark as picked up. Please try again.");
+            });
+    }
+}
+
+function showRejectionModal(reservationId) {
+    $("#rejectionReservationId").val(reservationId);
+    $("#rejectionReason").val("");
+    $("#rejectionModal").modal("show");
+}
+
+function setupSearchFunctionality() {
+    // Setup search for each tab
+    ["all", "pending", "accepted", "rejected", "completed"].forEach((tab) => {
+        $(`#search-${tab}`).on("input", function () {
+            const searchTerm = $(this).val().toLowerCase();
+            const filteredReservations = filterReservationsByStatus(tab);
+
+            if (searchTerm) {
+                const searchResults = filteredReservations.filter(
+                    (reservation) => {
+                        const customerName =
+                            `${reservation.firstname} ${reservation.lastname}`.toLowerCase();
+                        const email = (reservation.email || "").toLowerCase();
+                        const products = JSON.stringify(
+                            reservation.products_array || []
+                        ).toLowerCase();
+
+                        return (
+                            customerName.includes(searchTerm) ||
+                            email.includes(searchTerm) ||
+                            products.includes(searchTerm)
+                        );
+                    }
+                );
+                renderReservations(tab, searchResults);
+            } else {
+                renderReservations(tab, filteredReservations);
+            }
+        });
+    });
+}
+
+function updateTabCounts() {
+    const counts = {
+        all: allReservations.length,
+        pending: allReservations.filter((r) => r.status === "pending").length,
+        accepted: allReservations.filter((r) => r.status === "accepted").length,
+        rejected: allReservations.filter((r) => r.status === "rejected").length,
+        completed: allReservations.filter((r) => r.status === "picked_up")
+            .length,
+    };
+
+    // Update tab labels with counts (optional)
+    Object.keys(counts).forEach((status) => {
+        const tab = $(`.nav-link[data-target="${status}"]`);
+        const text = tab.text().replace(/\(\d+\)/, "");
+        tab.html(
+            `${tab.find("i")[0].outerHTML} ${text.trim()} (${counts[status]})`
+        );
+    });
+}
+
+function showSuccess(message) {
+    // You can implement your notification system here
+    alert(message); // Temporary
+}
+
+function showError(message) {
+    // You can implement your notification system here
+    alert(message); // Temporary
+}

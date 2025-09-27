@@ -1,204 +1,139 @@
 <?php
+// Debug - remove any output buffering and ensure clean output
+while (ob_get_level()) {
+    ob_end_clean();
+}
 
 include '../../../core/app.php';
-apiHeaders();
+
+// Set headers
+header('Content-Type: application/json');
+header('Cache-Control: no-cache, must-revalidate');
+
+// Add error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display errors in output, log them instead
 
 use VetSync\Models\Reservations;
-use Exception; // Add this line
 
-$response = [];
+try {
+    // Handle GET requests (fetch reservations)
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $result = Reservations::all();
 
-// Handle admin actions (update_status)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    if ($_POST['action'] === 'update_status') {
-        $id = $_POST['id'] ?? null;
-        $status = $_POST['status'] ?? null;
-        $rejectionReason = $_POST['rejection_reason'] ?? null;
-
-        if (!$id || !$status) {
-            echo json_encode(['success' => false, 'message' => 'Missing parameters']);
-            exit;
+        // Ensure we have a valid result
+        if (!is_array($result)) {
+            throw new Exception('Invalid result from Reservations::all()');
         }
 
-        // If rejecting, require a reason
-        if ($status === 'rejected' && empty($rejectionReason)) {
-            echo json_encode(['success' => false, 'message' => 'Rejection reason is required']);
-            exit;
-        }
+        echo json_encode($result);
+        exit;
+    }
 
-        $response = Reservations::updateStatus($id, $status, $rejectionReason);
+    // Handle POST requests
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST['action'])) {
+            if ($_POST['action'] === 'update_status') {
+                $id = $_POST['id'] ?? null;
+                $status = $_POST['status'] ?? null;
+                $rejectionReason = $_POST['rejection_reason'] ?? null;
+                $pickupNotes = $_POST['pickup_notes'] ?? '';
 
-        // Send pickup notification email when status is changed to 'completed'
-        if ($response['success'] && $status === 'completed') {
-            try {
-                // Get reservation details for email
-                $reservationDetails = Reservations::getById($id);
-                if ($reservationDetails['success']) {
-                    $reservation = $reservationDetails['data'];
-
-                    // Get user details
-                    global $conn; // Add this line!
-                    $stmt = $conn->prepare("
-                        SELECT u.firstname, u.lastname, u.email 
-                        FROM users u 
-                        WHERE u.uuid = ?
-                    ");
-                    $stmt->execute([$reservation['user_uuid']]);
-                    $userData = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($userData && $userData['email']) {
-                        // Parse products to create a readable list
-                        $products = json_decode($reservation['products'], true);
-                        $productNames = '';
-                        foreach ($products as $product) {
-                            $productNames .= "• " . htmlspecialchars($product['name']) . " (Qty: " . $product['quantity'] . ")<br>";
-                        }
-
-                        $emailService = new \VetSync\Services\Email();
-                        $userName = $userData['firstname'] . ' ' . $userData['lastname'];
-
-                        $emailResult = $emailService->sendPickupNotification(
-                            $userData['email'],
-                            $userName,
-                            $productNames,
-                            $reservation['preferred_date'],
-                            $reservation['total_amount']
-                        );
-
-                        // Log email result (optional)
-                        if (!$emailResult['success']) {
-                            error_log("Failed to send pickup notification email: " . $emailResult['message']);
-                        }
-                    }
+                if (!$id || !$status) {
+                    echo json_encode(['success' => false, 'message' => 'Missing parameters']);
+                    exit;
                 }
-            } catch (\Exception $e) { // Also use \Exception for the fully qualified name
-                error_log("Pickup notification email error: " . $e->getMessage());
-                // Don't fail the status update if email fails
+
+                // If rejecting, require a reason
+                if ($status === 'rejected' && empty($rejectionReason)) {
+                    echo json_encode(['success' => false, 'message' => 'Rejection reason is required']);
+                    exit;
+                }
+
+                // Handle different status updates
+                if ($status === 'picked_up') {
+                    $response = Reservations::markAsPickedUp($id, $pickupNotes);
+                } else {
+                    $response = Reservations::updateStatus($id, $status, $rejectionReason);
+                }
+
+                echo json_encode($response);
+                exit;
             }
-        }
 
-        echo json_encode($response);
-        exit;
+            if ($_POST['action'] === 'cancel_reservation') {
+                global $session;
+
+                if (!$session->has()) {
+                    echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
+                    exit;
+                }
+
+                $userData = $session->get();
+                $reservationId = $_POST['reservation_id'] ?? null;
+
+                if (!$reservationId) {
+                    echo json_encode(['success' => false, 'message' => 'Reservation ID is required']);
+                    exit;
+                }
+
+                $response = Reservations::updateStatus($reservationId, 'rejected', 'Cancelled by user');
+                if ($response['success']) {
+                    $response['message'] = 'Reservation cancelled successfully';
+                }
+                echo json_encode($response);
+                exit;
+            }
+        } else {
+            // Handle reservation creation (from cart)
+            global $session;
+
+            if (!$session->has()) {
+                echo json_encode(['success' => false, 'message' => 'You must be logged in to make a reservation.']);
+                exit;
+            }
+
+            $userData = $session->get();
+            $products = $_POST['products'] ?? null;
+            $preferredDate = $_POST['preferred_date'] ?? null;
+            $preferredTime = $_POST['preferred_time'] ?? null;
+
+            if (!$products || !$preferredDate || !$preferredTime) {
+                echo json_encode(['success' => false, 'message' => 'Missing required fields.']);
+                exit;
+            }
+
+            $data = [
+                'id' => time() . rand(100, 999),
+                'user_uuid' => $userData['uuid'],
+                'products' => $products,
+                'preferred_date' => $preferredDate,
+                'preferred_time' => $preferredTime,
+                'delivery_method' => $_POST['delivery_method'] ?? 'pickup',
+                'notes' => $_POST['notes'] ?? null,
+                'total_amount' => $_POST['total_amount'] ?? 0,
+            ];
+
+            $response = Reservations::store($data);
+            echo json_encode($response);
+            exit;
+        }
     }
 
-    // FIXED: Handle user cancellation using "rejected" status
-    if ($_POST['action'] === 'cancel_reservation') {
-        global $session;
+    // Default response for unsupported methods
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 
-        if (!$session->has()) {
-            echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
-            exit;
-        }
-
-        $userData = $session->get();
-
-        // Check user verification status
-        $isVerified = \VetSync\Models\Users::isUserVerified($userData['uuid']);
-        if (!$isVerified) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Your account is pending for verification. Please wait until verified to complete this action.'
-            ]);
-            exit;
-        }
-
-        $reservationId = $_POST['reservation_id'] ?? null;
-
-        if (!$reservationId) {
-            echo json_encode(['success' => false, 'message' => 'Reservation ID is required']);
-            exit;
-        }
-
-        // Verify the reservation belongs to the user and is pending
-        $reservation = Reservations::getById($reservationId);
-        if (!$reservation['success']) {
-            echo json_encode(['success' => false, 'message' => 'Reservation not found']);
-            exit;
-        }
-
-        if ($reservation['data']['user_uuid'] !== $userData['uuid']) {
-            echo json_encode(['success' => false, 'message' => 'Unauthorized']);
-            exit;
-        }
-
-        if ($reservation['data']['status'] !== 'pending') {
-            echo json_encode(['success' => false, 'message' => 'Only pending reservations can be cancelled']);
-            exit;
-        }
-
-        // FIXED: Update status to "rejected" with cancellation reason
-        $response = Reservations::updateStatus($reservationId, 'rejected', 'Cancelled by user');
-        if ($response['success']) {
-            $response['message'] = 'Reservation cancelled successfully';
-        }
-        echo json_encode($response);
-        exit;
-    }
+} catch (Exception $e) {
+    error_log("Reservations API Error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'An error occurred: ' . $e->getMessage()
+    ]);
+} catch (Error $e) {
+    error_log("Reservations API Fatal Error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'System error occurred'
+    ]);
 }
-
-// Handle reservation creation (from cart)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
-    global $session;
-
-    if (!$session->has()) {
-        echo json_encode(['success' => false, 'message' => 'You must be logged in to make a reservation.']);
-        exit;
-    }
-
-    $userData = $session->get();
-
-    // Check user verification status
-    $isVerified = \VetSync\Models\Users::isUserVerified($userData['uuid']);
-    if (!$isVerified) {
-        echo json_encode([
-            'success' => false,
-            'message' => 'Your account is pending for verification. Please wait until verified to complete this action.'
-        ]);
-        exit;
-    }
-
-    // Validate required fields
-    $products = $_POST['products'] ?? null;
-    $preferredDate = $_POST['preferred_date'] ?? null;
-    $preferredTime = $_POST['preferred_time'] ?? null;
-
-    if (!$products) {
-        echo json_encode(['success' => false, 'message' => 'No products selected.']);
-        exit;
-    }
-
-    if (!$preferredDate) {
-        echo json_encode(['success' => false, 'message' => 'Please select a preferred date.']);
-        exit;
-    }
-
-    if (!$preferredTime) {
-        echo json_encode(['success' => false, 'message' => 'Please select a preferred time.']);
-        exit;
-    }
-
-    $data = [
-        'id' => time() . rand(100, 999), // Simple ID generation
-        'user_uuid' => $userData['uuid'],
-        'products' => $products, // Already JSON encoded from frontend
-        'preferred_date' => $preferredDate,
-        'preferred_time' => $preferredTime,
-        'delivery_method' => $_POST['delivery_method'] ?? 'pickup',
-        'notes' => $_POST['notes'] ?? null,
-        'total_amount' => $_POST['total_amount'] ?? 0,
-    ];
-
-    $response = Reservations::store($data);
-    echo json_encode($response);
-    exit;
-}
-
-// Handle GET requests (fetch reservations)
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $result = Reservations::all();
-    echo json_encode($result);
-    exit;
-}
-
-echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 exit;

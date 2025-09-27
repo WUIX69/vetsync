@@ -251,9 +251,9 @@ $related_products = array_slice($related_products, 0, 3);
         main section.products .product-listing .content-2 .product-footer .quantity-controls {
             justify-content: center;
             margin: 0.5rem 0;
-        }
+    }
 
-        main section.products .product-listing .content-2 .product-footer .add-to-cart-btn {
+    main section.products .product-listing .content-2 .product-footer .add-to-cart-btn {
             width: 100%;
         }
     }
@@ -286,13 +286,13 @@ $related_products = array_slice($related_products, 0, 3);
                         // Stock status
                         $stock_status = intval($product['stock']) > 0 ? 'available' : 'out-of-stock';
                         ?>
-                        <div class="col-md-4">
-                            <div class="product-listing card">
-                                <div class="card-body">
-                                    <div class="content-1">
+                <div class="col-md-4">
+                    <div class="product-listing card">
+                        <div class="card-body">
+                            <div class="content-1">
                                         <img src="<?= media($product['uuid']) ?>" alt="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>"
-                                            class="product-image">
-                                        <div class="product-tag">
+                                    class="product-image">
+                                <div class="product-tag">
                                             <?php if (!empty($tags)): ?>
                                                 <div class="ui tag label <?= rand(0,1) ? 'red' : 'teal' ?>">
                                                     <?= htmlspecialchars(ucfirst(trim($tags[0])), ENT_QUOTES, 'UTF-8') ?>
@@ -300,69 +300,69 @@ $related_products = array_slice($related_products, 0, 3);
                                             <?php else: ?>
                                                 <div class="ui tag label blue">Featured</div>
                                             <?php endif; ?>
-                                        </div>
+                                </div>
                                         <div class="product-price">₱<?= number_format($effective_price, 2) ?></div>
-                                    </div>
-                                    <div class="content-2">
+                            </div>
+                            <div class="content-2">
                                         <h3 class="product-title"><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h3>
-                                        <div class="meta">
-                                            <div class="rating">
-                                                Rating:&nbsp;
+                                <div class="meta">
+                                    <div class="rating">
+                                        Rating:&nbsp;
                                                 <div class="ui yellow disabled rating" data-rating="<?= rand(3,5) ?>" data-max-rating="5">
-                                                </div>
-                                            </div>
-                                            <div class="vr-line"></div>
-                                            <div class="category">
-                                                <i class="tag icon"></i>
-                                                Product
-                                            </div>
                                         </div>
-                                        <p class="paragraph">
+                                    </div>
+                                    <div class="vr-line"></div>
+                                    <div class="category">
+                                        <i class="tag icon"></i>
+                                                Product
+                                    </div>
+                                </div>
+                                <p class="paragraph">
                                             <?= htmlspecialchars(substr($product['description'], 0, 100), ENT_QUOTES, 'UTF-8') ?>...
-                                        </p>
-                                        <div class="product-specs">
-                                            <div class="product-spec-item">
+                                </p>
+                                <div class="product-specs">
+                                    <div class="product-spec-item">
                                                 <i class="box icon"></i> Stock: <?= intval($product['stock']) ?>
-                                            </div>
+                                    </div>
                                             <?php if (!empty($specs)): ?>
                                                 <?php foreach (array_slice($specs, 0, 3) as $spec): ?>
-                                                    <div class="product-spec-item">
+                                    <div class="product-spec-item">
                                                         <i class="checkmark icon"></i> <?= htmlspecialchars(trim($spec), ENT_QUOTES, 'UTF-8') ?>
-                                                    </div>
+                                    </div>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
-                                        </div>
-                                        <div class="product-footer">
-                                            <div class="learnmore">
+                                </div>
+                                <div class="product-footer">
+                                    <div class="learnmore">
                                                 <a class="learnmore-btn" href="/src/app/user/product-single-view.php?uuid=<?= $product['uuid'] ?>">Learn More</a>
-                                            </div>
+                                    </div>
                                             <div class="quantity-controls">
-                                                <div class="ui mini icon buttons">
-                                                    <button class="ui button decrease-quantity">
-                                                        <i class="minus icon"></i>
-                                                    </button>
-                                                    <div class="ui disabled button quantity-value">1</div>
-                                                    <button class="ui button increase-quantity">
-                                                        <i class="plus icon"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                    <div class="ui mini icon buttons">
+                                        <button class="ui button decrease-quantity">
+                                            <i class="minus icon"></i>
+                                        </button>
+                                        <div class="ui disabled button quantity-value">1</div>
+                                        <button class="ui button increase-quantity">
+                                            <i class="plus icon"></i>
+                                        </button>
+                                    </div>
+                                        </div>
                                             <button class="add-to-cart-btn" <?= $stock_status === 'out-of-stock' ? 'disabled' : '' ?>>
                                                 <?= $stock_status === 'out-of-stock' ? 'Out of Stock' : 'Add to Cart' ?>
                                             </button>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="col-12">
                         <p class="text-center">No related products available.</p>
-                    </div>
+                </div>
                 <?php endif; ?>
 
-            </div>
-        </div>
+                    </div>
+                </div>
     </div>
 </section>
