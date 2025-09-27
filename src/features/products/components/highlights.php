@@ -1,3 +1,25 @@
+<?php
+$product = $GLOBALS['product'] ?? null;
+if (!$product) {
+    return;
+}
+
+// Parse tags and specs
+$tags = !empty($product['tags']) ? explode(',', $product['tags']) : [];
+$specs = !empty($product['specs']) ? explode(',', $product['specs']) : [];
+
+// Calculate stock status
+$stock_status = intval($product['stock']) > 0 ? 'in-stock' : 'out-stock';
+$stock_text = intval($product['stock']) > 0 ? 'In Stock' : 'Out of Stock';
+
+// Calculate effective price
+$effective_price = !empty($product['dc_price']) && floatval($product['dc_price']) > 0
+    ? floatval($product['dc_price'])
+    : floatval($product['og_price']);
+
+$has_discount = !empty($product['dc_price']) && floatval($product['dc_price']) > 0
+    && floatval($product['dc_price']) < floatval($product['og_price']);
+?>
 <style>
     /*----------- MAIN (Product) -----------*/
     main section.highlights {
@@ -251,7 +273,8 @@
             <!-- Product Images -->
             <div class="col-lg-7">
                 <div class="product-image-main">
-                    <img src="<?= asset('img/contents/products/collagen.png'); ?>" alt="Collagen Peptides">
+                    <img src="<?= media($product['uuid']) ?>"
+                        alt="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>">
                 </div>
                 <div class="product-thumbnails">
                     <div class="thumbnail active"></div>
@@ -263,13 +286,13 @@
             <!-- Product Info -->
             <div class="col-lg-5">
                 <div class="product-info-card">
-                    <div class="stock-status in-stock">In Stock</div>
+                    <div class="stock-status <?= $stock_status ?>"><?= $stock_text ?> (<?= intval($product['stock']) ?>)
+                    </div>
                     <div class="product-title">
-                        <h1>Lorem Ipsum Dolor</h1>
+                        <h1><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h1>
                     </div>
 
                     <div class="product-rating">
-                        <i class="star icon"></i>
                         <i class="star icon"></i>
                         <i class="star icon"></i>
                         <i class="star icon"></i>
@@ -278,57 +301,34 @@
                     </div>
 
                     <div class="product-price">
-                        ₱69.00 <span class="original-price text-decoration-line-through text-muted fs-6">₱78.00</span>
+                        ₱<?= number_format($effective_price, 2) ?>
+                        <?php if ($has_discount): ?>
+                            <span class="original-price">₱<?= number_format(floatval($product['og_price']), 2) ?></span>
+                        <?php endif; ?>
                     </div>
 
                     <div class="product-description">
-                        Cramond Leopard & Pythong Print Anorak Jacket in Beige but also the leap into electronic
-                        typesetting, remaining, Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis, eos!
+                        <?= nl2br(htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8')) ?>
                     </div>
 
-                    <!-- <div class="product-specs">
-                        <div class="specs-list">
-                            <div class="spec-item">
-                                <span class="spec-label">Material:</span>
-                                <span class="spec-value">Premium Cotton Blend</span>
+                    <?php if (!empty($specs)): ?>
+                        <div class="size-selector">
+                            <div class="size-label">
+                                <span>Specs : </span>
                             </div>
-                            <div class="spec-item">
-                                <span class="spec-label">Weight:</span>
-                                <span class="spec-value">250g</span>
-                            </div>
-                            <div class="spec-item">
-                                <span class="spec-label">Dimensions:</span>
-                                <span class="spec-value">30 x 20 x 5 cm</span>
-                            </div>
-                            <div class="spec-item">
-                                <span class="spec-label">Country of Origin:</span>
-                                <span class="spec-value">USA</span>
-                            </div>
-                            <div class="spec-item">
-                                <span class="spec-label">Care Instructions:</span>
-                                <span class="spec-value">Machine wash cold, tumble dry low</span>
+                            <div class="size-options">
+                                <?php foreach (array_slice($specs, 0, 4) as $spec): ?>
+                                    <div class="size-option"><?= htmlspecialchars(trim($spec), ENT_QUOTES, 'UTF-8') ?></div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                    </div> -->
-
-                    <div class="size-selector">
-                        <div class="size-label">
-                            <span>Size : </span>
-                            <a href="#">Guide Can't Find Your Size?</a>
-                        </div>
-                        <div class="size-options">
-                            <div class="size-option">S</div>
-                            <div class="size-option">M</div>
-                            <div class="size-option">L</div>
-                            <div class="size-option active">XL</div>
-                        </div>
-                    </div>
+                    <?php endif; ?>
 
                     <div class="product-actions">
                         <div class="ui input quantity-selector">
-                            <input type="number" value="1" min="1">
+                            <input type="number" value="1" min="1" max="<?= intval($product['stock']) ?>">
                         </div>
-                        <button class="ui primary compact mini button">
+                        <button class="ui primary compact mini button" <?= intval($product['stock']) <= 0 ? 'disabled' : '' ?>>
                             ADD TO CART
                         </button>
                         <button class="ui basic compact mini button wishlist-button">
@@ -337,35 +337,18 @@
                     </div>
 
                     <div class="product-meta">
-                        <div class="meta-item tags">
-                            <span><i class="tag icon"></i>Tags :</span>
-                            <div class="ui circular labels">
-                                <a class="ui mini grey basic label">
-                                    CLOTHING
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    FASHION
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    JACKET
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    LEOPARD PRINT
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    PYTHON PRINT
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    ANORAK
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    BEIGE
-                                </a>
-                                <a class="ui mini grey basic label">
-                                    OUTERWEAR
-                                </a>
+                        <?php if (!empty($tags)): ?>
+                            <div class="meta-item tags">
+                                <span><i class="tag icon"></i>Tags :</span>
+                                <div class="ui circular labels">
+                                    <?php foreach ($tags as $tag): ?>
+                                        <a class="ui mini grey basic label">
+                                            <?= strtoupper(htmlspecialchars(trim($tag), ENT_QUOTES, 'UTF-8')) ?>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
