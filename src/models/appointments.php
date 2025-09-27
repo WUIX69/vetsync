@@ -257,17 +257,22 @@ class Appointments
                 SELECT 
                     a.*, 
                     s.name AS service_name, 
+                    s.uuid AS service_uuid,
                     c.name AS category_name,
                     CONCAT(u.firstname, " ", u.lastname) AS user_name,
                     u.email AS user_email,
                     u.telephone AS user_phone,
                     p.name AS pet_name,
-                    p.breed AS pet_breed
+                    p.breed AS pet_breed,
+                    r.id AS review_id,
+                    r.rating AS review_rating,
+                    r.message AS review_message
                 FROM appointments a
                 LEFT JOIN services s ON a.service_uuid = s.uuid
                 LEFT JOIN categories c ON s.category_id = c.id
                 LEFT JOIN users u ON a.user_uuid = u.uuid
                 LEFT JOIN pets p ON a.pet_uuid = p.uuid
+                LEFT JOIN reviews r ON (r.reference_uuid = a.uuid AND r.reference_model = "appointment" AND r.user_uuid = a.user_uuid)
                 WHERE a.user_uuid = ?
                 ORDER BY a.date DESC
             ');
@@ -281,7 +286,12 @@ class Appointments
         } catch (PDOException $e) {
             return [
                 'success' => false,
-                'message' => 'Failed to fetch user appointments: ' . $e->getMessage(),
+                'message' => 'Database error: ' . $e->getMessage(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
             ];
         }
     }
@@ -356,6 +366,65 @@ class Appointments
         } catch (PDOException $e) {
             error_log("Error fetching appointment details: " . $e->getMessage());
             return false;
+        }
+    }
+
+    public static function updateStatusToCompleted($uuid)
+    {
+        try {
+            $stmt = self::conn()->prepare("
+                UPDATE appointments 
+                SET status = 'completed', updated_at = NOW() 
+                WHERE uuid = ?
+            ");
+            $stmt->execute([$uuid]);
+
+            if ($stmt->rowCount() > 0) {
+                return [
+                    'success' => true,
+                    'message' => 'Service marked as completed successfully.',
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Appointment not found.',
+                ];
+            }
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Failed to update status: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function getCompletedByUser($user_uuid)
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT 
+                    a.*, 
+                    s.name AS service_name,
+                    s.uuid AS service_uuid,
+                    r.id AS review_id
+                FROM appointments a
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                LEFT JOIN reviews r ON (r.reference_uuid = a.uuid AND r.reference_model = "appointments" AND r.user_uuid = ?)
+                WHERE a.user_uuid = ? AND a.status = "completed"
+                ORDER BY a.date DESC
+            ');
+            $stmt->execute([$user_uuid, $user_uuid]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+
+            return [
+                'success' => true,
+                'data' => $data,
+            ];
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch completed appointments: ' . $e->getMessage(),
+            ];
         }
     }
 }
