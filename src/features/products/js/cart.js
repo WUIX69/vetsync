@@ -120,6 +120,12 @@ const Cart = {
                     color: white;
                     border: 1px solid rgba(149, 165, 166, 0.3);
                 }
+
+                .status-badge.picked_up {
+                    background: linear-gradient(135deg, #28a745, #20c997);
+                    color: white;
+                    border: 1px solid rgba(40, 167, 69, 0.3);
+                }
             </style>
         `;
 
@@ -208,6 +214,14 @@ const Cart = {
         $(document).on("click", ".cancel-reservation-btn", (e) => {
             const reservationId = $(e.currentTarget).data("reservation-id");
             this.cancelReservation(reservationId);
+        });
+
+        // Handle rate reservation button clicks
+        $(document).on("click", ".rate-reservation-btn", (e) => {
+            e.preventDefault();
+            const reservationId = $(e.currentTarget).data("reservation-id");
+            const products = $(e.currentTarget).data("products");
+            this.handleRateReservation(reservationId, products);
         });
 
         // FIXED: Submit reservation - Handle both form submit and button click
@@ -366,11 +380,14 @@ const Cart = {
             });
         });
 
-        // FIXED: Handle all status types including "ready"
+        // FIXED: Handle all status types including "ready" and "picked_up"
         const statusLabel =
             status === "ready"
                 ? "Ready for Pickup"
+                : status === "picked_up"
+                ? "Picked Up"
                 : status.charAt(0).toUpperCase() + status.slice(1);
+
         const statusIcon =
             status === "pending"
                 ? "bx-time"
@@ -378,6 +395,8 @@ const Cart = {
                 ? "bx-check-circle"
                 : status === "ready"
                 ? "bx-package"
+                : status === "picked_up"
+                ? "bx-check-double"
                 : "bx-x-circle";
 
         const summaryHtml = `
@@ -434,10 +453,16 @@ const Cart = {
             localStorage.getItem("allReservations") || "[]"
         );
 
-        // FIXED: Handle "ready" status by mapping it to "completed"
+        // Handle specific status mappings
         if (status === "ready") {
             return allReservations.filter(
                 (reservation) => reservation.status === "completed"
+            );
+        }
+
+        if (status === "picked_up") {
+            return allReservations.filter(
+                (reservation) => reservation.status === "picked_up"
             );
         }
 
@@ -479,6 +504,9 @@ const Cart = {
         const rejectedReservations = reservations.filter(
             (r) => r.status === "rejected"
         );
+        const pickedUpReservations = reservations.filter(
+            (r) => r.status === "picked_up"
+        );
 
         // Store individual status arrays
         localStorage.setItem(
@@ -497,22 +525,34 @@ const Cart = {
             "rejectedReservations",
             JSON.stringify(rejectedReservations)
         );
+        localStorage.setItem(
+            "pickedUpReservations",
+            JSON.stringify(pickedUpReservations)
+        );
 
         // Update counts
         $("#pendingCount").text(pendingReservations.length);
         $("#acceptedCount").text(acceptedReservations.length);
         $("#readyCount").text(readyReservations.length);
         $("#rejectedCount").text(rejectedReservations.length);
+        $("#pickedUpCount").text(pickedUpReservations.length);
 
         // Render each tab
         this.renderReservationTab("pending", pendingReservations);
         this.renderReservationTab("accepted", acceptedReservations);
         this.renderReservationTab("ready", readyReservations);
         this.renderReservationTab("rejected", rejectedReservations);
+        this.renderReservationTab("picked_up", pickedUpReservations);
     },
 
+    // Update the renderReservationTab function around line 548:
     renderReservationTab(status, reservations) {
-        const container = $(`#${status}Reservations`);
+        // Handle special case for picked_up status - convert to camelCase for container ID
+        const containerId =
+            status === "picked_up"
+                ? "pickedUpReservations"
+                : `${status}Reservations`;
+        const container = $(`#${containerId}`);
         container.empty();
 
         if (reservations.length === 0) {
@@ -580,6 +620,18 @@ const Cart = {
             </div>`
                 : "";
 
+        // Update the rateButton creation around line 621:
+        const rateButton =
+            reservation.status === "picked_up"
+                ? `<div class="reservation-actions">
+                    <button class="rate-reservation-btn" 
+                            data-reservation-id="${reservation.id}"
+                            data-products='${reservation.products}'>
+                        <i class='bx bx-star'></i> Rate Your Experience
+                    </button>
+                </div>`
+                : "";
+
         // ENHANCED: Show appropriate status badge
         const displayStatus =
             reservation.status === "rejected" &&
@@ -587,6 +639,8 @@ const Cart = {
                 ? "CANCELLED"
                 : reservation.status === "completed"
                 ? "READY FOR PICKUP"
+                : reservation.status === "picked_up"
+                ? "PICKED UP"
                 : reservation.status.toUpperCase();
 
         const displayStatusClass =
@@ -595,14 +649,19 @@ const Cart = {
                 ? "cancelled"
                 : reservation.status === "completed"
                 ? "ready-for-pickup"
+                : reservation.status === "picked_up"
+                ? "picked_up"
                 : statusClass;
 
+        // FIXED: Simplified the conditional class assignment
+        const itemClass =
+            reservation.status === "completed" ||
+            reservation.status === "picked_up"
+                ? "ready-for-pickup-item"
+                : "";
+
         return $(`
-            <div class="reservation-item ${
-                reservation.status === "completed"
-                    ? "ready-for-pickup-item"
-                    : ""
-            }">
+            <div class="reservation-item ${itemClass}">
                 <div class="reservation-header">
                     <div>
                         <div class="reservation-id">Reservation #${
@@ -644,6 +703,7 @@ const Cart = {
                 </div>
 
                 ${cancelButton}
+                ${rateButton}
             </div>
         `);
     },
@@ -687,44 +747,6 @@ const Cart = {
         });
     },
 
-    updateReservationSummary(status) {
-        // This updates the summary sidebar when viewing reservations
-        const reservations =
-            status === "pending"
-                ? JSON.parse(
-                      localStorage.getItem("pendingReservations") || "[]"
-                  )
-                : status === "accepted"
-                ? JSON.parse(
-                      localStorage.getItem("acceptedReservations") || "[]"
-                  )
-                : JSON.parse(
-                      localStorage.getItem("rejectedReservations") || "[]"
-                  );
-
-        let totalAmount = 0;
-        let totalItems = 0;
-
-        reservations.forEach((reservation) => {
-            totalAmount += parseFloat(reservation.total_amount || 0);
-            const products = JSON.parse(reservation.products || "[]");
-            totalItems += products.length;
-        });
-
-        const summaryHtml = `
-            <div class="summary-row">
-                <span>Reservations (${reservations.length}):</span>
-                <span>${reservations.length}</span>
-            </div>
-            <div class="summary-row total">
-                <span>Total Amount:</span>
-                <span>₱${totalAmount.toFixed(2)}</span>
-            </div>
-        `;
-
-        $("#cartSummary .summary-content").html(summaryHtml);
-    },
-
     getEmptyState(status) {
         const messages = {
             pending: {
@@ -737,10 +759,20 @@ const Cart = {
                 title: "No Accepted Reservations",
                 message: "You have no accepted reservations yet.",
             },
+            ready: {
+                icon: "bx-package",
+                title: "No Ready Reservations",
+                message: "You have no reservations ready for pickup.",
+            },
             rejected: {
                 icon: "bx-x-circle",
                 title: "No Rejected Reservations",
                 message: "You have no rejected reservations.",
+            },
+            picked_up: {
+                icon: "bx-check-double",
+                title: "No Picked Up Orders",
+                message: "You have no picked up orders yet.",
             },
         };
 
@@ -866,8 +898,6 @@ const Cart = {
                 </label>
             </div>
         `;
-
-        // ... existing code ...
 
         items.forEach((item) => {
             const price = item.dc_price || item.og_price;
@@ -1357,111 +1387,6 @@ const Cart = {
                         transform: translateX(100px);
                     }
                 }
-
-                /* Cart Selection Styles */
-                .cart-selection-header {
-                    background: linear-gradient(135deg, #f8fffe, #e8f5f3);
-                    padding: 1rem 1.5rem;
-                    border-radius: 12px;
-                    margin-bottom: 1rem;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .select-all-label {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    font-weight: 600;
-                    color: #2c3e50;
-                    cursor: pointer;
-                    margin: 0;
-                }
-
-                .cart-checkbox-container {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .cart-item-checkbox, #selectAllItems {
-                    width: 18px;
-                    height: 18px;
-                    cursor: pointer;
-                    accent-color: #21ba45;
-                }
-
-                .reserve-btn.disabled {
-                    background: linear-gradient(135deg, #bdc3c7, #95a5a6) !important;
-                    cursor: not-allowed !important;
-                    transform: none !important;
-                    box-shadow: none !important;
-                }
-
-                /* Cancel Reservation Button */
-                .reservation-actions {
-                    margin-top: 1.5rem;
-                    padding-top: 1.5rem;
-                    border-top: 1px solid #f0f8f5;
-                    text-align: center;
-                }
-
-                .cancel-reservation-btn {
-                    background: linear-gradient(135deg, #e74c3c, #c0392b);
-                    color: white;
-                    border: none;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 12px;
-                    cursor: pointer;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    transition: all 0.3s ease;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-
-                .cancel-reservation-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
-                }
-
-                .cancel-reservation-btn i {
-                    font-size: 1rem;
-                }
-
-                /* Status Badge Styles */
-                .status-badge {
-                    padding: 0.4rem 0.8rem;
-                    border-radius: 12px;
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    display: inline-block;
-                    text-align: center;
-                }
-
-                .status-badge.pending {
-                    background: linear-gradient(135deg, #f8fffe, #e8f5f3);
-                    color: #2c3e50;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .status-badge.accepted {
-                    background: linear-gradient(135deg, #e8f5f3, #f8fffe);
-                    color: #21ba45;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .status-badge.rejected {
-                    background: linear-gradient(135deg, #f8fffe, #e8f5f3);
-                    color: #e74c3c;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .status-badge.cancelled {
-                    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-                    color: white;
-                    border-color: rgba(149, 165, 166, 0.3);
-                }
             </style>
         `;
 
@@ -1506,6 +1431,94 @@ const Cart = {
                 }
             },
         });
+    },
+
+    // Handle rate reservation button clicks
+    handleRateReservation(reservationId, products) {
+        // Parse products if it's a string
+        const productList =
+            typeof products === "string" ? JSON.parse(products) : products;
+
+        if (productList && productList.length > 0) {
+            // If single product, redirect to product page
+            if (productList.length === 1) {
+                const product = productList[0];
+                // Use product_uuid instead of uuid
+                const productUuid = product.product_uuid || product.uuid;
+                window.location.href = `/src/app/user/product-single-view.php?uuid=${productUuid}&review=true#reviews-section`;
+            } else {
+                // If multiple products, show selection modal
+                this.showProductRatingModal(reservationId, productList);
+            }
+        } else {
+            console.error("No products found for rating");
+        }
+    },
+
+    // Show modal for selecting which product to rate (for multiple products)
+    showProductRatingModal(reservationId, products) {
+        const modalHtml = `
+            <div class="rating-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                <div class="modal-content" style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; color: #333;">
+                            <i class='bx bx-star' style="color: #ffc107;"></i>
+                            Rate Your Products
+                        </h3>
+                        <p style="color: #666; margin: 10px 0 0 0;">Select a product to rate your experience</p>
+                    </div>
+                    <div class="product-list" style="margin-bottom: 20px;">
+                        ${products
+                            .map((product) => {
+                                const productUuid =
+                                    product.product_uuid || product.uuid;
+                                return `
+                                <div class="product-option" style="display: flex; align-items: center; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;" 
+                                     onclick="Cart.rateProduct('${productUuid}', '${
+                                    product.name
+                                }')" 
+                                     onmouseover="this.style.background='#f8f9fa'; this.style.borderColor='#007bff';" 
+                                     onmouseout="this.style.background='white'; this.style.borderColor='#ddd';">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; margin-bottom: 5px;">${
+                                            product.name
+                                        }</div>
+                                        <div style="color: #666; font-size: 0.9em;">Size: ${product.size.toUpperCase()} | Qty: ${
+                                    product.qty
+                                }</div>
+                                    </div>
+                                    <div style="color: #007bff;">
+                                        <i class='bx bx-chevron-right'></i>
+                                    </div>
+                                </div>
+                            `;
+                            })
+                            .join("")}
+                    </div>
+                    <div class="modal-actions" style="text-align: center;">
+                        <button onclick="Cart.closeRatingModal()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    },
+
+    // Rate a specific product
+    rateProduct(productUuid, productName) {
+        this.closeRatingModal();
+        window.location.href = `/src/app/user/product-single-view.php?uuid=${productUuid}&review=true#reviews-section`;
+    },
+
+    // Close rating modal
+    closeRatingModal() {
+        const modal = document.querySelector(".rating-modal");
+        if (modal) {
+            modal.remove();
+        }
     },
 };
 

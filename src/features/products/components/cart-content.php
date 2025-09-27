@@ -896,6 +896,12 @@
                 <span>Ready for Pickup</span>
                 <span class="count-badge" id="readyCount">0</span>
             </button>
+            <!-- NEW: Picked Up Tab -->
+            <button class="cart-tab" data-tab="picked_up">
+                <i class='bx bx-check-double'></i>
+                <span>Picked Up</span>
+                <span class="count-badge" id="pickedUpCount">0</span>
+            </button>
             <button class="cart-tab" data-tab="rejected">
                 <i class='bx bx-x-circle'></i>
                 <span>Rejected</span>
@@ -923,6 +929,11 @@
                 <!-- Ready for Pickup Tab -->
                 <div class="tab-content" id="readyTab">
                     <div id="readyReservations"></div>
+                </div>
+
+                <!-- NEW: Picked Up Tab -->
+                <div class="tab-content" id="picked_upTab">
+                    <div id="pickedUpReservations"></div>
                 </div>
 
                 <!-- Rejected Reservations Tab -->
