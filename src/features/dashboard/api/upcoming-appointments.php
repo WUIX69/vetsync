@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $userUuid = $userData['uuid'];
 
     try {
-        // Get only ACCEPTED appointments (not confirmed - it's "accepted" in your DB)
+        // Get ACCEPTED appointments - ONLY FUTURE DATES (today and beyond)
         $stmt = $conn->prepare("
             SELECT a.uuid,
                    a.service_uuid,
@@ -50,13 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             FROM appointments a
             WHERE a.user_uuid = ? 
             AND a.status = 'accepted'
-            AND a.date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)
+            AND a.date >= CURDATE()
+            ORDER BY a.date ASC, a.time ASC
+            LIMIT 10
         ");
 
         $stmt->execute([$userUuid]);
         $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Get only COMPLETED (ready for pickup) product reservations
+        // Get READY_FOR_PICKUP product reservations - ONLY FUTURE DATES
         $reservationStmt = $conn->prepare("
             SELECT r.id as uuid,
                    r.user_uuid,
@@ -68,8 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                    'reservation' as type
             FROM reservations r
             WHERE r.user_uuid = ? 
-            AND r.status = 'completed'
-            AND r.preferred_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)
+            AND r.status = 'ready_for_pickup'
+            AND (r.preferred_date >= CURDATE() OR r.preferred_date IS NULL)
+            ORDER BY r.preferred_date ASC, r.preferred_time ASC
+            LIMIT 10
         ");
 
         $reservationStmt->execute([$userUuid]);
@@ -78,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Combine appointments and reservations
         $allEvents = array_merge($appointments, $reservations);
 
-        // Get the current week (next 7 days starting from today)
+        // Get the next 7 days starting from today
         $currentWeek = [];
         for ($i = 0; $i < 7; $i++) {
             $date = new DateTime("+$i day");
@@ -87,12 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'date' => $dateKey,
                 'day_name' => $date->format('D'),
                 'day_number' => $date->format('j'),
+                'is_today' => $i === 0,
                 'appointments' => []
             ];
         }
 
         $formattedEvents = [];
-        $groupedByDate = [];
 
         // Process each event
         foreach ($allEvents as $event) {
@@ -127,54 +131,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'uuid' => $event['uuid'],
                     'type' => 'appointment',
                     'pet_name' => $petName,
-                    'pet_uuid' => $event['pet_uuid'],
                     'service_name' => $serviceName,
                     'date' => $event['date'],
                     'time' => $event['time'],
-                    'status' => $event['status'], // This will be "accepted"
-                    'note' => $event['note'],
+                    'status' => 'confirmed',
                     'formatted_time' => formatTime($event['time']),
+                    'formatted_date' => date('M j', strtotime($event['date'])),
                     'day_name' => date('D', strtotime($event['date'])),
-                    'day_number' => date('j', strtotime($event['date'])),
+                    'is_today' => $event['date'] === date('Y-m-d'),
                     'pet_image' => $event['pet_uuid'] ? media($event['pet_uuid']) : asset('img/placeholders/image.png'),
                 ];
 
             } else {
-                // Process reservation
+                // Process reservation (ready for pickup)
                 $products = json_decode($event['products'], true) ?: [];
-                $productNames = array_map(function ($p) {
-                    return $p['name'];
-                }, $products);
                 $productCount = count($products);
 
                 $formattedEvent = [
                     'uuid' => $event['uuid'],
-                    'type' => 'reservation',
+                    'type' => 'pickup',
                     'pet_name' => null,
-                    'pet_uuid' => null,
-                    'service_name' => "Product Pickup ($productCount items)",
-                    'product_names' => $productNames,
-                    'date' => $event['date'],
+                    'service_name' => $productCount > 1 ? "$productCount Products Ready" : "Product Ready",
+                    'date' => $event['date'] ?: date('Y-m-d'), // Use today if no date set
                     'time' => $event['time'],
-                    'status' => $event['status'], // This will be "completed"
-                    'note' => $event['note'],
+                    'status' => 'ready',
                     'formatted_time' => formatTime($event['time']),
-                    'day_name' => date('D', strtotime($event['date'])),
-                    'day_number' => date('j', strtotime($event['date'])),
+                    'formatted_date' => date('M j', strtotime($event['date'] ?: date('Y-m-d'))),
+                    'day_name' => date('D', strtotime($event['date'] ?: date('Y-m-d'))),
+                    'is_today' => ($event['date'] ?: date('Y-m-d')) === date('Y-m-d'),
                     'pet_image' => asset('img/placeholders/image.png'),
                 ];
             }
 
             $formattedEvents[] = $formattedEvent;
 
-            // Add to grouped by date
-            $dateKey = $event['date'];
-            if (!isset($groupedByDate[$dateKey])) {
-                $groupedByDate[$dateKey] = [];
-            }
-            $groupedByDate[$dateKey][] = $formattedEvent;
-
             // Add to current week if within range
+            $dateKey = $formattedEvent['date'];
             if (isset($currentWeek[$dateKey])) {
                 $currentWeek[$dateKey]['appointments'][] = $formattedEvent;
             }
@@ -193,7 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'data' => [
                 'appointments' => $formattedEvents,
                 'current_week' => array_values($currentWeek),
-                'grouped_by_date' => $groupedByDate,
                 'total_upcoming' => count($formattedEvents)
             ]
         ];
@@ -202,13 +193,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         error_log("Database error in upcoming appointments: " . $e->getMessage());
         $response = [
             'success' => false,
-            'message' => 'Database error: ' . $e->getMessage()
+            'message' => 'Database error occurred'
         ];
     } catch (Exception $e) {
         error_log("General error in upcoming appointments: " . $e->getMessage());
         $response = [
             'success' => false,
-            'message' => 'Error: ' . $e->getMessage()
+            'message' => 'Error loading appointments'
         ];
     }
 

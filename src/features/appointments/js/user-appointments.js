@@ -34,8 +34,8 @@ function renderAppointments(filter = "all") {
         (app) =>
             !hiddenAppointments.includes(app.uuid) && // Don't show hidden appointments
             (filter === "all" ||
-                (filter === "upcoming" &&
-                    (app.status === "pending" || app.status === "accepted")) ||
+                (filter === "pending" && app.status === "pending") ||
+                (filter === "confirmed" && app.status === "accepted") ||
                 (filter === "completed" && app.status === "completed") ||
                 (filter === "cancelled" && app.status === "cancelled"))
     );

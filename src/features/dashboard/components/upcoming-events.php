@@ -1,77 +1,111 @@
 <style>
+    main section.upcoming {
+        background: #fff;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        height: fit-content;
+    }
+
+    main section.upcoming .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+    main section.upcoming .header h4 {
+        color: #2c3e50;
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    main section.upcoming .header .month-text {
+        background: #f8f9fa;
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: #6c757d;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Week dates - cleaner design */
     main section.upcoming .dates {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 20px;
+        margin-bottom: 24px;
+        gap: 8px;
     }
 
     main section.upcoming .dates .item {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
         flex: 1;
+        transition: all 0.2s ease;
     }
 
     main section.upcoming .dates .item h5 {
-        font-weight: 600;
-        font-size: 0.8rem;
-        color: #666;
-        margin: 0;
+        font-weight: 500;
+        font-size: 0.75rem;
+        color: #8e9aaf;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     main section.upcoming .dates .item a {
-        color: #666;
-        font-size: 13px;
-        padding: 8px;
-        border-radius: 50%;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        color: #6c757d;
+        background: #f8f9fa;
         border: 2px solid transparent;
         position: relative;
     }
 
-    main section.upcoming .dates .item.active a,
     main section.upcoming .dates .item a:hover {
-        color: #fff;
-        background: #007bff;
-        border-color: #007bff;
-    }
-
-    main section.upcoming .dates .item.has-appointments a {
         background: #e3f2fd;
         color: #1976d2;
-        border-color: #1976d2;
+        transform: translateY(-2px);
     }
 
-    main section.upcoming .dates .item.has-appointments.active a {
-        background: #1976d2;
+    main section.upcoming .dates .item.active a {
+        background: #007bff;
         color: white;
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
     }
 
-    /* Appointment indicator dot */
+    main section.upcoming .dates .item.today a {
+        background: #28a745;
+        color: white;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
     main section.upcoming .dates .item.has-appointments a::after {
         content: '';
         position: absolute;
-        bottom: -2px;
+        top: -2px;
         right: -2px;
         width: 8px;
         height: 8px;
-        background: #ff4444;
+        background: #ff4757;
         border-radius: 50%;
         border: 2px solid white;
     }
 
+    /* Events list - cleaner design */
     main section.upcoming .events {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
         max-height: 300px;
         overflow-y: auto;
     }
@@ -79,117 +113,106 @@
     main section.upcoming .events .item {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        padding: 16px;
+        margin-bottom: 12px;
         background: #f8f9fa;
-        padding: 12px;
         border-radius: 12px;
-        border-left: 4px solid #007bff;
-        transition: all 0.3s ease;
-        cursor: pointer;
+        transition: all 0.2s ease;
+        border-left: 4px solid transparent;
     }
 
     main section.upcoming .events .item:hover {
-        background: #e9ecef;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: #e3f2fd;
+        transform: translateX(4px);
     }
 
-    main section.upcoming .events .item.confirmed {
+    main section.upcoming .events .item.appointment {
+        border-left-color: #007bff;
+    }
+
+    main section.upcoming .events .item.pickup {
         border-left-color: #28a745;
     }
 
-    main section.upcoming .events .item.pending {
-        border-left-color: #ffc107;
+    main section.upcoming .events .item img {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-right: 16px;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    main section.upcoming .events .item>div {
+    main section.upcoming .events .item .details {
+        flex: 1;
+    }
+
+    main section.upcoming .events .item .details h5 {
+        margin: 0 0 4px 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #2c3e50;
+        line-height: 1.2;
+    }
+
+    main section.upcoming .events .item .details .meta {
         display: flex;
         align-items: center;
         gap: 12px;
-        flex: 1;
-    }
-
-    main section.upcoming .events .item .pet-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    main section.upcoming .events .item .pet-avatar.placeholder {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
         font-size: 0.8rem;
-    }
-
-    main section.upcoming .events .item .event-info {
-        flex: 1;
-    }
-
-    main section.upcoming .events .item .event-info a {
-        font-size: 14px;
-        color: #2c3e50;
-        font-weight: 600;
-        text-decoration: none;
-        display: block;
-        margin-bottom: 4px;
-    }
-
-    main section.upcoming .events .item .event-info p {
-        font-size: 12px;
         color: #6c757d;
-        margin: 0;
+    }
+
+    main section.upcoming .events .item .details .meta span {
         display: flex;
         align-items: center;
         gap: 4px;
     }
 
-    main section.upcoming .events .item .status-badge {
-        padding: 4px 8px;
-        border-radius: 12px;
+    main section.upcoming .events .item .status {
+        padding: 6px 12px;
+        border-radius: 20px;
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-    main section.upcoming .events .item .status-badge.confirmed {
+    main section.upcoming .events .item .status.confirmed {
         background: #d4edda;
         color: #155724;
     }
 
-    main section.upcoming .events .item .status-badge.pending {
-        background: #fff3cd;
-        color: #856404;
+    main section.upcoming .events .item .status.ready {
+        background: #d1ecf1;
+        color: #0c5460;
     }
 
     /* Empty state */
-    .empty-appointments {
+    .no-appointments {
         text-align: center;
         padding: 40px 20px;
         color: #6c757d;
     }
 
-    .empty-appointments i {
+    .no-appointments i {
         font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
+        margin-bottom: 16px;
+        opacity: 0.4;
+        color: #adb5bd;
     }
 
-    .empty-appointments h5 {
+    .no-appointments h5 {
         color: #495057;
-        margin-bottom: 0.5rem;
+        margin-bottom: 8px;
+        font-weight: 600;
     }
 
-    .empty-appointments p {
-        font-size: 0.9rem;
+    .no-appointments p {
+        font-size: 0.85rem;
         margin: 0;
+        line-height: 1.4;
     }
 
     /* Loading state */
@@ -202,261 +225,209 @@
     .loading-appointments i {
         font-size: 2rem;
         animation: spin 1s linear infinite;
+        color: #007bff;
     }
 
     @keyframes spin {
-        0% {
+        from {
             transform: rotate(0deg);
         }
 
-        100% {
+        to {
             transform: rotate(360deg);
         }
     }
 
-    /* Header improvements */
-    main section.upcoming .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+    /* Scrollbar styling */
+    main section.upcoming .events::-webkit-scrollbar {
+        width: 4px;
     }
 
-    main section.upcoming .header h4 {
-        color: #2c3e50;
-        margin: 0;
-        font-weight: 600;
+    main section.upcoming .events::-webkit-scrollbar-track {
+        background: #f1f3f4;
+        border-radius: 2px;
     }
 
-    main section.upcoming .header .month-selector {
-        background: #f8f9fa;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 8px;
-        color: #495057;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
+    main section.upcoming .events::-webkit-scrollbar-thumb {
+        background: #c1c8d4;
+        border-radius: 2px;
     }
 
-    main section.upcoming .header .month-selector:hover {
-        background: #e9ecef;
+    main section.upcoming .events::-webkit-scrollbar-thumb:hover {
+        background: #a8b2c1;
     }
 </style>
 
 <section class="upcoming">
     <div class="header">
-        <h4>Upcoming Appointments</h4>
-        <button class="month-selector" id="currentMonth">
-            <span id="monthText">Loading...</span>
-            <i class='bx bx-chevron-down'></i>
-        </button>
+        <h4>Upcoming</h4>
+        <div class="month-text" id="monthText">September 2025</div>
     </div>
 
     <div class="dates" id="weekDates">
-        <!-- Week dates will be loaded here -->
         <div class="loading-appointments">
-            <i class='bx bx-loader-alt'></i>
+            <i class='bx bx-loader-alt bx-spin'></i>
         </div>
     </div>
 
     <div class="events" id="appointmentsList">
-        <!-- Appointments will be loaded here -->
         <div class="loading-appointments">
-            <i class='bx bx-loader-alt'></i>
-            <p>Loading your appointments...</p>
+            <i class='bx bx-loader-alt bx-spin'></i>
+            <p>Loading appointments...</p>
         </div>
     </div>
 </section>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let currentSelectedDate = null;
-        let appointmentsData = null;
+    function initUpcomingEvents() {
+        if (typeof $ === 'undefined') {
+            setTimeout(initUpcomingEvents, 100);
+            return;
+        }
 
-        // Load upcoming appointments
+        let allAppointments = [];
+        let currentWeek = [];
+        let selectedDate = new Date().toISOString().split('T')[0];
+
         function loadUpcomingAppointments() {
-            fetch('/src/features/dashboard/api/upcoming-appointments.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        appointmentsData = data.data;
-                        renderWeekDates(data.data.current_week);
+            $.ajax({
+                url: '/src/features/dashboard/api/upcoming-appointments.php',
+                method: 'GET',
+                dataType: 'json',
+                timeout: 10000,
+                success: function (response) {
+                    if (response && response.success) {
+                        allAppointments = response.data.appointments || [];
+                        currentWeek = response.data.current_week || [];
 
-                        // Show all appointments by default, or today's if selected
-                        const today = new Date().toISOString().split('T')[0];
-                        if (currentSelectedDate === null) {
-                            currentSelectedDate = today;
-                        }
-
-                        // Filter appointments for current selected date
-                        const selectedDateAppointments = appointmentsData.grouped_by_date[currentSelectedDate] || [];
-                        renderAppointments(selectedDateAppointments);
-
+                        renderWeekDates();
+                        renderAppointments();
                         updateMonthDisplay();
                     } else {
                         showError('Failed to load appointments');
                     }
-                })
-                .catch(error => {
-                    console.error('Error loading appointments:', error);
-                    showError('Error loading appointments');
-                });
-        }
-
-        // Render week dates
-        function renderWeekDates(weekData) {
-            const weekDatesContainer = document.getElementById('weekDates');
-            const today = new Date().toISOString().split('T')[0];
-
-            weekDatesContainer.innerHTML = weekData.map((day, index) => {
-                const hasAppointments = day.appointments.length > 0;
-                const isToday = day.date === today;
-                const isActive = currentSelectedDate === day.date;
-
-                return `
-                <div class="item ${isActive ? 'active' : ''} ${hasAppointments ? 'has-appointments' : ''}" 
-                     data-date="${day.date}">
-                    <h5>${day.day_name}</h5>
-                    <a href="javascript:void(0)" onclick="selectDate('${day.date}')">${day.day_number}</a>
-                </div>
-            `;
-            }).join('');
-        }
-
-        // Select a specific date
-        window.selectDate = function (date) {
-            currentSelectedDate = date;
-
-            // Update active date
-            document.querySelectorAll('.dates .item').forEach(item => {
-                item.classList.remove('active');
+                },
+                error: function () {
+                    showError('Network error occurred');
+                }
             });
-            document.querySelector(`[data-date="${date}"]`)?.classList.add('active');
+        }
 
-            // Filter and show appointments for selected date
-            if (appointmentsData) {
-                const dateAppointments = appointmentsData.grouped_by_date[date] || [];
-                renderAppointments(dateAppointments);
-            }
-        };
+        function renderWeekDates() {
+            const weekDatesContainer = document.getElementById('weekDates');
+            if (!weekDatesContainer) return;
 
-        // Render appointments
-        function renderAppointments(appointments) {
+            let weekDatesHtml = '';
+
+            currentWeek.forEach(function (day) {
+                const hasAppointments = day.appointments && day.appointments.length > 0;
+                const isActive = day.date === selectedDate;
+                const isToday = day.is_today;
+
+                weekDatesHtml += `
+                    <div class="item ${isActive ? 'active' : ''} ${hasAppointments ? 'has-appointments' : ''} ${isToday ? 'today' : ''}" 
+                         data-date="${day.date}">
+                        <h5>${day.day_name}</h5>
+                        <a href="#" onclick="selectDate('${day.date}'); return false;">
+                            ${day.day_number}
+                        </a>
+                    </div>
+                `;
+            });
+
+            weekDatesContainer.innerHTML = weekDatesHtml;
+        }
+
+        function renderAppointments() {
             const appointmentsList = document.getElementById('appointmentsList');
+            if (!appointmentsList) return;
 
-            if (appointments.length === 0) {
-                const selectedDateText = currentSelectedDate ?
-                    new Date(currentSelectedDate + 'T00:00:00').toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        month: 'long',
-                        day: 'numeric'
-                    }) : 'the next 2 weeks';
+            const dayAppointments = allAppointments.filter(function (appointment) {
+                return appointment.date === selectedDate;
+            });
 
+            if (dayAppointments.length === 0) {
+                const isToday = selectedDate === new Date().toISOString().split('T')[0];
                 appointmentsList.innerHTML = `
-                    <div class="empty-appointments">
+                    <div class="no-appointments">
                         <i class='bx bx-calendar-x'></i>
-                        <h5>No accepted events</h5>
-                        <p>No accepted appointments or ready pickups for ${selectedDateText}</p>
+                        <h5>${isToday ? 'No appointments today' : 'No appointments'}</h5>
+                        <p>${isToday ? 'Your schedule is clear for today' : 'Select another date or book a new appointment'}</p>
                     </div>
                 `;
                 return;
             }
 
-            appointmentsList.innerHTML = appointments.map(appointment => {
-                if (appointment.type === 'appointment') {
-                    // Render accepted appointment
-                    const petInitial = appointment.pet_name ? appointment.pet_name.charAt(0).toUpperCase() : 'P';
-                    const serviceName = appointment.service_name.startsWith('CUSTOM SERVICE REQUEST:')
-                        ? appointment.service_name.replace('CUSTOM SERVICE REQUEST:', '').trim()
-                        : appointment.service_name;
+            let appointmentsHtml = '';
+            dayAppointments.forEach(function (appointment) {
+                const typeClass = appointment.type;
+                const statusText = appointment.status === 'confirmed' ? 'Confirmed' : 'Ready';
 
-                    return `
-                        <div class="item confirmed" onclick="viewAppointment('${appointment.uuid}')">
-                            <div>
-                                ${appointment.pet_image && appointment.pet_image !== '/public/img/placeholders/image.png' ?
-                            `<img src="${appointment.pet_image}" alt="${appointment.pet_name}" class="pet-avatar">` :
-                            `<div class="pet-avatar placeholder">${petInitial}</div>`
-                        }
-                                <div class="event-info">
-                                    <a href="javascript:void(0)">${serviceName}</a>
-                                    <p>
-                                        <i class='bx bx-time'></i>
-                                        ${appointment.formatted_time}
-                                        ${appointment.pet_name ? ` • ${appointment.pet_name}` : ''}
-                                    </p>
-                                </div>
+                appointmentsHtml += `
+                    <div class="item ${typeClass}" onclick="viewEvent('${appointment.uuid}', '${appointment.type}')">
+                        <img src="${appointment.pet_image}" alt="${appointment.pet_name || 'Event'}" />
+                        <div class="details">
+                            <h5>${appointment.service_name}</h5>
+                            <div class="meta">
+                                ${appointment.pet_name ? `<span><i class='bx bx-heart'></i> ${appointment.pet_name}</span>` : ''}
+                                <span><i class='bx bx-time'></i> ${appointment.formatted_time}</span>
+                                ${appointment.is_today ? '<span><i class="bx bx-calendar-check"></i> Today</span>' : ''}
                             </div>
-                            <div class="status-badge confirmed">Accepted</div>
                         </div>
-                    `;
-                } else {
-                    // Render ready product reservation
-                    return `
-                        <div class="item confirmed reservation" onclick="viewReservation('${appointment.uuid}')">
-                            <div>
-                                <div class="pet-avatar placeholder">📦</div>
-                                <div class="event-info">
-                                    <a href="javascript:void(0)">${appointment.service_name}</a>
-                                    <p>
-                                        <i class='bx bx-time'></i>
-                                        ${appointment.formatted_time}
-                                        <span style="margin-left: 8px; color: #6c757d;">
-                                            ${appointment.product_names ? appointment.product_names.slice(0, 2).join(', ') : 'Products'}
-                                            ${appointment.product_names && appointment.product_names.length > 2 ? '...' : ''}
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="status-badge confirmed">Ready</div>
-                        </div>
-                    `;
-                }
-            }).join('');
+                        <div class="status ${appointment.status}">${statusText}</div>
+                    </div>
+                `;
+            });
+
+            appointmentsList.innerHTML = appointmentsHtml;
         }
 
-        // View appointment details
-        window.viewAppointment = function (appointmentUuid) {
-            // Redirect to appointments page with specific appointment
-            window.location.href = `/src/app/user/appointments.php#${appointmentUuid}`;
-        };
+        function selectDate(date) {
+            selectedDate = date;
+            document.querySelectorAll('.dates .item').forEach(function (item) {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-date="${date}"]`)?.classList.add('active');
+            renderAppointments();
+        }
 
-        // View reservation details
-        window.viewReservation = function (reservationUuid) {
-            // Redirect to reservations/cart page 
-            window.location.href = `/src/app/user/cart.php#${reservationUuid}`;
-        };
-
-        // Update month display
         function updateMonthDisplay() {
             const monthText = document.getElementById('monthText');
-            const currentDate = new Date();
-            monthText.textContent = currentDate.toLocaleDateString('en-US', {
-                month: 'long',
-                year: 'numeric'
-            });
+            if (monthText) {
+                const now = new Date();
+                monthText.textContent = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            }
         }
 
-        // Show error state
         function showError(message) {
             document.getElementById('weekDates').innerHTML = `
-            <div style="text-align: center; padding: 20px; color: #dc3545;">
-                <i class='bx bx-error-circle'></i>
-                <p>${message}</p>
-            </div>
-        `;
-
+                <div class="loading-appointments">
+                    <i class='bx bx-error-circle'></i>
+                </div>
+            `;
             document.getElementById('appointmentsList').innerHTML = `
-            <div style="text-align: center; padding: 20px; color: #dc3545;">
-                <p>Unable to load appointments</p>
-            </div>
-        `;
+                <div class="no-appointments">
+                    <i class='bx bx-error-circle'></i>
+                    <h5>Unable to load</h5>
+                    <p>${message}</p>
+                </div>
+            `;
         }
+
+        // Global functions
+        window.selectDate = selectDate;
+        window.viewEvent = function (uuid, type) {
+            if (type === 'appointment') {
+                window.location.href = `/src/app/user/appointments.php#${uuid}`;
+            } else {
+                window.location.href = `/src/app/user/cart.php#${uuid}`;
+            }
+        };
 
         // Initialize
         loadUpcomingAppointments();
-
-        // Refresh every 5 minutes
         setInterval(loadUpcomingAppointments, 5 * 60 * 1000);
-    });
+    }
+
+    initUpcomingEvents();
 </script>

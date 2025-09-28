@@ -37,224 +37,209 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $appointmentStmt->execute([$userUuid]);
         $completedAppointments = $appointmentStmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Get next upcoming appointment
+        // Get next upcoming appointment (ACCEPTED appointments)
         $upcomingStmt = $conn->prepare("
             SELECT a.date, a.time, s.name as service_name, p.name as pet_name
             FROM appointments a
             LEFT JOIN services s ON a.service_uuid = s.uuid
             LEFT JOIN pets p ON a.pet_uuid = p.uuid
             WHERE a.user_uuid = ? AND a.status = 'accepted' AND a.date >= CURDATE()
-            ORDER BY a.date ASC
+            ORDER BY a.date ASC, a.time ASC
             LIMIT 1
         ");
         $upcomingStmt->execute([$userUuid]);
         $nextAppointment = $upcomingStmt->fetch(PDO::FETCH_ASSOC);
 
+        // Get ready for pickup reservations count
+        $pickupStmt = $conn->prepare("
+            SELECT COUNT(*) as pickup_count
+            FROM reservations 
+            WHERE user_uuid = ? AND status = 'ready_for_pickup'
+        ");
+        $pickupStmt->execute([$userUuid]);
+        $pickupData = $pickupStmt->fetch(PDO::FETCH_ASSOC);
+
         // Analyze each pet's health status
         $petHealthData = [];
-        foreach ($pets as $pet) {
-            $petDob = new DateTime($pet['dob']);
-            $petAge = $petDob->diff(new DateTime())->y;
+        $totalVaccinations = 0;
 
-            // Get appointments for this specific pet
-            $petAppointments = array_filter($completedAppointments, function ($apt) use ($pet) {
-                return $apt['pet_uuid'] === $pet['uuid'];
+        foreach ($pets as $pet) {
+            $petAppointments = array_filter($completedAppointments, function ($appointment) use ($pet) {
+                return $appointment['pet_uuid'] === $pet['uuid'];
             });
 
-            $petVaccinations = 0;
-            $petCheckups = 0;
-            $lastVisit = null;
-
-            foreach ($petAppointments as $appointment) {
-                $categoryName = strtolower($appointment['category_name'] ?? '');
-                $serviceName = strtolower($appointment['service_name'] ?? '');
-
-                if (
-                    strpos($categoryName, 'vaccination') !== false ||
-                    strpos($serviceName, 'vaccin') !== false ||
-                    strpos($serviceName, 'injection') !== false ||
-                    strpos($serviceName, 'rabies') !== false
-                ) {
-                    $petVaccinations++;
+            $vaccinationAppointments = array_filter($petAppointments, function ($appointment) {
+                // Check category name
+                if (stripos($appointment['category_name'], 'vaccination') !== false) {
+                    return true;
                 }
 
-                if (
-                    strpos($categoryName, 'checkup') !== false ||
-                    strpos($serviceName, 'checkup') !== false ||
-                    strpos($serviceName, 'exam') !== false
-                ) {
-                    $petCheckups++;
+                // Check service name for vaccination-related keywords
+                $serviceName = strtolower($appointment['service_name']);
+                $vaccinationKeywords = [
+                    'vaccine',
+                    'vaccination',
+                    'rabies',
+                    'anti-rabies',
+                    'distemper',
+                    'parvovirus',
+                    'hepatitis',
+                    'parainfluenza',
+                    'bordetella',
+                    'leptospirosis',
+                    'lyme',
+                    'feline',
+                    'canine',
+                    'immunization',
+                    'shot',
+                    'booster'
+                ];
+
+                foreach ($vaccinationKeywords as $keyword) {
+                    if (stripos($serviceName, $keyword) !== false) {
+                        return true;
+                    }
                 }
 
-                if (!$lastVisit || $appointment['date'] > $lastVisit) {
-                    $lastVisit = $appointment['date'];
-                }
-            }
+                return false;
+            });
 
-            // Calculate health priority (lower number = needs more attention)
-            $healthPriority = 100;
-
-            // Deduct points for good care
-            $healthPriority -= ($petVaccinations * 15); // Each vaccination reduces priority
-            $healthPriority -= ($petCheckups * 10); // Each checkup reduces priority
-            $healthPriority -= (count($petAppointments) * 5); // Each visit reduces priority
-
-            // Add points for age (older pets need more attention)
-            if ($petAge > 7)
-                $healthPriority += 20; // Senior pets
-            elseif ($petAge > 3)
-                $healthPriority += 10; // Adult pets
-
-            // Add points if no recent visits
-            if ($lastVisit) {
-                $daysSinceLastVisit = (new DateTime())->diff(new DateTime($lastVisit))->days;
-                if ($daysSinceLastVisit > 365)
-                    $healthPriority += 25; // No visit in over a year
-                elseif ($daysSinceLastVisit > 180)
-                    $healthPriority += 15; // No visit in 6+ months
-            } else {
-                $healthPriority += 30; // Never visited
-            }
-
-            $petHealthData[] = [
-                'pet' => $pet,
-                'age' => $petAge,
-                'vaccinations' => $petVaccinations,
-                'checkups' => $petCheckups,
-                'total_visits' => count($petAppointments),
-                'last_visit' => $lastVisit,
-                'health_priority' => max(0, $healthPriority), // Don't go below 0
-                'needs_attention' => $healthPriority > 50
+            $petHealthData[$pet['uuid']] = [
+                'name' => $pet['name'],
+                'total_appointments' => count($petAppointments),
+                'vaccinations' => count($vaccinationAppointments),
+                'last_visit' => !empty($petAppointments) ? $petAppointments[0]['date'] : null
             ];
+
+            $totalVaccinations += count($vaccinationAppointments);
         }
 
-        // Sort by health priority (highest priority first)
-        usort($petHealthData, function ($a, $b) {
-            return $b['health_priority'] - $a['health_priority'];
-        });
+        // Calculate average health score with better multi-pet logic
+        $averageHealthScore = 0;
+        $petsWithAppointments = 0;
 
-        // Determine what to show in health card
-        $totalPets = count($pets);
+        if (count($pets) > 0) {
+            $totalScore = 0;
 
-        if ($totalPets === 0) {
-            $healthMessage = 'Add pets to track health';
-            $healthStatus = 'unknown';
-            $petInfo = null;
-        } elseif ($totalPets === 1) {
-            // Single pet - show that pet's info
-            $pet = $petHealthData[0];
-            if ($pet['health_priority'] > 70) {
-                $healthMessage = $pet['pet']['name'] . ' needs immediate attention';
-                $healthStatus = 'needs_checkup';
-            } elseif ($pet['health_priority'] > 50) {
-                $healthMessage = $pet['pet']['name'] . ' needs a checkup';
-                $healthStatus = 'fair';
-            } elseif ($pet['health_priority'] > 30) {
-                $healthMessage = $pet['pet']['name'] . ' is doing okay';
-                $healthStatus = 'good';
+            foreach ($pets as $pet) {
+                $petAppointments = array_filter($completedAppointments, function ($appointment) use ($pet) {
+                    return $appointment['pet_uuid'] === $pet['uuid'];
+                });
+
+                $appointmentCount = count($petAppointments);
+
+                // Only count pets that have had appointments (prevents new pets from dragging down score)
+                if ($appointmentCount > 0) {
+                    $petsWithAppointments++;
+
+                    // More realistic scoring: 
+                    // 1-2 appointments = 40%, 3-4 = 70%, 5+ = 100%
+                    if ($appointmentCount <= 2) {
+                        $petScore = 40;
+                    } elseif ($appointmentCount <= 4) {
+                        $petScore = 70;
+                    } else {
+                        $petScore = 100;
+                    }
+
+                    $totalScore += $petScore;
+                }
+            }
+
+            // Calculate average only from pets that have received care
+            if ($petsWithAppointments == 0) {
+                $averageHealthScore = 50; // Neutral starting point for all new pets
             } else {
-                $healthMessage = $pet['pet']['name'] . ' is in excellent health!';
-                $healthStatus = 'excellent';
-            }
-            $petInfo = $pet['pet']['name'] . ' • ' . $pet['age'] . ' years old';
-        } else {
-            // Multiple pets - show most critical info
-            $petsNeedingAttention = array_filter($petHealthData, function ($p) {
-                return $p['needs_attention']; });
-            $totalVaccinations = array_sum(array_column($petHealthData, 'vaccinations'));
-            $totalVisits = array_sum(array_column($petHealthData, 'total_visits'));
-
-            if (count($petsNeedingAttention) > 0) {
-                // Show the pet that needs most attention
-                $criticalPet = $petsNeedingAttention[0];
-                $healthMessage = $criticalPet['pet']['name'] . ' needs attention';
-                $healthStatus = 'needs_checkup';
-                $petInfo = count($petsNeedingAttention) . ' of ' . $totalPets . ' pets need care';
-            } else {
-                // All pets are doing well
-                $healthMessage = 'All ' . $totalPets . ' pets are healthy!';
-                $healthStatus = 'excellent';
-                $petInfo = $totalVaccinations . ' total vaccinations • ' . $totalVisits . ' total visits';
+                $averageHealthScore = round($totalScore / $petsWithAppointments);
             }
         }
 
-        // Count total appointments by type
-        $vaccinationCount = 0;
-        $checkupCount = 0;
-        $groomingCount = 0;
-        $totalVisits = count($completedAppointments);
-
-        foreach ($completedAppointments as $appointment) {
-            $categoryName = strtolower($appointment['category_name'] ?? '');
-            $serviceName = strtolower($appointment['service_name'] ?? '');
-
-            if (
-                strpos($categoryName, 'vaccination') !== false ||
-                strpos($serviceName, 'vaccin') !== false ||
-                strpos($serviceName, 'injection') !== false ||
-                strpos($serviceName, 'rabies') !== false
-            ) {
-                $vaccinationCount++;
-            } elseif (
-                strpos($categoryName, 'checkup') !== false ||
-                strpos($serviceName, 'checkup') !== false ||
-                strpos($serviceName, 'exam') !== false
-            ) {
-                $checkupCount++;
-            } elseif (
-                strpos($categoryName, 'grooming') !== false ||
-                strpos($serviceName, 'groom') !== false
-            ) {
-                $groomingCount++;
-            }
-        }
+        // Better vaccination calculation - only count pets that have had appointments
+        $petsWithCare = max(1, $petsWithAppointments); // Prevent division by zero
+        $totalVaccinationsNeeded = $petsWithCare * 5; // Only count pets receiving care
+        $vaccinationPercentage = $totalVaccinationsNeeded > 0 ?
+            min(100, round(($totalVaccinations / $totalVaccinationsNeeded) * 100)) : 0;
 
         // Format next appointment
-        $nextAppointmentData = null;
+        $nextAppointmentFormatted = null;
         if ($nextAppointment) {
             $appointmentDate = new DateTime($nextAppointment['date']);
             $today = new DateTime();
-            $daysUntil = $appointmentDate->diff($today)->days;
+            $daysUntil = $today->diff($appointmentDate)->days;
 
-            $nextAppointmentData = [
-                'service' => $nextAppointment['service_name'] ?? 'Custom Service',
-                'pet_name' => $nextAppointment['pet_name'] ?? '',
-                'formatted_date' => $appointmentDate->format('M j, Y'),
+            $nextAppointmentFormatted = [
+                'service' => $nextAppointment['service_name'] ?: 'Custom Service',
+                'pet_name' => $nextAppointment['pet_name'],
+                'date' => $nextAppointment['date'],
+                'time' => $nextAppointment['time'],
+                'formatted_date' => $appointmentDate->format('M j'),
                 'days_until' => $daysUntil
             ];
         }
 
-        // Calculate progress percentages based on total pets
-        $expectedVaccinations = $totalPets * 5; // 5 core vaccines per pet
-        $vaccinationProgress = $expectedVaccinations > 0 ? min(100, ($vaccinationCount / $expectedVaccinations) * 100) : 0;
-        $checkupProgress = $totalPets > 0 ? min(100, ($checkupCount / $totalPets) * 100) : 0;
-        $careScore = $totalPets > 0 ? min(100, ($totalVisits / ($totalPets * 3)) * 100) : 0;
+        // Determine health status
+        $healthStatus = 'excellent';
+        $healthMessage = 'All pets are doing well';
+        $petInfo = '';
 
+        if (count($pets) === 0) {
+            $healthStatus = 'neutral';
+            $healthMessage = 'No pets registered';
+            $petInfo = 'Add your first pet to get started';
+        } elseif (count($pets) === 1) {
+            $pet = $pets[0];
+            $petInfo = $pet['name'] . ' • ' . ($pet['species'] ?: 'Pet');
+            if ($averageHealthScore < 40) {
+                $healthStatus = 'poor';
+                $healthMessage = 'Needs more care';
+            } elseif ($averageHealthScore < 70) {
+                $healthStatus = 'fair';
+                $healthMessage = 'Regular checkups needed';
+            }
+        } else {
+            // Multi-pet messaging
+            if ($petsWithAppointments === 0) {
+                $petInfo = count($pets) . ' pets registered - schedule first appointments';
+                $healthMessage = 'New pets need initial checkups';
+            } elseif ($petsWithAppointments < count($pets)) {
+                $petInfo = $petsWithAppointments . ' of ' . count($pets) . ' pets receiving active care';
+                $healthMessage = 'Some pets need attention';
+            } else {
+                $petInfo = 'All ' . count($pets) . ' pets receiving active care';
+                $healthMessage = 'All pets are doing well';
+            }
+        }
+
+        // Get the most recent visit date
         $lastVisitDate = null;
         if (!empty($completedAppointments)) {
             $lastVisitDate = $completedAppointments[0]['date'];
         }
 
+        $stats = [
+            'health_status' => $healthStatus,
+            'health_message' => $healthMessage,
+            'pet_info' => $petInfo,
+            'total_pets' => count($pets),
+            'pets_with_care' => $petsWithAppointments, // Add this new field
+            'vaccination_count' => $totalVaccinations,
+            'total_visits' => count($completedAppointments),
+            'last_visit_date' => $lastVisitDate,
+            'next_appointment' => $nextAppointmentFormatted,
+            'pickup_count' => $pickupData['pickup_count'] ?? 0
+        ];
+
+        $progress = [
+            'care_score' => min(100, $averageHealthScore),
+            'vaccination' => $vaccinationPercentage
+        ];
+
         $response = [
             'success' => true,
             'data' => [
-                'stats' => [
-                    'total_pets' => $totalPets,
-                    'total_visits' => $totalVisits,
-                    'vaccination_count' => $vaccinationCount,
-                    'checkup_count' => $checkupCount,
-                    'grooming_count' => $groomingCount,
-                    'health_status' => $healthStatus,
-                    'health_message' => $healthMessage,
-                    'pet_info' => $petInfo,
-                    'last_visit_date' => $lastVisitDate,
-                    'next_appointment' => $nextAppointmentData
-                ],
-                'progress' => [
-                    'vaccination' => round($vaccinationProgress),
-                    'checkup' => round($checkupProgress),
-                    'care_score' => round($careScore)
-                ]
+                'stats' => $stats,
+                'progress' => $progress,
+                'pets' => $petHealthData
             ]
         ];
 
@@ -263,6 +248,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $response = [
             'success' => false,
             'message' => 'Database error: ' . $e->getMessage()
+        ];
+    } catch (Exception $e) {
+        error_log("General error in pet health stats: " . $e->getMessage());
+        $response = [
+            'success' => false,
+            'message' => 'Error: ' . $e->getMessage()
         ];
     }
 

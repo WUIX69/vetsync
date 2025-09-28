@@ -228,7 +228,7 @@
                                 </div>
                                 <i class='bx bx-calendar-check'></i>
                             </div>
-                            <div class="progress-label">${Math.min(100, Math.round((stats.total_visits / Math.max(1, stats.total_pets)) * 33))}%</div>
+                            <div class="progress-label">${Math.min(100, Math.round((stats.total_visits / Math.max(1, stats.pets_with_care || stats.total_pets)) * 33))}%</div>
                             <div class="progress">
                                 <div class="bar" style="width: ${Math.min(100, (stats.total_visits / Math.max(1, stats.total_pets)) * 33)}%"></div>
                             </div>
