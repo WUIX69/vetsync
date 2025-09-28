@@ -5,9 +5,9 @@
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Total Sales
+                            Total Revenue
                         </h6>
-                        <h2>$65,024</h2>
+                        <h2 id="total-revenue">Loading...</h2>
                     </div>
                     <div class="progress-circle">
                         <svg viewBox="0 0 36 36" class="circular-chart">
@@ -17,10 +17,10 @@
                                 stroke-width="3" />
                             <path d="M18 2.0845
                                                     a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#20c997"
-                                stroke-width="4.3" stroke-dasharray="81, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +81%
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c757d"
+                                stroke-width="4.3" stroke-dasharray="0, 100" id="revenue-progress" />
+                            <text x="18" y="20.35" class="percentage" id="revenue-percentage">
+                                0%
                             </text>
                         </svg>
                     </div>
@@ -30,9 +30,9 @@
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Site Visitors
+                            Total Users
                         </h6>
-                        <h2>1,234</h2>
+                        <h2 id="total-users">Loading...</h2>
                     </div>
                     <div class="progress-circle">
                         <svg viewBox="0 0 36 36" class="circular-chart">
@@ -42,10 +42,10 @@
                                 stroke-width="3" />
                             <path d="M18 2.0845
                                                     a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff0060"
-                                stroke-width="4.3" stroke-dasharray="23, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +23%
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c757d"
+                                stroke-width="4.3" stroke-dasharray="0, 100" id="users-progress" />
+                            <text x="18" y="20.35" class="percentage" id="users-percentage">
+                                0%
                             </text>
                         </svg>
                     </div>
@@ -55,9 +55,9 @@
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Searches
+                            Total Appointments
                         </h6>
-                        <h2>1,234</h2>
+                        <h2 id="total-appointments">Loading...</h2>
                     </div>
                     <div class="progress-circle">
                         <svg viewBox="0 0 36 36" class="circular-chart">
@@ -67,10 +67,10 @@
                                 stroke-width="3" />
                             <path d="M18 2.0845
                                                     a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c9bcf"
-                                stroke-width="4.3" stroke-dasharray="12, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +12%
+                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c757d"
+                                stroke-width="4.3" stroke-dasharray="0, 100" id="appointments-progress" />
+                            <text x="18" y="20.35" class="percentage" id="appointments-percentage">
+                                0%
                             </text>
                         </svg>
                     </div>
