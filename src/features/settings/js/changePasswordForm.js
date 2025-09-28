@@ -1,5 +1,4 @@
 $(function () {
-    // console.log("changePassForm");
     $("#changePasswordForm").form({
         fields: {
             current_password: {
@@ -42,29 +41,79 @@ $(function () {
         on: "submit",
         onSuccess: function (event, fields) {
             event.preventDefault();
-            const $submitBtn = $(this).find("button[type=submit]");
-
-            // console.log(fields);
-            // return false;
+            const $form = $(this);
+            const $submitBtn = $form.find("button[type=submit]");
 
             $.ajax({
                 url: apiUrl("settings") + "changePassword.php",
                 method: "POST",
                 data: fields,
                 dataType: "json",
-                timeout: 5000,
+                timeout: 10000,
                 beforeSend: function () {
                     $submitBtn.addClass("loading");
                 },
                 success: function (response) {
-                    console.log("API Response:", response);
-                    alert(response.message);
-                    // Optionally reset the form or handle UI updates here
+                    console.log("Password change response:", response);
+
+                    if (response.success) {
+                        // Show success notification
+                        $("body").toast({
+                            title: "Success!",
+                            message:
+                                response.message ||
+                                "Password updated successfully!",
+                            class: "success",
+                            displayTime: 4000,
+                            position: "top right",
+                        });
+
+                        // Reset form
+                        $form[0].reset();
+                        $form.form("remove prompt");
+
+                        // Optional: Auto-logout after password change
+                        setTimeout(function () {
+                            if (
+                                confirm(
+                                    "Password changed successfully! Would you like to log out and log back in with your new password?"
+                                )
+                            ) {
+                                window.location.href = "/src/app/auth/";
+                            }
+                        }, 2000);
+                    } else {
+                        // Show error notification
+                        $("body").toast({
+                            title: "Error!",
+                            message:
+                                response.message || "Failed to update password",
+                            class: "error",
+                            displayTime: 5000,
+                            position: "top right",
+                        });
+                    }
                 },
                 complete: function () {
                     $submitBtn.removeClass("loading");
                 },
-                error: ajaxErrorHandler,
+                error: function (xhr, status, error) {
+                    console.error("Password change error:", {
+                        xhr,
+                        status,
+                        error,
+                    });
+
+                    // Show error notification
+                    $("body").toast({
+                        title: "Network Error!",
+                        message:
+                            "Failed to connect to server. Please try again.",
+                        class: "error",
+                        displayTime: 5000,
+                        position: "top right",
+                    });
+                },
             });
         },
     });

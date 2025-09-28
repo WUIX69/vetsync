@@ -355,4 +355,40 @@ class Users
             return false;
         }
     }
+
+    public static function updateProfile($data = [])
+    {
+        try {
+            self::conn()->beginTransaction();
+            $stmt = self::conn()->prepare("
+                UPDATE users SET 
+                    firstname=?, 
+                    lastname=?, 
+                    telephone=?, 
+                    location=?
+                WHERE uuid=?
+            ");
+
+            $stmt->execute([
+                $data['firstname'],
+                $data['lastname'],
+                $data['telephone'],
+                $data['location'],
+                $data['user_uuid']
+            ]);
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => 'Profile updated successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Profile update failed. Please try again.',
+            ];
+        }
+    }
 }

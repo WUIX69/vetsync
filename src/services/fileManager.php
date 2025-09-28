@@ -68,7 +68,8 @@ class FileManager
         $oldFile = Attachments::single($reference_uuid);
         if ($oldFile['success'] && !empty($oldFile['data'])) {
             $this->deleteWherePermanent($oldFile['data']['folder'], $reference_model);
-            Attachments::deleteWhereReference($reference_model, $reference_uuid);
+            // Fix parameter order: reference_uuid, reference_model (not reference_model, reference_uuid)
+            Attachments::deleteWhereReference($reference_uuid, $reference_model);
         }
 
         // Store new file
