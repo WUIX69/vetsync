@@ -27,16 +27,13 @@
         <!-- Main Content -->
         <main class="container-main">
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-12">
                     <!-- User Stats -->
                     <?= featured('users/components/user-stats') ?>
-
+                </div>
+                <div class="col-lg-12">
                     <!-- New Users -->
                     <?= featured('users/components/new-users') ?>
-                </div>
-                <div class="col-lg-3">
-                    <!-- System Info -->
-                    <?= featured('users/components/sys-info') ?>
                 </div>
                 <div class="col-lg-12">
                     <!-- Users Table -->
@@ -58,6 +55,7 @@
     <!-- Page Scripts -->
     <script src="<?= featured('users/js/usersDataTable.js', true) ?>"></script>
     <script src="<?= featured('users/js/validateUserForm.js', true) ?>"></script>
+    <script src="<?= featured('users/js/userStats.js', true) ?>"></script>
 </body>
 
 </html>

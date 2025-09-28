@@ -3,7 +3,6 @@
 include '../../../core/app.php';
 apiHeaders();
 
-// use VetSync\Models\Users;
 use VetSync\Utils\Php\Formatters;
 use VetSync\Services\DataTables;
 
@@ -14,90 +13,142 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    // DB table to use
-    $table = 'users';
-    // Table's primary key
-    $primaryKey = 'uuid';
+    // Get filter parameters
+    $statusFilter = $_GET['status_filter'] ?? '';
+    $roleFilter = $_GET['role_filter'] ?? '';
 
-    // Array of database columns which should be read and sent back to DataTables.
-    // The `db` parameter represents the column name in the database, while the `dt`
-    // parameter represents the DataTables column identifier. In this case simple
-    // indexes
-    $columns = array(
-        ['db' => 'firstname', 'dt' => 'firstname'],
-        ['db' => 'email', 'dt' => 'email'],
-        [
-            'db' => 'verification_status',
-            'dt' => 'verification_status'
-            // Remove the formatter - let frontend handle the rendering
-        ],
-        ['db' => null, 'dt' => 'role'],
-        ['db' => 'location', 'dt' => 'location'],
-        ['db' => 'telephone', 'dt' => 'telephone'],
-        [
-            'db' => 'dob',
-            'dt' => 'dob',
-            'formatter' => function ($d, $row) {
-                return Formatters::dateToMDY($d);
-            }
-        ],
-        [
-            'db' => 'created_at',
-            'dt' => 'created_at',
-            'formatter' => function ($d, $row) {
-                return Formatters::timeAgo($d);
-            }
-        ],
-        // Additional Data: for array_map() data transformation
-        ['db' => 'uuid', 'dt' => 'uuid'],
-        ['db' => 'lastname', 'dt' => 'lastname'],
-    );
+    error_log("=== USERS DATATABLE ===");
+    error_log("Status filter: '$statusFilter'");
+    error_log("Role filter: '$roleFilter'");
 
-    // Use $conn if defined, otherwise use the SQL server connection information 
-    if (is_null($conn)) {
-        $conn = array(
-            'user' => $_ENV['DB_USERNAME'],
-            'pass' => $_ENV['DB_PASSWORD'],
-            'db' => $_ENV['DB_DATABASE'],
-            'host' => $_ENV['DB_HOST']
-        );
+    // ✅ CHECK CURRENT ADMIN SESSION
+    global $session;
+    $currentAdmin = null;
+    if ($session->has()) {
+        $sessionData = $session->get();
+        if (($sessionData['type'] ?? '') === 'admin') {
+            $currentAdmin = [
+                'firstname' => 'System',
+                'lastname' => 'Administrator',
+                'email' => $sessionData['email'] ?? 'admin@mail.com',
+                'telephone' => '+1-234-567-8900',
+                'location' => 'Admin Panel',
+                'verification_status' => 'verified',
+                'created_at' => date('Y-m-d H:i:s'),
+                'user_uuid' => 'admin-session-' . substr(md5($sessionData['email'] ?? 'admin'), 0, 8),
+                'profile_image' => asset('img/profiles/user-1.jpg'),
+            ];
+            error_log("🔍 Current admin session: " . $currentAdmin['email']);
+        }
     }
 
+    // ✅ SIMPLE: Use basic users table columns
+    $columns = array(
+        ['db' => 'firstname', 'dt' => 'firstname'],
+        ['db' => 'lastname', 'dt' => 'lastname'],
+        ['db' => 'email', 'dt' => 'email'],
+        ['db' => 'telephone', 'dt' => 'telephone'],
+        ['db' => 'location', 'dt' => 'location'],
+        ['db' => 'verification_status', 'dt' => 'verification_status'],
+        ['db' => 'created_at', 'dt' => 'created_at'],
+        ['db' => 'uuid', 'dt' => 'user_uuid'],
+    );
 
-    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-     * If you just want to use the basic configuration for DataTables with PHP
-     * server-side, there is no need to edit below this line.
-     */
+    // ✅ FILTERING LOGIC
+    $whereConditions = [];
+    $whereBindings = [];
+    $includeCurrentAdmin = false;
 
-    // Use DataTables class, otherwise use the legacy SSP class
-    // require('../../../services/dataTables.php');
+    // Handle status filter
+    if (!empty($statusFilter)) {
+        $whereConditions[] = "verification_status = :status";
+        $whereBindings['status'] = $statusFilter;
+        error_log("🔍 Applied status filter: {$statusFilter}");
+    }
 
-    $response = DataTables::simple($_GET, $conn, $table, $primaryKey, $columns);
-    $response['data'] = array_map(function ($user) {
-        return [
-            'user_uuid' => $user['uuid'],
-            'name' => $user['firstname'] . ' ' . $user['lastname'],
-            'email' => $user['email'],
-            'verification_status' => $user['verification_status'] ?? 'pending',
-            'role' => 'User',
-            'telephone' => $user['telephone'] ? $user['telephone'] : '...',
-            'dob' => $user['dob'],
-            'location' => $user['location'] ? $user['location'] : '...',
-            'profile' => media($user['uuid']),
-            'created_at' => $user['created_at'],
-            'DT_RowAttr' => [
-                'data-user-uuid' => $user['uuid'],
-                'class' => 'user-item'
-            ]
+    // Handle role filter
+    if (!empty($roleFilter)) {
+        if ($roleFilter === 'admin') {
+            $whereConditions[] = "email = :admin_email";
+            $whereBindings['admin_email'] = $currentAdmin['email'] ?? 'admin@mail.com';
+            error_log("🔍 Applied admin role filter");
+        } elseif ($roleFilter === 'user') {
+            $whereConditions[] = "email != :admin_email";
+            $whereBindings['admin_email'] = $currentAdmin['email'] ?? 'admin@mail.com';
+            error_log("🔍 Applied user role filter");
+        }
+    }
+
+    // ✅ DETERMINE IF ADMIN SHOULD BE INCLUDED
+    if ($currentAdmin) {
+        if (empty($roleFilter) || $roleFilter === 'admin') {
+            if (empty($statusFilter) || $currentAdmin['verification_status'] === $statusFilter) {
+                $includeCurrentAdmin = true;
+                error_log("✅ Admin will be included in results");
+            } else {
+                error_log("❌ Admin excluded - status doesn't match filter");
+            }
+        } else {
+            error_log("❌ Admin excluded - role filter is 'user'");
+        }
+    }
+
+    // Get database users
+    if (!empty($whereConditions)) {
+        $whereClause = [
+            'condition' => implode(' AND ', $whereConditions),
+            'bindings' => $whereBindings
         ];
-    }, $response['data'] ?? []);
-    $response['success'] = true;
-    $response['message'] = 'Users fetched successfully';
+        $data = DataTables::complex($_GET, $conn, 'users', 'uuid', $columns, $whereClause);
+        error_log("Using filtered query: " . $whereClause['condition']);
+    } else {
+        $data = DataTables::simple($_GET, $conn, 'users', 'uuid', $columns);
+        error_log("Using simple query - no filters");
+    }
+
+    error_log("📊 Retrieved " . count($data['data']) . " users from database");
+
+    // ✅ ADD PROFILE IMAGES: Use the SAME method as "New Users" section
+    foreach ($data['data'] as &$user) {
+        // ✅ EXACT SAME LOGIC as recent-users-admin.php
+        $avatarUrl = null;
+        if (function_exists('media')) {
+            $avatarUrl = media($user['user_uuid']);
+        }
+
+        // If no profile image or media function doesn't exist, use a nice placeholder
+        if (!$avatarUrl || $avatarUrl === '/public/img/profiles/') {
+            $fullName = ($user['firstname'] ?? '') . ' ' . ($user['lastname'] ?? '');
+            $avatarUrl = "https://ui-avatars.com/api/?name=" . urlencode($fullName) .
+                "&size=35&background=random&color=fff&font-size=0.6";
+        }
+
+        $user['profile_image'] = $avatarUrl;
+        error_log("📸 Profile image for {$user['user_uuid']}: {$avatarUrl}");
+    }
+
+    // ✅ ADD CURRENT ADMIN TO RESULTS IF NEEDED
+    if ($includeCurrentAdmin && $currentAdmin) {
+        // Add current admin as first result
+        array_unshift($data['data'], $currentAdmin);
+        $data['recordsTotal']++;
+        $data['recordsFiltered']++;
+        error_log("✅ Added current admin session to results");
+    }
+
+    error_log("📊 Final result: " . count($data['data']) . " total users");
+
+    echo json_encode($data);
 
 } catch (Exception $e) {
-    error_log($e->getMessage());
-    $response['message'] = $e->getMessage();
+    error_log("usersDataTable error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'Failed to load users',
+        'error' => $e->getMessage(),
+        'data' => [],
+        'recordsTotal' => 0,
+        'recordsFiltered' => 0
+    ]);
 }
-
-echo json_encode($response);
-exit;
+?>

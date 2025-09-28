@@ -21,33 +21,29 @@
                 </div>
                 <div class="field">
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="password" />
+                    <input type="password" name="password" placeholder="Password" />
                 </div>
-            </div>
-            <div class="field">
-                <label>Telephone</label>
-                <input type="text" name="telephone" placeholder="Telephone" />
             </div>
             <div class="two fields">
                 <div class="field">
-                    <label>Date of Birth</label>
-                    <input type="date" name="dob" placeholder="Date of Birth" />
+                    <label>Telephone</label>
+                    <input type="text" name="telephone" placeholder="Telephone" />
                 </div>
                 <div class="field">
                     <label>Role</label>
-                    <div class="ui fluid floating selection search dropdown">
+                    <div class="ui fluid selection dropdown">
                         <input type="hidden" name="role" />
                         <div class="default text">Select role</div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                            <div class="item" data-value="admin">Admin</div>
                             <div class="item" data-value="user">User</div>
+                            <div class="item" data-value="admin">Admin</div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="actions">
-                <button class="ui cancel clear button" type="reset">Cancel</button>
+                <button class="ui cancel button" type="button">Cancel</button>
                 <button class="ui positive submit button" type="submit" id="userFormSubmitBtn">
                     Save
                 </button>
