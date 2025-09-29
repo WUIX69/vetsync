@@ -122,6 +122,23 @@ class Appointments
     public static function updateStatusWithReason($uuid, $status, $cancellationReason = null)
     {
         try {
+            // Get appointment details for email notification
+            $appointmentStmt = self::conn()->prepare('
+                SELECT 
+                    a.*, 
+                    s.name AS service_name,
+                    CONCAT(u.firstname, " ", u.lastname) AS user_name,
+                    u.email AS user_email,
+                    p.name AS pet_name
+                FROM appointments a
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                LEFT JOIN users u ON a.user_uuid = u.uuid
+                LEFT JOIN pets p ON a.pet_uuid = p.uuid
+                WHERE a.uuid = ?
+            ');
+            $appointmentStmt->execute([$uuid]);
+            $appointmentData = $appointmentStmt->fetch(PDO::FETCH_ASSOC);
+
             if ($status === 'cancelled' && $cancellationReason) {
                 // Store cancellation reason in the note field
                 $stmt = self::conn()->prepare('
@@ -146,6 +163,39 @@ class Appointments
             }
 
             if ($stmt->rowCount() > 0) {
+                // Send email notification when appointment is accepted (confirmed)
+                if ($status === 'accepted' && $appointmentData && $appointmentData['user_email']) {
+                    try {
+                        $emailService = new \VetSync\Services\Email();
+
+                        // Get service name or custom service description
+                        $serviceName = $appointmentData['service_name'] ?? 'Custom Service';
+                        if (!$appointmentData['service_name'] && $appointmentData['note']) {
+                            // Extract custom service from note if it starts with "CUSTOM SERVICE REQUEST:"
+                            if (strpos($appointmentData['note'], 'CUSTOM SERVICE REQUEST:') === 0) {
+                                $lines = explode("\n", $appointmentData['note']);
+                                $serviceName = trim(str_replace('CUSTOM SERVICE REQUEST:', '', $lines[0]));
+                            }
+                        }
+
+                        $emailResult = $emailService->sendAppointmentConfirmation(
+                            $appointmentData['user_email'],
+                            $appointmentData['user_name'],
+                            $appointmentData['pet_name'],
+                            $serviceName,
+                            $appointmentData['date'],
+                            $appointmentData['date'] // Using date field for time as well
+                        );
+
+                        if (!$emailResult['success']) {
+                            error_log("Failed to send appointment confirmation email: " . $emailResult['message']);
+                        }
+                    } catch (Exception $e) {
+                        error_log("Appointment confirmation email error: " . $e->getMessage());
+                        // Don't fail the status update if email fails
+                    }
+                }
+
                 return [
                     'success' => true,
                     'message' => 'Appointment status updated successfully.',

@@ -244,6 +244,19 @@ class Reservations
     public static function updateStatus($id, $status, $reason = '')
     {
         try {
+            // Get reservation details for email notification
+            $reservationStmt = self::conn()->prepare('
+                SELECT 
+                    r.*, 
+                    CONCAT(u.firstname, " ", u.lastname) AS user_name,
+                    u.email AS user_email
+                FROM reservations r
+                LEFT JOIN users u ON r.user_uuid = u.uuid
+                WHERE r.id = ?
+            ');
+            $reservationStmt->execute([$id]);
+            $reservationData = $reservationStmt->fetch(PDO::FETCH_ASSOC);
+
             $stmt = self::conn()->prepare('
                 UPDATE reservations 
                 SET status = ?, 
@@ -254,6 +267,43 @@ class Reservations
             $stmt->execute([$status, $reason, $id]);
 
             if ($stmt->rowCount() > 0) {
+                // Send email notification when reservation is ready for pickup
+                if ($status === 'ready_for_pickup' && $reservationData && $reservationData['user_email']) {
+                    try {
+                        $emailService = new \VetSync\Services\Email();
+
+                        // Parse products for email
+                        $productNames = '';
+                        if (!empty($reservationData['products'])) {
+                            $products = json_decode($reservationData['products'], true);
+                            if (is_array($products)) {
+                                $productList = [];
+                                foreach ($products as $product) {
+                                    $name = $product['name'] ?? 'Product';
+                                    $qty = $product['qty'] ?? 1;
+                                    $productList[] = "• {$name} (Qty: {$qty})";
+                                }
+                                $productNames = implode('<br>', $productList);
+                            }
+                        }
+
+                        $emailResult = $emailService->sendPickupNotification(
+                            $reservationData['user_email'],
+                            $reservationData['user_name'],
+                            $productNames,
+                            $reservationData['created_at'], // Using created_at as reservation date
+                            $reservationData['total_amount'] ?? 0
+                        );
+
+                        if (!$emailResult['success']) {
+                            error_log("Failed to send pickup notification email: " . $emailResult['message']);
+                        }
+                    } catch (Exception $e) {
+                        error_log("Pickup notification email error: " . $e->getMessage());
+                        // Don't fail the status update if email fails
+                    }
+                }
+
                 return [
                     'success' => true,
                     'message' => 'Reservation status updated successfully.',
