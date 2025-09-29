@@ -28,14 +28,11 @@
                     <!-- Products Stats -->
                     <?= featured('products/components/stats') ?>
                 </div>
-                <div class="col-lg-9">
+                <div class="col-lg-12">
                     <!-- Categories Table -->
                     <?= featured('products/components/categories-table') ?>
                 </div>
-                <div class="col-lg-3">
-                    <!-- System Info -->
-                    <?= featured('products/components/sys-info') ?>
-                </div>
+                <!-- REMOVED: Right side logo/sys-info component -->
                 <div class="col-lg-12">
                     <!-- Products Table -->
                     <?= featured('products/components/products-table') ?>
