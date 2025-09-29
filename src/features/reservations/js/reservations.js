@@ -168,26 +168,63 @@ function createReservationRow(reservation) {
         }
     }
 
-    // Handle customer name properly
-    const firstName = reservation.firstname || reservation.first_name || "";
-    const lastName = reservation.lastname || reservation.last_name || "";
+    // ✅ FIX: Use the correct field names from API response
+    let customerName = "Unknown Customer";
+    let customerEmail = "No email provided";
+    let customerInitial = "U";
 
-    let customerName = "";
-    if (firstName && lastName) {
-        customerName = `${firstName} ${lastName}`;
-    } else if (firstName) {
-        customerName = firstName;
-    } else if (lastName) {
-        customerName = lastName;
-    } else {
-        customerName = "Unknown Customer";
+    if (reservation.user_name && reservation.user_name.trim() !== "") {
+        customerName = reservation.user_name;
+        customerInitial = customerName.charAt(0).toUpperCase();
     }
 
-    const customerInitial =
-        firstName.charAt(0).toUpperCase() ||
-        lastName.charAt(0).toUpperCase() ||
-        "U";
-    const customerEmail = reservation.email || "No email provided";
+    if (reservation.user_email && reservation.user_email.trim() !== "") {
+        customerEmail = reservation.user_email;
+    }
+
+    // ✅ SIMPLE: Use profile image or colorful avatar
+    let profileImageHtml = "";
+    if (reservation.profile_image) {
+        if (reservation.profile_image.includes("ui-avatars.com")) {
+            // It's a generated avatar
+            profileImageHtml = `<div class="customer-avatar" style="
+                width: 36px; 
+                height: 36px; 
+                border-radius: 50%; 
+                background-image: url('${reservation.profile_image}');
+                background-size: cover;
+                background-position: center;
+                flex-shrink: 0;
+            "></div>`;
+        } else {
+            // It's a real uploaded image
+            profileImageHtml = `<div class="customer-avatar" style="
+                width: 36px; 
+                height: 36px; 
+                border-radius: 50%; 
+                background-image: url('${reservation.profile_image}');
+                background-size: cover;
+                background-position: center;
+                border: 2px solid #e9ecef;
+                flex-shrink: 0;
+            "></div>`;
+        }
+    } else {
+        // Fallback to colored initial
+        profileImageHtml = `<div class="customer-avatar" style="
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        ">${customerInitial}</div>`;
+    }
 
     // Create products list with better price handling
     let productsList = "";
@@ -234,56 +271,44 @@ function createReservationRow(reservation) {
             ? calculatedTotal
             : parseFloat(reservation.total_amount || 0);
 
-    // Create row with improved customer display
+    // Create row with profile image
     const rowId = `reservation-${reservation.id}`;
     const row = $(`
         <tr id="${rowId}" data-reservation-id="${reservation.id}">
-                <td>
-                    <div style="font-weight: 600; color: #2c3e50;">${
-                        reservation.formatted_date || "No date"
-                    }</div>
-                    <div style="color: #6c757d; font-size: 0.85rem;">${
-                        reservation.formatted_time || "No time"
-                    }</div>
-                </td>
-                <td>
+            <td>
+                <div style="font-weight: 600; color: #2c3e50;">${
+                    reservation.formatted_date || "No date"
+                }</div>
+                <div style="color: #6c757d; font-size: 0.85rem;">${
+                    reservation.formatted_time || "No time"
+                }</div>
+            </td>
+            <td>
                 <div class="customer-info" style="display: flex; align-items: center; gap: 12px;">
-                    <div class="customer-avatar" style="
-                        width: 36px; 
-                        height: 36px; 
-                        border-radius: 50%; 
-                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                        display: flex; 
-                        align-items: center; 
-                        justify-content: center; 
-                        color: white; 
-                        font-weight: bold; 
-                        font-size: 0.9rem;
-                        flex-shrink: 0;
-                    ">${customerInitial}</div>
-                        <div class="customer-details">
+                    ${profileImageHtml}
+                    <div class="customer-details">
                         <div style="font-weight: 600; color: #2c3e50; font-size: 0.95rem;">${customerName}</div>
                         <div style="color: #6c757d; font-size: 0.8rem;">${customerEmail}</div>
-                        </div>
                     </div>
-                </td>
-                <td>
+                </div>
+            </td>
+            <td>
                 <div class="products-list" style="max-width: 200px;">
                     ${productsList}
-                    </div>
-                </td>
-                <td>
+                </div>
+            </td>
+            <td>
                 <div style="font-weight: 600; color: #2c3e50;">₱${totalAmount.toFixed(
                     2
                 )}</div>
-                </td>
-                <td>
+            </td>
+            <td>
                 ${getStatusBadge(reservation.status)}
-                </td>
-                <td>
+            </td>
+            <td>
                 ${getActionButtons(reservation)}
-                </td>
-            </tr>
+            </td>
+        </tr>
     `);
 
     return row;

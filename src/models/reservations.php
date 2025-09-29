@@ -4,6 +4,8 @@ namespace VetSync\Models;
 
 use PDO;
 use PDOException;
+use Exception;
+use DateTime; // Added for date formatting
 
 class Reservations
 {
@@ -18,18 +20,154 @@ class Reservations
         return self::$conn;
     }
 
+    public static function all()
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT 
+                    r.*, 
+                    CONCAT(u.firstname, " ", u.lastname) AS user_name,
+                    u.email AS user_email,
+                    u.telephone AS user_phone
+                FROM reservations r
+                LEFT JOIN users u ON r.user_uuid = u.uuid
+                ORDER BY r.created_at DESC
+            ');
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+
+            // Process each reservation
+            foreach ($data as &$reservation) {
+                // ✅ SIMPLE: Use the SAME method as users table - media() function
+                $avatarUrl = null;
+                if (function_exists('media') && !empty($reservation['user_uuid'])) {
+                    $avatarUrl = media($reservation['user_uuid']);
+                }
+
+                // If no profile image or media function doesn't work, use colorful avatar
+                if (!$avatarUrl || $avatarUrl === '/public/img/profiles/' || strpos($avatarUrl, 'placeholders') !== false) {
+                    $fullName = $reservation['user_name'] ?: 'User';
+                    $avatarUrl = "https://ui-avatars.com/api/?name=" . urlencode($fullName) .
+                        "&size=150&background=random&color=fff&font-size=0.6";
+                }
+
+                $reservation['profile_image'] = $avatarUrl;
+
+                // ✅ FIX: Format dates properly
+                if (!empty($reservation['preferred_date'])) {
+                    try {
+                        $date = new DateTime($reservation['preferred_date']);
+                        $reservation['formatted_date'] = $date->format('M j, Y');
+                    } catch (Exception $e) {
+                        $reservation['formatted_date'] = 'No date';
+                    }
+                } else {
+                    $reservation['formatted_date'] = 'No date';
+                }
+
+                // ✅ FIX: Format time properly
+                if (!empty($reservation['preferred_time'])) {
+                    try {
+                        $time = new DateTime($reservation['preferred_time']);
+                        $reservation['formatted_time'] = $time->format('g:i A');
+                    } catch (Exception $e) {
+                        if (preg_match('/^\d{2}:\d{2}$/', $reservation['preferred_time'])) {
+                            $time = DateTime::createFromFormat('H:i', $reservation['preferred_time']);
+                            $reservation['formatted_time'] = $time ? $time->format('g:i A') : 'No time';
+                        } else {
+                            $reservation['formatted_time'] = 'No time';
+                        }
+                    }
+                } else {
+                    $reservation['formatted_time'] = 'No time';
+                }
+
+                // Process products JSON
+                if (!empty($reservation['products'])) {
+                    $products = json_decode($reservation['products'], true);
+                    $reservation['products_array'] = $products ?? [];
+                    $reservation['products_count'] = is_array($products) ? count($products) : 0;
+                } else {
+                    $reservation['products_array'] = [];
+                    $reservation['products_count'] = 0;
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Reservations fetched successfully.',
+                'data' => $data,
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch reservations: ' . $e->getMessage(),
+                'data' => [],
+            ];
+        }
+    }
+
+    public static function single($id)
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT 
+                    r.*, 
+                    CONCAT(u.firstname, " ", u.lastname) AS user_name,
+                    u.email AS user_email,
+                    u.telephone AS user_phone
+                FROM reservations r
+                LEFT JOIN users u ON r.user_uuid = u.uuid
+                WHERE r.id = ?
+            ');
+            $stmt->execute([$id]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($data) {
+                // Process the products JSON
+                if (!empty($data['products'])) {
+                    $products = json_decode($data['products'], true);
+                    $data['products_array'] = $products ?? [];
+                } else {
+                    $data['products_array'] = [];
+                }
+
+                return [
+                    'success' => true,
+                    'message' => 'Reservation fetched successfully.',
+                    'data' => $data,
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Reservation not found.',
+                    'data' => null,
+                ];
+            }
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch reservation: ' . $e->getMessage(),
+                'data' => null,
+            ];
+        }
+    }
+
     public static function store($data)
     {
         try {
             $stmt = self::conn()->prepare('
-                INSERT INTO reservations (id, user_uuid, products, preferred_date, preferred_time, delivery_method, notes, total_amount, status, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+                INSERT INTO reservations (
+                    user_uuid, products, preferred_date, preferred_time,
+                    delivery_method, notes, total_amount, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ');
 
             $stmt->execute([
-                $data['id'],
                 $data['user_uuid'],
-                $data['products'], // JSON encoded products
+                $data['products'], // Already JSON encoded
                 $data['preferred_date'],
                 $data['preferred_time'],
                 $data['delivery_method'] ?? 'pickup',
@@ -41,92 +179,57 @@ class Reservations
             return [
                 'success' => true,
                 'message' => 'Reservation created successfully.',
-                'id' => $data['id']
+                'data' => ['id' => self::conn()->lastInsertId()],
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => 'Failed to create reservation: ' . $e->getMessage(),
+                'data' => null,
             ];
         }
     }
 
-    public static function all()
+    public static function update($id, $data)
     {
         try {
-            $stmt = self::conn()->prepare('
-                SELECT r.*, u.firstname, u.lastname, u.email 
-                FROM reservations r
-                LEFT JOIN users u ON r.user_uuid = u.uuid
-                ORDER BY r.created_at DESC
-            ');
-            $stmt->execute();
-            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $updateFields = [];
+            $params = [];
 
-            // Safely decode products JSON and add formatted data
-            $formattedReservations = [];
-            foreach ($reservations as $reservation) {
-                // Safely decode JSON
-                $products = [];
-                if (!empty($reservation['products'])) {
-                    $decoded = json_decode($reservation['products'], true);
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                        $products = $decoded;
-                    }
-                }
-
-                $reservation['products_array'] = $products;
-                $reservation['products_count'] = count($products);
-
-                // Safe date formatting
-                if (!empty($reservation['preferred_date'])) {
-                    $reservation['formatted_date'] = date('F j, Y', strtotime($reservation['preferred_date']));
-                } else {
-                    $reservation['formatted_date'] = 'Date not set';
-                }
-
-                if (!empty($reservation['preferred_time'])) {
-                    $reservation['formatted_time'] = date('g:i A', strtotime($reservation['preferred_time']));
-                } else {
-                    $reservation['formatted_time'] = 'Time not set';
-                }
-
-                $formattedReservations[] = $reservation;
+            if (isset($data['status'])) {
+                $updateFields[] = 'status = ?';
+                $params[] = $data['status'];
+            }
+            if (isset($data['rejection_reason'])) {
+                $updateFields[] = 'rejection_reason = ?';
+                $params[] = $data['rejection_reason'];
+            }
+            if (isset($data['delivery_method'])) {
+                $updateFields[] = 'delivery_method = ?';
+                $params[] = $data['delivery_method'];
+            }
+            if (isset($data['notes'])) {
+                $updateFields[] = 'notes = ?';
+                $params[] = $data['notes'];
             }
 
-            return [
-                'success' => true,
-                'data' => $formattedReservations,
-            ];
-        } catch (PDOException $e) {
-            error_log("SQL Error: " . $e->getMessage());
-            return [
-                'success' => false,
-                'message' => 'Failed to fetch reservations: ' . $e->getMessage(),
-            ];
-        }
-    }
+            $updateFields[] = 'updated_at = NOW()';
+            $params[] = $id;
 
-    public static function updateStatus($id, $status, $reason = null)
-    {
-        try {
-            $stmt = self::conn()->prepare('
-                UPDATE reservations 
-                SET status = ?, rejection_reason = ?, updated_at = NOW() 
-                WHERE id = ?
-            ');
-            $stmt->execute([$status, $reason, $id]);
+            $sql = 'UPDATE reservations SET ' . implode(', ', $updateFields) . ' WHERE id = ?';
+            $stmt = self::conn()->prepare($sql);
+            $stmt->execute($params);
 
             if ($stmt->rowCount() > 0) {
                 return [
                     'success' => true,
-                    'message' => "Reservation {$status} successfully.",
+                    'message' => 'Reservation updated successfully.',
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Reservation not found or already updated.',
+                    'message' => 'No changes made or reservation not found.',
                 ];
             }
         } catch (PDOException $e) {
@@ -138,104 +241,22 @@ class Reservations
         }
     }
 
-    public static function getByUser($user_uuid)
+    public static function updateStatus($id, $status, $reason = '')
     {
         try {
-            $stmt = self::conn()->prepare('
-                SELECT * FROM reservations 
-                WHERE user_uuid = ? 
-                ORDER BY created_at DESC
-            ');
-            $stmt->execute([$user_uuid]);
-            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Format data safely
-            $formattedReservations = [];
-            foreach ($reservations as $reservation) {
-                // Safely decode JSON
-                $products = [];
-                if (!empty($reservation['products'])) {
-                    $decoded = json_decode($reservation['products'], true);
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                        $products = $decoded;
-                    }
-                }
-
-                $reservation['products_array'] = $products;
-                $reservation['products_count'] = count($products);
-
-                // Safe date formatting
-                if (!empty($reservation['preferred_date'])) {
-                    $reservation['formatted_date'] = date('F j, Y', strtotime($reservation['preferred_date']));
-                } else {
-                    $reservation['formatted_date'] = 'Date not set';
-                }
-
-                if (!empty($reservation['preferred_time'])) {
-                    $reservation['formatted_time'] = date('g:i A', strtotime($reservation['preferred_time']));
-                } else {
-                    $reservation['formatted_time'] = 'Time not set';
-                }
-
-                $formattedReservations[] = $reservation;
-            }
-
-            return [
-                'success' => true,
-                'data' => $formattedReservations,
-            ];
-        } catch (PDOException $e) {
-            error_log("SQL Error: " . $e->getMessage());
-            return [
-                'success' => false,
-                'message' => 'Failed to fetch user reservations: ' . $e->getMessage(),
-            ];
-        }
-    }
-
-    public static function getById($id)
-    {
-        try {
-            $stmt = self::conn()->prepare('SELECT * FROM reservations WHERE id = ?');
-            $stmt->execute([$id]);
-            $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($reservation) {
-                return [
-                    'success' => true,
-                    'data' => $reservation,
-                ];
-            } else {
-                return [
-                    'success' => false,
-                    'message' => 'Reservation not found',
-                ];
-            }
-        } catch (PDOException $e) {
-            error_log("SQL Error: " . $e->getMessage());
-            return [
-                'success' => false,
-                'message' => 'Failed to fetch reservation: ' . $e->getMessage(),
-            ];
-        }
-    }
-
-    public static function markAsPickedUp($id, $admin_notes = '')
-    {
-        try {
-            // Simple update - only change status to picked_up
             $stmt = self::conn()->prepare('
                 UPDATE reservations 
-                SET status = "picked_up", 
+                SET status = ?, 
+                    rejection_reason = ?,
                     updated_at = NOW() 
                 WHERE id = ?
             ');
-            $stmt->execute([$id]);
+            $stmt->execute([$status, $reason, $id]);
 
             if ($stmt->rowCount() > 0) {
                 return [
                     'success' => true,
-                    'message' => 'Product marked as picked up successfully.',
+                    'message' => 'Reservation status updated successfully.',
                 ];
             } else {
                 return [
@@ -247,8 +268,135 @@ class Reservations
             error_log("SQL Error: " . $e->getMessage());
             return [
                 'success' => false,
-                'message' => 'Failed to update pickup status: ' . $e->getMessage(),
+                'message' => 'Failed to update status: ' . $e->getMessage(),
             ];
+        }
+    }
+
+    public static function delete($id)
+    {
+        try {
+            $stmt = self::conn()->prepare('DELETE FROM reservations WHERE id = ?');
+            $stmt->execute([$id]);
+
+            if ($stmt->rowCount() > 0) {
+                return [
+                    'success' => true,
+                    'message' => 'Reservation deleted successfully.',
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Reservation not found.',
+                ];
+            }
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to delete reservation: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function getByUser($userUuid)
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT r.* 
+                FROM reservations r
+                WHERE r.user_uuid = ?
+                ORDER BY r.created_at DESC
+            ');
+            $stmt->execute([$userUuid]);
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+
+            // Process the products JSON for each reservation
+            foreach ($data as &$reservation) {
+                if (!empty($reservation['products'])) {
+                    $products = json_decode($reservation['products'], true);
+                    $reservation['products_array'] = $products ?? [];
+                } else {
+                    $reservation['products_array'] = [];
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => 'User reservations fetched successfully.',
+                'data' => $data,
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch user reservations: ' . $e->getMessage(),
+                'data' => [],
+            ];
+        }
+    }
+
+    // 🔥 UPDATED METHOD WITH CORRECT JSON STRUCTURE HANDLING
+    public static function markAsPickedUp($id, $admin_notes = '')
+    {
+        try {
+            self::conn()->beginTransaction();
+
+            // Get the reservation
+            $stmt = self::conn()->prepare('SELECT products, status FROM reservations WHERE id = ?');
+            $stmt->execute([$id]);
+            $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$reservation) {
+                self::conn()->rollBack();
+                return ['success' => false, 'message' => 'Reservation not found.'];
+            }
+
+            // ✅ SIMPLE: Allow any status except already picked_up
+            if ($reservation['status'] === 'picked_up') {
+                self::conn()->rollBack();
+                return ['success' => false, 'message' => 'Reservation already marked as picked up.'];
+            }
+
+            // Parse products and reduce stock
+            $products = json_decode($reservation['products'], true);
+            if (!is_array($products)) {
+                self::conn()->rollBack();
+                return ['success' => false, 'message' => 'Invalid products data.'];
+            }
+
+            $reducedProducts = [];
+
+            foreach ($products as $product) {
+                $productUuid = $product['product_uuid'] ?? null;
+                $quantity = intval($product['qty'] ?? 0);
+
+                if ($productUuid && $quantity > 0) {
+                    // Reduce stock
+                    $updateStock = self::conn()->prepare('UPDATE products SET stock = stock - ? WHERE uuid = ? AND stock >= ?');
+                    $updateStock->execute([$quantity, $productUuid, $quantity]);
+
+                    if ($updateStock->rowCount() > 0) {
+                        $reducedProducts[] = ($product['name'] ?? 'Product') . " (Qty: $quantity)";
+                    }
+                }
+            }
+
+            // Update reservation status
+            $updateStmt = self::conn()->prepare('UPDATE reservations SET status = "picked_up", notes = ?, updated_at = NOW() WHERE id = ?');
+            $updateStmt->execute([$admin_notes, $id]);
+
+            self::conn()->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Marked as picked up successfully! Stock reduced for: ' . implode(', ', $reducedProducts)
+            ];
+
+        } catch (Exception $e) {
+            self::conn()->rollBack();
+            error_log("Stock reduction error: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Failed to mark as picked up: ' . $e->getMessage()];
         }
     }
 
@@ -257,51 +405,91 @@ class Reservations
         try {
             $stmt = self::conn()->prepare('
                 SELECT 
-                    r.*,
-                    r.id as reservation_id,
+                    r.id,
                     r.products,
+                    r.total_amount,
+                    r.status,
+                    r.created_at,
                     r.updated_at as pickup_date
                 FROM reservations r
                 WHERE r.user_uuid = ? AND r.status = "picked_up"
                 ORDER BY r.updated_at DESC
             ');
             $stmt->execute([$user_uuid]);
-            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
 
-            // Format data safely
-            $formattedReservations = [];
-            foreach ($reservations as $reservation) {
-                // Safely decode JSON
-                $products = [];
-                if (!empty($reservation['products'])) {
-                    $decoded = json_decode($reservation['products'], true);
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                        $products = $decoded;
-                    }
-                }
-
-                $reservation['products_array'] = $products;
-                $reservation['products_count'] = count($products);
-
-                // Safe date formatting - use updated_at as pickup date
+            // Format dates and parse products
+            foreach ($reservations as &$reservation) {
+                // Format pickup date
                 if (!empty($reservation['pickup_date'])) {
                     $reservation['formatted_pickup_date'] = date('F j, Y g:i A', strtotime($reservation['pickup_date']));
                 } else {
                     $reservation['formatted_pickup_date'] = 'Pickup date not set';
                 }
 
-                $formattedReservations[] = $reservation;
+                // Parse products JSON
+                if (!empty($reservation['products'])) {
+                    $products = json_decode($reservation['products'], true);
+                    $reservation['products_array'] = $products ?? [];
+                } else {
+                    $reservation['products_array'] = [];
+                }
             }
 
             return [
                 'success' => true,
-                'data' => $formattedReservations,
+                'message' => 'Picked up reservations fetched successfully.',
+                'data' => $reservations,
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => 'Failed to fetch picked up reservations: ' . $e->getMessage(),
+                'data' => [],
+            ];
+        }
+    }
+
+    public static function getReadyForPickupByUser($user_uuid)
+    {
+        try {
+            $stmt = self::conn()->prepare('
+                SELECT 
+                    r.id,
+                    r.products,
+                    r.total_amount,
+                    r.status,
+                    r.created_at,
+                    r.updated_at
+                FROM reservations r
+                WHERE r.user_uuid = ? AND r.status = "ready_for_pickup"
+                ORDER BY r.updated_at DESC
+            ');
+            $stmt->execute([$user_uuid]);
+            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+
+            // Parse products JSON
+            foreach ($reservations as &$reservation) {
+                if (!empty($reservation['products'])) {
+                    $products = json_decode($reservation['products'], true);
+                    $reservation['products_array'] = $products ?? [];
+                } else {
+                    $reservation['products_array'] = [];
+                }
+            }
+
+            return [
+                'success' => true,
+                'message' => 'Ready for pickup reservations fetched successfully.',
+                'data' => $reservations,
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to fetch ready for pickup reservations: ' . $e->getMessage(),
+                'data' => [],
             ];
         }
     }
