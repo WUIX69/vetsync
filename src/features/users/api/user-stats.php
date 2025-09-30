@@ -67,12 +67,12 @@ try {
     $yesterdayUsersStmt->execute();
     $yesterdayUsers = $yesterdayUsersStmt->fetch(PDO::FETCH_ASSOC)['yesterday_count'];
 
-    if ($yesterdayUsers > 0) {
+    if ($yesterdayUsers > 0 && $newUsersToday != $yesterdayUsers) {
         $newUsersTodayGrowth = round((($newUsersToday - $yesterdayUsers) / $yesterdayUsers) * 100);
-    } else if ($newUsersToday > 0) {
-        $newUsersTodayGrowth = 100;
+    } else if ($newUsersToday > 0 && $yesterdayUsers == 0) {
+        $newUsersTodayGrowth = 100; // New users when there were none yesterday
     } else {
-        $newUsersTodayGrowth = 0;
+        $newUsersTodayGrowth = 0; // No change or both are zero
     }
 
     // Cap growth values
