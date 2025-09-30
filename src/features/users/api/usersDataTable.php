@@ -42,7 +42,7 @@ try {
         }
     }
 
-    // ✅ SIMPLE: Use basic users table columns
+    // ✅ COLUMNS CONFIGURATION - All columns searchable for proper search
     $columns = array(
         ['db' => 'firstname', 'dt' => 'firstname'],
         ['db' => 'lastname', 'dt' => 'lastname'],
@@ -108,15 +108,13 @@ try {
 
     error_log("📊 Retrieved " . count($data['data']) . " users from database");
 
-    // ✅ ADD PROFILE IMAGES: Use the SAME method as "New Users" section
+    // ✅ ADD PROFILE IMAGES
     foreach ($data['data'] as &$user) {
-        // ✅ EXACT SAME LOGIC as recent-users-admin.php
         $avatarUrl = null;
         if (function_exists('media')) {
             $avatarUrl = media($user['user_uuid']);
         }
 
-        // If no profile image or media function doesn't exist, use a nice placeholder
         if (!$avatarUrl || $avatarUrl === '/public/img/profiles/') {
             $fullName = ($user['firstname'] ?? '') . ' ' . ($user['lastname'] ?? '');
             $avatarUrl = "https://ui-avatars.com/api/?name=" . urlencode($fullName) .
@@ -124,31 +122,56 @@ try {
         }
 
         $user['profile_image'] = $avatarUrl;
-        error_log("📸 Profile image for {$user['user_uuid']}: {$avatarUrl}");
     }
 
-    // ✅ ADD CURRENT ADMIN TO RESULTS IF NEEDED
+    // ✅ FIXED: ADD ADMIN ONLY TO FIRST PAGE AND IF MATCHES SEARCH
     if ($includeCurrentAdmin && $currentAdmin) {
-        // Add current admin as first result
-        array_unshift($data['data'], $currentAdmin);
-        $data['recordsTotal']++;
-        $data['recordsFiltered']++;
-        error_log("✅ Added current admin session to results");
+        // Check if admin matches search term (if any)
+        $searchTerm = $_GET['search']['value'] ?? '';
+        $shouldIncludeAdmin = true;
+
+        if (!empty($searchTerm)) {
+            $searchTerm = strtolower($searchTerm);
+            $adminData = strtolower(
+                $currentAdmin['firstname'] . ' ' .
+                $currentAdmin['lastname'] . ' ' .
+                $currentAdmin['email'] . ' ' .
+                $currentAdmin['location'] . ' ' .
+                $currentAdmin['telephone']
+            );
+            $shouldIncludeAdmin = strpos($adminData, $searchTerm) !== false;
+        }
+
+        // Only add admin to first page (when start is 0)
+        $start = intval($_GET['start'] ?? 0);
+        $isFirstPage = ($start === 0);
+
+        if ($shouldIncludeAdmin) {
+            // Always count admin in totals
+            $data['recordsTotal']++;
+            $data['recordsFiltered']++;
+
+            if ($isFirstPage) {
+                // Add current admin as first result only on first page
+                array_unshift($data['data'], $currentAdmin);
+                error_log("✅ Added current admin session to first page");
+            } else {
+                error_log("ℹ️ Admin counted in totals but not shown (page > 1)");
+            }
+        } else {
+            error_log("❌ Admin excluded - doesn't match search term: '$searchTerm'");
+        }
     }
 
-    error_log("📊 Final result: " . count($data['data']) . " total users");
+    error_log("📊 Final result: " . count($data['data']) . " users on this page");
 
     echo json_encode($data);
 
 } catch (Exception $e) {
-    error_log("usersDataTable error: " . $e->getMessage());
+    error_log("Users DataTable Error: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'Failed to load users',
-        'error' => $e->getMessage(),
-        'data' => [],
-        'recordsTotal' => 0,
-        'recordsFiltered' => 0
+        'message' => 'Error loading users data'
     ]);
 }
 ?>

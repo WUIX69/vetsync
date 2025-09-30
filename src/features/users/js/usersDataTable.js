@@ -899,3 +899,26 @@ function openAddUserModal() {
 }
 
 console.log("UsersDataTable initialized successfully");
+
+// ✅ CONNECT SEARCH INPUT TO DATATABLES
+$(document).ready(function () {
+    // Find the search input
+    const $searchInput = $(".table-filters .ui.search input.prompt");
+
+    if ($searchInput.length > 0) {
+        console.log("🔍 Connecting search input to DataTables");
+
+        // Add event listener for real-time search
+        $searchInput.on("input keyup", function () {
+            const searchValue = $(this).val();
+            console.log("🔍 Search value:", searchValue);
+
+            // Trigger DataTables search
+            $usersDataTable.search(searchValue).draw();
+        });
+
+        console.log("✅ Search input connected successfully");
+    } else {
+        console.warn("⚠️ Search input not found");
+    }
+});
