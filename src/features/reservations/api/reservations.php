@@ -38,15 +38,16 @@ try {
                 $status = $_POST['status'] ?? null;
                 $rejectionReason = $_POST['rejection_reason'] ?? null;
                 $pickupNotes = $_POST['pickup_notes'] ?? '';
+                $isNoShow = isset($_POST['is_no_show']) && $_POST['is_no_show'] == 1;
 
                 if (!$id || !$status) {
                     echo json_encode(['success' => false, 'message' => 'Missing parameters']);
                     exit;
                 }
 
-                // If rejecting, require a reason
-                if ($status === 'rejected' && empty($rejectionReason)) {
-                    echo json_encode(['success' => false, 'message' => 'Rejection reason is required']);
+                // If rejecting/cancelling, require a reason
+                if (($status === 'rejected' || $status === 'cancelled') && empty($rejectionReason)) {
+                    echo json_encode(['success' => false, 'message' => 'Reason is required']);
                     exit;
                 }
 
@@ -54,7 +55,7 @@ try {
                 if ($status === 'picked_up') {
                     $response = Reservations::markAsPickedUp($id, $pickupNotes);
                 } else {
-                    $response = Reservations::updateStatus($id, $status, $rejectionReason);
+                    $response = Reservations::updateStatus($id, $status, $rejectionReason, $isNoShow);
                 }
 
                 echo json_encode($response);

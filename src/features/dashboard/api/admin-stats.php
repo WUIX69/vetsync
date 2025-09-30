@@ -108,12 +108,22 @@ try {
         $revenueGrowth = 8;      // 8% growth
     }
 
+    // Get new users TODAY (actual count, not percentage)
+    $newUsersTodayStmt = $conn->prepare("
+        SELECT COUNT(*) as new_users_today 
+        FROM users 
+        WHERE DATE(created_at) = CURDATE()
+    ");
+    $newUsersTodayStmt->execute();
+    $newUsersToday = $newUsersTodayStmt->fetch(PDO::FETCH_ASSOC)['new_users_today'];
+
     $response = [
         'success' => true,
         'data' => [
             'total_users' => $totalUsers,
             'total_appointments' => $totalAppointments,
             'total_revenue' => number_format($totalRevenue, 2),
+            'new_users_today' => $newUsersToday, // Add this new field
             'users_growth' => $usersGrowth,
             'appointments_growth' => $appointmentsGrowth,
             'revenue_growth' => $revenueGrowth

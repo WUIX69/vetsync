@@ -241,15 +241,16 @@ class Reservations
         }
     }
 
-    public static function updateStatus($id, $status, $reason = '')
+    public static function updateStatus($id, $status, $reason = '', $isNoShow = false)
     {
         try {
-            // Get reservation details for email notification
+            // Get reservation details for email notification and user health update
             $reservationStmt = self::conn()->prepare('
                 SELECT 
                     r.*, 
                     CONCAT(u.firstname, " ", u.lastname) AS user_name,
-                    u.email AS user_email
+                    u.email AS user_email,
+                    u.user_health AS current_health
                 FROM reservations r
                 LEFT JOIN users u ON r.user_uuid = u.uuid
                 WHERE r.id = ?
@@ -257,6 +258,7 @@ class Reservations
             $reservationStmt->execute([$id]);
             $reservationData = $reservationStmt->fetch(PDO::FETCH_ASSOC);
 
+            // Update reservation status
             $stmt = self::conn()->prepare('
                 UPDATE reservations 
                 SET status = ?, 
@@ -267,6 +269,21 @@ class Reservations
             $stmt->execute([$status, $reason, $id]);
 
             if ($stmt->rowCount() > 0) {
+                // Handle no-show penalty
+                if ($isNoShow && $reservationData && $reservationData['user_uuid']) {
+                    $currentHealth = floatval($reservationData['current_health'] ?? 100);
+                    $newHealth = max(0, $currentHealth - 20); // Reduce by 20%, minimum 0%
+                    
+                    $healthStmt = self::conn()->prepare('
+                        UPDATE users 
+                        SET user_health = ? 
+                        WHERE uuid = ?
+                    ');
+                    $healthStmt->execute([$newHealth, $reservationData['user_uuid']]);
+                    
+                    error_log("User health penalty applied: {$reservationData['user_email']} health reduced from {$currentHealth}% to {$newHealth}%");
+                }
+
                 // Send email notification when reservation is ready for pickup
                 if ($status === 'ready_for_pickup' && $reservationData && $reservationData['user_email']) {
                     try {
@@ -306,19 +323,19 @@ class Reservations
 
                 return [
                     'success' => true,
-                    'message' => 'Reservation status updated successfully.',
+                    'message' => 'Reservation updated successfully.',
                 ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Reservation not found.',
+                    'message' => 'No changes made or reservation not found.',
                 ];
             }
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
             return [
                 'success' => false,
-                'message' => 'Failed to update status: ' . $e->getMessage(),
+                'message' => 'Failed to update reservation: ' . $e->getMessage(),
             ];
         }
     }

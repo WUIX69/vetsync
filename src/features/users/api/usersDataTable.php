@@ -50,6 +50,7 @@ try {
         ['db' => 'telephone', 'dt' => 'telephone'],
         ['db' => 'location', 'dt' => 'location'],
         ['db' => 'verification_status', 'dt' => 'verification_status'],
+        ['db' => 'user_health', 'dt' => 'user_health'], // Add user health
         ['db' => 'created_at', 'dt' => 'created_at'],
         ['db' => 'uuid', 'dt' => 'user_uuid'],
     );

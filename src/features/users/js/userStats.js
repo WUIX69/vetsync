@@ -31,11 +31,21 @@ function loadUserStats() {
                     "active-users-percentage",
                     data.active_users_growth
                 );
-                updateUserProgressCircle(
-                    "new-users-today-progress",
-                    "new-users-today-percentage",
-                    data.new_users_today_growth
-                );
+                // Special handling for new users today - show "--" when count is 0
+                if (data.new_users_today === 0) {
+                    // Show "--" instead of percentage when count is 0
+                    $("#new-users-today-percentage").text("--");
+                    $("#new-users-today-progress").attr(
+                        "stroke-dasharray",
+                        "0, 100"
+                    );
+                } else {
+                    updateUserProgressCircle(
+                        "new-users-today-progress",
+                        "new-users-today-percentage",
+                        data.new_users_today_growth
+                    );
+                }
             } else {
                 console.error("Failed to load user stats:", response.message);
             }

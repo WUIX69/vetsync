@@ -31,10 +31,11 @@ const $usersDataTable = $usersTable.DataTable({
         { targets: [1], width: "200px" },
         { targets: [2], width: "120px" },
         { targets: [3], width: "100px" },
-        { targets: [4], width: "150px" },
-        { targets: [5], width: "120px" },
+        { targets: [4], width: "120px" }, // Health column
+        { targets: [5], width: "150px" },
         { targets: [6], width: "120px" },
-        { targets: [7], width: "140px", orderable: false },
+        { targets: [7], width: "120px" },
+        { targets: [8], width: "140px", orderable: false },
     ],
     language: {
         info: "Showing _START_ to _END_ of _TOTAL_ entries",
@@ -136,6 +137,32 @@ const $usersDataTable = $usersTable.DataTable({
                 const role = data.email === "admin@mail.com" ? "Admin" : "User";
                 const roleClass = role === "Admin" ? "blue" : "teal";
                 return `<span class="ui ${roleClass} label">${role}</span>`;
+            },
+        },
+        {
+            data: "user_health",
+            width: "120px",
+            render: function (data) {
+                const health = parseFloat(data || 100);
+                let healthClass = "green";
+                let healthIcon = "favorite";
+
+                if (health < 50) {
+                    healthClass = "red";
+                    healthIcon = "heart broken";
+                } else if (health < 80) {
+                    healthClass = "orange";
+                    healthIcon = "heart";
+                }
+
+                return `
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <i class="ui ${healthIcon} ${healthClass} icon"></i>
+                        <span class="ui ${healthClass} label">${health.toFixed(
+                    0
+                )}%</span>
+                    </div>
+                `;
             },
         },
         {

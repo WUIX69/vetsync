@@ -754,7 +754,7 @@ function showCancellationModal(reservationId) {
                         <label>Cancellation Reason</label>
                         <select class="ui dropdown" id="cancellationReason">
                             <option value="">Select a reason...</option>
-                            <option value="Not picked up within 7 days">Not picked up within 7 days</option>
+                            <option value="Not picked up within 7 days - NO SHOW">⚠️ Not picked up within 7 days - NO SHOW (Penalizes user)</option>
                             <option value="Item no longer available">Item no longer available</option>
                             <option value="Customer requested cancellation">Customer requested cancellation</option>
                             <option value="Payment issues">Payment issues</option>
@@ -764,6 +764,10 @@ function showCancellationModal(reservationId) {
                     <div class="field">
                         <label>Additional Notes (Optional)</label>
                         <textarea id="cancellationNotes" placeholder="Additional cancellation details..."></textarea>
+                    </div>
+                    <div class="ui warning message" id="noShowWarning" style="display: none;">
+                        <div class="header">⚠️ User Health Penalty</div>
+                        <p>Selecting "NO SHOW" will reduce the customer's user health by 20%. This affects their booking priority.</p>
                     </div>
                 </div>
             </div>
@@ -786,8 +790,16 @@ function showCancellationModal(reservationId) {
     // Add modal to body
     $("body").append(modal);
 
-    // Initialize dropdown
-    $("#cancellationReason").dropdown();
+    // Initialize dropdown with change handler
+    $("#cancellationReason").dropdown({
+        onChange: function (value) {
+            if (value.includes("NO SHOW")) {
+                $("#noShowWarning").show();
+            } else {
+                $("#noShowWarning").hide();
+            }
+        },
+    });
 
     // Show modal
     $("#cancellationModal")
@@ -804,21 +816,26 @@ function showCancellationModal(reservationId) {
                 // Combine reason and notes
                 const fullReason = notes ? `${reason}: ${notes}` : reason;
 
+                // Check if this is a no-show
+                const isNoShow = reason.includes("NO SHOW");
+
                 // Call cancellation function
-                cancelReservation(reservationId, fullReason);
+                cancelReservation(reservationId, fullReason, isNoShow);
                 return true;
             },
         })
         .modal("show");
 }
 
-// Add new function for cancellation
-function cancelReservation(reservationId, reason) {
+// Update cancelReservation function to handle no-show penalty
+function cancelReservation(reservationId, reason, isNoShow = false) {
     console.log(
         "cancelReservation called with ID:",
         reservationId,
         "Reason:",
-        reason
+        reason,
+        "No Show:",
+        isNoShow
     );
 
     const data = {
@@ -826,6 +843,7 @@ function cancelReservation(reservationId, reason) {
         id: reservationId,
         status: "cancelled",
         rejection_reason: reason,
+        is_no_show: isNoShow ? 1 : 0,
     };
 
     console.log("Sending cancellation data:", data);
@@ -834,7 +852,12 @@ function cancelReservation(reservationId, reason) {
         .done(function (response) {
             console.log("Cancellation response:", response);
             if (response.success) {
-                showSuccess("Reservation cancelled successfully!");
+                let message = "Reservation cancelled successfully!";
+                if (isNoShow) {
+                    message +=
+                        "\n⚠️ User health reduced by 20% due to no-show.";
+                }
+                showSuccess(message);
                 loadReservations(); // Reload data
             } else {
                 showError(response.message);

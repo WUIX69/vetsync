@@ -201,6 +201,7 @@
                     <th style="width: 200px;">Email</th>
                     <th style="width: 120px;">Status</th>
                     <th style="width: 100px;">Role</th>
+                    <th style="width: 120px;">Health</th>
                     <th style="width: 150px;">Location</th>
                     <th style="width: 120px;">Telephone</th>
                     <th style="width: 120px;">Created At</th>
