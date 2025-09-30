@@ -4,7 +4,59 @@ const productsList = {
     init() {
         this.productsContainer = $(".products .row.g-4");
         this.loadProducts();
+        this.bindEvents();
         this.startAutoRefresh();
+    },
+
+    bindEvents() {
+        // Handle quantity increase
+        $(document).on("click", ".increase-quantity", (e) => {
+            e.preventDefault();
+            const quantityElement = $(e.currentTarget).siblings(
+                ".quantity-value"
+            );
+            let currentQuantity = parseInt(quantityElement.text()) || 1;
+            currentQuantity++;
+            quantityElement.text(currentQuantity);
+        });
+
+        // Handle quantity decrease
+        $(document).on("click", ".decrease-quantity", (e) => {
+            e.preventDefault();
+            const quantityElement = $(e.currentTarget).siblings(
+                ".quantity-value"
+            );
+            let currentQuantity = parseInt(quantityElement.text()) || 1;
+            if (currentQuantity > 1) {
+                currentQuantity--;
+                quantityElement.text(currentQuantity);
+            }
+        });
+
+        // Handle add to cart with current quantity
+        $(document).on("click", ".add-to-cart-btn", (e) => {
+            e.preventDefault();
+
+            // Check if button is disabled (for unavailable products)
+            if ($(e.currentTarget).hasClass("disabled")) {
+                return false;
+            }
+
+            const productCard = $(e.currentTarget).closest(".product-listing");
+            const productUuid = productCard.data("product-uuid");
+            const quantity =
+                parseInt(productCard.find(".quantity-value").text()) || 1;
+
+            // Get selected size if available (default to 'm' for medium)
+            const size = productCard.find(".size-selector").val() || "m";
+
+            // Use the Cart object from cart.js to add to cart
+            if (typeof Cart !== "undefined") {
+                Cart.addToCart(productUuid, quantity, size);
+            } else {
+                console.error("Cart object not available");
+            }
+        });
     },
 
     loadProducts() {

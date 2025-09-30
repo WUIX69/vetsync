@@ -167,9 +167,11 @@ const Cart = {
             $(this).addClass("active");
         });
 
-        // Quantity controls (cart page)
+        // Quantity controls (cart page) - FIX: Use regular function instead of arrow function
         $(document).on("click", ".update-quantity", (e) => {
             e.preventDefault();
+            console.log("Quantity button clicked:", e.currentTarget); // Debug log
+
             const productUuid = $(e.currentTarget).data("product-uuid");
             const size = $(e.currentTarget).data("size");
             const action = $(e.currentTarget).data("action");
@@ -177,11 +179,19 @@ const Cart = {
                 $(e.currentTarget).siblings(".quantity-display").text() || 1
             );
 
+            console.log("Quantity update data:", {
+                productUuid,
+                size,
+                action,
+                currentQty,
+            }); // Debug log
+
             let newQty =
                 action === "increase" ? currentQty + 1 : currentQty - 1;
             if (newQty < 1) newQty = 1;
 
-            this.updateQuantity(productUuid, size, newQty);
+            console.log("New quantity:", newQty); // Debug log
+            Cart.updateQuantity(productUuid, size, newQty); // Use Cart. instead of this.
         });
 
         // Remove item (cart page)
@@ -189,31 +199,31 @@ const Cart = {
             e.preventDefault();
             const productUuid = $(e.currentTarget).data("product-uuid");
             const size = $(e.currentTarget).data("size");
-            this.removeItem(productUuid, size);
+            Cart.removeItem(productUuid, size); // Use Cart. instead of this.
         });
 
         // Reserve button (cart page)
         $(document).on("click", ".reserve-btn", (e) => {
             e.preventDefault();
-            this.openReservationModal();
+            Cart.openReservationModal(); // Use Cart. instead of this.
         });
 
         // NEW: Select/Deselect cart items
         $(document).on("change", ".cart-item-checkbox", () => {
-            this.updateSelectedItemsSummary();
+            Cart.updateSelectedItemsSummary(); // Use Cart. instead of this.
         });
 
         // NEW: Select all / Deselect all
         $(document).on("click", "#selectAllItems", (e) => {
             const isChecked = $(e.currentTarget).is(":checked");
             $(".cart-item-checkbox").prop("checked", isChecked);
-            this.updateSelectedItemsSummary();
+            Cart.updateSelectedItemsSummary(); // Use Cart. instead of this.
         });
 
         // NEW: Cancel pending reservation
         $(document).on("click", ".cancel-reservation-btn", (e) => {
             const reservationId = $(e.currentTarget).data("reservation-id");
-            this.cancelReservation(reservationId);
+            Cart.cancelReservation(reservationId); // Use Cart. instead of this.
         });
 
         // Handle rate reservation button clicks
@@ -221,22 +231,24 @@ const Cart = {
             e.preventDefault();
             const reservationId = $(e.currentTarget).data("reservation-id");
             const products = $(e.currentTarget).data("products");
-            this.handleRateReservation(reservationId, products);
+            Cart.handleRateReservation(reservationId, products); // Use Cart. instead of this.
         });
 
         // FIXED: Submit reservation - Handle both form submit and button click
         $(document).on("submit", "#reservationForm", (e) => {
             e.preventDefault();
-            if (this.validateReservationForm()) {
-                this.submitReservation();
+            if (Cart.validateReservationForm()) {
+                // Use Cart. instead of this.
+                Cart.submitReservation(); // Use Cart. instead of this.
             }
         });
 
         // FIXED: Also handle the submit button click specifically
         $(document).on("click", "#reservationModal .submit.button", (e) => {
             e.preventDefault();
-            if (this.validateReservationForm()) {
-                this.submitReservation();
+            if (Cart.validateReservationForm()) {
+                // Use Cart. instead of this.
+                Cart.submitReservation(); // Use Cart. instead of this.
             }
         });
 
@@ -983,7 +995,8 @@ const Cart = {
 
         selectedCheckboxes.each(function () {
             totalItems += parseInt($(this).data("qty"));
-            totalAmount += parseFloat($(this).data("price"));
+            // Fix: Use total-price instead of price
+            totalAmount += parseFloat($(this).data("total-price"));
         });
 
         const selectedCount = selectedCheckboxes.length;
@@ -1052,40 +1065,49 @@ const Cart = {
             method: "DELETE",
             success: (response) => {
                 if (response.success) {
-                    this.loadCartItems();
-                    this.updateCartBadge();
-                    this.showNotification("Item removed from cart", "success");
+                    Cart.loadCartItems(); // Use Cart. instead of this.
+                    Cart.updateCartBadge(); // Use Cart. instead of this.
+                    Cart.showNotification("Item removed from cart", "success"); // Use Cart. instead of this.
                 } else {
-                    this.showNotification(response.message, "error");
+                    Cart.showNotification(response.message, "error"); // Use Cart. instead of this.
                 }
             },
             error: (xhr, status, error) => {
                 console.error("Remove item error:", { xhr, status, error });
-                this.showNotification("Failed to remove item", "error");
+                Cart.showNotification("Failed to remove item", "error"); // Use Cart. instead of this.
             },
         });
     },
 
     // Update quantity
     updateQuantity(productUuid, size, qty) {
+        console.log("updateQuantity called with:", { productUuid, size, qty }); // Debug log
+
+        // Use POST with action=update instead of PUT
+        const formData = new FormData();
+        formData.append("action", "update");
+        formData.append("product_uuid", productUuid);
+        formData.append("size", size);
+        formData.append("qty", qty);
+
         $.ajax({
             url: apiUrl("products") + "cart.php",
-            method: "PUT",
-            data: {
-                product_uuid: productUuid,
-                size: size,
-                qty: qty,
-            },
+            method: "POST", // Changed from PUT to POST
+            data: formData,
+            processData: false,
+            contentType: false,
             success: (response) => {
+                console.log("Update quantity response:", response); // Debug log
                 if (response.success) {
-                    this.loadCartItems();
-                    this.updateCartBadge();
+                    Cart.loadCartItems(); // Reload cart items to show updated quantity
+                    Cart.updateCartBadge(); // Update cart badge
                 } else {
-                    this.showNotification(response.message, "error");
+                    Cart.showNotification(response.message, "error");
                 }
             },
-            error: () => {
-                this.showNotification("Failed to update quantity", "error");
+            error: (xhr, status, error) => {
+                console.error("Update quantity error:", { xhr, status, error });
+                Cart.showNotification("Failed to update quantity", "error");
             },
         });
     },
