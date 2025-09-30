@@ -44,7 +44,7 @@
                         <div class="field">
                             <label for="telephone">Phone Number</label>
                             <div class="ui input">
-                                <input type="tel" name="telephone" placeholder="Phone Number">
+                                <input type="tel" name="telephone" placeholder="Phone Number" maxlength="11">
                             </div>
                         </div>
                         <div class="field">

@@ -44,6 +44,10 @@ $(function () {
                         type: "minLength[10]",
                         prompt: "Please enter at least 10 digits",
                     },
+                    {
+                        type: "maxLength[11]",
+                        prompt: "Phone number cannot exceed 11 digits",
+                    },
                 ],
             },
             password: {
