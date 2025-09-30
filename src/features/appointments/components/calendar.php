@@ -399,8 +399,8 @@
         for (let i = data.firstDayOfWeek - 1; i >= 0; i--) {
             const day = daysInPrevMonth - i;
             html += `<div class="calendar-day other-month">
-                <span class="calendar-day-number">${day}</span>
-            </div>`;
+            <span class="calendar-day-number">${day}</span>
+        </div>`;
         }
 
         // Current month days
@@ -433,7 +433,7 @@
             }
 
             html += `<div class="${dayClass}" data-date="${data.year}-${String(data.month).padStart(2, '0')}-${String(day).padStart(2, '0')}">
-                <span class="calendar-day-number">${day}</span>`;
+            <span class="calendar-day-number">${day}</span>`;
 
             if (hasAppointments) {
                 html += `<div class="appointment-indicator">${hasAppointments.count}</div>`;
@@ -459,8 +459,8 @@
 
         for (let day = 1; day <= remainingCells; day++) {
             html += `<div class="calendar-day other-month">
-                <span class="calendar-day-number">${day}</span>
-            </div>`;
+            <span class="calendar-day-number">${day}</span>
+        </div>`;
         }
 
         calendarGrid.innerHTML = html;
