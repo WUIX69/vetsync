@@ -261,15 +261,22 @@ class Email
                         </div>
                         
                         <div class='pickup-info'>
-                            <strong>�� Pickup Information:</strong><br>
+                            <strong>📍 Pickup Information:</strong><br>
                             <strong>Location:</strong> VetSync Veterinary Clinic<br>
                             <strong>Hours:</strong> Monday - Friday: 8:00 AM - 6:00 PM<br>
                             <strong>Saturday:</strong> 8:00 AM - 4:00 PM<br>
                             <strong>Note:</strong> Please bring a valid ID for pickup verification
                         </div>
                         
-                        <p>Please pick up your order within <strong>7 days</strong> to ensure product quality and availability.</p>
-                        <p>If you have any questions or need to arrange a different pickup time, please contact us.</p>
+                        <div class='highlight' style='background: #f8d7da; border-left: 4px solid #dc3545; color: #721c24;'>
+                            <strong>⚠️ IMPORTANT PICKUP NOTICE:</strong><br>
+                            <strong>Pickup Deadline:</strong> 7 days from ready date<br>
+                            <strong>⚠️ Please note:</strong> Items <strong>MUST</strong> be picked up within 7 days or your reservation will be <strong>AUTOMATICALLY CANCELLED</strong> and any payments will be processed for refund.<br>
+                            <strong>📞 Contact us immediately</strong> if you cannot pick up within this timeframe.
+                        </div>
+                        
+                        <p>Please pick up your order as soon as possible to avoid automatic cancellation.</p>
+                        <p>If you have any questions or need to arrange a different pickup time, please contact us immediately.</p>
                         
                         <p>Thank you for choosing VetSync!<br>The VetSync Team</p>
                     </div>

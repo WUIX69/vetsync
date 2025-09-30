@@ -93,6 +93,7 @@ function renderReservations(reservations) {
         "ready_for_pickup",
         "picked_up",
         "rejected",
+        "cancelled",
     ];
     statuses.forEach((status) => {
         $(`#${status}-reservations`).empty();
@@ -106,6 +107,7 @@ function renderReservations(reservations) {
         ready_for_pickup: 0,
         picked_up: 0,
         rejected: 0,
+        cancelled: 0,
     };
 
     reservations.forEach(function (reservation) {
@@ -338,7 +340,7 @@ function getActionButtons(reservation) {
                 <button class="btn btn-reject" onclick="showRejectionModal(${reservationId})" data-id="${reservationId}">
                     <i class="material-icons-sharp">cancel</i> Cancel
                 </button>
-            `;
+                `;
             break;
         case "ready_for_pickup":
         case "completed": // Handle legacy status
@@ -346,7 +348,13 @@ function getActionButtons(reservation) {
                 <button class="btn btn-complete" onclick="markAsPickedUp(${reservationId})" data-id="${reservationId}">
                     <i class="material-icons-sharp">done_all</i> Mark as Picked Up
                 </button>
-            `;
+                <button class="btn btn-cancel" onclick="showCancellationModal(${reservationId})" data-id="${reservationId}" 
+                        style="background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-left: 5px; font-size: 0.875rem; font-weight: 500; display: inline-flex; align-items: center; transition: all 0.3s ease;"
+                        onmouseover="this.style.background='#c82333'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'"
+                        onmouseout="this.style.background='#dc3545'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    <i class="material-icons-sharp" style="margin-right: 4px; font-size: 16px;">cancel</i> Cancel
+                </button>
+                `;
             break;
         case "picked_up":
             buttons = `
@@ -358,19 +366,14 @@ function getActionButtons(reservation) {
             break;
         case "rejected":
             buttons = `
-                    <span class="status-info">
-                    <i class="material-icons-sharp">info</i>
+                <span class="rejected-status">
+                    <i class="material-icons-sharp">cancel</i>
                     Rejected
-                    </span>
+                </span>
                 `;
             break;
         default:
-            buttons = `
-                    <span class="status-info">
-                    <i class="material-icons-sharp">help</i>
-                    Unknown Status: ${reservation.status}
-                    </span>
-                `;
+            buttons = `<span>No actions available</span>`;
     }
 
     return buttons;
@@ -404,6 +407,11 @@ function getStatusBadge(status) {
                 <i class="material-icons-sharp">cancel</i>
                 Rejected
             </span>`;
+        case "cancelled":
+            return `<span class="status-badge cancelled">
+                <i class="material-icons-sharp">cancel</i>
+                Cancelled
+            </span>`;
         default:
             return `<span class="status-badge unknown">
                 <i class="material-icons-sharp">help</i>
@@ -425,6 +433,8 @@ function getStatusIcon(status) {
         case "picked_up":
             return "done_all";
         case "rejected":
+            return "cancel";
+        case "cancelled":
             return "cancel";
         default:
             return "help";
@@ -613,6 +623,8 @@ function updateTabCounts() {
         picked_up: allReservations.filter((r) => r.status === "picked_up")
             .length,
         rejected: allReservations.filter((r) => r.status === "rejected").length,
+        cancelled: allReservations.filter((r) => r.status === "cancelled")
+            .length,
     };
 
     // Update tab labels with counts - Fix the outerHTML error
@@ -644,6 +656,8 @@ function getDisplayStatusName(status) {
             return "Picked Up";
         case "rejected":
             return "Rejected";
+        case "cancelled":
+            return "Cancelled";
         default:
             return status.charAt(0).toUpperCase() + status.slice(1);
     }
@@ -723,5 +737,111 @@ function loadReservations() {
                 error,
             });
             showError("Failed to load reservations. Please try again.");
+        });
+}
+
+// Add new function for cancellation modal
+function showCancellationModal(reservationId) {
+    const modal = `
+        <div class="ui modal" id="cancellationModal">
+            <div class="header">
+                <i class="cancel icon"></i>
+                Cancel Reservation
+            </div>
+            <div class="content">
+                <div class="ui form">
+                    <div class="field">
+                        <label>Cancellation Reason</label>
+                        <select class="ui dropdown" id="cancellationReason">
+                            <option value="">Select a reason...</option>
+                            <option value="Not picked up within 7 days">Not picked up within 7 days</option>
+                            <option value="Item no longer available">Item no longer available</option>
+                            <option value="Customer requested cancellation">Customer requested cancellation</option>
+                            <option value="Payment issues">Payment issues</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Additional Notes (Optional)</label>
+                        <textarea id="cancellationNotes" placeholder="Additional cancellation details..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui cancel button">
+                    <i class="remove icon"></i>
+                    Cancel
+                </div>
+                <div class="ui red approve button">
+                    <i class="checkmark icon"></i>
+                    Confirm Cancellation
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Remove existing modal if any
+    $("#cancellationModal").remove();
+
+    // Add modal to body
+    $("body").append(modal);
+
+    // Initialize dropdown
+    $("#cancellationReason").dropdown();
+
+    // Show modal
+    $("#cancellationModal")
+        .modal({
+            onApprove: function () {
+                const reason = $("#cancellationReason").val();
+                const notes = $("#cancellationNotes").val();
+
+                if (!reason) {
+                    alert("Please select a cancellation reason.");
+                    return false;
+                }
+
+                // Combine reason and notes
+                const fullReason = notes ? `${reason}: ${notes}` : reason;
+
+                // Call cancellation function
+                cancelReservation(reservationId, fullReason);
+                return true;
+            },
+        })
+        .modal("show");
+}
+
+// Add new function for cancellation
+function cancelReservation(reservationId, reason) {
+    console.log(
+        "cancelReservation called with ID:",
+        reservationId,
+        "Reason:",
+        reason
+    );
+
+    const data = {
+        action: "update_status",
+        id: reservationId,
+        status: "cancelled",
+        rejection_reason: reason,
+    };
+
+    console.log("Sending cancellation data:", data);
+
+    $.post("/src/features/reservations/api/reservations.php", data)
+        .done(function (response) {
+            console.log("Cancellation response:", response);
+            if (response.success) {
+                showSuccess("Reservation cancelled successfully!");
+                loadReservations(); // Reload data
+            } else {
+                showError(response.message);
+            }
+        })
+        .fail(function (xhr, status, error) {
+            console.error("AJAX Error:", { xhr, status, error });
+            showError("Failed to cancel reservation. Please try again.");
         });
 }

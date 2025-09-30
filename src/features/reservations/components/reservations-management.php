@@ -531,6 +531,50 @@
             color: #495057;
             margin-bottom: 0.5rem;
         }
+
+        .btn-cancel,
+        .btn.btn-cancel {
+            background: #6c757d !important;
+            color: white !important;
+            border: none !important;
+            padding: 6px 12px !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            margin-left: 5px !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .btn-cancel:hover,
+        .btn.btn-cancel:hover {
+            background: #5a6268 !important;
+            color: white !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+            text-decoration: none !important;
+        }
+
+        .btn-cancel i,
+        .btn.btn-cancel i {
+            margin-right: 4px !important;
+            font-size: 16px !important;
+        }
+
+        /* Ensure cancel button styling overrides any other button styles */
+        button.btn-cancel,
+        button.btn.btn-cancel {
+            background: #6c757d !important;
+            border: none !important;
+        }
+
+        button.btn-cancel:hover,
+        button.btn.btn-cancel:hover {
+            background: #5a6268 !important;
+        }
 </style>
 
 <section class="reservations">
@@ -578,6 +622,12 @@
                     <a class="nav-link" data-target="rejected">
                         <i class="material-icons-sharp">cancel</i>
                         Rejected
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-target="cancelled">
+                        <i class="material-icons-sharp">block</i>
+                        Cancelled
                     </a>
                 </li>
             </ul>
@@ -716,6 +766,29 @@
                         </tr>
                     </thead>
                     <tbody id="rejected-reservations">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Cancelled Tab -->
+            <div class="tab-content" id="cancelled-tab">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search cancelled reservations..."
+                        id="search-cancelled">
+                </div>
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>DATE</th>
+                            <th>CUSTOMER</th>
+                            <th>PRODUCTS</th>
+                            <th>AMOUNT</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cancelled-reservations">
                         <!-- Populated by JavaScript -->
                     </tbody>
                 </table>
