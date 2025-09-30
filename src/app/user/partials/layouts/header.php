@@ -300,6 +300,40 @@ $activeLink = uriPagePath();
             padding: 12px 18px;
         }
     }
+
+    /* Terms Icon Styles */
+    .terms-icon {
+        position: relative;
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    .terms-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: inherit;
+        padding: 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .terms-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .terms-icon i {
+        font-size: 22px;
+        color: #333;
+        transition: color 0.3s ease;
+    }
+
+    .terms-link:hover i {
+        color: #007bff;
+    }
 </style>
 
 <!-- Site Header -->
@@ -338,6 +372,13 @@ $activeLink = uriPagePath();
                         <a href="<?= app('user/appointments') ?>">View all appointments</a>
                     </div>
                 </div>
+            </div>
+
+            <!-- Terms and Agreement Icon -->
+            <div class="terms-icon">
+                <a href="javascript:void(0)" onclick="showTermsModal()" class="terms-link" title="Terms & Agreement">
+                    <i class="file text outline icon"></i>
+                </a>
             </div>
 
             <!-- Simple Cart Icon - Only shows cart items now -->
