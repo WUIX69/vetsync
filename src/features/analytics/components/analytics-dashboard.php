@@ -141,7 +141,7 @@
 
         if (topSales.length > 0) {
             productNames = topSales.slice(0, 5).map(item => item.product_name);
-            productSales = topSales.slice(0, 5).map(item => item.reservations);
+            productSales = topSales.slice(0, 5).map(item => item.total_quantity); // Use total_quantity instead of reservations
         }
 
         createProductsChart(productNames, productSales);

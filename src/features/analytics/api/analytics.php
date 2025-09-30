@@ -63,32 +63,49 @@ try {
     $revenueTodayResult = $revenueTodayStmt->fetch(PDO::FETCH_ASSOC);
     $analytics['revenue_today'] = floatval($revenueTodayResult['revenue_today'] ?? 0);
 
-    // ✅ 8. TOP SALES - Most Reserved Products
-    $topSalesStmt = $conn->prepare("
-        SELECT products, COUNT(*) as reservation_count, SUM(total_amount) as total_sales
+    // ✅ 8. TOP SALES - Most Sold Products by Total Quantity
+    $reservationsStmt = $conn->prepare("
+        SELECT products, total_amount
         FROM reservations 
         WHERE status IN ('picked_up', 'ready_for_pickup', 'accepted')
-        GROUP BY products
-        ORDER BY reservation_count DESC
-        LIMIT 5
+        AND products IS NOT NULL
     ");
-    $topSalesStmt->execute();
-    $topSalesResults = $topSalesStmt->fetchAll(PDO::FETCH_ASSOC);
+    $reservationsStmt->execute();
+    $reservationsResults = $reservationsStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $analytics['top_sales'] = [];
-    foreach ($topSalesResults as $sale) {
-        $products = json_decode($sale['products'], true);
+    $productSales = [];
+
+    foreach ($reservationsResults as $reservation) {
+        $products = json_decode($reservation['products'], true);
         if ($products && is_array($products)) {
             foreach ($products as $product) {
                 $productName = $product['name'] ?? 'Unknown Product';
-                $analytics['top_sales'][] = [
-                    'product_name' => $productName,
-                    'reservations' => intval($sale['reservation_count']),
-                    'total_sales' => floatval($sale['total_sales'])
-                ];
+                $quantity = intval($product['qty'] ?? 1);
+                $price = floatval($product['price'] ?? 0);
+
+                if (!isset($productSales[$productName])) {
+                    $productSales[$productName] = [
+                        'product_name' => $productName,
+                        'total_quantity' => 0,
+                        'total_sales' => 0,
+                        'reservations_count' => 0
+                    ];
+                }
+
+                $productSales[$productName]['total_quantity'] += $quantity;
+                $productSales[$productName]['total_sales'] += ($price * $quantity);
+                $productSales[$productName]['reservations_count'] += 1;
             }
         }
     }
+
+    // Sort by total quantity sold (descending)
+    usort($productSales, function ($a, $b) {
+        return $b['total_quantity'] - $a['total_quantity'];
+    });
+
+    // Take top 5 and format for output
+    $analytics['top_sales'] = array_slice($productSales, 0, 5);
 
     // ✅ 9. WEEKLY ACTIVITY (last 7 days)
     $weeklyStmt = $conn->prepare("

@@ -19,11 +19,11 @@ try {
     $appointmentsStmt->execute();
     $totalAppointments = $appointmentsStmt->fetch(PDO::FETCH_ASSOC)['total_appointments'];
 
-    // Get total revenue from reservations
+    // Get total revenue from completed reservations only
     $revenueStmt = $conn->prepare("
         SELECT SUM(total_amount) as total_revenue 
         FROM reservations 
-        WHERE status IN ('accepted', 'ready_for_pickup', 'picked_up')
+        WHERE status = 'picked_up'
     ");
     $revenueStmt->execute();
     $totalRevenue = $revenueStmt->fetch(PDO::FETCH_ASSOC)['total_revenue'] ?? 0;
@@ -68,11 +68,11 @@ try {
         $appointmentsGrowth = 0;
     }
 
-    // Revenue growth (last 7 days vs previous 7 days)
+    // Revenue growth (last 7 days vs previous 7 days) - only picked up orders
     $recent7DaysRevenueStmt = $conn->prepare("
         SELECT SUM(total_amount) as revenue 
         FROM reservations 
-        WHERE status IN ('accepted', 'ready_for_pickup', 'picked_up') 
+        WHERE status = 'picked_up'
         AND created_at >= ?
     ");
     $recent7DaysRevenueStmt->execute([$last7Days]);
@@ -81,7 +81,7 @@ try {
     $previous7DaysRevenueStmt = $conn->prepare("
         SELECT SUM(total_amount) as revenue 
         FROM reservations 
-        WHERE status IN ('accepted', 'ready_for_pickup', 'picked_up') 
+        WHERE status = 'picked_up'
         AND created_at >= ? AND created_at < ?
     ");
     $previous7DaysRevenueStmt->execute([$last14Days, $last7Days]);
