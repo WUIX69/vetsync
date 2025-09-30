@@ -182,6 +182,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Handle GET requests for fetching appointments
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $action = $_GET['action'] ?? null;
+
+    if ($action === 'get_by_date') {
+        $date = $_GET['date'] ?? null;
+        if (!$date) {
+            echo json_encode(['success' => false, 'message' => 'Date parameter is required']);
+            exit;
+        }
+
+        try {
+            global $conn;
+
+            // Query to get appointments for specific date with user and pet info (NO pet image)
+            $stmt = $conn->prepare("
+                SELECT 
+                    a.uuid,
+                    a.date,
+                    a.time,
+                    a.status,
+                    a.note,
+                    a.user_uuid,
+                    a.pet_uuid,
+                    a.service_uuid,
+                    u.firstname as user_firstname,
+                    u.lastname as user_lastname,
+                    u.email as user_email,
+                    p.name as pet_name,
+                    s.name as service_name
+                FROM appointments a
+                LEFT JOIN users u ON a.user_uuid = u.uuid
+                LEFT JOIN pets p ON a.pet_uuid = p.uuid  
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                WHERE DATE(a.date) = ?
+                ORDER BY a.time ASC
+            ");
+
+            $stmt->execute([$date]);
+            $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Format the data with default placeholder image
+            $formattedAppointments = array_map(function ($appointment) {
+                return [
+                    'uuid' => $appointment['uuid'],
+                    'date' => $appointment['date'],
+                    'time' => $appointment['time'],
+                    'status' => $appointment['status'],
+                    'note' => $appointment['note'] ?? '',
+                    'user_uuid' => $appointment['user_uuid'],
+                    'pet_uuid' => $appointment['pet_uuid'],
+                    'service_uuid' => $appointment['service_uuid'],
+                    'user_name' => trim(($appointment['user_firstname'] ?? '') . ' ' . ($appointment['user_lastname'] ?? '')),
+                    'user_email' => $appointment['user_email'] ?? '',
+                    'pet_name' => $appointment['pet_name'] ?? 'Unknown Pet',
+                    'pet_image' => '/public/img/placeholders/image.png', // Always use placeholder
+                    'service_name' => $appointment['service_name'] ?? 'Custom Service',
+                    'formatted_time' => $appointment['time'] ? date('g:i A', strtotime($appointment['time'])) : 'No time set',
+                    'formatted_date' => $appointment['date'] ? date('F j, Y', strtotime($appointment['date'])) : 'No date set'
+                ];
+            }, $appointments);
+
+            echo json_encode(['success' => true, 'data' => $formattedAppointments]);
+            exit;
+
+        } catch (Exception $e) {
+            error_log("Get appointments by date error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+            exit;
+        }
+    }
+
+    // Default GET behavior - get all appointments
     $response = VetSync\Models\Appointments::all();
     echo json_encode($response);
     exit;
