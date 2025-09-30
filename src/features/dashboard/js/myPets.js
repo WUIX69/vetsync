@@ -11,17 +11,18 @@ const petModalForm = petModal.find("form");
 let isModalHide = false;
 let isPondRender = false;
 
-// Pet Image FilePond
+// Pet Image FilePond - FIXED VERSION
 const petImagePond = FilePond.create(document.querySelector(".pet-pond"), {
-    maxFiles: 2,
+    maxFiles: 1, // CHANGED: Only allow 1 file
     maxFileSize: "2MB",
-    allowMultiple: true,
+    allowMultiple: false, // CHANGED: No multiple files
     allowFileTypes: ["image/*"],
     labelIdle: `Drag & Drop your pet image or <span class="filepond--label-action">Browse</span>`,
     imagePreviewHeight: 170,
     imageCropAspectRatio: "1:1",
     imageResizeTargetWidth: 200,
     imageResizeTargetHeight: 200,
+    allowReplace: true, // ADDED: Allow replacing files
     onprocessfile: function (error, file) {
         // console.log("On Process Files:", file);
     },
@@ -764,12 +765,9 @@ petModalForm.form({
             success: function (response) {
                 alert(response.message);
                 if (response.success) {
-                    getAllPets(); // Refresh the pets data
-                    isPondRender = true; // Set the flag BEFORE hiding the modal
-                    petModal.modal("hide");
+                    // Simple solution: Just reload the page
+                    window.location.reload();
                 }
-            },
-            complete: function () {
                 $submitBtn.removeClass("loading");
             },
         });

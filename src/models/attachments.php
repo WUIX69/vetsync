@@ -42,7 +42,8 @@ class Attachments
     public static function single($reference_uuid)
     {
         try {
-            $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid LIMIT 1";
+            // Get the LATEST attachment (most recently uploaded)
+            $sql = "SELECT * FROM attachments WHERE reference_uuid = :reference_uuid ORDER BY id DESC LIMIT 1";
             $stmt = self::conn()->prepare($sql);
             $stmt->execute([':reference_uuid' => $reference_uuid]);
             $data = $stmt->fetch(PDO::FETCH_ASSOC) ?? [];

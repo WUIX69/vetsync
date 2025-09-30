@@ -74,9 +74,9 @@ try {
             }
 
             $result['data'] = array_map(function ($item) use ($reference_model) {
-                // Format correct data
+                // Format correct data with cache busting
                 $formattedData = [
-                    'image' => media($item['uuid']),
+                    'image' => media($item['uuid']) . '?v=' . (time() + rand(1, 1000)), // Add timestamp to prevent caching
                     'created_at' => Formatters::dateToMDY($item['created_at']),
                 ];
 
@@ -107,7 +107,7 @@ try {
 
             // Add formatted image and files data (same as the 'all' action)
             if ($response['success'] && !empty($response['data'])) {
-                $response['data']['image'] = media($response['data']['uuid']);
+                $response['data']['image'] = media($response['data']['uuid']) . '?v=' . (time() + rand(1, 1000)); // Add cache busting
                 $response['data']['files'] = Attachments::all($pet_uuid)['data'] ?? [];
                 $response['data']['created_at'] = Formatters::dateToMDY($response['data']['created_at']);
             }
