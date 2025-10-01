@@ -32,7 +32,7 @@ function renderAppointments(filter = "all") {
 
     let filteredAppointments = userAppointments.filter(
         (app) =>
-            !hiddenAppointments.includes(app.uuid) && // Don't show hidden appointments
+            !hiddenAppointments.includes(app.uuid) &&
             (filter === "all" ||
                 (filter === "pending" && app.status === "pending") ||
                 (filter === "confirmed" && app.status === "accepted") ||
@@ -45,8 +45,19 @@ function renderAppointments(filter = "all") {
         return;
     }
 
+    // Group appointments by booking_group_id
+    const grouped = {};
     filteredAppointments.forEach((appointment) => {
-        const appointmentCard = createAppointmentCard(appointment);
+        const groupId = appointment.booking_group_id || appointment.uuid;
+        if (!grouped[groupId]) {
+            grouped[groupId] = [];
+        }
+        grouped[groupId].push(appointment);
+    });
+
+    // Render each group
+    Object.values(grouped).forEach((appointmentGroup) => {
+        const appointmentCard = createAppointmentGroupCard(appointmentGroup);
         container.append(appointmentCard);
     });
 }
@@ -56,7 +67,7 @@ function createAppointmentCard(appointment) {
     const canCancel =
         appointment.status === "pending" || appointment.status === "accepted";
     const canDelete = appointment.status === "cancelled";
-    const canRate = appointment.status === "completed"; // NEW: Can rate completed appointments
+    const canRate = appointment.status === "completed";
 
     // USER SIDE: Show both admin cancellation and reschedule reasons
     let reasonInfo = "";
@@ -171,6 +182,102 @@ function createAppointmentCard(appointment) {
                         ? `<button class="btn btn-success" disabled title="Already reviewed">
                     <span class="emoji">✅</span> Reviewed
                 </button>`
+                        : ""
+                }
+            </div>
+        </div>
+    `;
+}
+
+function createAppointmentGroupCard(appointmentGroup) {
+    // If it's a single appointment, use the regular card
+    if (appointmentGroup.length === 1) {
+        return createAppointmentCard(appointmentGroup[0]);
+    }
+
+    // Multiple appointments booked together
+    const firstAppointment = appointmentGroup[0];
+    const statusInfo = getStatusInfo(firstAppointment.status);
+    const canCancel =
+        firstAppointment.status === "pending" ||
+        firstAppointment.status === "accepted";
+    const canDelete = firstAppointment.status === "cancelled";
+
+    // Collect all service names
+    const serviceNames = appointmentGroup
+        .map((app) => app.service_name || "Custom Service")
+        .join(", ");
+    const serviceCount = appointmentGroup.length;
+
+    return `
+        <div class="appointment-listing appointment-group" data-group-id="${
+            firstAppointment.booking_group_id
+        }">
+            <div class="appointment-header">
+                <h3>
+                    <span class="ui label teal">Group Booking</span>
+                    ${serviceCount} Services
+                </h3>
+                <span class="appointment-status ${statusInfo.class}">${
+        statusInfo.label
+    }</span>
+            </div>
+            <div class="appointment-description">
+                ${getOriginalInstructions(firstAppointment.note)}
+            </div>
+            <div class="appointment-details">
+                <div class="detail-item">
+                    <span class="emoji">📅</span>
+                    <strong>Date:</strong> ${firstAppointment.formatted_date}
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">🏥</span>
+                    <strong>Services:</strong> ${serviceNames}
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">🐾</span>
+                    <strong>Pet:</strong> ${firstAppointment.pet_name}${
+        firstAppointment.pet_breed ? ` (${firstAppointment.pet_breed})` : ""
+    }
+                </div>
+            </div>
+            <div class="appointment-services-list" style="margin: 1rem 0; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+                <strong style="display: block; margin-bottom: 0.5rem;">📋 Services in this booking:</strong>
+                ${appointmentGroup
+                    .map(
+                        (app, index) => `
+                    <div style="padding: 0.5rem 0; border-bottom: ${
+                        index < appointmentGroup.length - 1
+                            ? "1px solid #e0e0e0"
+                            : "none"
+                    };">
+                        ${index + 1}. ${app.service_name || "Custom Service"}
+                    </div>
+                `
+                    )
+                    .join("")}
+            </div>
+            <div class="appointment-actions">
+                ${
+                    canCancel
+                        ? appointmentGroup
+                              .map(
+                                  (app) => `
+                    <button class="btn btn-outline-danger btn-cancel" data-uuid="${app.uuid}" style="margin: 0.25rem;">
+                        <span class="emoji">❌</span> Cancel ${app.service_name}
+                    </button>
+                `
+                              )
+                              .join("")
+                        : ""
+                }
+                ${
+                    canDelete
+                        ? `
+                    <button class="btn btn-outline-secondary btn-delete-group" data-group-id="${firstAppointment.booking_group_id}">
+                        <span class="emoji">🗑️</span> Remove All
+                    </button>
+                `
                         : ""
                 }
             </div>

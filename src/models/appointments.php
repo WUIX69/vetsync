@@ -57,6 +57,52 @@ class Appointments
         }
     }
 
+    public static function storeWithGroup($data = [])
+    {
+        try {
+            // Validate required fields - allow service_uuid to be null for custom services
+            if (
+                empty($data['uuid']) || empty($data['user_uuid']) ||
+                empty($data['pet_uuid']) || empty($data['date'])
+            ) {
+                throw new Exception('Missing required appointment data');
+            }
+
+            $stmt = self::conn()->prepare("
+                INSERT INTO appointments (
+                    uuid, booking_group_id, service_uuid, user_uuid, pet_uuid, date, note, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+            ");
+
+            $stmt->execute([
+                $data['uuid'],
+                $data['booking_group_id'] ?? null,
+                $data['service_uuid'], // This can be null for custom services
+                $data['user_uuid'],
+                $data['pet_uuid'],
+                $data['date'],
+                $data['note']
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Appointment booked successfully! We will contact you to confirm.',
+            ];
+        } catch (PDOException $e) {
+            error_log("Appointment booking error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to book appointment. Please try again.',
+            ];
+        } catch (Exception $e) {
+            error_log("Appointment validation error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
     public static function store($data = [])
     {
         try {
@@ -306,6 +352,7 @@ class Appointments
             $stmt = self::conn()->prepare('
                 SELECT 
                     a.*, 
+                    a.booking_group_id,
                     s.name AS service_name, 
                     s.uuid AS service_uuid,
                     c.name AS category_name,
@@ -324,7 +371,7 @@ class Appointments
                 LEFT JOIN pets p ON a.pet_uuid = p.uuid
                 LEFT JOIN reviews r ON (r.reference_uuid = a.uuid AND r.reference_model = "appointment" AND r.user_uuid = a.user_uuid)
                 WHERE a.user_uuid = ?
-                ORDER BY a.date DESC
+                ORDER BY a.booking_group_id DESC, a.date DESC
             ');
             $stmt->execute([$userUuid]);
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];

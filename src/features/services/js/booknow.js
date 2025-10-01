@@ -80,9 +80,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 observeChanges: true,
                 onShow: function () {
                     if (modalSelector === "#bookNowModal") {
-                        $(
-                            "#bookNowPetDropdown, #bookNowServiceDropdown"
-                        ).dropdown();
+                        // Initialize pet dropdown first
+                        $("#bookNowPetDropdown").dropdown();
+
+                        // Initialize multi-select dropdown for services
+                        $("#bookNowServiceDropdown").dropdown({
+                            placeholder: "Select one or more services",
+                            allowAdditions: false,
+                            hideAdditions: true,
+                            minCharacters: 0,
+                        });
 
                         // Fetch pets
                         $.ajax({
@@ -150,16 +157,24 @@ document.addEventListener("DOMContentLoaded", function () {
                                             text: "Others (Custom Service Request)",
                                         })
                                     );
-                                    if (
-                                        window.selectedServiceUuids &&
-                                        window.selectedServiceUuids.length
-                                    ) {
-                                        $serviceDropdown.val(
-                                            window.selectedServiceUuids[0]
-                                        );
-                                    }
                                 }
+
+                                // Refresh dropdown FIRST
                                 $serviceDropdown.dropdown("refresh");
+
+                                // THEN set pre-selected values (after refresh)
+                                if (
+                                    window.selectedServiceUuids &&
+                                    window.selectedServiceUuids.length > 0
+                                ) {
+                                    // Use setTimeout to ensure dropdown is fully ready
+                                    setTimeout(function () {
+                                        $serviceDropdown.dropdown(
+                                            "set selected",
+                                            window.selectedServiceUuids
+                                        );
+                                    }, 100);
+                                }
                             },
                             error: function (xhr, status, error) {
                                 console.error(
@@ -175,11 +190,22 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
 
                         // Add change event handler for service dropdown
-                        $(document).on(
-                            "change",
-                            "#bookNowServiceDropdown",
-                            function () {
-                                const selectedValue = $(this).val();
+                        $("#bookNowServiceDropdown")
+                            .off("change")
+                            .on("change", function () {
+                                const selectedValues =
+                                    $(this).dropdown("get value");
+
+                                // Handle both array and string returns
+                                let valuesArray = [];
+                                if (Array.isArray(selectedValues)) {
+                                    valuesArray = selectedValues;
+                                } else if (typeof selectedValues === "string") {
+                                    valuesArray = selectedValues
+                                        ? selectedValues.split(",")
+                                        : [];
+                                }
+
                                 const $customServiceField = $(
                                     "#customServiceField"
                                 );
@@ -188,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         'textarea[name="custom_service_request"]'
                                     );
 
-                                if (selectedValue === "others") {
+                                if (valuesArray.includes("others")) {
                                     $customServiceField.show();
                                     $customTextarea.prop("required", true);
                                 } else {
@@ -196,8 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     $customTextarea.prop("required", false);
                                     $customTextarea.val(""); // Clear the field when hidden
                                 }
-                            }
-                        );
+                            });
                     }
                 },
             })
@@ -230,16 +255,6 @@ $(function () {
                     },
                 ],
             },
-            service_uuid: {
-                identifier: "service_uuid",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please select a service",
-                    },
-                ],
-            },
-            // FIXED: Conditional validation for custom service request
             custom_service_request: {
                 identifier: "custom_service_request",
                 rules: [
@@ -248,7 +263,6 @@ $(function () {
                         prompt: "Please describe the custom service you need",
                     },
                 ],
-                // FIXED: Remove problematic depends selector - we'll handle this differently
                 optional: true,
             },
         },
@@ -256,12 +270,40 @@ $(function () {
             event.preventDefault();
             console.log("Form validation passed, submitting...");
 
+            // Get selected services
+            const selectedServices = $("#bookNowServiceDropdown").dropdown(
+                "get value"
+            );
+
+            // Handle both array and string returns
+            let serviceUuids = [];
+            if (Array.isArray(selectedServices)) {
+                serviceUuids = selectedServices;
+            } else if (typeof selectedServices === "string") {
+                serviceUuids = selectedServices
+                    ? selectedServices.split(",")
+                    : [];
+            }
+
+            // Manual validation for services (since array fields don't work well with Semantic UI)
+            if (serviceUuids.length === 0) {
+                $("#bookNowForm").form(
+                    "add prompt",
+                    "service_uuids[]",
+                    "Please select at least one service"
+                );
+                // Show error on the dropdown
+                $("#bookNowServiceDropdown").parent().addClass("error");
+                return false;
+            } else {
+                $("#bookNowServiceDropdown").parent().removeClass("error");
+            }
+
             // Custom validation for "Others" service
-            const serviceUuid = fields.service_uuid;
             const customServiceRequest = fields.custom_service_request;
 
             if (
-                serviceUuid === "others" &&
+                serviceUuids.includes("others") &&
                 (!customServiceRequest || customServiceRequest.trim() === "")
             ) {
                 // Show error for custom service field
@@ -274,14 +316,14 @@ $(function () {
             }
 
             const formData = new FormData();
-            formData.append("action", "add");
-            formData.append("service_uuid", fields.service_uuid);
+            formData.append("action", "add_multiple");
+            formData.append("service_uuids", JSON.stringify(serviceUuids));
             formData.append("pet_uuid", fields.pet_uuid);
             formData.append("date", fields.date);
-            formData.append("note", fields.note || "");
+            formData.append("note", fields.special_request || "");
 
             // Add custom service request if "Others" is selected
-            if (fields.service_uuid === "others") {
+            if (serviceUuids.includes("others")) {
                 formData.append(
                     "custom_service_request",
                     fields.custom_service_request
@@ -293,11 +335,12 @@ $(function () {
             submitBtn.addClass("loading disabled");
 
             $.ajax({
-                url: "/src/features/appointments/api/user-appointments.php", // FIXED: Use user appointments API
+                url: "/src/features/appointments/api/user-appointments.php",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
+                dataType: "json", // Add this to ensure proper JSON parsing
                 success: function (response) {
                     console.log("Booking response:", response);
                     submitBtn.removeClass("loading disabled");
@@ -305,29 +348,50 @@ $(function () {
                     if (response.success) {
                         $("#bookNowModal").modal("hide");
                         $("#bookNowForm")[0].reset();
+                        $("#bookNowServiceDropdown").dropdown("clear");
 
                         // Show success notification
                         showDateNotification(
                             "success",
-                            "Appointment Booked!",
-                            "Your appointment has been successfully submitted and is pending confirmation."
+                            "Appointments Booked!",
+                            response.message ||
+                                "Your appointments have been successfully submitted and are pending confirmation."
                         );
+
+                        // Optional: Reload page after a delay to show updated appointments
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
                     } else {
                         showDateNotification(
                             "error",
                             "Booking Failed",
                             response.message ||
-                                "Failed to book appointment. Please try again."
+                                "Failed to book appointments. Please try again."
                         );
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error("Booking error:", error);
+                    console.log("XHR:", xhr);
                     submitBtn.removeClass("loading disabled");
+
+                    // Try to parse error response
+                    let errorMessage =
+                        "An error occurred while booking your appointments. Please try again.";
+                    try {
+                        const errorResponse = JSON.parse(xhr.responseText);
+                        if (errorResponse.message) {
+                            errorMessage = errorResponse.message;
+                        }
+                    } catch (e) {
+                        // Keep default message
+                    }
+
                     showDateNotification(
                         "error",
                         "Booking Failed",
-                        "An error occurred while booking your appointment. Please try again."
+                        errorMessage
                     );
                 },
             });

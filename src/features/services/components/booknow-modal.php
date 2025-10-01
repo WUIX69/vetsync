@@ -76,10 +76,12 @@ $userFullName = $currentUser['name'] ?? '';
                     </div>
                 </div>
                 <div class="field">
-                    <label for="service_uuid">Select Service</label>
-                    <select name="service_uuid" id="bookNowServiceDropdown" class="ui dropdown" required>
+                    <label for="service_uuids">Select Services</label>
+                    <select name="service_uuids[]" id="bookNowServiceDropdown" class="ui fluid dropdown" multiple
+                        required>
                         <!-- Services will be loaded here by JS -->
                     </select>
+                    <small class="text-muted">You can select multiple services for this appointment</small>
                 </div>
 
                 <!-- Add custom service request field (hidden by default) -->
