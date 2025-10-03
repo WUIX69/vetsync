@@ -6,6 +6,10 @@ const servicesTableBody = serviceSection.find("table tbody");
 const serviceModal = $("#serviceModal");
 const serviceModalForm = serviceModal.find("form");
 
+// Store all services and categories for filtering
+let allServices = [];
+let allCategories = [];
+
 // Filepond Flags (Required)
 let isModalHide = false;
 let isPondRender = false;
@@ -88,70 +92,18 @@ function getAllServices() {
         dataType: "json",
         timeout: 5000,
         success: function (response) {
-            // console.log("API Response:", response);
-            // return false;
-
             if (!response.success) {
                 alert(response.message);
                 return false;
             }
 
-            const services = response.data;
-            let servicesHTML = "";
-
-            services.forEach((service, idx) => {
-                servicesHTML += `
-                    <tr class="service-item" data-service-uuid="${service.uuid}">
-                        <td>
-                            <img class="service-img" src="${service.image}" alt="Services">
-                        </td>
-                        <td>${service.name}</td>
-                        <td>
-                            ${service.description}
-                        </td>
-                        <td>&#8369; ${service.price}</td>
-                        <td>${service.duration}</td>
-                        <td>
-                            <i class="${service.category.icon} icon"></i>
-                            ${service.category.label}
-                        </td>
-                       <td>
-                            <span class="text-capitalize service-status ${service.status.label}">
-                                <i class="${service.status.icon} icon"></i>
-                                ${service.status.label}
-                            </span>
-                        </td>
-                        <td>
-                            ${service.created_at}
-                        </td>
-                        <td>
-                            ${service.updated_at}
-                        </td>
-                        <td>
-                            <div class="ui compact floating selection dropdown actions-dd">
-                                <i class="dropdown icon"></i>
-                                <div class="text">Actions</div>
-                                <div class="menu">
-                                    <div class="item" data-value="view"><i class="eye icon"></i>View</div>
-                                    <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
-                                    <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            servicesTableBody.append(servicesHTML);
+            allServices = response.data;
+            renderServices(allServices);
         },
         complete: function () {
-            // Add event listener to dropdown
             servicesTableBody.find(".ui.dropdown").dropdown();
             servicesTableBody.find(".actions-dd").dropdown({
                 onChange: function (value) {
-                    // console.log(value);
-
-                    // Get the category ID on its tr
                     const serviceUuid = $(this)
                         .closest(".service-item")
                         .data("service-uuid");
@@ -160,14 +112,172 @@ function getAllServices() {
                         getSingleService(serviceUuid);
                     } else if (value === "delete") {
                         deleteService(serviceUuid);
-                    } else {
-                        return false;
                     }
                 },
             });
         },
         error: ajaxErrorHandler,
     });
+}
+
+function loadServiceCategories() {
+    $.ajax({
+        url: apiUrl("shared") + "categories.php",
+        method: "GET",
+        headers: {
+            "X-Reference-Model": "services",
+        },
+        data: {
+            action: "all",
+        },
+        dataType: "json",
+        timeout: 5000,
+        success: function (response) {
+            if (response.success) {
+                allCategories = response.data;
+                populateCategoryDropdown();
+            }
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
+function populateCategoryDropdown() {
+    const $dropdown = $(".table-filters .ui.dropdown").has(
+        'input[name="category-filter"]'
+    );
+    const $menu = $dropdown.find(".menu");
+
+    $menu.empty();
+    $menu.append('<div class="item" data-value="all">All Categories</div>');
+
+    allCategories.forEach((category) => {
+        if (category.status === "active") {
+            $menu.append(`
+                <div class="item" data-value="${category.name}">
+                    <i class="${category.icon} icon"></i>
+                    ${category.name}
+                </div>
+            `);
+        }
+    });
+
+    $dropdown.dropdown("refresh");
+}
+
+function renderServices(services) {
+    servicesTableBody.empty();
+
+    if (services.length === 0) {
+        servicesTableBody.append(`
+            <tr>
+                <td colspan="10" class="center aligned">
+                    <p class="text-muted">No services found</p>
+                </td>
+            </tr>
+        `);
+        return;
+    }
+
+    let servicesHTML = "";
+
+    services.forEach((service) => {
+        servicesHTML += `
+            <tr class="service-item" data-service-uuid="${service.uuid}">
+                <td>
+                    <img class="service-img" src="${service.image}" alt="Services">
+                </td>
+                <td>${service.name}</td>
+                <td>${service.description}</td>
+                <td>&#8369; ${service.price}</td>
+                <td>${service.duration}</td>
+                <td>
+                    <i class="${service.category.icon} icon"></i>
+                    ${service.category.label}
+                </td>
+                <td>
+                    <span class="text-capitalize service-status ${service.status.label}">
+                        <i class="${service.status.icon} icon"></i>
+                        ${service.status.label}
+                    </span>
+                </td>
+                <td>${service.created_at}</td>
+                <td>${service.updated_at}</td>
+                <td>
+                    <div class="ui compact floating selection dropdown actions-dd">
+                        <i class="dropdown icon"></i>
+                        <div class="text">Actions</div>
+                        <div class="menu">
+                            <div class="item" data-value="view"><i class="eye icon"></i>View</div>
+                            <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
+                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    servicesTableBody.append(servicesHTML);
+
+    servicesTableBody.find(".ui.dropdown").dropdown();
+    servicesTableBody.find(".actions-dd").dropdown({
+        onChange: function (value) {
+            const serviceUuid = $(this)
+                .closest(".service-item")
+                .data("service-uuid");
+
+            if (value === "view" || value === "edit") {
+                getSingleService(serviceUuid);
+            } else if (value === "delete") {
+                deleteService(serviceUuid);
+            }
+        },
+    });
+}
+
+function filterServices() {
+    const searchTerm = $(".service-search input.prompt")
+        .val()
+        .toLowerCase()
+        .trim();
+    const statusFilter = $('input[name="status-filter"]').val();
+    const categoryFilter = $('input[name="category-filter"]').val();
+
+    let filtered = allServices;
+
+    // Search filter
+    if (searchTerm) {
+        filtered = filtered.filter((service) => {
+            return (
+                service.name.toLowerCase().includes(searchTerm) ||
+                service.description.toLowerCase().includes(searchTerm) ||
+                service.category.label.toLowerCase().includes(searchTerm)
+            );
+        });
+    }
+
+    // Status filter
+    if (statusFilter && statusFilter !== "all") {
+        filtered = filtered.filter((service) => {
+            return (
+                service.status.label.toLowerCase() ===
+                statusFilter.toLowerCase()
+            );
+        });
+    }
+
+    // Category filter
+    if (categoryFilter && categoryFilter !== "all") {
+        filtered = filtered.filter((service) => {
+            return (
+                service.category.label.toLowerCase() ===
+                categoryFilter.toLowerCase()
+            );
+        });
+    }
+
+    renderServices(filtered);
 }
 
 function getSingleService(serviceUuid = null) {
@@ -253,7 +363,20 @@ function deleteService(serviceUuid = null) {
 }
 
 $(function () {
+    loadServiceCategories();
     getAllServices();
+
+    // Initialize dropdowns with onChange
+    $(".table-filters .ui.dropdown").dropdown({
+        onChange: function () {
+            filterServices();
+        },
+    });
+
+    // Search on input
+    $(".service-search input.prompt").on("input", function () {
+        filterServices();
+    });
 
     // Get Single service and open modal
     $("body").on("click", ".service-item", function (e) {
