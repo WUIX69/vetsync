@@ -18,10 +18,20 @@
         border-radius: 18px;
         transition: transform 0.3s ease;
         margin-bottom: 10px;
+        cursor: default;
     }
 
     main section.status .items-list .item:hover {
         transform: translateY(-2px);
+    }
+
+    main section.status .items-list .item.clickable {
+        cursor: pointer;
+    }
+
+    main section.status .items-list .item.clickable:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
 
     main section.status .items-list .item.item-2 {
@@ -29,10 +39,6 @@
     }
 
     main section.status .items-list .item.item-3 {
-        background: #f0fdf4;
-    }
-
-    main section.status .items-list .item.item-4 {
         background: #fef2f2;
     }
 
@@ -40,7 +46,6 @@
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        margin-bottom: 20px;
     }
 
     main section.status .items-list .item .info h5 {
@@ -65,46 +70,6 @@
         border-radius: 50%;
     }
 
-    main section.status .items-list .item .progress {
-        position: relative;
-        height: 8px;
-        background: #e5e7eb;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    main section.status .items-list .item .progress .bar {
-        height: 8px;
-        background: #031224;
-        border-radius: 10px;
-        transition: width 0.8s ease;
-        width: 0%;
-    }
-
-    main section.status .items-list .item.item-1 .progress .bar {
-        background: #3b82f6;
-    }
-
-    main section.status .items-list .item.item-2 .progress .bar {
-        background: #f59e0b;
-    }
-
-    main section.status .items-list .item.item-3 .progress .bar {
-        background: #10b981;
-    }
-
-    main section.status .items-list .item.item-4 .progress .bar {
-        background: #ef4444;
-    }
-
-    .progress-label {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1f2937;
-        text-align: right;
-        margin-bottom: 5px;
-    }
-
     .loading-stats {
         display: flex;
         align-items: center;
@@ -124,6 +89,76 @@
         color: #6b7280;
         margin-top: 5px;
     }
+
+    /* Vaccination Modal Styles */
+    .vaccination-modal .content {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .vaccination-item {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #f59e0b;
+    }
+
+    .vaccination-item.completed {
+        border-left-color: #10b981;
+        background: #f0fdf4;
+    }
+
+    .vaccination-item.overdue {
+        border-left-color: #ef4444;
+        background: #fef2f2;
+    }
+
+    .vaccination-item .pet-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 0.5rem;
+    }
+
+    .vaccination-item .vaccine-name {
+        font-size: 1rem;
+        color: #6b7280;
+        margin-bottom: 1rem;
+    }
+
+    .vaccination-item .progress-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .vaccination-item .session-badge {
+        background: #f59e0b;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .vaccination-item.completed .session-badge {
+        background: #10b981;
+    }
+
+    .vaccination-item.overdue .session-badge {
+        background: #ef4444;
+    }
+
+    .vaccination-item .next-date {
+        font-size: 0.9rem;
+        color: #4b5563;
+    }
+
+    .vaccination-item .book-btn {
+        margin-top: 1rem;
+    }
 </style>
 
 <section class="status">
@@ -137,6 +172,20 @@
         </div>
     </div>
 </section>
+
+<!-- Vaccination Tracking Modal -->
+<div class="ui modal vaccination-modal">
+    <i class="close icon"></i>
+    <div class="header">
+        <i class="syringe icon"></i> Vaccination Tracking
+    </div>
+    <div class="content" id="vaccinationContent">
+        <div class="ui active centered inline loader"></div>
+    </div>
+    <div class="actions">
+        <div class="ui black deny button">Close</div>
+    </div>
+</div>
 
 <style>
     @keyframes spin {
@@ -179,11 +228,10 @@
         function renderHealthStats(data) {
             const statsContainer = document.getElementById('healthStats');
             const stats = data.stats;
-            const progress = data.progress;
 
             statsContainer.innerHTML = `
                 <div class="row">
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="item item-1 health-${stats.health_status}">
                             <div class="info">
                                 <div>
@@ -193,49 +241,25 @@
                                 </div>
                                 <i class='bx bx-heart'></i>
                             </div>
-                            <div class="progress-label">${progress.care_score}%</div>
-                            <div class="progress">
-                                <div class="bar" style="width: ${progress.care_score}%"></div>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="item item-2">
+                    <div class="col-lg-4">
+                        <div class="item item-2 clickable" onclick="showVaccinationModal()">
                             <div class="info">
                                 <div>
                                     <h5>Vaccinations</h5>
                                     <p>${stats.vaccination_count} completed</p>
-                                    <div class="next-appointment">${stats.vaccination_count < (stats.total_pets * 5) ? 'Core vaccines recommended' : 'Up to date!'}</div>
+                                    <div class="next-appointment">
+                                        ${stats.vaccination_count < (stats.total_pets * 5) ? 'Core vaccines recommended' : 'Up to date!'}
+                                        <br><span style="color: #2196f3; font-weight: 600;">Click to view details →</span>
+                                    </div>
                                 </div>
                                 <i class='bx bx-shield-plus'></i>
                             </div>
-                            <div class="progress-label">${progress.vaccination}%</div>
-                            <div class="progress">
-                                <div class="bar" style="width: ${progress.vaccination}%"></div>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-4">
                         <div class="item item-3">
-                            <div class="info">
-                                <div>
-                                    <h5>Recent Care</h5>
-                                    <p>${stats.total_visits} total visits</p>
-                                    <div class="next-appointment">${stats.last_visit_date ?
-                    `Last visit: ${new Date(stats.last_visit_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` :
-                    'No visits yet'
-                }</div>
-                                </div>
-                                <i class='bx bx-calendar-check'></i>
-                            </div>
-                            <div class="progress-label">${Math.min(100, Math.round((stats.total_visits / Math.max(1, stats.pets_with_care || stats.total_pets)) * 33))}%</div>
-                            <div class="progress">
-                                <div class="bar" style="width: ${Math.min(100, (stats.total_visits / Math.max(1, stats.total_pets)) * 33)}%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="item item-4">
                             <div class="info">
                                 <div>
                                     <h5>Next Appointment</h5>
@@ -247,10 +271,6 @@
                 }
                                 </div>
                                 <i class='bx bx-calendar-plus'></i>
-                            </div>
-                            <div class="progress-label">${stats.next_appointment ? '100' : '0'}%</div>
-                            <div class="progress">
-                                <div class="bar" style="width: ${stats.next_appointment ? '100' : '0'}%"></div>
                             </div>
                         </div>
                     </div>
@@ -270,11 +290,85 @@
             `;
         }
 
+        // Show vaccination tracking modal
+        window.showVaccinationModal = function () {
+            $('.vaccination-modal').modal('show');
+            loadVaccinationTracking();
+        };
+
+        function loadVaccinationTracking() {
+            const content = document.getElementById('vaccinationContent');
+            content.innerHTML = '<div class="ui active centered inline loader"></div>';
+
+            fetch('/src/features/dashboard/api/vaccination-tracking.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        renderVaccinationTracking(data.data);
+                    } else {
+                        content.innerHTML = `<div class="ui negative message">${data.message || 'Failed to load vaccination data'}</div>`;
+                    }
+                })
+                .catch(error => {
+                    content.innerHTML = `<div class="ui negative message">Error: ${error.message}</div>`;
+                });
+        }
+
+        function renderVaccinationTracking(vaccinations) {
+            const content = document.getElementById('vaccinationContent');
+
+            if (vaccinations.length === 0) {
+                content.innerHTML = `
+                    <div class="ui info message">
+                        <div class="header">No Vaccination Records</div>
+                        <p>No vaccination appointments found. Book a vaccination service to start tracking.</p>
+                        <a href="/src/app/user/services.php" class="ui primary button" style="margin-top: 1rem;">
+                            <i class="calendar plus icon"></i> Book Vaccination
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            vaccinations.forEach(vacc => {
+                const statusClass = vacc.status;
+                const completedPercent = (vacc.completed_sessions / vacc.total_sessions) * 100;
+
+                html += `
+                    <div class="vaccination-item ${statusClass}">
+                        <div class="pet-name">🐾 ${vacc.pet_name}</div>
+                        <div class="vaccine-name">${vacc.service_name}</div>
+                        <div class="progress-info">
+                            <span class="session-badge">
+                                ${vacc.completed_sessions} of ${vacc.total_sessions} sessions completed
+                            </span>
+                        </div>
+                        ${vacc.last_date_formatted ? `<div class="next-date">Last session: ${vacc.last_date_formatted}</div>` : ''}
+                        <div class="next-date" style="font-weight: 600; margin-top: 0.5rem;">
+                            ${vacc.status === 'overdue' ? '⚠️ ' : ''}
+                            Next: ${vacc.next_recommended_date}
+                        </div>
+                        ${vacc.status !== 'completed' ? `
+                            <a href="/src/app/user/services.php?vaccine=${encodeURIComponent(vacc.service_name)}" class="ui small orange button book-btn">
+                                <i class="calendar plus icon"></i> Book Next Session
+                            </a>
+                        ` : `
+                            <div class="ui success message" style="margin-top: 1rem; padding: 0.8rem;">
+                                <i class="check circle icon"></i> Vaccination series completed!
+                            </div>
+                        `}
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+        }
+
         // Make function globally available for retry button
         window.loadPetHealthStats = loadPetHealthStats;
 
         // Refresh every 5 minutes
         setInterval(loadPetHealthStats, 5 * 60 * 1000);
     });
-</script>
 </script>
