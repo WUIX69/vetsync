@@ -30,16 +30,23 @@
                 <!-- Hidden input to ensure delivery_method is sent with correct ENUM value -->
                 <input type="hidden" name="delivery_method" value="pickup">
 
-                <!-- Simple text display instead of UI message -->
+                <!-- Combined pickup info and terms notice -->
                 <div
-                    style="background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; padding: 12px; margin-top: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <i class="info circle icon" style="color: #2196f3;"></i>
+                    style="background-color: #fff3cd; border: 2px solid #ffc107; border-radius: 6px; padding: 14px; margin-top: 8px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <i class="exclamation triangle icon" style="color: #ff9800; font-size: 1.3em;"></i>
                         <div>
-                            <div style="font-weight: bold; color: #1976d2;">Clinic Pickup Only</div>
-                            <div style="font-size: 0.9em; color: #424242; margin-top: 4px;">
+                            <div style="font-weight: bold; color: #f57c00; margin-bottom: 8px;">
+                                <i class="info circle icon"></i> Clinic Pickup Only
+                            </div>
+                            <div style="font-size: 0.95em; color: #424242; line-height: 1.5;">
                                 All product reservations must be picked up at our clinic. We'll notify you when your
                                 products are ready for pickup.
+                            </div>
+                            <div
+                                style="font-size: 0.95em; color: #d84315; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ffecb3;">
+                                ⏰ <strong>IMPORTANT:</strong> Orders must be picked up within 3 days or you might be
+                                penalized. Failure to pick up may result in cancellation and affect your user status.
                             </div>
                         </div>
                     </div>

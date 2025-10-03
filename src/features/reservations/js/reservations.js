@@ -754,7 +754,7 @@ function showCancellationModal(reservationId) {
                         <label>Cancellation Reason</label>
                         <select class="ui dropdown" id="cancellationReason">
                             <option value="">Select a reason...</option>
-                            <option value="Not picked up within 7 days - NO SHOW">⚠️ Not picked up within 7 days - NO SHOW (Penalizes user)</option>
+                            <option value="Not picked up within 3 days - NO SHOW">⚠️ Not picked up within 3 days - NO SHOW (Penalizes user)</option>
                             <option value="Item no longer available">Item no longer available</option>
                             <option value="Customer requested cancellation">Customer requested cancellation</option>
                             <option value="Payment issues">Payment issues</option>

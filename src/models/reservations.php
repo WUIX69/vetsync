@@ -160,12 +160,13 @@ class Reservations
         try {
             $stmt = self::conn()->prepare('
                 INSERT INTO reservations (
-                    user_uuid, products, preferred_date, preferred_time,
+                    id, user_uuid, products, preferred_date, preferred_time,
                     delivery_method, notes, total_amount, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ');
 
             $stmt->execute([
+                $data['id'] ?? time() . rand(100, 999), // Generate ID if not provided
                 $data['user_uuid'],
                 $data['products'], // Already JSON encoded
                 $data['preferred_date'],
@@ -179,7 +180,7 @@ class Reservations
             return [
                 'success' => true,
                 'message' => 'Reservation created successfully.',
-                'data' => ['id' => self::conn()->lastInsertId()],
+                'data' => ['id' => $data['id'] ?? self::conn()->lastInsertId()],
             ];
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
@@ -273,14 +274,14 @@ class Reservations
                 if ($isNoShow && $reservationData && $reservationData['user_uuid']) {
                     $currentHealth = floatval($reservationData['current_health'] ?? 100);
                     $newHealth = max(0, $currentHealth - 20); // Reduce by 20%, minimum 0%
-                    
+
                     $healthStmt = self::conn()->prepare('
                         UPDATE users 
                         SET user_health = ? 
                         WHERE uuid = ?
                     ');
                     $healthStmt->execute([$newHealth, $reservationData['user_uuid']]);
-                    
+
                     error_log("User health penalty applied: {$reservationData['user_email']} health reduced from {$currentHealth}% to {$newHealth}%");
                 }
 
@@ -425,31 +426,14 @@ class Reservations
                 return ['success' => false, 'message' => 'Reservation already marked as picked up.'];
             }
 
-            // Parse products and reduce stock
+            // Parse products
             $products = json_decode($reservation['products'], true);
             if (!is_array($products)) {
                 self::conn()->rollBack();
                 return ['success' => false, 'message' => 'Invalid products data.'];
             }
 
-            $reducedProducts = [];
-
-            foreach ($products as $product) {
-                $productUuid = $product['product_uuid'] ?? null;
-                $quantity = intval($product['qty'] ?? 0);
-
-                if ($productUuid && $quantity > 0) {
-                    // Reduce stock
-                    $updateStock = self::conn()->prepare('UPDATE products SET stock = stock - ? WHERE uuid = ? AND stock >= ?');
-                    $updateStock->execute([$quantity, $productUuid, $quantity]);
-
-                    if ($updateStock->rowCount() > 0) {
-                        $reducedProducts[] = ($product['name'] ?? 'Product') . " (Qty: $quantity)";
-                    }
-                }
-            }
-
-            // Update reservation status
+            // Update reservation status (no stock reduction needed since we removed stock)
             $updateStmt = self::conn()->prepare('UPDATE reservations SET status = "picked_up", notes = ?, updated_at = NOW() WHERE id = ?');
             $updateStmt->execute([$admin_notes, $id]);
 
@@ -457,12 +441,12 @@ class Reservations
 
             return [
                 'success' => true,
-                'message' => 'Marked as picked up successfully! Stock reduced for: ' . implode(', ', $reducedProducts)
+                'message' => 'Marked as picked up successfully!'
             ];
 
         } catch (Exception $e) {
             self::conn()->rollBack();
-            error_log("Stock reduction error: " . $e->getMessage());
+            error_log("Mark as picked up error: " . $e->getMessage());
             return ['success' => false, 'message' => 'Failed to mark as picked up: ' . $e->getMessage()];
         }
     }

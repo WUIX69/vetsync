@@ -1212,24 +1212,19 @@ const Cart = {
                 console.log("Reservation response:", response); // Debug log
 
                 if (response.success) {
-                    // CHANGED: Use plain notification instead of fancy center modal
-                    this.showNotification(
-                        "🎉 Reservation submitted successfully! Please wait for admin approval.",
-                        "success"
-                    );
-
-                    // Hide modal after showing notification
-                    setTimeout(() => {
-                        $("#reservationModal").modal("hide");
-                    }, 500);
-
-                    // Remove selected items from cart
+                    // Remove selected items from cart first
                     this.removeSelectedItemsFromCart();
 
-                    // Redirect after longer delay to show notification
+                    // Hide the reservation form modal
+                    $("#reservationModal").modal("hide");
+
+                    // Simple alert like sign-in
                     setTimeout(() => {
+                        alert(
+                            "Reservation submitted successfully!\n\nPlease wait for admin approval."
+                        );
                         window.location.href = "/src/app/user/products.php";
-                    }, 4000); // Increased to 4 seconds
+                    }, 300);
                 } else {
                     this.showNotification(
                         response.message || "Failed to submit reservation",

@@ -270,8 +270,8 @@ class Email
                         
                         <div class='highlight' style='background: #f8d7da; border-left: 4px solid #dc3545; color: #721c24;'>
                             <strong>⚠️ IMPORTANT PICKUP NOTICE:</strong><br>
-                            <strong>Pickup Deadline:</strong> 7 days from ready date<br>
-                            <strong>⚠️ Please note:</strong> Items <strong>MUST</strong> be picked up within 7 days or your reservation will be <strong>AUTOMATICALLY CANCELLED</strong> and any payments will be processed for refund.<br>
+                            <strong>Pickup Deadline:</strong> 3 days from ready date<br>
+                            <strong>⚠️ Please note:</strong> Items <strong>MUST</strong> be picked up within 3 days or your reservation will be <strong>AUTOMATICALLY CANCELLED</strong> and any payments will be processed for refund.<br>
                             <strong>📞 Contact us immediately</strong> if you cannot pick up within this timeframe.
                         </div>
                         

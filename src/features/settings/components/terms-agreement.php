@@ -160,8 +160,8 @@
 
                         <h4>📦 Product Reservations:</h4>
                         <div class="ui bulleted list">
-                            <div class="item">Reserved products must be picked up within <strong>7 days</strong></div>
-                            <div class="item">Failure to pick up within 7 days will result in automatic cancellation
+                            <div class="item">Reserved products must be picked up within <strong>3 days</strong></div>
+                            <div class="item">Failure to pick up within 3 days will result in automatic cancellation
                             </div>
                             <div class="item">No-show penalties may affect your user priority status</div>
                             <div class="item">Refunds for cancelled reservations will be processed within 5-7 business
