@@ -24,7 +24,7 @@ $categories = Categories::all('products')['data'] ?? [];
                 <label>Description</label>
                 <textarea name="description" rows="3" placeholder="Enter product description"></textarea>
             </div>
-            <div class="three fields">
+            <div class="two fields">
                 <div class="field">
                     <label>Original Price</label>
                     <div class="ui labeled input">
@@ -38,10 +38,6 @@ $categories = Categories::all('products')['data'] ?? [];
                         <div class="ui label">&#8369;</div>
                         <input type="decimal" name="dc_price" placeholder="0.00">
                     </div>
-                </div>
-                <div class="field">
-                    <label>Stock</label>
-                    <input type="number" name="stock" placeholder="0" min="1">
                 </div>
             </div>
             <div class="two fields">

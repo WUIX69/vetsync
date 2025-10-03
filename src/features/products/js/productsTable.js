@@ -171,7 +171,7 @@ function renderProducts(products) {
     if (products.length === 0) {
         productsTableBody.append(`
             <tr>
-                <td colspan="11" class="center aligned">
+                <td colspan="10" class="center aligned">
                     <p class="text-muted">No products found</p>
                 </td>
             </tr>
@@ -193,7 +193,6 @@ function renderProducts(products) {
                     ${product.category.label}
                 </td>
                 <td class="product-price">&#8369; ${product.og_price}</td>
-                <td class="product-stock">${product.stock}</td>
                 <td>
                     <span class="text-capitalize product-status ${product.status.label}">
                         <i class="${product.status.icon} icon"></i>
@@ -396,6 +395,15 @@ $(function () {
         filterProducts();
     });
 
+    // Click on table row to open edit modal
+    $("body").on("click", ".product-item", function (e) {
+        // Don't trigger if clicking on dropdown
+        if ($(e.target).closest(".ui.dropdown").length) return;
+
+        const productUuid = $(this).data("product-uuid");
+        getSingleProduct(productUuid);
+    });
+
     // Validate Product Modal Form
     productModalForm.form({
         fields: {
@@ -437,15 +445,6 @@ $(function () {
                     {
                         type: "decimal",
                         prompt: "Please enter a valid discounted price",
-                    },
-                ],
-            },
-            stock: {
-                identifier: "stock",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please enter stock quantity",
                     },
                 ],
             },
