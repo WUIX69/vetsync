@@ -16,32 +16,13 @@ function loadAdminStats() {
             if (response.success) {
                 const data = response.data;
 
-                // Update stats
-                $("#total-revenue").text("₱" + data.total_revenue);
-                $("#total-users").text(data.total_users);
-                $("#total-appointments").text(data.total_appointments);
-
-                // Update progress circles with debug logging
-                console.log("Updating progress circles with:", {
-                    revenue: data.revenue_growth,
-                    users: data.users_growth,
-                    appointments: data.appointments_growth,
-                });
-
-                updateProgressCircle(
-                    "revenue-progress",
-                    "revenue-percentage",
-                    data.revenue_growth
+                // Update stats with new pending data
+                $("#overall-pending").text(data.overall_pending);
+                $("#pending-appointments-month").text(
+                    data.pending_appointments_month
                 );
-                updateProgressCircle(
-                    "users-progress",
-                    "users-percentage",
-                    data.users_growth
-                );
-                updateProgressCircle(
-                    "appointments-progress",
-                    "appointments-percentage",
-                    data.appointments_growth
+                $("#pending-reservations-month").text(
+                    data.pending_reservations_month
                 );
             } else {
                 console.error("Failed to load admin stats:", response.message);
@@ -51,32 +32,6 @@ function loadAdminStats() {
             console.error("Error loading admin stats:", error);
         },
     });
-}
-
-function updateProgressCircle(progressId, percentageId, value) {
-    console.log(`Updating ${progressId} with value: ${value}%`); // Debug log
-
-    const absValue = Math.abs(value);
-    const cappedValue = Math.min(absValue, 100);
-
-    // Update progress circle - ensure it shows the actual percentage
-    $(`#${progressId}`).attr("stroke-dasharray", `${cappedValue}, 100`);
-
-    // Update percentage text with + or - sign
-    const sign = value > 0 ? "+" : value < 0 ? "" : "+"; // No sign for 0, + for positive, - handled by value itself
-    $(`#${percentageId}`).text(`${sign}${value}%`);
-
-    // Change color based on positive/negative/zero
-    let color;
-    if (value > 0) {
-        color = "#20c997"; // Green for positive
-    } else if (value < 0) {
-        color = "#dc3545"; // Red for negative
-    } else {
-        color = "#6c757d"; // Gray for zero
-    }
-
-    $(`#${progressId}`).attr("stroke", color);
 }
 
 function loadRecentAppointments() {
@@ -89,7 +44,7 @@ function loadRecentAppointments() {
                 renderRecentAppointments(response.data);
             } else {
                 $("#recent-appointments-list").html(
-                    '<p class="text-muted text-center">No recent appointments found</p>'
+                    '<p class="text-muted text-center">No pending appointments</p>'
                 );
             }
         },
@@ -133,13 +88,13 @@ function loadRecentReservations() {
                 renderRecentReservations(response.data);
             } else {
                 $("#recent-reservations-list").html(
-                    '<p class="text-muted text-center">No recent orders found</p>'
+                    '<p class="text-muted text-center">No pending reservations</p>'
                 );
             }
         },
         error: function () {
             $("#recent-reservations-list").html(
-                '<p class="text-danger text-center">Failed to load orders</p>'
+                '<p class="text-danger text-center">Failed to load reservations</p>'
             );
         },
     });
@@ -149,7 +104,7 @@ function renderRecentAppointments(appointments) {
     let html = "";
 
     if (appointments.length === 0) {
-        html = '<p class="text-muted text-center">No recent appointments</p>';
+        html = '<p class="text-muted text-center">No pending appointments</p>';
     } else {
         appointments.forEach((appointment) => {
             html += `
@@ -204,7 +159,7 @@ function renderRecentReservations(reservations) {
     let html = "";
 
     if (reservations.length === 0) {
-        html = '<p class="text-muted text-center">No recent orders</p>';
+        html = '<p class="text-muted text-center">No pending reservations</p>';
     } else {
         reservations.forEach((reservation) => {
             const statusClass = getReservationStatusClass(reservation.status);

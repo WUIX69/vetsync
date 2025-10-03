@@ -5,24 +5,9 @@
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Total Revenue
+                            Overall Pending
                         </h6>
-                        <h2 id="total-revenue">Loading...</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c757d"
-                                stroke-width="4.3" stroke-dasharray="0, 100" id="revenue-progress" />
-                            <text x="18" y="20.35" class="percentage" id="revenue-percentage">
-                                0%
-                            </text>
-                        </svg>
+                        <h2 id="overall-pending">Loading...</h2>
                     </div>
                 </div>
             </div>
@@ -30,24 +15,9 @@
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Total Users
+                            Pending Appointments This Month
                         </h6>
-                        <h2 id="total-users">Loading...</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c757d"
-                                stroke-width="4.3" stroke-dasharray="0, 100" id="users-progress" />
-                            <text x="18" y="20.35" class="percentage" id="users-percentage">
-                                0%
-                            </text>
-                        </svg>
+                        <h2 id="pending-appointments-month">Loading...</h2>
                     </div>
                 </div>
             </div>
@@ -55,24 +25,9 @@
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Total Appointments
+                            Pending Products Reservations This Month
                         </h6>
-                        <h2 id="total-appointments">Loading...</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c757d"
-                                stroke-width="4.3" stroke-dasharray="0, 100" id="appointments-progress" />
-                            <text x="18" y="20.35" class="percentage" id="appointments-percentage">
-                                0%
-                            </text>
-                        </svg>
+                        <h2 id="pending-reservations-month">Loading...</h2>
                     </div>
                 </div>
             </div>

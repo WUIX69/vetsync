@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    // Get recent reservations (last 8)
+    // Get pending reservations only (last 8)
     $stmt = $conn->prepare("
         SELECT 
             r.id,
@@ -22,6 +22,7 @@ try {
             CONCAT(u.firstname, ' ', u.lastname) as user_name
         FROM reservations r
         LEFT JOIN users u ON r.user_uuid = u.uuid
+        WHERE r.status = 'pending'
         ORDER BY r.created_at DESC
         LIMIT 8
     ");
@@ -69,16 +70,16 @@ try {
     ];
 
 } catch (PDOException $e) {
-    error_log("Recent Reservations Error: " . $e->getMessage());
+    error_log("Pending Reservations Error: " . $e->getMessage());
     $response = [
         'success' => false,
         'message' => 'Database error occurred'
     ];
 } catch (Exception $e) {
-    error_log("Recent Reservations General Error: " . $e->getMessage());
+    error_log("Pending Reservations General Error: " . $e->getMessage());
     $response = [
         'success' => false,
-        'message' => 'An error occurred while fetching reservations'
+        'message' => 'An error occurred while fetching pending reservations'
     ];
 }
 

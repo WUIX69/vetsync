@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    // Get recent appointments (last 5 only)
+    // Get pending appointments only (last 5)
     $stmt = $conn->prepare("
         SELECT 
             a.uuid,
@@ -26,6 +26,7 @@ try {
         LEFT JOIN pets p ON a.pet_uuid = p.uuid
         LEFT JOIN services s ON a.service_uuid = s.uuid
         LEFT JOIN users u ON a.user_uuid = u.uuid
+        WHERE a.status = 'pending'
         ORDER BY a.created_at DESC
         LIMIT 5
     ");
@@ -54,16 +55,16 @@ try {
     ];
 
 } catch (PDOException $e) {
-    error_log("Recent Appointments Error: " . $e->getMessage());
+    error_log("Pending Appointments Error: " . $e->getMessage());
     $response = [
         'success' => false,
         'message' => 'Database error occurred'
     ];
 } catch (Exception $e) {
-    error_log("Recent Appointments General Error: " . $e->getMessage());
+    error_log("Pending Appointments General Error: " . $e->getMessage());
     $response = [
         'success' => false,
-        'message' => 'An error occurred while fetching appointments'
+        'message' => 'An error occurred while fetching pending appointments'
     ];
 }
 

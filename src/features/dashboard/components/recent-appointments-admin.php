@@ -58,7 +58,7 @@
 </style>
 
 <section class="recent-appointments">
-    <h3>Recent Appointments</h3>
+    <h3>Pending Appointments</h3>
     <div id="recent-appointments-list">
         <div class="text-center p-3">
             <div class="spinner-border text-primary" role="status">

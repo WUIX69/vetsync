@@ -36,7 +36,7 @@
 </style>
 
 <section class="recent-reservations">
-    <h3>Recent Product Orders</h3>
+    <h3>Pending Reservations</h3>
     <div id="recent-reservations-list">
         <div class="text-center p-3">
             <div class="spinner-border text-primary" role="status">
