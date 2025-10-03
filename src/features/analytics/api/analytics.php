@@ -9,61 +9,90 @@ try {
 
     $analytics = [];
 
-    // ✅ 1. TOTAL REVENUE (from reservations)
-    $revenueStmt = $conn->prepare("SELECT SUM(total_amount) as total_revenue FROM reservations WHERE status = 'picked_up'");
-    $revenueStmt->execute();
-    $revenueResult = $revenueStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['total_revenue'] = floatval($revenueResult['total_revenue'] ?? 0);
+    // 1. ALL APPOINTMENTS
+    $allAppointmentsStmt = $conn->prepare("SELECT COUNT(*) as total FROM appointments WHERE status != 'cancelled'");
+    $allAppointmentsStmt->execute();
+    $analytics['all_appointments'] = intval($allAppointmentsStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
 
-    // ✅ 2. TOTAL USERS
-    $usersStmt = $conn->prepare("SELECT COUNT(*) as total_users FROM users");
-    $usersStmt->execute();
-    $usersResult = $usersStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['total_users'] = intval($usersResult['total_users'] ?? 0);
-
-    // ✅ 3. TOTAL APPOINTMENTS
-    $appointmentsStmt = $conn->prepare("SELECT COUNT(*) as total_appointments FROM appointments");
-    $appointmentsStmt->execute();
-    $appointmentsResult = $appointmentsStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['total_appointments'] = intval($appointmentsResult['total_appointments'] ?? 0);
-
-    // ✅ 4. TOTAL RESERVATIONS
-    $reservationsStmt = $conn->prepare("SELECT COUNT(*) as total_reservations FROM reservations");
-    $reservationsStmt->execute();
-    $reservationsResult = $reservationsStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['total_reservations'] = intval($reservationsResult['total_reservations'] ?? 0);
-
-    // ✅ 5. NEW USERS THIS MONTH
-    $thisMonthStmt = $conn->prepare("
-        SELECT COUNT(*) as new_users 
-        FROM users 
-        WHERE MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())
+    // 2. PENDING APPOINTMENTS THIS MONTH
+    $pendingMonthStmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM appointments 
+        WHERE status = 'pending'
+        AND MONTH(date) = MONTH(NOW()) 
+        AND YEAR(date) = YEAR(NOW())
     ");
-    $thisMonthStmt->execute();
-    $thisMonthResult = $thisMonthStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['new_users_this_month'] = intval($thisMonthResult['new_users'] ?? 0);
+    $pendingMonthStmt->execute();
+    $analytics['pending_month'] = intval($pendingMonthStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
 
-    // ✅ 6. ORDERS TODAY (reservations)
-    $todayStmt = $conn->prepare("
-        SELECT COUNT(*) as orders_today 
-        FROM reservations 
-        WHERE DATE(created_at) = CURDATE()
+    // 3. PENDING APPOINTMENTS TODAY
+    $pendingTodayStmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM appointments 
+        WHERE status = 'pending'
+        AND DATE(date) = CURDATE()
     ");
-    $todayStmt->execute();
-    $todayResult = $todayStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['orders_today'] = intval($todayResult['orders_today'] ?? 0);
+    $pendingTodayStmt->execute();
+    $analytics['pending_today'] = intval($pendingTodayStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
 
-    // ✅ 7. REVENUE TODAY
-    $revenueTodayStmt = $conn->prepare("
-        SELECT SUM(total_amount) as revenue_today 
-        FROM reservations 
-        WHERE DATE(created_at) = CURDATE() AND status = 'picked_up'
+    // 4. COMPLETED APPOINTMENTS (ALL TIME)
+    $completedAllStmt = $conn->prepare("SELECT COUNT(*) as total FROM appointments WHERE status = 'completed'");
+    $completedAllStmt->execute();
+    $analytics['completed_all'] = intval($completedAllStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
+
+    // 5. COMPLETED APPOINTMENTS THIS MONTH
+    $completedMonthStmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM appointments 
+        WHERE status = 'completed'
+        AND MONTH(date) = MONTH(NOW()) 
+        AND YEAR(date) = YEAR(NOW())
     ");
-    $revenueTodayStmt->execute();
-    $revenueTodayResult = $revenueTodayStmt->fetch(PDO::FETCH_ASSOC);
-    $analytics['revenue_today'] = floatval($revenueTodayResult['revenue_today'] ?? 0);
+    $completedMonthStmt->execute();
+    $analytics['completed_month'] = intval($completedMonthStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
 
-    // ✅ 8. TOP SALES - Most Sold Products by Total Quantity
+    // 6. COMPLETED APPOINTMENTS TODAY
+    $completedTodayStmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM appointments 
+        WHERE status = 'completed'
+        AND DATE(date) = CURDATE()
+    ");
+    $completedTodayStmt->execute();
+    $analytics['completed_today'] = intval($completedTodayStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
+
+    // 7. CANCELLED APPOINTMENTS (ALL TIME)
+    $cancelledAllStmt = $conn->prepare("SELECT COUNT(*) as total FROM appointments WHERE status = 'cancelled'");
+    $cancelledAllStmt->execute();
+    $analytics['cancelled_all'] = intval($cancelledAllStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
+
+    // 8. CANCELLED APPOINTMENTS THIS MONTH
+    $cancelledMonthStmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM appointments 
+        WHERE status = 'cancelled'
+        AND MONTH(date) = MONTH(NOW()) 
+        AND YEAR(date) = YEAR(NOW())
+    ");
+    $cancelledMonthStmt->execute();
+    $analytics['cancelled_month'] = intval($cancelledMonthStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
+
+    // 9. CANCELLED APPOINTMENTS TODAY
+    $cancelledTodayStmt = $conn->prepare("
+        SELECT COUNT(*) as total 
+        FROM appointments 
+        WHERE status = 'cancelled'
+        AND DATE(date) = CURDATE()
+    ");
+    $cancelledTodayStmt->execute();
+    $analytics['cancelled_today'] = intval($cancelledTodayStmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
+
+    // TOTAL ORDERS (for charts)
+    $ordersStmt = $conn->prepare("SELECT COUNT(*) as total_orders FROM reservations");
+    $ordersStmt->execute();
+    $analytics['total_reservations'] = intval($ordersStmt->fetch(PDO::FETCH_ASSOC)['total_orders'] ?? 0);
+
+    // TOP SALES - Most Sold Products by Total Quantity
     $reservationsStmt = $conn->prepare("
         SELECT products, total_amount
         FROM reservations 
@@ -81,63 +110,50 @@ try {
             foreach ($products as $product) {
                 $productName = $product['name'] ?? 'Unknown Product';
                 $quantity = intval($product['qty'] ?? 1);
-                $price = floatval($product['price'] ?? 0);
 
                 if (!isset($productSales[$productName])) {
                     $productSales[$productName] = [
                         'product_name' => $productName,
                         'total_quantity' => 0,
-                        'total_sales' => 0,
-                        'reservations_count' => 0
                     ];
                 }
 
                 $productSales[$productName]['total_quantity'] += $quantity;
-                $productSales[$productName]['total_sales'] += ($price * $quantity);
-                $productSales[$productName]['reservations_count'] += 1;
             }
         }
     }
 
-    // Sort by total quantity sold (descending)
+    // Sort and get top 5
     usort($productSales, function ($a, $b) {
         return $b['total_quantity'] - $a['total_quantity'];
     });
-
-    // Take top 5 and format for output
     $analytics['top_sales'] = array_slice($productSales, 0, 5);
 
-    // ✅ 9. WEEKLY ACTIVITY (last 7 days)
-    $weeklyStmt = $conn->prepare("
-        SELECT 
-            DATE(created_at) as date,
-            COUNT(*) as count
-        FROM reservations 
-        WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-        GROUP BY DATE(created_at)
-        ORDER BY date ASC
+    // MOST BOOKED SERVICES
+    $servicesStmt = $conn->prepare("
+        SELECT s.name as service_name, COUNT(a.uuid) as booking_count
+        FROM services s
+        LEFT JOIN appointments a ON s.uuid = a.service_uuid
+        WHERE a.status != 'cancelled'
+        GROUP BY s.uuid, s.name
+        ORDER BY booking_count DESC
+        LIMIT 5
     ");
-    $weeklyStmt->execute();
-    $weeklyResults = $weeklyStmt->fetchAll(PDO::FETCH_ASSOC);
+    $servicesStmt->execute();
+    $analytics['top_services'] = $servicesStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $analytics['weekly_activity'] = [];
-    foreach ($weeklyResults as $day) {
-        $analytics['weekly_activity'][] = [
-            'date' => $day['date'],
-            'count' => intval($day['count'])
-        ];
-    }
+    // ORDER STATUS DISTRIBUTION
+    $statusStmt = $conn->prepare("
+        SELECT status, COUNT(*) as count
+        FROM reservations
+        GROUP BY status
+    ");
+    $statusStmt->execute();
+    $analytics['order_status'] = $statusStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo json_encode([
-        'success' => true,
-        'data' => $analytics
-    ]);
-
+    echo json_encode(['success' => true, 'data' => $analytics]);
 } catch (Exception $e) {
-    error_log("Analytics Error: " . $e->getMessage());
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to fetch analytics: ' . $e->getMessage()
-    ]);
+    error_log("Analytics API Error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Error fetching analytics data']);
 }
 ?>

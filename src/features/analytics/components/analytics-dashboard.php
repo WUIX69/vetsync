@@ -1,36 +1,36 @@
 <div class="ui container">
-    <!-- Fomantic UI Statistics -->
+    <!-- Top Row: Main Appointment Stats -->
     <div class="ui four statistics">
-        <div class="green statistic">
-            <div class="value">
-                <i class="money bill alternate icon"></i>
-                <span id="total-revenue">₱90</span>
-            </div>
-            <div class="label">Total Revenue</div>
-        </div>
-
         <div class="blue statistic">
             <div class="value">
-                <i class="users icon"></i>
-                <span id="total-users">24</span>
-            </div>
-            <div class="label">Total Users</div>
-        </div>
-
-        <div class="teal statistic">
-            <div class="value">
                 <i class="calendar icon"></i>
-                <span id="total-appointments">15</span>
+                <span id="all-appointments">0</span>
             </div>
-            <div class="label">Total Appointments</div>
+            <div class="label">All Appointments</div>
         </div>
 
-        <div class="orange statistic">
+        <div class="yellow statistic">
             <div class="value">
-                <i class="shopping cart icon"></i>
-                <span id="total-reservations">15</span>
+                <i class="clock icon"></i>
+                <span id="pending-month">0</span>
             </div>
-            <div class="label">Total Orders</div>
+            <div class="label">Pending This Month</div>
+        </div>
+
+        <div class="green statistic">
+            <div class="value">
+                <i class="check circle icon"></i>
+                <span id="completed-all">0</span>
+            </div>
+            <div class="label">Completed Appointments</div>
+        </div>
+
+        <div class="red statistic">
+            <div class="value">
+                <i class="times circle icon"></i>
+                <span id="cancelled-all">0</span>
+            </div>
+            <div class="label">Cancelled Appointments</div>
         </div>
     </div>
 
@@ -75,21 +75,33 @@
         </div>
     </div>
 
-    <!-- Additional Stats -->
-    <div class="ui three statistics">
-        <div class="blue statistic">
-            <div class="value" id="orders-today">0</div>
-            <div class="label">Orders Today</div>
-        </div>
+    <div class="ui divider"></div>
 
-        <div class="green statistic">
-            <div class="value">₱<span id="revenue-today">0</span></div>
-            <div class="label">Revenue Today</div>
+    <!-- Bottom Row: Detailed Stats - Daily & Monthly -->
+    <div class="ui five statistics">
+        <div class="orange statistic">
+            <div class="value" id="pending-today">0</div>
+            <div class="label">Pending Today</div>
         </div>
 
         <div class="teal statistic">
-            <div class="value" id="new-users-today">19</div>
-            <div class="label">New Users This Month</div>
+            <div class="value" id="completed-month">0</div>
+            <div class="label">Completed This Month</div>
+        </div>
+
+        <div class="green statistic">
+            <div class="value" id="completed-today">0</div>
+            <div class="label">Completed Today</div>
+        </div>
+
+        <div class="pink statistic">
+            <div class="value" id="cancelled-month">0</div>
+            <div class="label">Cancelled This Month</div>
+        </div>
+
+        <div class="red statistic">
+            <div class="value" id="cancelled-today">0</div>
+            <div class="label">Cancelled Today</div>
         </div>
     </div>
 </div>
@@ -109,14 +121,18 @@
                 console.log('Response:', data);
 
                 if (data.success) {
-                    // Update the numbers
-                    document.getElementById('total-revenue').innerText = '₱' + formatNumber(data.data.total_revenue || 0);
-                    document.getElementById('total-users').innerText = formatNumber(data.data.total_users || 0);
-                    document.getElementById('total-appointments').innerText = formatNumber(data.data.total_appointments || 0);
-                    document.getElementById('total-reservations').innerText = formatNumber(data.data.total_reservations || 0);
-                    document.getElementById('orders-today').innerText = formatNumber(data.data.orders_today || 0);
-                    document.getElementById('revenue-today').innerText = formatNumber(data.data.revenue_today || 0);
-                    document.getElementById('new-users-today').innerText = formatNumber(data.data.new_users_this_month || 0);
+                    // Update top row stats
+                    document.getElementById('all-appointments').innerText = formatNumber(data.data.all_appointments || 0);
+                    document.getElementById('pending-month').innerText = formatNumber(data.data.pending_month || 0);
+                    document.getElementById('completed-all').innerText = formatNumber(data.data.completed_all || 0);
+                    document.getElementById('cancelled-all').innerText = formatNumber(data.data.cancelled_all || 0);
+
+                    // Update bottom row stats
+                    document.getElementById('pending-today').innerText = formatNumber(data.data.pending_today || 0);
+                    document.getElementById('completed-month').innerText = formatNumber(data.data.completed_month || 0);
+                    document.getElementById('completed-today').innerText = formatNumber(data.data.completed_today || 0);
+                    document.getElementById('cancelled-month').innerText = formatNumber(data.data.cancelled_month || 0);
+                    document.getElementById('cancelled-today').innerText = formatNumber(data.data.cancelled_today || 0);
 
                     // Create all charts
                     createAllCharts(data.data);
@@ -134,14 +150,14 @@
     }
 
     function createAllCharts(data) {
-        // 1. Products Chart - Use real data from API
+        // 1. Products Chart
         const topSales = data.top_sales || [];
-        let productNames = ['Whiskas', 'Diaper', 'Lunganisa', 'Dog Food', 'Cat Food'];
-        let productSales = [12, 8, 6, 4, 3];
+        let productNames = ['No Data'];
+        let productSales = [0];
 
         if (topSales.length > 0) {
-            productNames = topSales.slice(0, 5).map(item => item.product_name);
-            productSales = topSales.slice(0, 5).map(item => item.total_quantity); // Use total_quantity instead of reservations
+            productNames = topSales.map(item => item.product_name);
+            productSales = topSales.map(item => item.total_quantity);
         }
 
         createProductsChart(productNames, productSales);
