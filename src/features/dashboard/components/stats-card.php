@@ -265,7 +265,7 @@
                                     <h5>Next Appointment</h5>
                                     ${stats.next_appointment ?
                     `<p>${stats.next_appointment.service}</p>
-                                         <div class="next-appointment">${stats.next_appointment.pet_name ? stats.next_appointment.pet_name + ' • ' : ''}${stats.next_appointment.formatted_date} • ${stats.next_appointment.days_until} days</div>` :
+                                         <div class="next-appointment">${stats.next_appointment.pet_name ? stats.next_appointment.pet_name + ' • ' : ''}${stats.next_appointment.formatted_date} • ${stats.next_appointment.days_until}</div>` :
                     `<p>No upcoming appointments</p>
                                          <div class="next-appointment"><a href="/src/app/user/services.php" style="color: #3b82f6;">Book now</a></div>`
                 }

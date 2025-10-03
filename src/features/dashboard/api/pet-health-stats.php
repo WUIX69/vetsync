@@ -165,7 +165,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if ($nextAppointment) {
             $appointmentDate = new DateTime($nextAppointment['date']);
             $today = new DateTime();
-            $daysUntil = $today->diff($appointmentDate)->days;
+            $today->setTime(0, 0, 0); // Reset time to midnight for accurate day comparison
+            $appointmentDate->setTime(0, 0, 0);
+
+            $interval = $today->diff($appointmentDate);
+            $daysUntil = (int) $interval->format('%r%a'); // %r gives the sign (+ or -), %a gives days
+
+            // Format the days display
+            $daysDisplay = '';
+            if ($daysUntil < 0) {
+                $daysDisplay = 'Overdue';
+            } elseif ($daysUntil === 0) {
+                $daysDisplay = 'Today';
+            } elseif ($daysUntil === 1) {
+                $daysDisplay = 'Tomorrow';
+            } else {
+                $daysDisplay = $daysUntil . ' days';
+            }
 
             $nextAppointmentFormatted = [
                 'service' => $nextAppointment['service_name'] ?: 'Custom Service',
@@ -173,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'date' => $nextAppointment['date'],
                 'time' => $nextAppointment['time'],
                 'formatted_date' => $appointmentDate->format('M j'),
-                'days_until' => $daysUntil
+                'days_until' => $daysDisplay
             ];
         }
 
