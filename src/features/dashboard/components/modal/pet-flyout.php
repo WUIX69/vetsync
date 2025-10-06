@@ -136,10 +136,12 @@
                                     <label>Breed:</label>
                                     <span class="pet-profile-breed pet-profile-value"></span>
                                 </div>
+                                <!-- Date of Birth - HIDDEN (not used in system)
                                 <div class="pet-profile-section">
                                     <label>Date of Birth:</label>
                                     <span class="pet-profile-dob pet-profile-value"></span>
                                 </div>
+                                -->
                                 <div class="pet-profile-section">
                                     <label>Created:</label>
                                     <span class="pet-profile-created_at pet-profile-value"></span>

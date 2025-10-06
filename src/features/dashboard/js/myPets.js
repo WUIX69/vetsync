@@ -70,7 +70,73 @@ const petImagePond = FilePond.create(document.querySelector(".pet-pond"), {
     },
 });
 
-// Add this right after the FilePond setup and before the petsAjax function (around line 60-70)
+// Common breeds for different species (Only Dog and Cat for now)
+const breedOptions = {
+    Dog: [
+        { value: "Golden Retriever", text: "Golden Retriever" },
+        { value: "Labrador Retriever", text: "Labrador Retriever" },
+        { value: "German Shepherd", text: "German Shepherd" },
+        { value: "Shih Tzu", text: "Shih Tzu" },
+        { value: "Aspin", text: "Aspin (Asong Pinoy)" },
+        { value: "Other", text: "Other (Specify below)" },
+    ],
+    Cat: [
+        { value: "Persian", text: "Persian" },
+        { value: "Siamese", text: "Siamese" },
+        { value: "Maine Coon", text: "Maine Coon" },
+        { value: "British Shorthair", text: "British Shorthair" },
+        { value: "Puspin", text: "Puspin (Pusang Pinoy)" },
+        { value: "Other", text: "Other (Specify below)" },
+    ],
+    // Bird and Rabbit removed - only Dog and Cat available for now
+};
+
+// Handle species dropdown change
+$(document).on("change", "#petSpeciesDropdown", function () {
+    const species = $(this).val();
+    const $breedDropdown = $("#petBreedDropdown");
+    const $customBreedField = $("#customBreedField");
+
+    // Reset custom fields
+    $customBreedField.hide();
+    $("#customBreedInput").val("");
+
+    if (species && breedOptions[species]) {
+        // Enable and populate breed dropdown
+        $breedDropdown.prop("disabled", false);
+        $breedDropdown.empty();
+        $breedDropdown.append('<option value="">Select Breed</option>');
+
+        breedOptions[species].forEach(function (breed) {
+            $breedDropdown.append(
+                `<option value="${breed.value}">${breed.text}</option>`
+            );
+        });
+
+        $breedDropdown.dropdown("refresh");
+        $breedDropdown.dropdown("clear");
+    } else {
+        // No species selected
+        $breedDropdown.dropdown("clear");
+        $breedDropdown.empty();
+        $breedDropdown.append('<option value="">Select species first</option>');
+        $breedDropdown.dropdown("refresh");
+        $breedDropdown.prop("disabled", true);
+    }
+});
+
+// Handle breed dropdown change
+$(document).on("change", "#petBreedDropdown", function () {
+    const breed = $(this).val();
+    const $customBreedField = $("#customBreedField");
+
+    if (breed === "Other") {
+        $customBreedField.show();
+    } else {
+        $customBreedField.hide();
+        $("#customBreedInput").val("");
+    }
+});
 
 // Original Pet click handler - Use the existing showPetFlyout function
 $(document)
@@ -703,40 +769,17 @@ petModalForm.form({
     fields: {
         name: {
             identifier: "name",
-            rules: [
-                {
-                    type: "empty",
-                    prompt: "Please enter a pet name",
-                },
-            ],
-        },
-        dob: {
-            identifier: "dob",
-            rules: [
-                {
-                    type: "empty",
-                    prompt: "Please enter date of birth",
-                },
-            ],
+            rules: [{ type: "empty", prompt: "Please enter a pet name" }],
         },
         species: {
             identifier: "species",
-            rules: [
-                {
-                    type: "empty",
-                    prompt: "Please enter species",
-                },
-            ],
+            rules: [{ type: "empty", prompt: "Please select a species" }],
         },
         breed: {
             identifier: "breed",
-            rules: [
-                {
-                    type: "empty",
-                    prompt: "Please enter breed",
-                },
-            ],
+            rules: [{ type: "empty", prompt: "Please select a breed" }],
         },
+        // DOB field removed - not needed anymore
     },
     inline: true,
     on: "submit",
@@ -744,6 +787,16 @@ petModalForm.form({
         event.preventDefault();
         const $submitBtn = $(this).find("button[type=submit]");
         const formData = new FormData(petModalForm[0]);
+
+        // Handle custom breed
+        if (fields.breed === "Other") {
+            const customBreed = $("#customBreedInput").val().trim();
+            if (!customBreed) {
+                alert("Please enter a custom breed");
+                return false;
+            }
+            formData.set("breed", customBreed);
+        }
 
         let action = "store";
         if (formData.get("uuid")) action = "update";
@@ -754,22 +807,27 @@ petModalForm.form({
         formData.set("files", files.join(","));
         formData.delete("file");
 
-        petsAjax({
+        $.ajax({
+            url: apiUrl("dashboard") + "pets.php",
             method: "POST",
             data: formData,
             processData: false,
             contentType: false,
+            dataType: "json",
+            timeout: 5000,
             beforeSend: function () {
                 $submitBtn.addClass("loading");
             },
             success: function (response) {
                 alert(response.message);
-                if (response.success) {
-                    // Simple solution: Just reload the page
-                    window.location.reload();
-                }
+                getAllPets();
+                isPondRender = true;
+                petModal.modal("hide");
+            },
+            complete: function () {
                 $submitBtn.removeClass("loading");
             },
+            error: ajaxErrorHandler,
         });
     },
 });

@@ -757,12 +757,14 @@
                                         <strong>Breed:</strong> <span id="reportPetBreed"></span>
                                     </div>
                                 </div>
+                                <!-- Pet Age - HIDDEN (DOB not used in system)
                                 <div class="item">
                                     <i class="birthday cake icon"></i>
                                     <div class="content">
                                         <strong>Age:</strong> <span id="reportPetAge"></span>
                                     </div>
                                 </div>
+                                -->
                             </div>
                         </div>
                     </div>

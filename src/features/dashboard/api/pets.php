@@ -29,7 +29,7 @@ try {
         $data = [
             'user_uuid' => userData()['uuid'] ?? null, // Use server-side session
             'name' => $_POST['name'] ?? '',
-            'dob' => $_POST['dob'] ?? '',
+            'dob' => !empty($_POST['dob']) ? $_POST['dob'] : null, // FIX: Set to NULL if empty
             'species' => $_POST['species'] ?? '',
             'breed' => $_POST['breed'] ?? '',
             'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
