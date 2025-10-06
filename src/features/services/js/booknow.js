@@ -423,29 +423,28 @@ $(function () {
                     submitBtn.removeClass("loading disabled");
 
                     if (response.success) {
+                        // Close modal first
                         $("#bookNowModal").modal("hide");
+
+                        // Show simple alert message (like login)
+                        alert(
+                            "✅ Appointment booked successfully! We will contact you to confirm."
+                        );
+
+                        // Reset form
                         $("#bookNowForm")[0].reset();
                         $("#bookNowServiceDropdown").dropdown("clear");
                         $("#dateAvailability").hide();
 
-                        // Show success notification
-                        showDateNotification(
-                            "success",
-                            "Appointments Booked!",
-                            response.message ||
-                                "Your appointments have been successfully submitted and are pending confirmation."
-                        );
-
-                        // Optional: Reload page after a delay to show updated appointments
+                        // Reload page
                         setTimeout(function () {
                             window.location.reload();
-                        }, 2000);
+                        }, 500);
                     } else {
-                        showDateNotification(
-                            "error",
-                            "Booking Failed",
-                            response.message ||
-                                "Failed to book appointments. Please try again."
+                        alert(
+                            "❌ " +
+                                (response.message ||
+                                    "Failed to book appointment. Please try again.")
                         );
                     }
                 },

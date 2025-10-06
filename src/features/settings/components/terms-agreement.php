@@ -168,14 +168,14 @@
                                 days</div>
                         </div>
 
-                        <div class="ui info message">
-                            <i class="info circle icon"></i>
-                            <div class="content">
-                                <div class="header">User Health Score</div>
-                                <p>We maintain a reliability score based on appointment and pickup compliance. Higher
-                                    scores receive priority scheduling.</p>
-                            </div>
-                        </div>
+                        <li>
+                            <strong>Appointment Cancellations:</strong>
+                            <ul style="margin-top: 0.5rem;">
+                                <li>Appointments cannot be cancelled within 2 days of the scheduled date</li>
+                                <li>Contact us directly if you need to cancel within this period</li>
+                                <li>No-shows (failure to attend without notice) will result in a 20% health penalty</li>
+                            </ul>
+                        </li>
                     </div>
 
                     <div class="title">

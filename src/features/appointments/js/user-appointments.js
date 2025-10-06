@@ -418,14 +418,16 @@ function cancelAppointment(uuid) {
         },
         success: function (response) {
             if (response.success) {
+                alert("Appointment cancelled successfully.");
                 // Reload appointments
                 loadUserAppointments();
             } else {
-                alert("Failed to cancel appointment: " + response.message);
+                // Show detailed error message
+                alert(response.message || "Failed to cancel appointment");
             }
         },
         error: function () {
-            alert("Error cancelling appointment");
+            alert("Error cancelling appointment. Please try again.");
         },
     });
 }

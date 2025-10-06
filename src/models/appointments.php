@@ -209,6 +209,18 @@ class Appointments
             }
 
             if ($stmt->rowCount() > 0) {
+                // HEALTH RECOVERY: Reward user when appointment is completed
+                if ($status === 'completed' && $appointmentData && $appointmentData['user_uuid']) {
+                    $healthStmt = self::conn()->prepare('
+                        UPDATE users 
+                        SET health = LEAST(100, health + 5)
+                        WHERE uuid = ?
+                    ');
+                    $healthStmt->execute([$appointmentData['user_uuid']]);
+                    
+                    error_log("User health reward: {$appointmentData['user_email']} gained +5% health for completing appointment (max 100%)");
+                }
+
                 // Send email notification when appointment is accepted (confirmed)
                 if ($status === 'accepted' && $appointmentData && $appointmentData['user_email']) {
                     try {
@@ -244,7 +256,9 @@ class Appointments
 
                 return [
                     'success' => true,
-                    'message' => 'Appointment status updated successfully.',
+                    'message' => $status === 'completed' 
+                        ? 'Appointment completed successfully! User earned +5% health.' 
+                        : 'Appointment status updated successfully.',
                 ];
             } else {
                 return [

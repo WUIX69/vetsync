@@ -225,6 +225,35 @@ try {
                 exit;
             }
 
+            // Check if appointment is within 2 days - PREVENT CANCELLATION
+            global $conn;
+            $stmt = $conn->prepare('SELECT date FROM appointments WHERE uuid = ? AND user_uuid = ? LIMIT 1');
+            $stmt->execute([$appointmentUuid, $userUuid]);
+            $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$appointment) {
+                echo json_encode(['success' => false, 'message' => 'Appointment not found']);
+                exit;
+            }
+
+            // Calculate days until appointment
+            $appointmentDate = new DateTime($appointment['date']);
+            $today = new DateTime();
+            $today->setTime(0, 0, 0);
+            $appointmentDate->setTime(0, 0, 0);
+
+            $daysUntil = $today->diff($appointmentDate)->days;
+            $isPast = $appointmentDate < $today;
+
+            // Prevent cancellation if within 2 days or past
+            if (!$isPast && $daysUntil < 2) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Cannot cancel appointment within 2 days of the scheduled date. Please contact us directly if you need to make changes.'
+                ]);
+                exit;
+            }
+
             $response = Appointments::updateStatusWithReason($appointmentUuid, 'cancelled', $reason);
             echo json_encode($response);
             exit;

@@ -374,12 +374,14 @@ $activeLink = uriPagePath();
                 </div>
             </div>
 
-            <!-- Terms and Agreement Icon -->
+            <!-- Terms and Agreement Icon - REMOVED (Available in Settings) -->
+            <!-- 
             <div class="terms-icon">
                 <a href="javascript:void(0)" onclick="showTermsModal()" class="terms-link" title="Terms & Agreement">
                     <i class="file text outline icon"></i>
                 </a>
             </div>
+            -->
 
             <!-- Simple Cart Icon - Only shows cart items now -->
             <div class="cart-icon">
