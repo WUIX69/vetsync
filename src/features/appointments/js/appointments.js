@@ -565,7 +565,7 @@ function tableRowHtml(
             <small class="text-muted">
                 ${
                     app.note && app.note.includes("Cancelled")
-                        ? app.note.replace(/^.*Cancelled[^:]*:\s*/, "")
+                        ? app.note.replace(/^.*Cancelled[^:]*:\\s*/, "")
                         : "No reason provided"
                 }
             </small>
@@ -575,11 +575,18 @@ function tableRowHtml(
     return `
         <tr data-uuid="${app.uuid}">
             <td>
-                <div class="fw-bold">${app.date || ""}</div>
+                <div class="fw-bold">${
+                    app.formatted_date || app.date || ""
+                }</div>
                 <small class="text-muted">ID: ${app.uuid.substring(
                     0,
                     8
                 )}...</small>
+            </td>
+            <td>
+                <div class="fw-bold">${
+                    app.formatted_time || "No time set"
+                }</div>
             </td>
             <td>
                 <div class="d-flex align-items-center">
@@ -638,28 +645,28 @@ function getStatusColor(statusClass) {
 // Update the renderAppointments function
 function renderAppointments(data, status = "all") {
     let tableSelector = "";
-    let colspan = "6"; // Default colspan
+    let colspan = "7"; // Updated from 6
 
     switch (status) {
         case "all":
             tableSelector = "#appointmentsTableAll tbody";
-            colspan = "6";
+            colspan = "7"; // Was 6
             break;
         case "pending":
             tableSelector = "#appointmentsTablePending tbody";
-            colspan = "5"; // No status column
+            colspan = "6"; // Was 5
             break;
         case "confirmed":
             tableSelector = "#appointmentsTableConfirmed tbody";
-            colspan = "5"; // No status column
+            colspan = "6"; // Was 5
             break;
         case "completed":
             tableSelector = "#appointmentsTableCompleted tbody";
-            colspan = "5"; // No status column
+            colspan = "6"; // Was 5
             break;
         case "cancelled":
             tableSelector = "#appointmentsTableCancelled tbody";
-            colspan = "6"; // Has reason column
+            colspan = "7"; // Was 6
             break;
     }
 

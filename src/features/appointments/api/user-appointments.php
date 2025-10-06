@@ -33,7 +33,7 @@ try {
                 $formattedData = [
                     'pet_image' => !empty($item['pet_uuid']) ? media($item['pet_uuid']) : asset('img/placeholders/image.png'),
                     'formatted_date' => !empty($item['date']) ? date('F j, Y', strtotime($item['date'])) : 'Date not set',
-                    'formatted_time' => !empty($item['date']) ? date('g:i A', strtotime($item['date'])) : 'Time not set',
+                    'formatted_time' => !empty($item['time']) ? date('g:i A', strtotime($item['time'])) : 'No time set',
                 ];
 
                 // Merge formatted data with the original item
@@ -61,6 +61,7 @@ try {
             $service_uuids = json_decode($_POST['service_uuids'] ?? '[]', true);
             $pet_uuid = $_POST['pet_uuid'] ?? null;
             $date = $_POST['date'] ?? null;
+            $time = $_POST['time'] ?? null;
             $note = $_POST['note'] ?? '';
             $custom_service_request = $_POST['custom_service_request'] ?? null;
 
@@ -122,6 +123,7 @@ try {
                         'user_uuid' => $userUuid,
                         'pet_uuid' => $pet_uuid,
                         'date' => $date,
+                        'time' => $time,
                         'note' => $appointmentNote
                     ];
 
@@ -160,6 +162,7 @@ try {
             $service_uuid = $_POST['service_uuid'] ?? null;
             $pet_uuid = $_POST['pet_uuid'] ?? null;
             $date = $_POST['date'] ?? null;
+            $time = $_POST['time'] ?? null;
             $note = $_POST['note'] ?? '';
             $custom_service_request = $_POST['custom_service_request'] ?? null;
 
@@ -208,6 +211,7 @@ try {
                 'user_uuid' => $userUuid,
                 'pet_uuid' => $pet_uuid,
                 'date' => $date,
+                'time' => $time,
                 'note' => $note
             ];
 

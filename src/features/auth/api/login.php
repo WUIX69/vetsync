@@ -1,22 +1,30 @@
 <?php
-
-include '../../../core/app.php';
-apiHeaders();
-
-use VetSync\Models\Users;
-// global $response;
-// global $session;
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $response['message'] = 'Invalid request method';
-    echo json_encode($response);
-    exit;
+// Clean any output buffering
+while (ob_get_level()) {
+    ob_end_clean();
 }
 
-try {
+include '../../../core/app.php';
 
-    $email = $_POST['email'] ?? '';
-    $password = $_POST['password'] ?? '';
+// Set headers for JSON response
+header('Content-Type: application/json');
+
+use VetSync\Models\Users;
+
+$response = [
+    'success' => false,
+    'message' => '',
+];
+
+try {
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
+    if (!$email || !$password) {
+        $response['message'] = 'All fields are required!';
+        echo json_encode($response);
+        exit;
+    }
 
     $user = Users::singleWhereUserEmail($email);
     $admin = Users::singleWhereAdminEmail($email);
@@ -25,8 +33,6 @@ try {
 
         // AUTO NO-SHOW DETECTION: Check for past accepted appointments
         global $conn;
-
-        // Find accepted appointments that are past their scheduled date
         $findNoShows = $conn->prepare('
             SELECT uuid, pet_uuid
             FROM appointments 
@@ -42,7 +48,7 @@ try {
             $markNoShow = $conn->prepare('
                 UPDATE appointments 
                 SET status = "cancelled", 
-                    cancellation_reason = "NO SHOW - Did not attend scheduled appointment"
+                    note = CONCAT(IFNULL(note, ""), "[CANCELLED BY ADMIN] NO SHOW - Did not attend scheduled appointment")
                 WHERE uuid = ?
             ');
 
@@ -54,7 +60,7 @@ try {
             $penaltyAmount = count($noShowAppointments) * 20;
             $updateHealth = $conn->prepare('
                 UPDATE users 
-                SET health = GREATEST(0, health - ?)
+                SET user_health = GREATEST(0, user_health - ?)
                 WHERE uuid = ?
             ');
             $updateHealth->execute([$penaltyAmount, $user['uuid']]);
@@ -69,7 +75,7 @@ try {
                 (SELECT COUNT(*) FROM appointments 
                  WHERE user_uuid = ? 
                  AND status = "cancelled" 
-                 AND (cancellation_reason LIKE "%NO SHOW%" OR cancellation_reason LIKE "%no show%")
+                 AND (note LIKE "%NO SHOW%" OR note LIKE "%no show%")
                  AND updated_at > DATE_SUB(NOW(), INTERVAL 7 DAY)) +
                 (SELECT COUNT(*) FROM reservations 
                  WHERE user_uuid = ? 
@@ -81,10 +87,10 @@ try {
         $noShowData = $checkNoShows->fetch(PDO::FETCH_ASSOC);
 
         // Restore 2% health if no recent no-shows and health is below 100%
-        if ($noShowData && $noShowData['recent_no_shows'] == 0 && $user['health'] < 100) {
+        if ($noShowData && $noShowData['recent_no_shows'] == 0 && $user['user_health'] < 100) {
             $updateHealth = $conn->prepare('
                 UPDATE users 
-                SET health = LEAST(100, health + 2)
+                SET user_health = LEAST(100, user_health + 2)
                 WHERE uuid = ?
             ');
             $updateHealth->execute([$user['uuid']]);

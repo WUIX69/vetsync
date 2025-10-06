@@ -70,8 +70,8 @@ class Appointments
 
             $stmt = self::conn()->prepare("
                 INSERT INTO appointments (
-                    uuid, booking_group_id, service_uuid, user_uuid, pet_uuid, date, note, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+                    uuid, booking_group_id, service_uuid, user_uuid, pet_uuid, date, time, note, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
             ");
 
             $stmt->execute([
@@ -81,6 +81,54 @@ class Appointments
                 $data['user_uuid'],
                 $data['pet_uuid'],
                 $data['date'],
+                $data['time'] ?? null,
+                $data['note'] ?? ''
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Appointment booked successfully! We will contact you to confirm.',
+            ];
+        } catch (PDOException $e) {
+            error_log("Appointment booking error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Failed to book appointment. Please try again.',
+            ];
+        } catch (Exception $e) {
+            error_log("Appointment validation error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function storeMultiple($data = [])
+    {
+        try {
+            // Validate required fields - allow service_uuid to be null for custom services
+            if (
+                empty($data['uuid']) || empty($data['user_uuid']) ||
+                empty($data['pet_uuid']) || empty($data['date'])
+            ) {
+                throw new Exception('Missing required appointment data');
+            }
+
+            $stmt = self::conn()->prepare("
+                INSERT INTO appointments (
+                    uuid, booking_group_id, service_uuid, user_uuid, pet_uuid, date, time, note, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
+            ");
+
+            $stmt->execute([
+                $data['uuid'],
+                $data['booking_group_id'] ?? null,
+                $data['service_uuid'], // This can be null for custom services
+                $data['user_uuid'],
+                $data['pet_uuid'],
+                $data['date'],
+                $data['time'] ?? null, // Changed from time_slot to time
                 $data['note']
             ]);
 
@@ -116,8 +164,8 @@ class Appointments
 
             $stmt = self::conn()->prepare("
                 INSERT INTO appointments (
-                    uuid, service_uuid, user_uuid, pet_uuid, date, note, status, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, 'pending', NOW())
+                    uuid, service_uuid, user_uuid, pet_uuid, date, time, note, status, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', NOW())
             ");
 
             $stmt->execute([
@@ -126,6 +174,7 @@ class Appointments
                 $data['user_uuid'],
                 $data['pet_uuid'],
                 $data['date'],
+                $data['time'] ?? null, // Changed from time_slot to time
                 $data['note']
             ]);
 
@@ -209,18 +258,6 @@ class Appointments
             }
 
             if ($stmt->rowCount() > 0) {
-                // HEALTH RECOVERY: Reward user when appointment is completed
-                if ($status === 'completed' && $appointmentData && $appointmentData['user_uuid']) {
-                    $healthStmt = self::conn()->prepare('
-                        UPDATE users 
-                        SET health = LEAST(100, health + 5)
-                        WHERE uuid = ?
-                    ');
-                    $healthStmt->execute([$appointmentData['user_uuid']]);
-                    
-                    error_log("User health reward: {$appointmentData['user_email']} gained +5% health for completing appointment (max 100%)");
-                }
-
                 // Send email notification when appointment is accepted (confirmed)
                 if ($status === 'accepted' && $appointmentData && $appointmentData['user_email']) {
                     try {
@@ -254,10 +291,20 @@ class Appointments
                     }
                 }
 
+                // Health recovery for completed appointments (+5%)
+                if ($status === 'completed') {
+                    $recoverHealth = self::conn()->prepare('
+                        UPDATE users 
+                        SET user_health = LEAST(100, user_health + 5)
+                        WHERE uuid = ?
+                    ');
+                    $recoverHealth->execute([$appointmentData['user_uuid']]);
+                }
+
                 return [
                     'success' => true,
-                    'message' => $status === 'completed' 
-                        ? 'Appointment completed successfully! User earned +5% health.' 
+                    'message' => $status === 'completed'
+                        ? 'Appointment completed successfully! User earned +5% health.'
                         : 'Appointment status updated successfully.',
                 ];
             } else {

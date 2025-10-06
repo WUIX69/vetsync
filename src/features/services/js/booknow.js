@@ -51,6 +51,63 @@ function loadAppointmentAvailability() {
     });
 }
 
+// Load available time slots for a specific date
+function loadAvailableTimeSlots(date) {
+    const $timeSlotDropdown = $("#appointmentTimeSlot");
+
+    // Reset dropdown and show loading
+    $timeSlotDropdown.html('<option value="">Loading time slots...</option>');
+    $timeSlotDropdown.parent(".ui.dropdown").addClass("disabled"); // Disable Fomantic UI dropdown
+    $timeSlotDropdown.dropdown("clear");
+    $timeSlotDropdown.dropdown("refresh");
+
+    $.ajax({
+        url: "/src/features/appointments/api/check-time-availability.php",
+        method: "GET",
+        data: { date: date },
+        dataType: "json",
+        success: function (response) {
+            if (response.success && response.time_slots) {
+                let options =
+                    '<option value="">Select your preferred time</option>';
+
+                response.time_slots.forEach((slot) => {
+                    if (slot.available) {
+                        options += `<option value="${slot.value}">${slot.label}</option>`;
+                    } else {
+                        options += `<option value="${slot.value}" disabled>${slot.label} (Booked)</option>`;
+                    }
+                });
+
+                $timeSlotDropdown.html(options);
+                $timeSlotDropdown.prop("disabled", false); // Enable select element
+                $timeSlotDropdown
+                    .parent(".ui.dropdown")
+                    .removeClass("disabled"); // Enable Fomantic UI dropdown
+                $timeSlotDropdown.dropdown("refresh");
+
+                console.log("Time slots loaded for", date);
+            } else {
+                $timeSlotDropdown.html(
+                    '<option value="">No time slots available</option>'
+                );
+                $timeSlotDropdown.prop("disabled", true);
+                $timeSlotDropdown.parent(".ui.dropdown").addClass("disabled");
+                $timeSlotDropdown.dropdown("refresh");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Failed to load time slots:", error);
+            $timeSlotDropdown.html(
+                '<option value="">Error loading time slots</option>'
+            );
+            $timeSlotDropdown.prop("disabled", true);
+            $timeSlotDropdown.parent(".ui.dropdown").addClass("disabled");
+            $timeSlotDropdown.dropdown("refresh");
+        },
+    });
+}
+
 // Check if a date is available
 function checkDateAvailability(dateString) {
     const $availabilityDiv = $("#dateAvailability");
@@ -156,6 +213,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             minCharacters: 0,
                         });
 
+                        // Initialize time slot dropdown
+                        $("#appointmentTimeSlot").dropdown({
+                            placeholder: "Select your preferred time",
+                        });
+
                         // Fetch pets
                         $.ajax({
                             url: "/src/features/dashboard/api/pets.php",
@@ -252,7 +314,62 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Add real-time date validation
                         $("#appointmentDateInput").on("change", function () {
                             validateDateInput(this);
+
+                            const selectedDate = $(this).val();
+                            if (
+                                selectedDate &&
+                                checkDateAvailability(selectedDate)
+                            ) {
+                                loadAvailableTimeSlots(selectedDate);
+                                // Remove error state from time field if it exists
+                                $("#appointmentTimeSlot")
+                                    .closest(".field")
+                                    .removeClass("error");
+                                $("#timeSlotError").remove();
+                            } else {
+                                // Reset time slot dropdown if date is invalid
+                                $("#appointmentTimeSlot")
+                                    .html(
+                                        '<option value="">Select a date first</option>'
+                                    )
+                                    .dropdown("clear")
+                                    .dropdown("refresh");
+                            }
                         });
+
+                        // Add validation for time slot dropdown click
+                        $("#appointmentTimeSlot")
+                            .parent(".ui.dropdown")
+                            .on("click", function () {
+                                const selectedDate = $(
+                                    "#appointmentDateInput"
+                                ).val();
+                                const $timeField = $(
+                                    "#appointmentTimeSlot"
+                                ).closest(".field");
+
+                                if (!selectedDate) {
+                                    // Show error on time field
+                                    $timeField.addClass("error");
+
+                                    // Remove existing error message if any
+                                    $("#timeSlotError").remove();
+
+                                    // Add error message
+                                    $timeField.append(
+                                        '<div class="ui pointing above prompt label" id="timeSlotError">Please select an appointment date first</div>'
+                                    );
+
+                                    // Focus on date input
+                                    $("#appointmentDateInput").focus();
+
+                                    return false;
+                                } else {
+                                    // Remove error if date is selected
+                                    $timeField.removeClass("error");
+                                    $("#timeSlotError").remove();
+                                }
+                            });
 
                         // Add change event handler for service dropdown
                         $("#bookNowServiceDropdown")
@@ -308,6 +425,15 @@ $(function () {
                     {
                         type: "regExp[/^\\d{4}-\\d{2}-\\d{2}$/]",
                         prompt: "Please enter a valid date format",
+                    },
+                ],
+            },
+            time: {
+                identifier: "time",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select a preferred time slot",
                     },
                 ],
             },
@@ -397,6 +523,7 @@ $(function () {
             formData.append("service_uuids", JSON.stringify(serviceUuids));
             formData.append("pet_uuid", fields.pet_uuid);
             formData.append("date", fields.date);
+            formData.append("time", fields.time); // Changed from fields.time_slot
             formData.append("note", fields.special_request || "");
 
             // Add custom service request if "Others" is selected

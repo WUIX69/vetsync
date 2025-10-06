@@ -254,6 +254,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // Default GET behavior - get all appointments
     $response = VetSync\Models\Appointments::all();
+
+    // Format time field for display
+    if ($response['success'] && !empty($response['data'])) {
+        $response['data'] = array_map(function ($appointment) {
+            $appointment['formatted_time'] = !empty($appointment['time'])
+                ? date('g:i A', strtotime($appointment['time']))
+                : 'No time set';
+            $appointment['formatted_date'] = !empty($appointment['date'])
+                ? date('F j, Y', strtotime($appointment['date']))
+                : 'No date set';
+            return $appointment;
+        }, $response['data']);
+    }
+
     echo json_encode($response);
     exit;
 }

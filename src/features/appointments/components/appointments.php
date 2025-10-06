@@ -527,6 +527,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Date</th>
+                                            <th>Time</th>
                                             <th>Pet</th>
                                             <th>Owner</th>
                                             <th>Service</th>
@@ -552,6 +553,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Date</th>
+                                            <th>Time</th>
                                             <th>Pet</th>
                                             <th>Owner</th>
                                             <th>Service</th>
@@ -576,6 +578,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Date</th>
+                                            <th>Time</th>
                                             <th>Pet</th>
                                             <th>Owner</th>
                                             <th>Service</th>
@@ -600,6 +603,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Date</th>
+                                            <th>Time</th>
                                             <th>Pet</th>
                                             <th>Owner</th>
                                             <th>Service</th>
@@ -624,6 +628,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Date</th>
+                                            <th>Time</th>
                                             <th>Pet</th>
                                             <th>Owner</th>
                                             <th>Service</th>

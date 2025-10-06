@@ -139,6 +139,12 @@ function createAppointmentCard(appointment) {
                     <strong>Date:</strong> ${appointment.formatted_date}
                 </div>
                 <div class="detail-item">
+                    <span class="emoji">⏰</span>
+                    <strong>Time:</strong> ${
+                        appointment.formatted_time || "No time set"
+                    }
+                </div>
+                <div class="detail-item">
                     <span class="emoji">🏥</span>
                     <strong>Service:</strong> ${appointment.service_name}
                 </div>
@@ -229,6 +235,12 @@ function createAppointmentGroupCard(appointmentGroup) {
                 <div class="detail-item">
                     <span class="emoji">📅</span>
                     <strong>Date:</strong> ${firstAppointment.formatted_date}
+                </div>
+                <div class="detail-item">
+                    <span class="emoji">⏰</span>
+                    <strong>Time:</strong> ${
+                        firstAppointment.formatted_time || "No time set"
+                    }
                 </div>
                 <div class="detail-item">
                     <span class="emoji">🏥</span>

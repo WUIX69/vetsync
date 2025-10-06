@@ -81,6 +81,9 @@ $userFullName = $currentUser['name'] ?? '';
             <strong><i class="info circle icon"></i> Important Booking Policies:</strong>
             <ul>
                 <li><strong>10 appointments/day maximum</strong> - First come, first served basis</li>
+                <li><strong>Time slots:</strong> 1-hour intervals, but actual service time may vary based on procedure
+                </li>
+                <li><strong>Lateness policy:</strong> Late arrivals will be placed at the end of the queue</li>
                 <li><strong>Cannot cancel within 2 days</strong> of appointment date</li>
                 <li><strong>No-show penalty:</strong> 20% health reduction affects booking priority</li>
                 <li>For cancellations within 2 days, contact us directly</li>
@@ -96,6 +99,15 @@ $userFullName = $currentUser['name'] ?? '';
                 <div class="date-availability-info" id="dateAvailability">
                     <!-- Availability message will be shown here -->
                 </div>
+            </div>
+
+            <!-- Time Slot Field -->
+            <div class="field">
+                <label for="time">Preferred Time <span style="color: red;">*</span></label>
+                <select name="time" id="appointmentTimeSlot" class="ui dropdown" required disabled>
+                    <option value="">Select a date first</option>
+                </select>
+                <small class="text-muted">Available time slots (clinic hours: 9 AM - 8 PM, lunch: 12 PM)</small>
             </div>
 
             <!-- Pet Dropdown -->
