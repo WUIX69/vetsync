@@ -40,7 +40,7 @@ class Appointments
                 LEFT JOIN categories c ON s.category_id = c.id
                 LEFT JOIN users u ON a.user_uuid = u.uuid
                 LEFT JOIN pets p ON a.pet_uuid = p.uuid
-                ORDER BY a.created_at DESC
+                ORDER BY a.date ASC, a.created_at ASC
             ');
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];

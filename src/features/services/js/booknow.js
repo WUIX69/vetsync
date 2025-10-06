@@ -1,5 +1,9 @@
 // src/features/services/js/booknow.js
 
+// Global variable to store disabled dates
+let disabledDates = [];
+let dailyAppointmentCounts = {};
+
 // Date validation notification function
 function showDateNotification(type, title, message) {
     // Create notification element
@@ -29,6 +33,47 @@ function showDateNotification(type, title, message) {
     }, 5000);
 }
 
+// Load availability data
+function loadAppointmentAvailability() {
+    return $.ajax({
+        url: "/src/features/appointments/api/check-availability.php",
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
+            if (response.success) {
+                disabledDates = response.disabled_dates || [];
+                console.log("Disabled dates loaded:", disabledDates);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Failed to load availability:", error);
+        },
+    });
+}
+
+// Check if a date is available
+function checkDateAvailability(dateString) {
+    const $availabilityDiv = $("#dateAvailability");
+
+    if (disabledDates.includes(dateString)) {
+        $availabilityDiv
+            .removeClass("available")
+            .addClass("fully-booked")
+            .html(
+                '<i class="times circle icon"></i><span><strong>Fully Booked!</strong> This date has reached the maximum 10 appointments. Please select another date.</span>'
+            );
+        return false;
+    } else {
+        $availabilityDiv
+            .removeClass("fully-booked")
+            .addClass("available")
+            .html(
+                '<i class="check circle icon"></i><span><strong>Date Available!</strong> Slots are still open for this date.</span>'
+            );
+        return true;
+    }
+}
+
 // Real-time date validation
 function validateDateInput(inputElement) {
     const selectedDate = $(inputElement).val();
@@ -38,20 +83,32 @@ function validateDateInput(inputElement) {
         today.setHours(0, 0, 0, 0);
         appointmentDate.setHours(0, 0, 0, 0);
 
+        // Check if past date
         if (appointmentDate < today) {
             showDateNotification(
                 "error",
                 "Past Date Selected",
                 "You cannot book an appointment for a past date. Please select today or a future date."
             );
-            $(inputElement).val(""); // Clear the invalid date
+            $(inputElement).val("");
+            $("#dateAvailability").hide();
+            return false;
+        }
+
+        // Check if date is fully booked
+        if (!checkDateAvailability(selectedDate)) {
+            showDateNotification(
+                "warning",
+                "Date Fully Booked",
+                "This date has reached the maximum of 10 appointments. Please select another available date."
+            );
+            $(inputElement).val("");
             return false;
         } else {
-            // Show success notification for valid future date
             showDateNotification(
                 "success",
-                "Date Selected",
-                "Great! You have selected a valid appointment date."
+                "Date Available",
+                "Great! This date has available slots for appointments."
             );
         }
     }
@@ -80,6 +137,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 observeChanges: true,
                 onShow: function () {
                     if (modalSelector === "#bookNowModal") {
+                        // Load availability data first
+                        loadAppointmentAvailability().then(function () {
+                            console.log(
+                                "Availability loaded, disabled dates:",
+                                disabledDates
+                            );
+                        });
+
                         // Initialize pet dropdown first
                         $("#bookNowPetDropdown").dropdown();
 
@@ -185,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         });
 
                         // Add real-time date validation
-                        $('input[name="date"]').on("change", function () {
+                        $("#appointmentDateInput").on("change", function () {
                             validateDateInput(this);
                         });
 
@@ -270,6 +335,18 @@ $(function () {
             event.preventDefault();
             console.log("Form validation passed, submitting...");
 
+            // Additional validation: Check if selected date is fully booked
+            if (disabledDates.includes(fields.date)) {
+                showDateNotification(
+                    "error",
+                    "Date Fully Booked",
+                    "This date is no longer available. Please select another date."
+                );
+                $("#appointmentDateInput").val("");
+                $("#dateAvailability").hide();
+                return false;
+            }
+
             // Get selected services
             const selectedServices = $("#bookNowServiceDropdown").dropdown(
                 "get value"
@@ -349,6 +426,7 @@ $(function () {
                         $("#bookNowModal").modal("hide");
                         $("#bookNowForm")[0].reset();
                         $("#bookNowServiceDropdown").dropdown("clear");
+                        $("#dateAvailability").hide();
 
                         // Show success notification
                         showDateNotification(
