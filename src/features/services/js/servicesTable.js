@@ -171,7 +171,7 @@ function renderServices(services) {
     if (services.length === 0) {
         servicesTableBody.append(`
             <tr>
-                <td colspan="10" class="center aligned">
+                <td colspan="12" class="center aligned">
                     <p class="text-muted">No services found</p>
                 </td>
             </tr>
@@ -186,6 +186,24 @@ function renderServices(services) {
         const categoryIcon = service.category?.icon || "tag";
         const categoryLabel = service.category?.label || "Uncategorized";
 
+        // Format vaccination doses and interval
+        let dosesDisplay = "-";
+        let intervalDisplay = "-";
+
+        if (service.vaccination_doses) {
+            dosesDisplay = `<span class="ui mini teal label">${
+                service.vaccination_doses
+            } ${service.vaccination_doses === 1 ? "dose" : "doses"}</span>`;
+        }
+
+        if (service.vaccination_interval && service.vaccination_interval_unit) {
+            const unit =
+                service.vaccination_interval === 1
+                    ? service.vaccination_interval_unit.replace(/s$/, "") // Remove 's' for singular
+                    : service.vaccination_interval_unit;
+            intervalDisplay = `<span class="ui mini purple label">${service.vaccination_interval} ${unit}</span>`;
+        }
+
         servicesHTML += `
             <tr class="service-item" data-service-uuid="${service.uuid}">
                 <td>
@@ -195,6 +213,8 @@ function renderServices(services) {
                 <td>${service.description}</td>
                 <td>&#8369; ${service.price}</td>
                 <td>${service.duration}</td>
+                <td>${dosesDisplay}</td>
+                <td>${intervalDisplay}</td>
                 <td>
                     <i class="${categoryIcon} icon"></i>
                     ${categoryLabel}
