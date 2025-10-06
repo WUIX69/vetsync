@@ -33,7 +33,7 @@ try {
             'price' => $_POST['price'] ? $_POST['price'] : null,
             'status' => $_POST['status'] ?? '',
             'duration' => $_POST['duration'] ? $_POST['duration'] : null,
-            // 'faqs' => $_POST['faqs'] ? $_POST['faqs'] : null,
+            'vaccination_doses' => !empty($_POST['vaccination_doses']) ? intval($_POST['vaccination_doses']) : null,
             'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
         ];
 

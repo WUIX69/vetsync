@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $userUuid = $userData['uuid'];
 
     try {
-        // Get all vaccination appointments with service details
+        // Get all vaccination appointments with service details including vaccination_doses
         $stmt = $conn->prepare("
             SELECT 
                 a.uuid,
@@ -25,13 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 p.name as pet_name,
                 s.name as service_name,
                 s.uuid as service_uuid,
+                s.vaccination_doses,
                 c.name as category_name
             FROM appointments a
             LEFT JOIN pets p ON a.pet_uuid = p.uuid
             LEFT JOIN services s ON a.service_uuid = s.uuid
             LEFT JOIN categories c ON s.category_id = c.id
             WHERE a.user_uuid = ? 
-            AND (c.name LIKE '%vaccination%' OR s.name LIKE '%vaccine%' OR s.name LIKE '%rabies%')
+            AND (c.name LIKE '%vaccination%' OR s.name LIKE '%vaccine%' OR s.name LIKE '%rabies%' OR s.vaccination_doses IS NOT NULL)
             ORDER BY p.name ASC, a.date DESC
         ");
         $stmt->execute([$userUuid]);
@@ -46,6 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $petUuid = $vacc['pet_uuid'];
             $serviceUuid = $vacc['service_uuid'];
 
+            // Use the service's specified doses, default to 3 if not set
+            $totalDoses = $vacc['vaccination_doses'] ?? 3;
+
             // Create unique key for pet + vaccine combination
             $key = $petUuid . '_' . $serviceUuid;
 
@@ -56,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'service_name' => $serviceName,
                     'service_uuid' => $serviceUuid,
                     'completed_sessions' => 0,
-                    'total_sessions' => 3, // Default: most vaccines need 3 doses
+                    'total_sessions' => $totalDoses, // DYNAMIC based on service configuration
                     'last_date' => null,
                     'next_recommended_date' => null,
                     'status' => 'not_started',
@@ -86,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
             if ($completed === 0) {
                 $tracking['status'] = 'not_started';
-                $tracking['next_recommended_date'] = 'Book first session';
+                $tracking['next_recommended_date'] = 'No appointment yet';
             } elseif ($completed < $total) {
                 $tracking['status'] = 'ongoing';
 
@@ -105,10 +109,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         $tracking['next_recommended_date'] = 'Overdue - Book now!';
                         $tracking['status'] = 'overdue';
                     }
+                } else {
+                    $tracking['next_recommended_date'] = 'No appointment yet';
                 }
             } else {
+                // COMPLETED - Show annual booster date
                 $tracking['status'] = 'completed';
-                $tracking['next_recommended_date'] = 'Series completed!';
+
+                if ($tracking['last_date']) {
+                    $lastDate = new DateTime($tracking['last_date']);
+                    $boosterDate = clone $lastDate;
+                    $boosterDate->modify('+1 year'); // Annual booster
+
+                    $today = new DateTime();
+                    $today->setTime(0, 0, 0);
+                    $boosterDate->setTime(0, 0, 0);
+
+                    if ($boosterDate > $today) {
+                        $interval = $today->diff($boosterDate);
+                        $daysUntil = $interval->days;
+
+                        if ($daysUntil > 30) {
+                            $tracking['next_recommended_date'] = 'Annual booster: ' . $boosterDate->format('M d, Y');
+                        } else {
+                            $tracking['next_recommended_date'] = 'Annual booster: ' . $boosterDate->format('M d, Y') . ' (in ' . $daysUntil . ' days)';
+                        }
+                    } else {
+                        $tracking['next_recommended_date'] = 'Annual booster overdue - Book now!';
+                        $tracking['status'] = 'booster_overdue';
+                    }
+                } else {
+                    $tracking['next_recommended_date'] = 'Series completed!';
+                }
             }
 
             // Format last date
@@ -129,6 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'message' => 'Error loading vaccination data: ' . $e->getMessage()
         ];
     }
+} else {
+    $response = ['success' => false, 'message' => 'Invalid request method'];
 }
 
 echo json_encode($response);

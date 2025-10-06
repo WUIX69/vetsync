@@ -44,28 +44,12 @@ $categories = Categories::all('services')['data'] ?? [];
                     <label>Price</label>
                     <div class="ui labeled input">
                         <div class="ui label">&#8369;</div>
-                        <input type="number" name="price" placeholder="0.00">
+                        <input type="number" name="price" placeholder="0.00" step="0.01">
                     </div>
                 </div>
                 <div class="field">
                     <label>Duration (minutes)</label>
                     <input type="number" name="duration" placeholder="30">
-                </div>
-            </div>
-            <div class="field">
-                <label>Status</label>
-                <div class="ui selection dropdown">
-                    <input type="hidden" name="status">
-                    <i class="dropdown icon"></i>
-                    <div class="default text">Select Status</div>
-                    <div class="menu">
-                        <div class="item" data-value="available">
-                            <i class="check circle green icon"></i>Available
-                        </div>
-                        <div class="item" data-value="unavailable">
-                            <i class="times circle red icon"></i>Unavailable
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="field">
@@ -81,6 +65,37 @@ $categories = Categories::all('services')['data'] ?? [];
                                 <i class="<?= $category['icon'] ?> icon"></i><?= $category['name'] ?>
                             </div>
                         <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vaccination Doses Field - Shows only for vaccination services -->
+            <div class="field vaccination-doses-field" style="display: none;">
+                <label>
+                    <i class="syringe icon"></i> Number of Doses/Sessions Required
+                    <span class="ui mini teal label">For Vaccination Series Tracking</span>
+                </label>
+                <input type="number" name="vaccination_doses" placeholder="e.g., 1, 2, or 3" min="1" max="10">
+                <small style="display: block; margin-top: 0.5rem; color: #666;">
+                    <i class="info circle icon"></i>
+                    How many doses needed to complete this vaccine? Examples: Anti-rabies (3 doses), Deworming (2
+                    doses), Anti-parvo (1 dose)
+                </small>
+            </div>
+
+            <div class="field">
+                <label>Status</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="status">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Status</div>
+                    <div class="menu">
+                        <div class="item" data-value="available">
+                            <i class="check circle green icon"></i>Available
+                        </div>
+                        <div class="item" data-value="unavailable">
+                            <i class="times circle red icon"></i>Unavailable
+                        </div>
                     </div>
                 </div>
             </div>

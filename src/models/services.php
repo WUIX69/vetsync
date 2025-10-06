@@ -71,9 +71,10 @@ class Services
                     description, 
                     status,
                     price, 
-                    duration
+                    duration,
+                    vaccination_doses
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?
                 )
             ");
 
@@ -84,7 +85,8 @@ class Services
                 $data['description'],
                 $data['status'],
                 $data['price'],
-                $data['duration']
+                $data['duration'],
+                $data['vaccination_doses'] ?? null
             ]);
 
             self::conn()->commit();
@@ -115,6 +117,7 @@ class Services
                     status=?,
                     price=?, 
                     duration=?,
+                    vaccination_doses=?,
                     updated_at=NOW()
                 WHERE uuid=?
             ");
@@ -126,6 +129,7 @@ class Services
                 $data['status'],
                 $data['price'],
                 $data['duration'],
+                $data['vaccination_doses'] ?? null,
                 $data['uuid']
             ]);
 
@@ -137,7 +141,10 @@ class Services
         } catch (PDOException $e) {
             error_log("SQL Error: " . $e->getMessage());
             self::conn()->rollBack();
-            return 0;
+            return [
+                'success' => false,
+                'message' => 'Service update failed: ' . $e->getMessage(),
+            ];
         }
     }
 

@@ -332,32 +332,67 @@
 
             let html = '';
             vaccinations.forEach(vacc => {
-                const statusClass = vacc.status;
-                const completedPercent = (vacc.completed_sessions / vacc.total_sessions) * 100;
+                let badgeClass = 'teal';
+                let statusText = vacc.completed_sessions + ' of ' + vacc.total_sessions + ' sessions completed';
+
+                if (vacc.status === 'completed') {
+                    badgeClass = 'green';
+                } else if (vacc.status === 'ongoing') {
+                    badgeClass = 'blue';
+                } else if (vacc.status === 'overdue' || vacc.status === 'booster_overdue') {
+                    badgeClass = 'red';
+                } else if (vacc.status === 'not_started') {
+                    badgeClass = 'orange';
+                }
+
+                // Determine next step message
+                let nextMessage = '';
+                if (vacc.status === 'completed') {
+                    nextMessage = `<div class="ui success message" style="margin-top: 1rem; padding: 0.75rem;">
+                        <i class="check circle icon"></i> Vaccination series completed!<br>
+                        <strong>Next:</strong> ${vacc.next_recommended_date}
+                    </div>`;
+                } else if (vacc.status === 'booster_overdue') {
+                    nextMessage = `<div class="ui warning message" style="margin-top: 1rem; padding: 0.75rem;">
+                        <i class="exclamation triangle icon"></i> <strong>${vacc.next_recommended_date}</strong>
+                    </div>`;
+                } else if (vacc.status === 'overdue') {
+                    nextMessage = `<div class="ui warning message" style="margin-top: 1rem; padding: 0.75rem;">
+                        <i class="exclamation triangle icon"></i> <strong>Next:</strong> ${vacc.next_recommended_date}
+                    </div>`;
+                } else if (vacc.status === 'ongoing') {
+                    nextMessage = `<div class="ui info message" style="margin-top: 1rem; padding: 0.75rem;">
+                        <i class="clock icon"></i> <strong>Next session:</strong> ${vacc.next_recommended_date}
+                    </div>`;
+                } else {
+                    nextMessage = `<p style="margin-top: 1rem; color: #666;">
+                        <strong>Next:</strong> ${vacc.next_recommended_date}
+                    </p>`;
+                }
+
+                let actionButton = '';
+                if (vacc.status !== 'completed') {
+                    actionButton = `<a href="/src/app/user/appointments.php" class="ui orange button" style="margin-top: 0.5rem;">
+                        <i class="calendar plus icon"></i> Book Next Session
+                    </a>`;
+                } else if (vacc.status === 'booster_overdue') {
+                    actionButton = `<a href="/src/app/user/appointments.php" class="ui red button" style="margin-top: 0.5rem;">
+                        <i class="calendar plus icon"></i> Book Annual Booster
+                    </a>`;
+                }
 
                 html += `
-                    <div class="vaccination-item ${statusClass}">
+                    <div class="vaccination-item ${vacc.status}">
                         <div class="pet-name">🐾 ${vacc.pet_name}</div>
                         <div class="vaccine-name">${vacc.service_name}</div>
                         <div class="progress-info">
-                            <span class="session-badge">
-                                ${vacc.completed_sessions} of ${vacc.total_sessions} sessions completed
+                            <span class="ui ${badgeClass} label" style="font-size: 0.9rem;">
+                                ${statusText}
                             </span>
                         </div>
                         ${vacc.last_date_formatted ? `<div class="next-date">Last session: ${vacc.last_date_formatted}</div>` : ''}
-                        <div class="next-date" style="font-weight: 600; margin-top: 0.5rem;">
-                            ${vacc.status === 'overdue' ? '⚠️ ' : ''}
-                            Next: ${vacc.next_recommended_date}
-                        </div>
-                        ${vacc.status !== 'completed' ? `
-                            <a href="/src/app/user/services.php?vaccine=${encodeURIComponent(vacc.service_name)}" class="ui small orange button book-btn">
-                                <i class="calendar plus icon"></i> Book Next Session
-                            </a>
-                        ` : `
-                            <div class="ui success message" style="margin-top: 1rem; padding: 0.8rem;">
-                                <i class="check circle icon"></i> Vaccination series completed!
-                            </div>
-                        `}
+                        ${nextMessage}
+                        ${actionButton}
                     </div>
                 `;
             });
