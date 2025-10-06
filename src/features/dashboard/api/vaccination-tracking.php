@@ -26,6 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 s.name as service_name,
                 s.uuid as service_uuid,
                 s.vaccination_doses,
+                s.vaccination_interval,
+                s.vaccination_interval_unit,
                 c.name as category_name
             FROM appointments a
             LEFT JOIN pets p ON a.pet_uuid = p.uuid
@@ -50,6 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             // Use the service's specified doses, default to 3 if not set
             $totalDoses = $vacc['vaccination_doses'] ?? 3;
 
+            // Use the service's specified interval, default to 2 weeks if not set
+            $intervalValue = $vacc['vaccination_interval'] ?? 2;
+            $intervalUnit = $vacc['vaccination_interval_unit'] ?? 'weeks';
+
             // Create unique key for pet + vaccine combination
             $key = $petUuid . '_' . $serviceUuid;
 
@@ -60,7 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'service_name' => $serviceName,
                     'service_uuid' => $serviceUuid,
                     'completed_sessions' => 0,
-                    'total_sessions' => $totalDoses, // DYNAMIC based on service configuration
+                    'total_sessions' => $totalDoses,
+                    'interval_value' => $intervalValue,
+                    'interval_unit' => $intervalUnit,
                     'last_date' => null,
                     'next_recommended_date' => null,
                     'status' => 'not_started',
@@ -87,6 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         foreach ($vaccinationTracking as &$tracking) {
             $completed = $tracking['completed_sessions'];
             $total = $tracking['total_sessions'];
+            $intervalValue = $tracking['interval_value'];
+            $intervalUnit = $tracking['interval_unit'];
+
+            // Create readable interval text
+            $intervalText = $intervalValue . ' ' . ($intervalValue == 1 ? rtrim($intervalUnit, 's') : $intervalUnit);
 
             if ($completed === 0) {
                 $tracking['status'] = 'not_started';
@@ -94,17 +107,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             } elseif ($completed < $total) {
                 $tracking['status'] = 'ongoing';
 
-                // Calculate next recommended date (2 weeks after last dose)
+                // Calculate next recommended date (using configurable interval)
                 if ($tracking['last_date']) {
                     $lastDate = new DateTime($tracking['last_date']);
                     $nextDate = clone $lastDate;
-                    $nextDate->modify('+2 weeks'); // Recommend 2 weeks interval
+                    $nextDate->modify('+' . $intervalValue . ' ' . $intervalUnit);
 
                     $today = new DateTime();
                     $interval = $today->diff($nextDate);
 
                     if ($nextDate > $today) {
-                        $tracking['next_recommended_date'] = $nextDate->format('M d, Y') . ' (in ' . $interval->days . ' days)';
+                        $tracking['next_recommended_date'] = $nextDate->format('M d, Y') . ' (in ' . $interval->days . ' days, ' . $intervalText . ' interval)';
                     } else {
                         $tracking['next_recommended_date'] = 'Overdue - Book now!';
                         $tracking['status'] = 'overdue';

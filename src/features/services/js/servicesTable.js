@@ -351,6 +351,7 @@ function getSingleService(serviceUuid = null) {
 // Function to show/hide vaccination doses field based on category
 function toggleVaccinationDosesField(categoryName) {
     const $vaccDosesField = $(".vaccination-doses-field");
+    const $vaccIntervalField = $(".vaccination-interval-field");
 
     console.log("toggleVaccinationDosesField called with:", categoryName);
 
@@ -360,13 +361,30 @@ function toggleVaccinationDosesField(categoryName) {
         (categoryName.toLowerCase().includes("vacin") || // This catches both "vaccination" and "vacination"
             categoryName.toLowerCase().includes("vaccine"))
     ) {
-        console.log("Showing vaccination doses field");
+        console.log("Showing vaccination fields");
         $vaccDosesField.show();
+        $vaccIntervalField.show();
+
+        // Set default unit to 'weeks' if empty
+        const $unitDropdown = $vaccIntervalField
+            .find(".ui.dropdown")
+            .has('input[name="vaccination_interval_unit"]');
+        const currentUnit = $unitDropdown
+            .find('input[name="vaccination_interval_unit"]')
+            .val();
+        if (!currentUnit) {
+            $unitDropdown.dropdown("set selected", "weeks");
+        }
     } else {
-        console.log("Hiding vaccination doses field");
+        console.log("Hiding vaccination fields");
         $vaccDosesField.hide();
-        // Clear the value when hiding
+        $vaccIntervalField.hide();
+        // Clear the values when hiding
         $vaccDosesField.find('input[name="vaccination_doses"]').val("");
+        $vaccIntervalField.find('input[name="vaccination_interval"]').val("");
+        $vaccIntervalField
+            .find('input[name="vaccination_interval_unit"]')
+            .val("");
     }
 }
 

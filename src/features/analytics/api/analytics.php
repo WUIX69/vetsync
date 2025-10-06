@@ -145,7 +145,7 @@ try {
     // ORDER STATUS DISTRIBUTION
     $statusStmt = $conn->prepare("
         SELECT status, COUNT(*) as count
-        FROM reservations
+        FROM reservations 
         GROUP BY status
     ");
     $statusStmt->execute();

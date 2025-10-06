@@ -72,9 +72,11 @@ class Services
                     status,
                     price, 
                     duration,
-                    vaccination_doses
+                    vaccination_doses,
+                    vaccination_interval,
+                    vaccination_interval_unit
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )
             ");
 
@@ -86,7 +88,9 @@ class Services
                 $data['status'],
                 $data['price'],
                 $data['duration'],
-                $data['vaccination_doses'] ?? null
+                $data['vaccination_doses'] ?? null,
+                $data['vaccination_interval'] ?? 2,
+                $data['vaccination_interval_unit'] ?? 'weeks'
             ]);
 
             self::conn()->commit();
@@ -118,6 +122,8 @@ class Services
                     price=?, 
                     duration=?,
                     vaccination_doses=?,
+                    vaccination_interval=?,
+                    vaccination_interval_unit=?,
                     updated_at=NOW()
                 WHERE uuid=?
             ");
@@ -130,6 +136,8 @@ class Services
                 $data['price'],
                 $data['duration'],
                 $data['vaccination_doses'] ?? null,
+                $data['vaccination_interval'] ?? 2,
+                $data['vaccination_interval_unit'] ?? 'weeks',
                 $data['uuid']
             ]);
 

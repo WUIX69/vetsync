@@ -83,6 +83,42 @@ $categories = Categories::all('services')['data'] ?? [];
                 </small>
             </div>
 
+            <!-- Vaccination Interval Field - Shows only for vaccination services -->
+            <div class="field vaccination-interval-field" style="display: none;">
+                <label>
+                    <i class="calendar alternate icon"></i> Interval Between Doses
+                    <span class="ui mini purple label">Time Between Each Dose</span>
+                </label>
+                <div class="two fields">
+                    <div class="field">
+                        <input type="number" name="vaccination_interval" placeholder="e.g., 2, 3, or 4" min="1"
+                            max="365" value="2">
+                    </div>
+                    <div class="field">
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="vaccination_interval_unit">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Select Unit</div>
+                            <div class="menu">
+                                <div class="item" data-value="days">
+                                    <i class="calendar day icon"></i>Days
+                                </div>
+                                <div class="item" data-value="weeks">
+                                    <i class="calendar week icon"></i>Weeks
+                                </div>
+                                <div class="item" data-value="months">
+                                    <i class="calendar icon"></i>Months
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <small style="display: block; margin-top: 0.5rem; color: #666;">
+                    <i class="clock icon"></i>
+                    Time interval between each dose. Examples: 2 weeks, 14 days, 1 month
+                </small>
+            </div>
+
             <div class="field">
                 <label>Status</label>
                 <div class="ui selection dropdown">

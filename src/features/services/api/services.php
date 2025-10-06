@@ -34,6 +34,8 @@ try {
             'status' => $_POST['status'] ?? '',
             'duration' => $_POST['duration'] ? $_POST['duration'] : null,
             'vaccination_doses' => !empty($_POST['vaccination_doses']) ? intval($_POST['vaccination_doses']) : null,
+            'vaccination_interval' => !empty($_POST['vaccination_interval']) ? intval($_POST['vaccination_interval']) : 2,
+            'vaccination_interval_unit' => !empty($_POST['vaccination_interval_unit']) ? $_POST['vaccination_interval_unit'] : 'weeks',
             'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
         ];
 
