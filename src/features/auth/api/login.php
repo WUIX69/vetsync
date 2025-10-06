@@ -23,9 +23,46 @@ try {
 
     if ($user && password_verify($password, $user['password'])) {
 
-        // AUTO HEALTH RECOVERY: Restore health on login (if eligible)
+        // AUTO NO-SHOW DETECTION: Check for past accepted appointments
         global $conn;
 
+        // Find accepted appointments that are past their scheduled date
+        $findNoShows = $conn->prepare('
+            SELECT uuid, pet_uuid
+            FROM appointments 
+            WHERE user_uuid = ? 
+            AND status = "accepted" 
+            AND date < CURDATE()
+        ');
+        $findNoShows->execute([$user['uuid']]);
+        $noShowAppointments = $findNoShows->fetchAll(PDO::FETCH_ASSOC);
+
+        // Mark each as NO SHOW and penalize health
+        if (count($noShowAppointments) > 0) {
+            $markNoShow = $conn->prepare('
+                UPDATE appointments 
+                SET status = "cancelled", 
+                    cancellation_reason = "NO SHOW - Did not attend scheduled appointment"
+                WHERE uuid = ?
+            ');
+
+            foreach ($noShowAppointments as $appointment) {
+                $markNoShow->execute([$appointment['uuid']]);
+            }
+
+            // Apply 20% health penalty for no-shows
+            $penaltyAmount = count($noShowAppointments) * 20;
+            $updateHealth = $conn->prepare('
+                UPDATE users 
+                SET health = GREATEST(0, health - ?)
+                WHERE uuid = ?
+            ');
+            $updateHealth->execute([$penaltyAmount, $user['uuid']]);
+
+            error_log("No-show penalty: {$email} lost {$penaltyAmount}% health for " . count($noShowAppointments) . " missed appointment(s)");
+        }
+
+        // AUTO HEALTH RECOVERY: Restore health on login (if eligible)
         // Check if user has recent no-shows (last 7 days)
         $checkNoShows = $conn->prepare('
             SELECT 
