@@ -372,11 +372,11 @@
 
                 let actionButton = '';
                 if (vacc.status !== 'completed') {
-                    actionButton = `<a href="/src/app/user/appointments.php" class="ui orange button" style="margin-top: 0.5rem;">
+                    actionButton = `<a href="/src/app/user/services.php" class="ui orange button" style="margin-top: 0.5rem;">
                         <i class="calendar plus icon"></i> Book Next Session
                     </a>`;
                 } else if (vacc.status === 'booster_overdue') {
-                    actionButton = `<a href="/src/app/user/appointments.php" class="ui red button" style="margin-top: 0.5rem;">
+                    actionButton = `<a href="/src/app/user/services.php" class="ui red button" style="margin-top: 0.5rem;">
                         <i class="calendar plus icon"></i> Book Annual Booster
                     </a>`;
                 }
