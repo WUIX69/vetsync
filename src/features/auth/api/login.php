@@ -79,7 +79,7 @@ try {
                  AND updated_at > DATE_SUB(NOW(), INTERVAL 7 DAY)) +
                 (SELECT COUNT(*) FROM reservations 
                  WHERE user_uuid = ? 
-                 AND cancellation_reason LIKE "%NO SHOW%"
+                 AND rejection_reason LIKE "%NO SHOW%"
                  AND updated_at > DATE_SUB(NOW(), INTERVAL 7 DAY))
                 as recent_no_shows
         ');
