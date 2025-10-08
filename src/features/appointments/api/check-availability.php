@@ -13,16 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $startDate = date('Y-m-d');
         $endDate = date('Y-m-d', strtotime('+90 days'));
 
-        // Count appointments per date (excluding cancelled)
+        // Count unique booking groups per date (grouped appointments count as 1)
+        // For appointments without a booking_group_id, count them individually
         $stmt = $conn->prepare("
             SELECT 
                 DATE(date) as appointment_date,
-                COUNT(*) as appointment_count
+                COUNT(DISTINCT COALESCE(booking_group_id, uuid)) as appointment_count
             FROM appointments
             WHERE DATE(date) BETWEEN ? AND ?
             AND status != 'cancelled'
             GROUP BY DATE(date)
-            HAVING COUNT(*) >= 10
+            HAVING COUNT(DISTINCT COALESCE(booking_group_id, uuid)) >= 5
         ");
 
         $stmt->execute([$startDate, $endDate]);
@@ -36,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $response = [
             'success' => true,
             'disabled_dates' => $disabledDates,
-            'max_per_day' => 10
+            'max_per_day' => 5
         ];
 
     } catch (PDOException $e) {

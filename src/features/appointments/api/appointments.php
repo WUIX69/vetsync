@@ -198,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $stmt = $conn->prepare("
                 SELECT 
                     a.uuid,
+                    a.booking_group_id,
                     a.date,
                     a.time,
                     a.status,
@@ -215,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 LEFT JOIN pets p ON a.pet_uuid = p.uuid  
                 LEFT JOIN services s ON a.service_uuid = s.uuid
                 WHERE DATE(a.date) = ?
-                ORDER BY a.time ASC
+                ORDER BY a.booking_group_id DESC, a.time ASC
             ");
 
             $stmt->execute([$date]);
@@ -225,6 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $formattedAppointments = array_map(function ($appointment) {
                 return [
                     'uuid' => $appointment['uuid'],
+                    'booking_group_id' => $appointment['booking_group_id'] ?? null,
                     'date' => $appointment['date'],
                     'time' => $appointment['time'],
                     'status' => $appointment['status'],

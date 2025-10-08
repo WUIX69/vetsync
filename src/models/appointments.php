@@ -214,107 +214,97 @@ class Appointments
         }
     }
 
-    public static function updateStatusWithReason($uuid, $status, $cancellationReason = null)
+    // Update the updateStatusWithReason function to handle groups
+    public static function updateStatusWithReason($uuid, $status, $reason = '')
     {
         try {
-            // Get appointment details for email notification
-            $appointmentStmt = self::conn()->prepare('
-                SELECT 
-                    a.*, 
-                    s.name AS service_name,
-                    CONCAT(u.firstname, " ", u.lastname) AS user_name,
-                    u.email AS user_email,
-                    p.name AS pet_name
-                FROM appointments a
-                LEFT JOIN services s ON a.service_uuid = s.uuid
-                LEFT JOIN users u ON a.user_uuid = u.uuid
-                LEFT JOIN pets p ON a.pet_uuid = p.uuid
-                WHERE a.uuid = ?
-            ');
-            $appointmentStmt->execute([$uuid]);
-            $appointmentData = $appointmentStmt->fetch(PDO::FETCH_ASSOC);
+            // Check if this appointment is part of a group
+            $checkStmt = self::conn()->prepare("SELECT booking_group_id FROM appointments WHERE uuid = ?");
+            $checkStmt->execute([$uuid]);
+            $appointment = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($status === 'cancelled' && $cancellationReason) {
-                // Store cancellation reason in the note field
-                $stmt = self::conn()->prepare('
+            if ($appointment && $appointment['booking_group_id']) {
+                // Update entire group
+                $groupId = $appointment['booking_group_id'];
+
+                $stmt = self::conn()->prepare("
                     UPDATE appointments 
                     SET status = ?, 
-                        note = CONCAT(COALESCE(note, ""), 
-                            CASE 
-                                WHEN note IS NULL OR note = "" THEN ""
-                                ELSE "\n\n"
-                            END,
-                            "[CANCELLED BY ADMIN] ", ?)
-                    WHERE uuid = ?
-                ');
-                $stmt->execute([$status, $cancellationReason, $uuid]);
-            } else {
-                $stmt = self::conn()->prepare('
-                    UPDATE appointments 
-                    SET status = ?
-                    WHERE uuid = ?
-                ');
-                $stmt->execute([$status, $uuid]);
-            }
+                        note = CASE 
+                            WHEN ? != '' THEN CONCAT(COALESCE(note, ''), 
+                                CASE 
+                                    WHEN note IS NULL OR note = '' THEN ''
+                                    ELSE '\n\n'
+                                END,
+                                '[', UPPER(?), ' - GROUP] ', ?, ' - ', NOW())
+                            ELSE note
+                        END,
+                        updated_at = NOW()
+                    WHERE booking_group_id = ?
+                ");
+                $stmt->execute([$status, $reason, $status, $reason, $groupId]);
 
-            if ($stmt->rowCount() > 0) {
-                // Send email notification when appointment is accepted (confirmed)
-                if ($status === 'accepted' && $appointmentData && $appointmentData['user_email']) {
-                    try {
-                        $emailService = new \VetSync\Services\Email();
-
-                        // Get service name or custom service description
-                        $serviceName = $appointmentData['service_name'] ?? 'Custom Service';
-                        if (!$appointmentData['service_name'] && $appointmentData['note']) {
-                            // Extract custom service from note if it starts with "CUSTOM SERVICE REQUEST:"
-                            if (strpos($appointmentData['note'], 'CUSTOM SERVICE REQUEST:') === 0) {
-                                $lines = explode("\n", $appointmentData['note']);
-                                $serviceName = trim(str_replace('CUSTOM SERVICE REQUEST:', '', $lines[0]));
-                            }
-                        }
-
-                        $emailResult = $emailService->sendAppointmentConfirmation(
-                            $appointmentData['user_email'],
-                            $appointmentData['user_name'],
-                            $appointmentData['pet_name'],
-                            $serviceName,
-                            $appointmentData['date'],
-                            $appointmentData['date'] // Using date field for time as well
-                        );
-
-                        if (!$emailResult['success']) {
-                            error_log("Failed to send appointment confirmation email: " . $emailResult['message']);
-                        }
-                    } catch (Exception $e) {
-                        error_log("Appointment confirmation email error: " . $e->getMessage());
-                        // Don't fail the status update if email fails
-                    }
-                }
-
-                // Health recovery for completed appointments (+5%)
+                // Health recovery logic for completed status
                 if ($status === 'completed') {
-                    $recoverHealth = self::conn()->prepare('
-                        UPDATE users 
-                        SET user_health = LEAST(100, user_health + 5)
-                        WHERE uuid = ?
-                    ');
-                    $recoverHealth->execute([$appointmentData['user_uuid']]);
+                    $userStmt = self::conn()->prepare("SELECT DISTINCT user_uuid FROM appointments WHERE booking_group_id = ?");
+                    $userStmt->execute([$groupId]);
+                    $user = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+                    if ($user) {
+                        $healthStmt = self::conn()->prepare("
+                            UPDATE users 
+                            SET user_health = LEAST(user_health + 5, 100) 
+                            WHERE uuid = ?
+                        ");
+                        $healthStmt->execute([$user['user_uuid']]);
+                    }
                 }
 
                 return [
                     'success' => true,
-                    'message' => $status === 'completed'
-                        ? 'Appointment completed successfully! User earned +5% health.'
-                        : 'Appointment status updated successfully.',
+                    'message' => 'Group appointment updated successfully. All services in this booking have been updated.',
                 ];
             } else {
+                // Update single appointment (existing logic)
+                $stmt = self::conn()->prepare("
+                    UPDATE appointments 
+                    SET status = ?, 
+                        note = CASE 
+                            WHEN ? != '' THEN CONCAT(COALESCE(note, ''), 
+                                CASE 
+                                    WHEN note IS NULL OR note = '' THEN ''
+                                    ELSE '\n\n'
+                                END,
+                                '[', UPPER(?), '] ', ?, ' - ', NOW())
+                            ELSE note
+                        END,
+                        updated_at = NOW()
+                    WHERE uuid = ?
+                ");
+                $stmt->execute([$status, $reason, $status, $reason, $uuid]);
+
+                // Health recovery for single appointment
+                if ($status === 'completed') {
+                    $userStmt = self::conn()->prepare("SELECT user_uuid FROM appointments WHERE uuid = ?");
+                    $userStmt->execute([$uuid]);
+                    $user = $userStmt->fetch(PDO::FETCH_ASSOC);
+
+                    if ($user) {
+                        $healthStmt = self::conn()->prepare("
+                            UPDATE users 
+                            SET user_health = LEAST(user_health + 5, 100) 
+                            WHERE uuid = ?
+                        ");
+                        $healthStmt->execute([$user['user_uuid']]);
+                    }
+                }
+
                 return [
-                    'success' => false,
-                    'message' => 'Failed to update appointment status.',
+                    'success' => true,
+                    'message' => 'Appointment updated successfully.',
                 ];
             }
         } catch (PDOException $e) {
-            error_log("SQL Error: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => 'Failed to update appointment status: ' . $e->getMessage(),
@@ -382,23 +372,54 @@ class Appointments
     public static function reschedule($uuid, $new_date, $reason = '')
     {
         try {
-            $stmt = self::conn()->prepare("
-                UPDATE appointments 
-                SET date = ?, 
-                    note = CONCAT(COALESCE(note, ''), 
-                        CASE 
-                            WHEN note IS NULL OR note = '' THEN ''
-                            ELSE '\n\n'
-                        END,
-                        '[RESCHEDULED BY ADMIN] ', ?, ' - ', NOW()),
-                    updated_at = NOW()
-                WHERE uuid = ?
-            ");
-            $stmt->execute([$new_date, $reason, $uuid]);
-            return [
-                'success' => true,
-                'message' => 'Appointment rescheduled successfully.',
-            ];
+            // Check if this appointment is part of a group
+            $checkStmt = self::conn()->prepare("SELECT booking_group_id FROM appointments WHERE uuid = ?");
+            $checkStmt->execute([$uuid]);
+            $appointment = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($appointment && $appointment['booking_group_id']) {
+                // Reschedule entire group
+                $groupId = $appointment['booking_group_id'];
+
+                $stmt = self::conn()->prepare("
+                    UPDATE appointments 
+                    SET date = ?, 
+                        note = CONCAT(COALESCE(note, ''), 
+                            CASE 
+                                WHEN note IS NULL OR note = '' THEN ''
+                                ELSE '\n\n'
+                            END,
+                            '[RESCHEDULED BY ADMIN - GROUP] ', ?, ' - ', NOW()),
+                        updated_at = NOW()
+                    WHERE booking_group_id = ?
+                ");
+                $stmt->execute([$new_date, $reason, $groupId]);
+
+                return [
+                    'success' => true,
+                    'message' => 'Group appointment rescheduled successfully. All services in this booking have been updated.',
+                ];
+            } else {
+                // Reschedule single appointment
+                $stmt = self::conn()->prepare("
+                    UPDATE appointments 
+                    SET date = ?, 
+                        note = CONCAT(COALESCE(note, ''), 
+                            CASE 
+                                WHEN note IS NULL OR note = '' THEN ''
+                                ELSE '\n\n'
+                            END,
+                            '[RESCHEDULED BY ADMIN] ', ?, ' - ', NOW()),
+                        updated_at = NOW()
+                    WHERE uuid = ?
+                ");
+                $stmt->execute([$new_date, $reason, $uuid]);
+
+                return [
+                    'success' => true,
+                    'message' => 'Appointment rescheduled successfully.',
+                ];
+            }
         } catch (PDOException $e) {
             return [
                 'success' => false,

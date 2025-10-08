@@ -32,8 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         ];
 
         // Get booked time slots for the specified date
+        // Count distinct booking groups (grouped appointments count as 1)
         $stmt = $conn->prepare("
-            SELECT time, COUNT(*) as booking_count
+            SELECT 
+                time, 
+                COUNT(DISTINCT COALESCE(booking_group_id, uuid)) as booking_count
             FROM appointments
             WHERE DATE(date) = ?
             AND status != 'cancelled'

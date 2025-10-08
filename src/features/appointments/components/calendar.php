@@ -305,6 +305,32 @@
         padding: 2rem;
         color: #6b7280;
     }
+
+    /* Grouped Appointment Items in Modal */
+    .grouped-appointment-item {
+        background-color: #f8f9fa !important;
+        border-left: 4px solid #0d6efd !important;
+        margin-bottom: 0 !important;
+    }
+
+    .grouped-appointment-item.group-first-item {
+        border-top: 2px solid #0d6efd !important;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        padding-top: 1rem !important;
+    }
+
+    .grouped-appointment-item.group-last-item {
+        border-bottom: 2px solid #0d6efd !important;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        padding-bottom: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .grouped-appointment-item:hover {
+        background-color: #e7f1ff !important;
+    }
 </style>
 
 <section class="calendar-view box">
@@ -538,6 +564,41 @@
 
     // Show modal with appointments for a specific date
     function showDateAppointmentsModal(date, appointments) {
+        // Group appointments by booking_group_id for display
+        const groupedAppts = {};
+        const standaloneAppts = [];
+
+        appointments.forEach(apt => {
+            if (apt.booking_group_id) {
+                if (!groupedAppts[apt.booking_group_id]) {
+                    groupedAppts[apt.booking_group_id] = [];
+                }
+                groupedAppts[apt.booking_group_id].push(apt);
+            } else {
+                standaloneAppts.push(apt);
+            }
+        });
+
+        // Build appointment items HTML
+        let appointmentsHtml = '';
+
+        // Add grouped appointments - SHOW AS ONE ITEM
+        Object.keys(groupedAppts).forEach(groupId => {
+            const group = groupedAppts[groupId];
+            if (group.length > 1) {
+                // Create ONE item for the entire group
+                appointmentsHtml += createGroupedAppointmentModalItem(group);
+            } else {
+                // Single appointment with group ID - treat as standalone
+                appointmentsHtml += createAppointmentModalItem(group[0]);
+            }
+        });
+
+        // Add standalone appointments
+        standaloneAppts.forEach(apt => {
+            appointmentsHtml += createAppointmentModalItem(apt);
+        });
+
         const modalHtml = `
             <div class="ui modal" id="dateAppointmentsModal">
                 <div class="header">
@@ -546,7 +607,7 @@
                 </div>
                 <div class="content">
                     <div class="ui divided items">
-                        ${appointments.map(appointment => createAppointmentModalItem(appointment)).join('')}
+                        ${appointmentsHtml}
                     </div>
                 </div>
                 <div class="actions">
@@ -577,8 +638,100 @@
         }).modal('show');
     }
 
-    // Create appointment item for modal
-    function createAppointmentModalItem(appointment) {
+    // NEW FUNCTION: Create grouped appointment item (multiple services as ONE item)
+    function createGroupedAppointmentModalItem(appointmentGroup) {
+        const firstApt = appointmentGroup[0];
+
+        const statusColors = {
+            'pending': 'orange',
+            'accepted': 'blue',
+            'completed': 'green',
+            'cancelled': 'red'
+        };
+
+        const statusLabels = {
+            'pending': 'Pending',
+            'accepted': 'Confirmed',
+            'completed': 'Completed',
+            'cancelled': 'Cancelled'
+        };
+
+        const statusColor = statusColors[firstApt.status] || 'grey';
+        const statusLabel = statusLabels[firstApt.status] || firstApt.status;
+
+        // Build service list
+        const servicesList = appointmentGroup.map(apt =>
+            `<li><strong>${apt.service_name || 'Custom Service'}</strong>${apt.note && !apt.note.includes('CUSTOM') ? ' - ' + apt.note : ''}</li>`
+        ).join('');
+
+        let actionButtons = '';
+
+        if (firstApt.status === 'pending') {
+            actionButtons = `
+                <button class="ui mini green button" onclick="quickUpdateStatus('${firstApt.uuid}', 'accepted')">
+                    <i class="check icon"></i> Confirm All
+                </button>
+                <button class="ui mini orange button" onclick="quickReschedule('${firstApt.uuid}')">
+                    <i class="calendar icon"></i> Reschedule All
+                </button>
+                <button class="ui mini red button" onclick="quickCancel('${firstApt.uuid}')">
+                    <i class="times icon"></i> Cancel All
+                </button>
+            `;
+        } else if (firstApt.status === 'accepted') {
+            actionButtons = `
+                <button class="ui mini green button" onclick="quickUpdateStatus('${firstApt.uuid}', 'completed')">
+                    <i class="checkmark icon"></i> Complete All
+                </button>
+                <button class="ui mini orange button" onclick="quickReschedule('${firstApt.uuid}')">
+                    <i class="calendar icon"></i> Reschedule All
+                </button>
+                <button class="ui mini red button" onclick="quickCancel('${firstApt.uuid}')">
+                    <i class="times icon"></i> Cancel All
+                </button>
+            `;
+        } else {
+            actionButtons = `
+                <button class="ui mini basic button" onclick="viewAppointmentDetails('${firstApt.uuid}')">
+                    <i class="eye icon"></i> View Details
+                </button>
+            `;
+        }
+
+        return `
+            <div class="item" style="background-color: #f0f8ff; border-left: 4px solid #2185d0; padding: 1rem;">
+                <div class="ui mini circular image">
+                    <img src="${firstApt.pet_image || '/public/img/placeholders/image.png'}" 
+                         onerror="this.src='/public/img/placeholders/image.png'">
+                </div>
+                <div class="content">
+                    <div class="header">
+                        ${firstApt.pet_name || 'Unknown Pet'}
+                        <span class="ui mini blue label" style="margin-left: 0.5rem;">
+                            <i class="layer group icon"></i> Group Booking (${appointmentGroup.length} services)
+                        </span>
+                        <span class="ui ${statusColor} label" style="float: right;">${statusLabel}</span>
+                    </div>
+                    <div class="meta">
+                        <span><i class="user icon"></i> ${firstApt.user_name || firstApt.user_email}</span>
+                        <span style="margin-left: 1rem;"><i class="clock icon"></i> ${firstApt.formatted_time || 'No time set'}</span>
+                    </div>
+                    <div class="description">
+                        <strong>Services:</strong>
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            ${servicesList}
+                        </ul>
+                    </div>
+                    <div class="extra" style="margin-top: 1rem;">
+                        ${actionButtons}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Keep existing function for single appointments
+    function createAppointmentModalItem(appointment, groupInfo = null) {
         const statusColors = {
             'pending': 'orange',
             'accepted': 'blue',
@@ -595,6 +748,13 @@
 
         const statusColor = statusColors[appointment.status] || 'grey';
         const statusLabel = statusLabels[appointment.status] || appointment.status;
+
+        // Group badge
+        let groupBadge = '';
+        if (groupInfo && groupInfo.isGrouped) {
+            const badgeColor = groupInfo.groupIndex === 1 ? 'primary' : 'secondary';
+            groupBadge = `<span class="ui mini ${badgeColor} label">Group ${groupInfo.groupIndex}/${groupInfo.groupSize}</span> `;
+        }
 
         let actionButtons = '';
 
@@ -630,8 +790,20 @@
             `;
         }
 
+        // Add grouping classes for visual styling
+        let itemClasses = 'item';
+        if (groupInfo && groupInfo.isGrouped) {
+            itemClasses += ' grouped-appointment-item';
+            if (groupInfo.groupIndex === 1) {
+                itemClasses += ' group-first-item';
+            }
+            if (groupInfo.groupIndex === groupInfo.groupSize) {
+                itemClasses += ' group-last-item';
+            }
+        }
+
         return `
-            <div class="item">
+            <div class="${itemClasses}">
                 <div class="ui mini circular image">
                     <img src="${appointment.pet_image || '/public/img/placeholders/image.png'}" 
                          onerror="this.src='/public/img/placeholders/image.png'">
@@ -645,7 +817,7 @@
                         <span><i class="user icon"></i> ${appointment.user_name || appointment.user_email || 'Unknown Owner'}</span>
                     </div>
                     <div class="description">
-                        <strong>Service:</strong> ${appointment.service_name || 'Custom Service'}<br>
+                        <strong>Service:</strong> ${groupBadge}${appointment.service_name || 'Custom Service'}<br>
                         <strong>Time:</strong> ${appointment.formatted_time || 'Not specified'}
                         ${appointment.note ? `<br><strong>Notes:</strong> ${appointment.note.substring(0, 100)}${appointment.note.length > 100 ? '...' : ''}` : ''}
                     </div>

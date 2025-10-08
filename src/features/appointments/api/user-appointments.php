@@ -88,6 +88,26 @@ try {
                 exit;
             }
 
+            // **NEW: Check if user already has an appointment for this date**
+            $checkStmt = $conn->prepare('
+                SELECT COUNT(*) as booking_count 
+                FROM appointments 
+                WHERE user_uuid = ? 
+                AND DATE(date) = ? 
+                AND status != "cancelled"
+                LIMIT 1
+            ');
+            $checkStmt->execute([$userUuid, $date]);
+            $existingBooking = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($existingBooking && $existingBooking['booking_count'] > 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'You already have an appointment booked for this date. Please choose a different date or contact us to modify your existing appointment.'
+                ]);
+                exit;
+            }
+
             // Generate a shared booking group ID for multiple services
             $bookingGroupId = uuid();
             $appointmentCount = 0;

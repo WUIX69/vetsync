@@ -475,7 +475,8 @@ function tableRowHtml(
     statusClass,
     statusLabel,
     isCompleted = false,
-    tabType = "all"
+    tabType = "all",
+    groupInfo = { isGrouped: false }
 ) {
     let actionButtons = "";
 
@@ -489,30 +490,50 @@ function tableRowHtml(
         `;
     } else if (statusLabel === "Pending") {
         actionButtons = `
-            <div class="action-buttons">
-                <button class="btn btn-xs btn-success confirm-appointment" data-uuid="${app.uuid}">
-                    Confirm
-            </button>
-                <button class="btn btn-xs btn-warning reschedule-appointment" data-uuid="${app.uuid}">
-                    Reschedule
-            </button>
-                <button class="btn btn-xs btn-danger cancel-appointment" data-uuid="${app.uuid}">
-                    Cancel
-            </button>
+            <div class="ui compact menu">
+                <div class="ui simple dropdown item">
+                    Actions
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item confirm-appointment" data-uuid="${app.uuid}">
+                            <i class="check green icon"></i>
+                            Confirm
+                        </div>
+                        <div class="item reschedule-appointment" data-uuid="${app.uuid}">
+                            <i class="calendar orange icon"></i>
+                            Reschedule
+                        </div>
+                        <div class="divider"></div>
+                        <div class="item cancel-appointment" data-uuid="${app.uuid}">
+                            <i class="times red icon"></i>
+                            Cancel
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     } else if (statusLabel === "Confirmed") {
         actionButtons = `
-            <div class="action-buttons">
-                <button class="btn btn-xs btn-success complete-appointment" data-uuid="${app.uuid}">
-                    Complete
-            </button>
-                <button class="btn btn-xs btn-warning reschedule-appointment" data-uuid="${app.uuid}">
-                    Reschedule
-            </button>
-                <button class="btn btn-xs btn-danger cancel-appointment" data-uuid="${app.uuid}">
-                    Cancel
-            </button>
+            <div class="ui compact menu">
+                <div class="ui simple dropdown item">
+                    Actions
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <div class="item complete-appointment" data-uuid="${app.uuid}">
+                            <i class="check green icon"></i>
+                            Complete
+                        </div>
+                        <div class="item reschedule-appointment" data-uuid="${app.uuid}">
+                            <i class="calendar orange icon"></i>
+                            Reschedule
+                        </div>
+                        <div class="divider"></div>
+                        <div class="item cancel-appointment" data-uuid="${app.uuid}">
+                            <i class="times red icon"></i>
+                            Cancel
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
     } else if (statusLabel === "Cancelled") {
@@ -572,8 +593,32 @@ function tableRowHtml(
         </td>`
             : "";
 
+    // Group styling classes and badge
+    let groupClasses = "";
+    let groupBadge = "";
+
+    if (groupInfo.isGrouped && groupInfo.isCollapsed) {
+        const additionalCount = groupInfo.groupSize - 1;
+        groupClasses = "group-collapsed cursor-pointer";
+        groupBadge = `
+                <span class="text-primary ms-2" style="font-size: 0.85rem; cursor: pointer;">
+                    <i class="bx bx-chevron-right group-expand-icon"></i>
+                    + ${additionalCount} more service${
+            additionalCount > 1 ? "s" : ""
+        }
+                </span>
+            `;
+
+        // Note: data-group-id will be added directly to the <tr> tag below
+    }
+
+    const groupDataAttr =
+        groupInfo.isGrouped && groupInfo.isCollapsed
+            ? `data-group-id="${groupInfo.groupId}"`
+            : "";
+
     return `
-        <tr data-uuid="${app.uuid}">
+    <tr data-uuid="${app.uuid}" class="${groupClasses}" ${groupDataAttr}>
             <td>
                 <div class="fw-bold">${
                     app.formatted_date || app.date || ""
@@ -612,7 +657,7 @@ function tableRowHtml(
                 <small class="text-muted">${app.user_email || ""}</small>
             </td>
             <td>
-                <div class="fw-bold">${serviceName}</div>
+                <div class="fw-bold">${serviceName}${groupBadge}</div>
                 ${
                     shortInstructions
                         ? `<small class="text-muted" title="${instructions}">${shortInstructions}</small>`
@@ -645,28 +690,28 @@ function getStatusColor(statusClass) {
 // Update the renderAppointments function
 function renderAppointments(data, status = "all") {
     let tableSelector = "";
-    let colspan = "7"; // Updated from 6
+    let colspan = "7";
 
     switch (status) {
         case "all":
             tableSelector = "#appointmentsTableAll tbody";
-            colspan = "7"; // Was 6
+            colspan = "7";
             break;
         case "pending":
             tableSelector = "#appointmentsTablePending tbody";
-            colspan = "6"; // Was 5
+            colspan = "6";
             break;
         case "confirmed":
             tableSelector = "#appointmentsTableConfirmed tbody";
-            colspan = "6"; // Was 5
+            colspan = "6";
             break;
         case "completed":
             tableSelector = "#appointmentsTableCompleted tbody";
-            colspan = "6"; // Was 5
+            colspan = "6";
             break;
         case "cancelled":
             tableSelector = "#appointmentsTableCancelled tbody";
-            colspan = "7"; // Was 6
+            colspan = "7";
             break;
     }
 
@@ -689,16 +734,69 @@ function renderAppointments(data, status = "all") {
         return;
     }
 
+    // Group appointments by booking_group_id
+    const groupedAppointments = {};
+    const standaloneAppointments = [];
+    const processedGroups = new Set();
+
+    data.forEach((appointment) => {
+        if (appointment.booking_group_id) {
+            if (!groupedAppointments[appointment.booking_group_id]) {
+                groupedAppointments[appointment.booking_group_id] = [];
+            }
+            groupedAppointments[appointment.booking_group_id].push(appointment);
+        } else {
+            standaloneAppointments.push(appointment);
+        }
+    });
+
+    // Render all appointments in order, but collapse groups
     data.forEach((appointment) => {
         const statusInfo = getStatusInfo(appointment.status);
-        const row = tableRowHtml(
-            appointment,
-            statusInfo.class,
-            statusInfo.label,
-            appointment.status === "completed",
-            status // Pass the tab type
-        );
-        container.append(row);
+
+        // Check if this is part of a group
+        if (
+            appointment.booking_group_id &&
+            groupedAppointments[appointment.booking_group_id]?.length > 1
+        ) {
+            const groupId = appointment.booking_group_id;
+
+            // Only render the first appointment of the group
+            if (processedGroups.has(groupId)) {
+                return; // Skip, already rendered
+            }
+
+            processedGroups.add(groupId);
+            const group = groupedAppointments[groupId];
+
+            // Render collapsed group row
+            const groupRow = tableRowHtml(
+                appointment,
+                statusInfo.class,
+                statusInfo.label,
+                appointment.status === "completed",
+                status,
+                {
+                    isGrouped: true,
+                    isCollapsed: true,
+                    groupSize: group.length,
+                    groupId: groupId,
+                    groupData: group,
+                }
+            );
+            container.append(groupRow);
+        } else {
+            // Render standalone appointment normally
+            const row = tableRowHtml(
+                appointment,
+                statusInfo.class,
+                statusInfo.label,
+                appointment.status === "completed",
+                status,
+                { isGrouped: false }
+            );
+            container.append(row);
+        }
     });
 }
 
@@ -1234,3 +1332,110 @@ $(document).on("click", "#confirmCancel", function () {
         });
     }
 });
+
+// Handle group expansion/collapse - Updated to handle both row and badge clicks
+$(document).on(
+    "click",
+    ".group-collapsed, .group-expand-icon, .group-collapsed .text-primary",
+    function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Find the parent row
+        const $row = $(this).hasClass("group-collapsed")
+            ? $(this)
+            : $(this).closest(".group-collapsed");
+
+        if (!$row.length) return;
+
+        const groupId = $row.attr("data-group-id");
+        const $icon = $row.find(".group-expand-icon");
+        const isExpanded = $row.hasClass("group-expanded");
+
+        console.log("Group clicked:", groupId, "isExpanded:", isExpanded);
+
+        if (isExpanded) {
+            // Collapse: remove expanded rows
+            $(`.group-child-row[data-parent-group="${groupId}"]`).remove();
+            $icon.removeClass("bx-chevron-down").addClass("bx-chevron-right");
+            $row.removeClass("group-expanded");
+        } else {
+            // Expand: fetch and render child rows
+            $icon.removeClass("bx-chevron-right").addClass("bx-chevron-down");
+            $row.addClass("group-expanded");
+
+            // Fetch current appointments to get group data
+            $.ajax({
+                url: "/src/features/appointments/api/appointments.php",
+                method: "GET",
+                dataType: "json",
+                success: function (response) {
+                    if (response.success && response.data) {
+                        const groupAppointments = response.data.filter(
+                            (apt) => apt.booking_group_id === groupId
+                        );
+
+                        console.log(
+                            "Found group appointments:",
+                            groupAppointments.length
+                        );
+
+                        if (groupAppointments.length > 1) {
+                            for (let i = 1; i < groupAppointments.length; i++) {
+                                const childApp = groupAppointments[i];
+                                const statusInfo = getStatusInfo(
+                                    childApp.status
+                                );
+
+                                const childRow = `
+                                <tr class="group-child-row" data-parent-group="${groupId}" data-uuid="${
+                                    childApp.uuid
+                                }">
+                                    <td colspan="2" style="padding-left: 3rem; background-color: #f8f9fa;">
+                                        <i class="bx bx-subdirectory-right text-muted"></i>
+                                        <strong>${
+                                            childApp.service_name ||
+                                            "Custom Service"
+                                        }</strong>
+                                    </td>
+                                    <td style="background-color: #f8f9fa;">
+                                        <div class="fw-bold">${
+                                            childApp.pet_name || "Unknown"
+                                        }</div>
+                                    </td>
+                                    <td style="background-color: #f8f9fa;">
+                                        <div>${
+                                            childApp.user_name ||
+                                            childApp.user_email
+                                        }</div>
+                                    </td>
+                                    <td colspan="2" style="background-color: #f8f9fa;">
+                                        <div class="fw-bold">${
+                                            childApp.service_name ||
+                                            "Custom Service"
+                                        }</div>
+                                    </td>
+                                    <td style="background-color: #f8f9fa;">
+                                        ${getActionButtonsForChild(
+                                            childApp,
+                                            statusInfo.label
+                                        )}
+                                    </td>
+                                </tr>
+                            `;
+
+                                $row.after(childRow);
+                            }
+                        }
+                    }
+                },
+            });
+        }
+    }
+);
+
+// Helper function to get action buttons for child rows
+function getActionButtonsForChild(app, statusLabel) {
+    // Child rows should not have action buttons - actions apply to entire group
+    return `<small class="text-muted">Actions apply to entire group</small>`;
+}
