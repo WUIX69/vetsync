@@ -336,6 +336,16 @@ $activeLink = uriPagePath();
     .terms-link:hover i {
         color: #007bff;
     }
+
+    .notification-item.unread {
+        background-color: #f0f9ff;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .notification-item.unread .notification-item-header strong {
+        color: #1e40af;
+        font-weight: 700;
+    }
 </style>
 
 <!-- Site Header -->
