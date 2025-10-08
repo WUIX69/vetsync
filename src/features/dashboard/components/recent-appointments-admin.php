@@ -7,6 +7,12 @@
         margin-top: 1rem;
     }
 
+    .recent-appointments h3 {
+        margin: 0 0 1rem 0;
+        font-weight: 600;
+        font-size: 1.125rem;
+    }
+
     .appointment-item {
         display: flex;
         align-items: center;

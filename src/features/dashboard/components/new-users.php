@@ -2,16 +2,23 @@
     .new-users {
         background: var(--color-white);
         border-radius: 1rem;
-        padding: 1.5rem;
+        padding: 4.5rem;
         box-shadow: var(--box-shadow);
         margin-top: 1rem;
+    }
+
+    .new-users h3 {
+        margin: 0 0 1rem 0;
+        font-weight: 600;
+        font-size: 1.125rem;
+        /* Add this to match appointments */
     }
 
     .user-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-top: 1rem;
+        gap: 0.8rem;
+        margin-top: 0;
     }
 
     .user-card {
@@ -19,7 +26,7 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        padding: 1rem;
+        padding: 0.8rem;
         border-radius: 0.5rem;
         background: #f8f9fa;
         transition: transform 0.2s ease;
@@ -31,8 +38,8 @@
     }
 
     .user-avatar {
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         display: flex;
@@ -40,8 +47,8 @@
         justify-content: center;
         color: white;
         font-weight: bold;
-        margin-bottom: 0.5rem;
-        font-size: 1.2rem;
+        margin-bottom: 0.4rem;
+        font-size: 1.1rem;
     }
 
     .user-avatar img {
@@ -53,9 +60,9 @@
 
     .user-name {
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         color: var(--color-dark);
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -63,24 +70,24 @@
     }
 
     .user-time {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         color: var(--color-info-dark);
     }
 
     @media (max-width: 768px) {
         .user-grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
+            gap: 0.6rem;
         }
 
         .user-card {
-            padding: 0.75rem;
+            padding: 0.6rem;
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            font-size: 1rem;
+            width: 38px;
+            height: 38px;
+            font-size: 0.95rem;
         }
     }
 </style>

@@ -867,19 +867,76 @@
             });
     }
 
-    // Quick reschedule function
+    // Quick reschedule function - Updated to use modal with date picker
     function quickReschedule(uuid) {
-        const newDate = prompt('Enter new date (YYYY-MM-DD):');
-        if (!newDate) return;
+        // Create reschedule modal HTML
+        const modalHTML = `
+            <div class="ui mini modal" id="rescheduleModal">
+                <div class="header">
+                    <i class="calendar icon"></i> Reschedule Appointment
+                </div>
+                <div class="content">
+                    <form class="ui form" id="rescheduleForm">
+                        <div class="field">
+                            <label>New Date</label>
+                            <input type="date" id="rescheduleNewDate" name="new_date" required min="${new Date().toISOString().split('T')[0]}">
+                        </div>
+                        <div class="field">
+                            <label>Reason for Rescheduling</label>
+                            <textarea id="rescheduleReason" name="reason" rows="3" placeholder="Explain why you're rescheduling this appointment..." required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="actions">
+                    <button class="ui cancel button">
+                        <i class="times icon"></i> Cancel
+                    </button>
+                    <button class="ui positive button" onclick="submitReschedule('${uuid}')">
+                        <i class="checkmark icon"></i> Reschedule
+                    </button>
+                </div>
+            </div>
+        `;
 
-        // Validate date format
-        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!dateRegex.test(newDate)) {
-            alert('Please enter date in YYYY-MM-DD format');
+        // Remove existing modal if any
+        $('#rescheduleModal').remove();
+
+        // Add modal to body
+        $('body').append(modalHTML);
+
+        // Show modal
+        $('#rescheduleModal').modal({
+            closable: true,
+            onApprove: function () {
+                return false; // Prevent auto close, we'll handle it in submitReschedule
+            }
+        }).modal('show');
+    }
+
+    // Submit reschedule
+    function submitReschedule(uuid) {
+        const newDate = $('#rescheduleNewDate').val();
+        const reason = $('#rescheduleReason').val().trim();
+
+        if (!newDate) {
+            alert('Please select a new date');
             return;
         }
 
-        const reason = prompt('Reason for rescheduling:') || 'Rescheduled by admin';
+        if (!reason) {
+            alert('Please provide a reason for rescheduling');
+            return;
+        }
+
+        // Validate date is not in the past
+        const selectedDate = new Date(newDate);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (selectedDate < today) {
+            alert('Cannot reschedule to a past date');
+            return;
+        }
 
         fetch('/src/features/appointments/api/appointments.php', {
             method: 'POST',
@@ -891,6 +948,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    $('#rescheduleModal').modal('hide');
                     $('#dateAppointmentsModal').modal('hide');
                     loadCalendar(currentMonth, currentYear);
                     alert('Appointment rescheduled successfully!');
