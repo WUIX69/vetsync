@@ -13,23 +13,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $startDate = date('Y-m-d');
         $endDate = date('Y-m-d', strtotime('+90 days'));
 
-        // Count unique booking groups per date (grouped appointments count as 1)
-        // For appointments without a booking_group_id, count them individually
+        // Check which dates are fully booked (all time slots taken)
+        // We'll calculate this based on total booked minutes vs available minutes
         $stmt = $conn->prepare("
             SELECT 
-                DATE(date) as appointment_date,
-                COUNT(DISTINCT COALESCE(booking_group_id, uuid)) as appointment_count
-            FROM appointments
-            WHERE DATE(date) BETWEEN ? AND ?
-            AND status != 'cancelled'
-            GROUP BY DATE(date)
-            HAVING COUNT(DISTINCT COALESCE(booking_group_id, uuid)) >= 5
+                DATE(a.date) as appointment_date,
+                SUM(COALESCE(s.duration, 60)) as total_booked_minutes
+            FROM appointments a
+            LEFT JOIN services s ON a.service_uuid = s.uuid
+            WHERE DATE(a.date) BETWEEN ? AND ?
+            AND a.status != 'cancelled'
+            GROUP BY DATE(a.date)
+            HAVING SUM(COALESCE(s.duration, 60)) >= 600
         ");
 
         $stmt->execute([$startDate, $endDate]);
         $fullyBookedDates = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Convert to array of dates
+        // 600 minutes = 10 hours (9 AM - 8 PM with 1 hour lunch = 10 available hours)
         $disabledDates = array_map(function ($row) {
             return $row['appointment_date'];
         }, $fullyBookedDates);
@@ -37,7 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $response = [
             'success' => true,
             'disabled_dates' => $disabledDates,
-            'max_per_day' => 5
+            'capacity_type' => 'time_based',
+            'available_hours_per_day' => 10
         ];
 
     } catch (PDOException $e) {

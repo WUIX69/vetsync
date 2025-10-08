@@ -77,16 +77,15 @@ $userFullName = $currentUser['name'] ?? '';
     </div>
     <div class="content">
         <!-- Compact Booking Policies -->
-        <div class="booking-policies">
-            <strong><i class="info circle icon"></i> Important Booking Policies:</strong>
-            <ul>
-                <li><strong>10 appointments/day maximum</strong> - First come, first served basis</li>
-                <li><strong>Time slots:</strong> 1-hour intervals, but actual service time may vary based on procedure
-                </li>
-                <li><strong>Lateness policy:</strong> Late arrivals will be placed at the end of the queue</li>
-                <li><strong>Cannot cancel within 2 days</strong> of appointment date</li>
-                <li><strong>No-show penalty:</strong> 20% health reduction affects booking priority</li>
-                <li>For cancellations within 2 days, contact us directly</li>
+        <div class="ui warning message" style="margin-top: 1rem;">
+            <div class="header"><i class="info circle icon"></i> Important Booking Policies:</div>
+            <ul style="margin: 0.8rem 0 0.3rem 1.5rem; font-size: 0.92rem; line-height: 1.6;">
+                <li><strong>Time slots:</strong> Based on service duration (9 AM - 8 PM, lunch 12-1 PM). Actual service
+                    time may vary—some services may finish faster or take longer than estimated.</li>
+                <li><strong>Lateness policy:</strong> Late arrivals will be placed at the end of the queue.</li>
+                <li><strong>Cancellation:</strong> You cannot cancel within 2 days of your appointment date.</li>
+                <li><strong>No-show penalty:</strong> Missing an appointment results in a 20% health reduction, which
+                    affects your future booking priority.</li>
             </ul>
         </div>
 

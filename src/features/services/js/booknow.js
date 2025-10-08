@@ -52,8 +52,15 @@ function loadAppointmentAvailability() {
 }
 
 // Load available time slots for a specific date
-function loadAvailableTimeSlots(date) {
+function loadAvailableTimeSlots(date, serviceUuids) {
     const $timeSlotDropdown = $("#appointmentTimeSlot");
+
+    if (!date || !serviceUuids || serviceUuids.length === 0) {
+        $timeSlotDropdown
+            .prop("disabled", true)
+            .html('<option value="">Select services first</option>');
+        return;
+    }
 
     // Reset dropdown and show loading
     $timeSlotDropdown.html('<option value="">Loading time slots...</option>');
@@ -61,10 +68,14 @@ function loadAvailableTimeSlots(date) {
     $timeSlotDropdown.dropdown("clear");
     $timeSlotDropdown.dropdown("refresh");
 
+    // Build query string with service UUIDs
+    const serviceParams = serviceUuids
+        .map((uuid) => `service_uuids[]=${encodeURIComponent(uuid)}`)
+        .join("&");
+
     $.ajax({
-        url: "/src/features/appointments/api/check-time-availability.php",
+        url: `/src/features/appointments/api/check-time-availability.php?date=${date}&${serviceParams}`,
         method: "GET",
-        data: { date: date },
         dataType: "json",
         success: function (response) {
             if (response.success && response.time_slots) {
@@ -320,7 +331,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                 selectedDate &&
                                 checkDateAvailability(selectedDate)
                             ) {
-                                loadAvailableTimeSlots(selectedDate);
+                                loadAvailableTimeSlots(
+                                    selectedDate,
+                                    window.selectedServiceUuids
+                                );
                                 // Remove error state from time field if it exists
                                 $("#appointmentTimeSlot")
                                     .closest(".field")

@@ -88,24 +88,34 @@ try {
                 exit;
             }
 
-            // **NEW: Check if user already has an appointment for this date**
-            $checkStmt = $conn->prepare('
-                SELECT COUNT(*) as booking_count 
-                FROM appointments 
-                WHERE user_uuid = ? 
-                AND DATE(date) = ? 
-                AND status != "cancelled"
-                LIMIT 1
-            ');
-            $checkStmt->execute([$userUuid, $date]);
-            $existingBooking = $checkStmt->fetch(PDO::FETCH_ASSOC);
+            // **NEW: Validate appointment doesn't extend past closing time (8 PM)**
+            if ($time) {
+                // Calculate total duration of selected services
+                $totalDuration = 0;
 
-            if ($existingBooking && $existingBooking['booking_count'] > 0) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'You already have an appointment booked for this date. Please choose a different date or contact us to modify your existing appointment.'
-                ]);
-                exit;
+                foreach ($service_uuids as $service_uuid) {
+                    if ($service_uuid !== 'others') {
+                        $durationStmt = $conn->prepare('SELECT duration FROM services WHERE uuid = ? LIMIT 1');
+                        $durationStmt->execute([$service_uuid]);
+                        $service = $durationStmt->fetch(PDO::FETCH_ASSOC);
+                        $totalDuration += $service ? (int) $service['duration'] : 60; // Default 60 min if not found
+                    } else {
+                        $totalDuration += 60; // Custom services default to 60 minutes
+                    }
+                }
+
+                // Check if appointment would extend past 8 PM (20:00:00)
+                $startTime = strtotime($time);
+                $endTime = $startTime + ($totalDuration * 60); // Convert minutes to seconds
+                $closingTime = strtotime('20:00:00');
+
+                if ($endTime > $closingTime) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'This appointment would extend past our closing time (8 PM). Total duration: ' . $totalDuration . ' minutes. Please select an earlier time slot.'
+                    ]);
+                    exit;
+                }
             }
 
             // Generate a shared booking group ID for multiple services
