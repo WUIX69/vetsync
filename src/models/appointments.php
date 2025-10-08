@@ -214,14 +214,36 @@ class Appointments
         }
     }
 
-    // Update the updateStatusWithReason function to handle groups
+    // Update the updateStatusWithReason function to handle groups AND create notifications
     public static function updateStatusWithReason($uuid, $status, $reason = '')
     {
         try {
             // Check if this appointment is part of a group
-            $checkStmt = self::conn()->prepare("SELECT booking_group_id FROM appointments WHERE uuid = ?");
+            $checkStmt = self::conn()->prepare("
+                SELECT 
+                    a.booking_group_id, 
+                    a.user_uuid, 
+                    a.date,
+                    a.time,
+                    p.name as pet_name,
+                    s.name as service_name
+                FROM appointments a
+                LEFT JOIN pets p ON a.pet_uuid = p.uuid
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                WHERE a.uuid = ?
+            ");
             $checkStmt->execute([$uuid]);
             $appointment = $checkStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$appointment) {
+                return ['success' => false, 'message' => 'Appointment not found'];
+            }
+
+            $userUuid = $appointment['user_uuid'];
+            $petName = $appointment['pet_name'] ?? 'Your pet';
+            $serviceName = $appointment['service_name'] ?? 'appointment';
+            $appointmentDate = date('M d, Y', strtotime($appointment['date']));
+            $appointmentTime = $appointment['time'] ?? 'Not set';
 
             if ($appointment && $appointment['booking_group_id']) {
                 // Update entire group
@@ -246,19 +268,16 @@ class Appointments
 
                 // Health recovery logic for completed status
                 if ($status === 'completed') {
-                    $userStmt = self::conn()->prepare("SELECT DISTINCT user_uuid FROM appointments WHERE booking_group_id = ?");
-                    $userStmt->execute([$groupId]);
-                    $user = $userStmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($user) {
-                        $healthStmt = self::conn()->prepare("
+                    $healthStmt = self::conn()->prepare("
                             UPDATE users 
                             SET user_health = LEAST(user_health + 5, 100) 
                             WHERE uuid = ?
                         ");
-                        $healthStmt->execute([$user['user_uuid']]);
-                    }
+                    $healthStmt->execute([$userUuid]);
                 }
+
+                // CREATE NOTIFICATION for group appointment
+                self::createNotification($userUuid, 'appointment', $uuid, $status, $petName, $serviceName, $appointmentDate, $appointmentTime, true);
 
                 return [
                     'success' => true,
@@ -285,19 +304,16 @@ class Appointments
 
                 // Health recovery for single appointment
                 if ($status === 'completed') {
-                    $userStmt = self::conn()->prepare("SELECT user_uuid FROM appointments WHERE uuid = ?");
-                    $userStmt->execute([$uuid]);
-                    $user = $userStmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($user) {
-                        $healthStmt = self::conn()->prepare("
+                    $healthStmt = self::conn()->prepare("
                             UPDATE users 
                             SET user_health = LEAST(user_health + 5, 100) 
                             WHERE uuid = ?
                         ");
-                        $healthStmt->execute([$user['user_uuid']]);
-                    }
+                    $healthStmt->execute([$userUuid]);
                 }
+
+                // CREATE NOTIFICATION for single appointment
+                self::createNotification($userUuid, 'appointment', $uuid, $status, $petName, $serviceName, $appointmentDate, $appointmentTime, false);
 
                 return [
                     'success' => true,
@@ -312,25 +328,70 @@ class Appointments
         }
     }
 
-    public static function getByPetUuid($pet_uuid)
+    // NEW FUNCTION: Create notification helper
+    private static function createNotification($userUuid, $type, $referenceId, $status, $petName, $serviceName, $date, $time, $isGroup = false)
     {
         try {
-            $stmt = self::conn()->prepare('
-                SELECT COUNT(*) as appointment_count 
-                FROM appointments 
-                WHERE pet_uuid = ? AND status IN ("pending", "accepted")
-            ');
-            $stmt->execute([$pet_uuid]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return [
-                'success' => true,
-                'data' => $result,
+            $conn = self::conn();
+
+            // Determine notification details based on status
+            $notifications = [
+                'accepted' => [
+                    'title' => 'Appointment Confirmed',
+                    'message' => "Your appointment for {$petName}'s {$serviceName} on {$date} at {$time} has been confirmed." . ($isGroup ? " (Group booking)" : ""),
+                    'icon' => 'check-circle',
+                    'color' => 'blue',
+                    'link' => '/src/app/user/appointments.php'
+                ],
+                'completed' => [
+                    'title' => 'Appointment Completed',
+                    'message' => "Your appointment for {$petName}'s {$serviceName} has been completed. Thank you for visiting!" . ($isGroup ? " (Group booking)" : ""),
+                    'icon' => 'check',
+                    'color' => 'green',
+                    'link' => '/src/app/user/appointments.php'
+                ],
+                'cancelled' => [
+                    'title' => 'Appointment Cancelled',
+                    'message' => "Your appointment for {$petName}'s {$serviceName} on {$date} has been cancelled." . ($isGroup ? " (Group booking)" : ""),
+                    'icon' => 'times-circle',
+                    'color' => 'red',
+                    'link' => '/src/app/user/appointments.php'
+                ],
+                'pending' => [
+                    'title' => 'Appointment Pending',
+                    'message' => "Your appointment for {$petName}'s {$serviceName} is pending confirmation." . ($isGroup ? " (Group booking)" : ""),
+                    'icon' => 'clock',
+                    'color' => 'orange',
+                    'link' => '/src/app/user/appointments.php'
+                ]
             ];
+
+            $notif = $notifications[$status] ?? null;
+
+            if (!$notif) {
+                return; // Skip if status is unknown
+            }
+
+            // Insert notification
+            $stmt = $conn->prepare("
+                INSERT INTO notifications (user_uuid, type, reference_id, title, message, icon, color, link, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+            ");
+
+            $stmt->execute([
+                $userUuid,
+                $type,
+                $referenceId,
+                $notif['title'],
+                $notif['message'],
+                $notif['icon'],
+                $notif['color'],
+                $notif['link']
+            ]);
+
         } catch (PDOException $e) {
-            return [
-                'success' => false,
-                'message' => 'Failed to check appointments: ' . $e->getMessage(),
-            ];
+            // Log error but don't fail the main operation
+            error_log("Failed to create notification: " . $e->getMessage());
         }
     }
 
@@ -369,57 +430,65 @@ class Appointments
         }
     }
 
-    public static function reschedule($uuid, $new_date, $reason = '')
+    public static function reschedule($uuid, $newDate, $reason = '')
     {
         try {
-            // Check if this appointment is part of a group
-            $checkStmt = self::conn()->prepare("SELECT booking_group_id FROM appointments WHERE uuid = ?");
+            // Get appointment details for notification
+            $checkStmt = self::conn()->prepare("
+                SELECT 
+                    a.user_uuid, 
+                    p.name as pet_name,
+                    s.name as service_name,
+                    a.time
+                FROM appointments a
+                LEFT JOIN pets p ON a.pet_uuid = p.uuid
+                LEFT JOIN services s ON a.service_uuid = s.uuid
+                WHERE a.uuid = ?
+            ");
             $checkStmt->execute([$uuid]);
             $appointment = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($appointment && $appointment['booking_group_id']) {
-                // Reschedule entire group
-                $groupId = $appointment['booking_group_id'];
-
-                $stmt = self::conn()->prepare("
-                    UPDATE appointments 
-                    SET date = ?, 
-                        note = CONCAT(COALESCE(note, ''), 
-                            CASE 
-                                WHEN note IS NULL OR note = '' THEN ''
-                                ELSE '\n\n'
-                            END,
-                            '[RESCHEDULED BY ADMIN - GROUP] ', ?, ' - ', NOW()),
-                        updated_at = NOW()
-                    WHERE booking_group_id = ?
-                ");
-                $stmt->execute([$new_date, $reason, $groupId]);
-
-                return [
-                    'success' => true,
-                    'message' => 'Group appointment rescheduled successfully. All services in this booking have been updated.',
-                ];
-            } else {
-                // Reschedule single appointment
-                $stmt = self::conn()->prepare("
-                    UPDATE appointments 
-                    SET date = ?, 
-                        note = CONCAT(COALESCE(note, ''), 
-                            CASE 
-                                WHEN note IS NULL OR note = '' THEN ''
-                                ELSE '\n\n'
-                            END,
-                            '[RESCHEDULED BY ADMIN] ', ?, ' - ', NOW()),
-                        updated_at = NOW()
-                    WHERE uuid = ?
-                ");
-                $stmt->execute([$new_date, $reason, $uuid]);
-
-                return [
-                    'success' => true,
-                    'message' => 'Appointment rescheduled successfully.',
-                ];
+            if (!$appointment) {
+                return ['success' => false, 'message' => 'Appointment not found'];
             }
+
+            // Update appointment
+            $stmt = self::conn()->prepare("
+                UPDATE appointments 
+                SET date = ?,
+                    note = CONCAT(COALESCE(note, ''), 
+                        CASE 
+                            WHEN note IS NULL OR note = '' THEN ''
+                            ELSE '\n\n'
+                        END,
+                        '[RESCHEDULED] ', ?, ' - ', NOW()),
+                    updated_at = NOW()
+                WHERE uuid = ?
+            ");
+
+            $stmt->execute([$newDate, $reason, $uuid]);
+
+            // CREATE RESCHEDULE NOTIFICATION
+            $newDateFormatted = date('M d, Y', strtotime($newDate));
+            $petName = $appointment['pet_name'] ?? 'Your pet';
+            $serviceName = $appointment['service_name'] ?? 'appointment';
+            $time = $appointment['time'] ?? 'Not set';
+
+            $notifStmt = self::conn()->prepare("
+                INSERT INTO notifications (user_uuid, type, reference_id, title, message, icon, color, link, created_at)
+                VALUES (?, 'appointment', ?, 'Appointment Rescheduled', ?, 'calendar', 'orange', '/src/app/user/appointments.php', NOW())
+            ");
+
+            $notifStmt->execute([
+                $appointment['user_uuid'],
+                $uuid,
+                "Your appointment for {$petName}'s {$serviceName} has been rescheduled to {$newDateFormatted} at {$time}."
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Appointment rescheduled successfully.',
+            ];
         } catch (PDOException $e) {
             return [
                 'success' => false,
