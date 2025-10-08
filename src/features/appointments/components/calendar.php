@@ -387,7 +387,9 @@
         // Show loading
         calendarGrid.innerHTML = '<div class="loading">Loading calendar...</div>';
 
-        fetch(`/src/features/appointments/api/calendar.php?month=${month}&year=${year}`)
+        // Add timestamp to prevent caching
+        const timestamp = new Date().getTime();
+        fetch(`/src/features/appointments/api/calendar.php?month=${month}&year=${year}&_=${timestamp}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -853,10 +855,12 @@
                 if (data.success) {
                     // Close modal
                     $('#dateAppointmentsModal').modal('hide');
-                    // Reload calendar
-                    loadCalendar(currentMonth, currentYear);
                     // Show success message
                     alert('Appointment status updated successfully!');
+                    // Reload calendar after a short delay to ensure DB update completes
+                    setTimeout(() => {
+                        loadCalendar(currentMonth, currentYear);
+                    }, 300);
                 } else {
                     alert('Failed to update appointment: ' + data.message);
                 }
@@ -972,7 +976,7 @@
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `action=update_status&uuid=${uuid}&status=cancelled&cancellation_reason=${encodeURIComponent(reason)}`
+            body: `action=cancel&uuid=${uuid}&reason=${encodeURIComponent(reason)}`
         })
             .then(response => response.json())
             .then(data => {
@@ -990,17 +994,95 @@
             });
     }
 
-    // View all appointments for date
+    // Function to view all appointments for a specific date in the main appointments page
     function viewAllAppointments(date) {
         window.location.href = `/src/app/admin/appointments.php?date=${date}`;
     }
 
-    // View appointment details
+    // Function to view appointment details in a modal
     function viewAppointmentDetails(uuid) {
-        window.location.href = `/src/app/admin/appointments.php?highlight=${uuid}`;
+        fetch(`/src/features/appointments/api/appointments.php?action=get_by_uuid&uuid=${uuid}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const appointment = data.data;
+                    const modalHtml = `
+                        <div class="ui modal" id="appointmentDetailsModal">
+                            <div class="header">
+                                <i class="info circle icon"></i>
+                                Appointment Details
+                            </div>
+                            <div class="content">
+                                <div class="ui divided items">
+                                    <div class="item">
+                                        <div class="ui mini circular image">
+                                            <img src="${appointment.pet_image || '/public/img/placeholders/image.png'}" 
+                                                 onerror="this.src='/public/img/placeholders/image.png'">
+                                        </div>
+                                        <div class="content">
+                                            <div class="header">
+                                                ${appointment.pet_name || 'Unknown Pet'}
+                                                <div class="ui ${appointment.status === 'accepted' ? 'blue' : appointment.status === 'completed' ? 'green' : appointment.status === 'cancelled' ? 'red' : 'orange'} label mini">${appointment.status}</div>
+                                            </div>
+                                            <div class="meta">
+                                                <span><i class="user icon"></i> ${appointment.user_name || appointment.user_email || 'Unknown Owner'}</span>
+                                                <span style="margin-left: 1rem;"><i class="clock icon"></i> ${appointment.formatted_time || 'No time set'}</span>
+                                            </div>
+                                            <div class="description">
+                                                <strong>Service:</strong> ${appointment.service_name || 'Custom Service'}${appointment.note && !appointment.note.includes('CUSTOM') ? ' - ' + appointment.note : ''}
+                                                <br><strong>Notes:</strong> ${appointment.note || 'No notes'}
+                                            </div>
+                                            <div class="extra">
+                                                <button class="ui mini green button" onclick="quickUpdateStatus('${appointment.uuid}', 'completed')">
+                                                    <i class="checkmark icon"></i> Complete
+                                                </button>
+                                                <button class="ui mini orange button" onclick="quickReschedule('${appointment.uuid}')">
+                                                    <i class="calendar icon"></i> Reschedule
+                                                </button>
+                                                <button class="ui mini red button" onclick="quickCancel('${appointment.uuid}')">
+                                                    <i class="times icon"></i> Cancel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <div class="ui cancel button">Close</div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Remove existing modal if any
+                    const existingModal = document.getElementById('appointmentDetailsModal');
+                    if (existingModal) {
+                        existingModal.remove();
+                    }
+
+                    // Add modal to page
+                    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                    // Show modal
+                    $('#appointmentDetailsModal').modal({
+                        closable: true,
+                        onHidden: function () {
+                            $(this).remove();
+                        }
+                    }).modal('show');
+                } else {
+                    alert('Error loading appointment details: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching appointment details:', error);
+                alert('Network error loading appointment details. Please check your connection.');
+            });
     }
 
-    // Navigation handlers
+    // Initial load of calendar
+    loadCalendar(currentMonth, currentYear);
+
+    // Calendar navigation
     document.getElementById('prevMonth').addEventListener('click', () => {
         currentMonth--;
         if (currentMonth < 1) {
@@ -1018,7 +1100,4 @@
         }
         loadCalendar(currentMonth, currentYear);
     });
-
-    // Load initial calendar
-    loadCalendar(currentMonth, currentYear);
 </script>

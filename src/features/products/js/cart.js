@@ -835,7 +835,7 @@ const Cart = {
         });
     },
 
-    // Update cart badge - ENHANCED VERSION
+    // Update cart badge - Show total active cart count
     updateCartBadge() {
         $.ajax({
             url: apiUrl("products") + "cart.php",
@@ -843,21 +843,11 @@ const Cart = {
             data: { action: "count" },
             success: (response) => {
                 if (response.success) {
-                    const cartLastViewed =
-                        localStorage.getItem("cartLastViewed") || 0;
-                    const cartItems = response.items || [];
+                    const totalCartItems = response.count || 0; // Get total count
 
-                    // Count items added after last view
-                    const newCartItemsCount = cartItems.filter((item) => {
-                        const itemTimestamp = new Date(
-                            item.created_at
-                        ).getTime();
-                        return itemTimestamp > cartLastViewed;
-                    }).length;
-
-                    // ONLY show cart items in cart badge
-                    if (newCartItemsCount > 0) {
-                        $("#cartBadge").text(newCartItemsCount).show();
+                    // Show badge with total count if there are items
+                    if (totalCartItems > 0) {
+                        $("#cartBadge").text(totalCartItems).show();
                     } else {
                         $("#cartBadge").hide();
                     }
