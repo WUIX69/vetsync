@@ -49,14 +49,14 @@
     }
 
     main section.status .items-list .item .info h5 {
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 600;
         margin-bottom: 5px;
         color: #1f2937;
     }
 
     main section.status .items-list .item .info p {
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 500;
         color: #6b7280;
         margin: 0;
@@ -85,7 +85,7 @@
     }
 
     .next-appointment {
-        font-size: 11px;
+        font-size: 13px;
         color: #6b7280;
         margin-top: 5px;
     }

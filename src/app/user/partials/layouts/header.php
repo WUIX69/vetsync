@@ -31,7 +31,8 @@ $activeLink = uriPagePath();
 
     .cart-icon i {
         font-size: 22px;
-        color: #333;
+        color: white;
+        /* Changed from #333 to white */
         transition: color 0.3s ease;
     }
 
@@ -80,7 +81,8 @@ $activeLink = uriPagePath();
 
     .notification-bell i {
         font-size: 22px;
-        color: #333;
+        color: white;
+        /* Changed from #333 to white */
         transition: color 0.3s ease;
         padding: 10px;
         border-radius: 6px;
@@ -340,7 +342,8 @@ $activeLink = uriPagePath();
 <header class="site-header">
     <div class="nav">
         <div class="logo">
-            <i class='bx bxl-codepen'></i>
+            <img src="/public/img/logo.jpg" alt="J.A.A Logo"
+                style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; margin-right: 10px;">
             <a href="<?= app('user') ?>">VetSync</a>
         </div>
         <div class="nav-links">
