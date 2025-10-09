@@ -209,10 +209,6 @@ function createAppointmentGroupCard(appointmentGroup) {
         firstAppointment.status === "accepted";
     const canDelete = firstAppointment.status === "cancelled";
 
-    // Collect all service names
-    const serviceNames = appointmentGroup
-        .map((app) => app.service_name || "Custom Service")
-        .join(", ");
     const serviceCount = appointmentGroup.length;
 
     return `
@@ -241,10 +237,6 @@ function createAppointmentGroupCard(appointmentGroup) {
                     <strong>Time:</strong> ${
                         firstAppointment.formatted_time || "No time set"
                     }
-                </div>
-                <div class="detail-item">
-                    <span class="emoji">🏥</span>
-                    <strong>Services:</strong> ${serviceNames}
                 </div>
                 <div class="detail-item">
                     <span class="emoji">🐾</span>
