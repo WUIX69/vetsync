@@ -857,10 +857,10 @@
                     $('#dateAppointmentsModal').modal('hide');
                     // Show success message
                     alert('Appointment status updated successfully!');
-                    // Reload calendar after a short delay to ensure DB update completes
+                    // Reload calendar after delay to ensure DB update completes
                     setTimeout(() => {
                         loadCalendar(currentMonth, currentYear);
-                    }, 300);
+                    }, 500);
                 } else {
                     alert('Failed to update appointment: ' + data.message);
                 }
@@ -954,8 +954,11 @@
                 if (data.success) {
                     $('#rescheduleModal').modal('hide');
                     $('#dateAppointmentsModal').modal('hide');
-                    loadCalendar(currentMonth, currentYear);
                     alert('Appointment rescheduled successfully!');
+                    // Reload calendar after delay to ensure DB update completes
+                    setTimeout(() => {
+                        loadCalendar(currentMonth, currentYear);
+                    }, 500);
                 } else {
                     alert('Failed to reschedule appointment: ' + data.message);
                 }
@@ -976,13 +979,16 @@
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `action=cancel&uuid=${uuid}&reason=${encodeURIComponent(reason)}`
+            body: `action=update_status&uuid=${uuid}&status=cancelled&cancellation_reason=${encodeURIComponent(reason)}`
         })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     $('#dateAppointmentsModal').modal('hide');
-                    loadCalendar(currentMonth, currentYear);
+                    // Add delay and cache-busting to ensure refresh
+                    setTimeout(() => {
+                        loadCalendar(currentMonth, currentYear);
+                    }, 500);
                     alert('Appointment cancelled successfully!');
                 } else {
                     alert('Failed to cancel appointment: ' + data.message);

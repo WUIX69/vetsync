@@ -476,10 +476,12 @@ class Appointments
     public static function reschedule($uuid, $newDate, $reason = '')
     {
         try {
-            // Get appointment details for notification
+            // Get appointment details for notification (INCLUDING booking_group_id)
             $checkStmt = self::conn()->prepare("
                 SELECT 
+                    a.booking_group_id,
                     a.user_uuid, 
+                    a.note,
                     p.name as pet_name,
                     s.name as service_name,
                     a.time
@@ -495,27 +497,55 @@ class Appointments
                 return ['success' => false, 'message' => 'Appointment not found'];
             }
 
-            // Update appointment
-            $stmt = self::conn()->prepare("
-                UPDATE appointments 
-                SET date = ?,
-                    note = CONCAT(COALESCE(note, ''), 
-                        CASE 
-                            WHEN note IS NULL OR note = '' THEN ''
-                            ELSE '\n\n'
-                        END,
-                        '[RESCHEDULED] ', ?, ' - ', NOW()),
-                    updated_at = NOW()
-                WHERE uuid = ?
-            ");
+            $isGroupBooking = !empty($appointment['booking_group_id']);
 
-            $stmt->execute([$newDate, $reason, $uuid]);
+            // Remove old reschedule notes and add only the new one
+            $existingNote = $appointment['note'] ?? '';
+
+            // Remove all previous [RESCHEDULED] entries (both GROUP and single)
+            $cleanedNote = preg_replace('/\[RESCHEDULED(?:\s*-\s*GROUP)?\].*?(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})(\n\n)?/s', '', $existingNote);
+            $cleanedNote = trim($cleanedNote);
+
+            // Build new note
+            $newRescheduleNote = '[RESCHEDULED' . ($isGroupBooking ? ' - GROUP' : '') . '] ' . $reason . ' - ' . date('Y-m-d H:i:s');
+
+            // Combine: existing non-reschedule notes + new reschedule note
+            if (!empty($cleanedNote)) {
+                $finalNote = $cleanedNote . "\n\n" . $newRescheduleNote;
+            } else {
+                $finalNote = $newRescheduleNote;
+            }
+
+            // Update appointment(s)
+            if ($isGroupBooking) {
+                // Update ALL appointments in the group with the SAME note
+                $stmt = self::conn()->prepare("
+                    UPDATE appointments 
+                    SET date = ?,
+                        note = ?,
+                        updated_at = NOW()
+                    WHERE booking_group_id = ?
+                ");
+                $stmt->execute([$newDate, $finalNote, $appointment['booking_group_id']]);
+            } else {
+                // Update single appointment
+                $stmt = self::conn()->prepare("
+                    UPDATE appointments 
+                    SET date = ?,
+                        note = ?,
+                        updated_at = NOW()
+                    WHERE uuid = ?
+                ");
+                $stmt->execute([$newDate, $finalNote, $uuid]);
+            }
 
             // CREATE RESCHEDULE NOTIFICATION
             $newDateFormatted = date('M d, Y', strtotime($newDate));
             $petName = $appointment['pet_name'] ?? 'Your pet';
             $serviceName = $appointment['service_name'] ?? 'appointment';
             $time = $appointment['time'] ?? 'Not set';
+
+            $groupText = $isGroupBooking ? ' (Group booking)' : '';
 
             $notifStmt = self::conn()->prepare("
                 INSERT INTO notifications (user_uuid, type, reference_id, title, message, icon, color, link, created_at)
@@ -525,12 +555,16 @@ class Appointments
             $notifStmt->execute([
                 $appointment['user_uuid'],
                 $uuid,
-                "Your appointment for {$petName}'s {$serviceName} has been rescheduled to {$newDateFormatted} at {$time}."
+                "Your appointment for {$petName}'s {$serviceName} has been rescheduled to {$newDateFormatted} at {$time}.{$groupText}"
             ]);
+
+            $successMessage = $isGroupBooking
+                ? 'Group appointment rescheduled successfully. All services in this booking have been updated.'
+                : 'Appointment rescheduled successfully.';
 
             return [
                 'success' => true,
-                'message' => 'Appointment rescheduled successfully.',
+                'message' => $successMessage,
             ];
         } catch (PDOException $e) {
             return [
