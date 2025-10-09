@@ -99,9 +99,20 @@ function renderReservations(reservations) {
         $(`#${status}-reservations`).empty();
     });
 
+    // Group reservations by user, date, and time
+    const grouped = {};
+    reservations.forEach((reservation) => {
+        const groupKey = `${reservation.user_uuid}_${reservation.preferred_date}_${reservation.preferred_time}_${reservation.status}`;
+
+        if (!grouped[groupKey]) {
+            grouped[groupKey] = [];
+        }
+        grouped[groupKey].push(reservation);
+    });
+
     // Update tab counts
     const statusCounts = {
-        all: reservations.length,
+        all: Object.keys(grouped).length, // Count groups, not individual reservations
         pending: 0,
         accepted: 0,
         ready_for_pickup: 0,
@@ -110,21 +121,29 @@ function renderReservations(reservations) {
         cancelled: 0,
     };
 
-    reservations.forEach(function (reservation) {
-        const row = createReservationRow(reservation);
+    Object.values(grouped).forEach(function (group) {
+        const row =
+            group.length > 1
+                ? createGroupedReservationRow(group)
+                : createReservationRow(group[0]);
 
         // Add to all reservations
         $("#all-reservations").append(row);
 
         // Add to specific status tab
-        const status = reservation.status;
+        const status = group[0].status;
         if (status === "ready_for_pickup" || status === "completed") {
-            // Handle both ready_for_pickup and legacy completed status
-            const readyRow = createReservationRow(reservation); // Create new row instead of cloning
+            const readyRow =
+                group.length > 1
+                    ? createGroupedReservationRow(group)
+                    : createReservationRow(group[0]);
             $("#ready_for_pickup-reservations").append(readyRow);
             statusCounts.ready_for_pickup++;
         } else {
-            const statusRow = createReservationRow(reservation); // Create new row instead of cloning
+            const statusRow =
+                group.length > 1
+                    ? createGroupedReservationRow(group)
+                    : createReservationRow(group[0]);
             $(`#${status}-reservations`).append(statusRow);
             if (statusCounts.hasOwnProperty(status)) {
                 statusCounts[status]++;
@@ -867,4 +886,356 @@ function cancelReservation(reservationId, reason, isNoShow = false) {
             console.error("AJAX Error:", { xhr, status, error });
             showError("Failed to cancel reservation. Please try again.");
         });
+}
+
+function createGroupedReservationRow(reservationGroup) {
+    console.log("Creating grouped row for reservations:", reservationGroup);
+
+    const firstReservation = reservationGroup[0];
+
+    // Calculate total amount and collect all products
+    let totalAmount = 0;
+    let allProducts = [];
+
+    reservationGroup.forEach((reservation) => {
+        const amount = parseFloat(reservation.total_amount || 0);
+        totalAmount += amount;
+
+        // Parse products
+        let products = [];
+        if (
+            reservation.products_array &&
+            Array.isArray(reservation.products_array)
+        ) {
+            products = reservation.products_array;
+        } else if (reservation.products) {
+            try {
+                products =
+                    typeof reservation.products === "string"
+                        ? JSON.parse(reservation.products)
+                        : reservation.products;
+            } catch (e) {
+                products = [];
+            }
+        }
+        allProducts.push(...products);
+    });
+
+    // Customer info
+    let customerName = firstReservation.user_name || "Unknown Customer";
+    let customerEmail = firstReservation.user_email || "No email provided";
+    let customerInitial = customerName.charAt(0).toUpperCase();
+
+    // Profile image
+    let profileImageHtml = "";
+    if (
+        firstReservation.profile_image &&
+        !firstReservation.profile_image.includes("placeholders")
+    ) {
+        profileImageHtml = `<div class="customer-avatar" style="
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            background-image: url('${firstReservation.profile_image}');
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #e9ecef;
+            flex-shrink: 0;
+        "></div>`;
+    } else {
+        profileImageHtml = `<div class="customer-avatar" style="
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        ">${customerInitial}</div>`;
+    }
+
+    // Create products list
+    let productsList =
+        '<div class="product-list" style="max-height: 150px; overflow-y: auto;">';
+    allProducts.forEach((product, index) => {
+        const productName =
+            product.name || product.product_name || `Product ${index + 1}`;
+        const quantity = parseInt(product.quantity || product.qty || 1);
+        const price = parseFloat(product.price || product.unit_price || 0);
+        const itemTotal = quantity * price;
+
+        productsList += `
+            <div class="product-item" style="padding: 0.4rem 0; border-bottom: 1px solid #f0f0f0;">
+                <div class="product-name" style="font-weight: 600; color: #2c3e50;">${productName}</div>
+                <div class="product-details" style="color: #6c757d; font-size: 0.85rem;">
+                    Qty: ${quantity} × ₱${price.toFixed(
+            2
+        )} = ₱${itemTotal.toFixed(2)}
+                </div>
+            </div>
+        `;
+    });
+    productsList += "</div>";
+
+    // Status badge
+    const statusClass = getStatusClass(firstReservation.status);
+    const statusText = getStatusText(firstReservation.status);
+
+    // Action buttons
+    const actionButtons = createGroupActionButtons(reservationGroup);
+
+    return `
+        <tr style="background: linear-gradient(to right, #f0f8ff 0%, #ffffff 100%); border-left: 4px solid #2185d0;">
+            <td>
+                <div style="font-weight: 600; color: #2c3e50;">${
+                    firstReservation.formatted_date || "No date"
+                }</div>
+                <div style="font-size: 0.85rem; color: #6c757d;">${
+                    firstReservation.formatted_time || "No time"
+                }</div>
+            </td>
+            <td>
+                <div class="customer-info" style="display: flex; align-items: center; gap: 0.75rem;">
+                    ${profileImageHtml}
+                    <div class="customer-details">
+                        <div class="customer-name" style="font-weight: 600; color: #2c3e50;">${customerName}</div>
+                        <div class="customer-email" style="color: #6c757d; font-size: 0.85rem;">${customerEmail}</div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div style="margin-bottom: 0.5rem;">
+                    <span class="ui mini teal label">
+                        <i class="layer group icon"></i> Group Reservation (${
+                            reservationGroup.length
+                        } items)
+                    </span>
+                </div>
+                ${productsList}
+            </td>
+            <td>
+                <div class="amount" style="font-weight: 700; color: #28a745; font-size: 1.1rem;">
+                    ₱${totalAmount.toFixed(2)}
+                </div>
+            </td>
+            <td>
+                <span class="status-badge ${statusClass}">${statusText}</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    ${actionButtons}
+                </div>
+            </td>
+        </tr>
+    `;
+}
+
+function createGroupActionButtons(reservationGroup) {
+    const firstReservation = reservationGroup[0];
+    const status = firstReservation.status;
+    const reservationIds = reservationGroup.map((r) => r.id).join(",");
+
+    if (status === "pending") {
+        return `
+            <button class="btn btn-accept" onclick="acceptGroupReservation('${reservationIds}')">
+                <i class="check icon"></i> Accept All
+            </button>
+            <button class="btn btn-reject" onclick="rejectGroupReservation('${reservationIds}')">
+                <i class="times icon"></i> Reject All
+            </button>
+        `;
+    } else if (status === "accepted") {
+        return `
+            <button class="btn btn-ready" onclick="markGroupAsReady('${reservationIds}')">
+                <i class="box icon"></i> Ready for Pickup
+            </button>
+            <button class="btn btn-cancel" onclick="cancelGroupReservation('${reservationIds}')">
+                <i class="ban icon"></i> Cancel All
+            </button>
+        `;
+    } else if (status === "ready_for_pickup") {
+        return `
+            <button class="btn btn-complete" onclick="markGroupAsPickedUp('${reservationIds}')">
+                <i class="check circle icon"></i> Mark as Picked Up
+            </button>
+            <button class="btn btn-cancel" onclick="cancelGroupReservation('${reservationIds}')">
+                <i class="ban icon"></i> Cancel All
+            </button>
+        `;
+    } else {
+        return `<span class="status-info">No actions available</span>`;
+    }
+}
+
+function getStatusClass(status) {
+    switch (status) {
+        case "pending":
+            return "pending";
+        case "accepted":
+            return "accepted";
+        case "ready_for_pickup":
+        case "completed": // Handle legacy status
+            return "ready";
+        case "picked_up":
+            return "completed";
+        case "rejected":
+            return "rejected";
+        case "cancelled":
+            return "cancelled";
+        default:
+            return "unknown";
+    }
+}
+
+function getStatusText(status) {
+    switch (status) {
+        case "pending":
+            return "Pending";
+        case "accepted":
+            return "Accepted";
+        case "ready_for_pickup":
+        case "completed": // Handle legacy status
+            return "Ready for Pickup";
+        case "picked_up":
+            return "Picked Up";
+        case "rejected":
+            return "Rejected";
+        case "cancelled":
+            return "Cancelled";
+        default:
+            return status.charAt(0).toUpperCase() + status.slice(1);
+    }
+}
+
+function acceptGroupReservation(reservationIds) {
+    if (!confirm("Accept all reservations in this group?")) return;
+
+    const ids = reservationIds.split(",");
+    let completed = 0;
+
+    ids.forEach((id) => {
+        $.post(
+            "/src/features/reservations/api/reservations.php",
+            {
+                action: "update_status",
+                id: id,
+                status: "accepted",
+            },
+            function (response) {
+                completed++;
+                if (completed === ids.length) {
+                    loadReservations();
+                    alert("All reservations accepted successfully!");
+                }
+            }
+        );
+    });
+}
+
+function rejectGroupReservation(reservationIds) {
+    const reason = prompt("Reason for rejecting all reservations:");
+    if (!reason) return;
+
+    const ids = reservationIds.split(",");
+    let completed = 0;
+
+    ids.forEach((id) => {
+        $.post(
+            "/src/features/reservations/api/reservations.php",
+            {
+                action: "update_status",
+                id: id,
+                status: "rejected",
+                rejection_reason: reason,
+            },
+            function (response) {
+                completed++;
+                if (completed === ids.length) {
+                    loadReservations();
+                    alert("All reservations rejected.");
+                }
+            }
+        );
+    });
+}
+
+function markGroupAsReady(reservationIds) {
+    if (!confirm("Mark all reservations as ready for pickup?")) return;
+
+    const ids = reservationIds.split(",");
+    let completed = 0;
+
+    ids.forEach((id) => {
+        $.post(
+            "/src/features/reservations/api/reservations.php",
+            {
+                action: "update_status",
+                id: id,
+                status: "ready_for_pickup",
+            },
+            function (response) {
+                completed++;
+                if (completed === ids.length) {
+                    loadReservations();
+                    alert("All reservations marked as ready for pickup!");
+                }
+            }
+        );
+    });
+}
+
+function markGroupAsPickedUp(reservationIds) {
+    if (!confirm("Mark all reservations as picked up?")) return;
+
+    const ids = reservationIds.split(",");
+    let completed = 0;
+
+    ids.forEach((id) => {
+        $.post(
+            "/src/features/reservations/api/reservations.php",
+            {
+                action: "update_status",
+                id: id,
+                status: "picked_up",
+            },
+            function (response) {
+                completed++;
+                if (completed === ids.length) {
+                    loadReservations();
+                    alert("All reservations marked as picked up!");
+                }
+            }
+        );
+    });
+}
+
+function cancelGroupReservation(reservationIds) {
+    const reason = prompt("Reason for cancelling all reservations:");
+    if (!reason) return;
+
+    const ids = reservationIds.split(",");
+    let completed = 0;
+
+    ids.forEach((id) => {
+        $.post(
+            "/src/features/reservations/api/reservations.php",
+            {
+                action: "update_status",
+                id: id,
+                status: "cancelled",
+                rejection_reason: reason,
+            },
+            function (response) {
+                completed++;
+                if (completed === ids.length) {
+                    loadReservations();
+                    alert("All reservations cancelled.");
+                }
+            }
+        );
+    });
 }
