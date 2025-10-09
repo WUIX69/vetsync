@@ -1,5 +1,8 @@
 // Global Notification System - Database-backed
 const NotificationSystem = {
+    showUnreadOnly: false,
+    allNotifications: [],
+
     init() {
         this.bindEvents();
         this.loadNotifications();
@@ -20,6 +23,25 @@ const NotificationSystem = {
                 $menu.show();
                 this.loadNotifications();
             }
+        });
+
+        // Handle unread filter toggle
+        $(document).on("click", ".filter-unread-btn", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const $btn = $(e.currentTarget);
+
+            this.showUnreadOnly = !this.showUnreadOnly;
+
+            if (this.showUnreadOnly) {
+                $btn.addClass("active");
+                $btn.html('<i class="bx bx-check"></i> Unread');
+            } else {
+                $btn.removeClass("active");
+                $btn.html('<i class="bx bx-filter"></i> Unread');
+            }
+
+            this.renderNotifications(this.allNotifications);
         });
 
         // Handle clear all notifications
@@ -60,6 +82,7 @@ const NotificationSystem = {
             dataType: "json",
             success: (response) => {
                 if (response.success) {
+                    this.allNotifications = response.data;
                     this.renderNotifications(response.data);
                     this.updateNotificationBadge(response.unread_count);
                 }
@@ -74,18 +97,28 @@ const NotificationSystem = {
         const $container = $(".notifications-list");
         $container.empty();
 
-        if (notifications.length === 0) {
+        // Filter based on unread toggle
+        let filteredNotifications = notifications;
+        if (this.showUnreadOnly) {
+            filteredNotifications = notifications.filter((n) => n.is_read == 0);
+        }
+
+        if (filteredNotifications.length === 0) {
             $container.html(`
                 <div class="notification-item empty">
                     <div class="notification-content">
-                        <p>No notifications</p>
+                        <p>${
+                            this.showUnreadOnly
+                                ? "No unread notifications"
+                                : "No notifications"
+                        }</p>
                     </div>
                 </div>
             `);
             return;
         }
 
-        notifications.forEach((notification) => {
+        filteredNotifications.forEach((notification) => {
             const $notification = this.createNotificationElement(notification);
             $container.append($notification);
         });
@@ -95,12 +128,23 @@ const NotificationSystem = {
         const timeAgo = this.getTimeAgo(notification.created_at);
         const isUnread = notification.is_read == 0;
 
+        const iconMap = {
+            bell: "bell",
+            calendar: "calendar alternate outline",
+            check: "check circle",
+            times: "times circle",
+            info: "info circle",
+            bookmark: "bookmark",
+        };
+
+        const iconName = iconMap[notification.icon] || "bell";
+
         return $(`
             <div class="notification-item ${
                 isUnread ? "unread" : ""
             }" data-notification-id="${notification.id}">
                 <div class="notification-item-icon ${notification.color}">
-                    <i class='bx bx-${notification.icon}'></i>
+                    <i class="${iconName} icon"></i>
                 </div>
                 <div class="notification-content">
                     <div class="notification-item-header">
@@ -108,18 +152,18 @@ const NotificationSystem = {
                         <span class="notification-time">${timeAgo}</span>
                     </div>
                     <p class="notification-message">${notification.message}</p>
-                </div>
-                <div class="notification-actions">
-                    <a href="${
-                        notification.link
-                    }" class="ui mini primary button view-btn">
-                        <i class='bx bx-show'></i> View
-                    </a>
-                    <button class="ui mini basic button delete-notification" data-id="${
-                        notification.id
-                    }" title="Dismiss">
-                        <i class='bx bx-x'></i>
-                    </button>
+                    <div class="notification-actions">
+                        <a href="${
+                            notification.link
+                        }" class="ui mini primary button view-btn">
+                            <i class="eye icon"></i>View
+                        </a>
+                        <button class="ui mini basic button delete-notification" data-id="${
+                            notification.id
+                        }" title="Dismiss">
+                            <i class="times icon"></i>Dismiss
+                        </button>
+                    </div>
                 </div>
             </div>
         `);

@@ -131,16 +131,44 @@ $activeLink = uriPagePath();
 
     .notification-menu-header {
         padding: 18px 24px;
-        border-bottom: 1px solid #eee;
+        border-bottom: 2px solid #e8e8e8;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        background-color: #fafbfc;
     }
 
     .notification-menu-header span {
-        font-weight: 600;
-        color: #333;
+        font-weight: 700;
         font-size: 16px;
+        color: #1a1a1a;
+    }
+
+    .notification-header-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .filter-unread-btn {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .filter-unread-btn.active {
+        background-color: #2185d0 !important;
+        color: white !important;
+    }
+
+    .mark-all-read {
+        font-size: 12px !important;
+        padding: 6px 12px !important;
+        color: #666 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .mark-all-read:hover {
+        background-color: #f0f0f0 !important;
     }
 
     .notifications-list {
@@ -149,12 +177,13 @@ $activeLink = uriPagePath();
     }
 
     .notification-item {
-        padding: 18px 24px;
+        padding: 14px 18px;
         border-bottom: 1px solid #f0f0f0;
         display: flex;
         align-items: flex-start;
-        gap: 15px;
-        transition: background-color 0.2s ease;
+        gap: 12px;
+        transition: all 0.2s ease;
+        position: relative;
     }
 
     .notification-item:hover {
@@ -167,139 +196,215 @@ $activeLink = uriPagePath();
 
     .notification-item.empty {
         text-align: center;
-        color: #666;
+        color: #999;
         font-style: italic;
-        padding: 30px 24px;
+        padding: 40px 24px;
     }
 
     .notification-item-icon {
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
     }
 
     .notification-item-icon i {
-        font-size: 20px;
+        font-size: 18px;
+        margin: 0 !important;
     }
 
     .notification-item-icon.green {
-        background-color: #d4edda;
-        color: #155724;
+        background: linear-gradient(135deg, #21ba45 0%, #16ab39 100%);
+        color: white;
     }
 
     .notification-item-icon.red {
-        background-color: #f8d7da;
-        color: #721c24;
+        background: linear-gradient(135deg, #db2828 0%, #ca1010 100%);
+        color: white;
+    }
+
+    .notification-item-icon.blue {
+        background: linear-gradient(135deg, #2185d0 0%, #1678c2 100%);
+        color: white;
+    }
+
+    .notification-item-icon.orange {
+        background: linear-gradient(135deg, #f2711c 0%, #e8590c 100%);
+        color: white;
+    }
+
+    .notification-item-icon.yellow {
+        background: linear-gradient(135deg, #fbbd08 0%, #eaae00 100%);
+        color: white;
+    }
+
+    .notification-item-icon.teal {
+        background: linear-gradient(135deg, #00b5ad 0%, #009c95 100%);
+        color: white;
     }
 
     .notification-content {
         flex: 1;
         min-width: 0;
+        display: flex;
+        flex-direction: column;
     }
 
     .notification-item-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         margin-bottom: 6px;
+        gap: 10px;
     }
 
     .notification-item-header strong {
-        font-size: 15px;
+        font-size: 14px;
+        color: #1a1a1a;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .notification-time {
+        font-size: 11px;
+        color: #999;
+        white-space: nowrap;
+        font-weight: 500;
+    }
+
+    .notification-message {
+        font-size: 13px;
+        color: #555;
+        margin: 0 0 10px 0;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    .notification-message strong,
+    .notification-message b {
         color: #333;
         font-weight: 600;
     }
 
-    .notification-time {
-        font-size: 12px;
-        color: #666;
-        white-space: nowrap;
-    }
-
-    .notification-message {
-        font-size: 14px;
-        color: #666;
-        margin: 0;
-        line-height: 1.5;
-        margin-bottom: 8px;
-    }
-
-    .rejection-reason {
-        font-size: 13px;
-        color: #dc3545;
-        margin: 6px 0 0 0;
-        font-style: italic;
-        line-height: 1.4;
-    }
-
     .notification-actions {
-        flex-shrink: 0;
-        margin-top: 4px;
+        display: flex;
+        gap: 6px;
+        margin-top: auto;
+    }
+
+    .notification-actions .ui.button {
+        margin: 0 !important;
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        border-radius: 6px !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .notification-actions .ui.button i {
+        margin: 0 4px 0 0 !important;
+        font-size: 13px;
+    }
+
+    .notification-actions .ui.primary.button {
+        background: linear-gradient(135deg, #2185d0 0%, #1678c2 100%) !important;
+        box-shadow: 0 2px 4px rgba(33, 133, 208, 0.2) !important;
+    }
+
+    .notification-actions .ui.primary.button:hover {
+        background: linear-gradient(135deg, #1678c2 0%, #1a69a4 100%) !important;
+        box-shadow: 0 3px 6px rgba(33, 133, 208, 0.3) !important;
+        transform: translateY(-1px);
+    }
+
+    .notification-actions .ui.basic.button {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        color: #666 !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .notification-actions .ui.basic.button:hover {
+        background: #f8f9fa !important;
+        border-color: #999 !important;
+        color: #333 !important;
+        transform: translateY(-1px);
     }
 
     .notification-footer {
-        padding: 15px 24px;
-        border-top: 1px solid #eee;
+        padding: 14px 20px;
+        border-top: 1px solid #e8e8e8;
         text-align: center;
+        background-color: #fafbfc;
     }
 
     .notification-footer a {
-        color: #007bff;
+        color: #2185d0;
         text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 13px;
+        font-weight: 600;
+        transition: color 0.2s ease;
     }
 
     .notification-footer a:hover {
-        text-decoration: underline;
+        color: #1678c2;
+        text-decoration: none;
+    }
+
+    /* Unread notification styling */
+    .notification-item.unread {
+        background-color: #f0f9ff;
+        border-left: 4px solid #2185d0;
+    }
+
+    .notification-item.unread .notification-item-header strong {
+        color: #0c5460;
+        font-weight: 700;
+    }
+
+    .notification-item.unread::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 80%;
+        background: linear-gradient(180deg, #2185d0 0%, #1678c2 100%);
+        border-radius: 0 4px 4px 0;
     }
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
-
-        .cart-icon,
-        .notification-bell {
-            margin-right: 15px;
-        }
-
-        .cart-link,
-        .notification-bell i {
-            padding: 8px;
-        }
-
-        .cart-icon i,
-        .notification-bell i {
-            font-size: 20px;
-        }
-
-        .cart-badge,
-        .notification-badge {
-            top: 0;
-            right: 0;
-            font-size: 10px;
-            min-width: 14px;
-            height: 14px;
-        }
-
-        .notification-menu {
-            width: 320px;
-            right: -20px;
-        }
-
         .notification-item {
-            padding: 15px 18px;
+            padding: 14px 16px;
         }
 
-        .notification-menu-header {
-            padding: 15px 18px;
+        .notification-item-icon {
+            width: 34px;
+            height: 34px;
         }
 
-        .notification-footer {
-            padding: 12px 18px;
+        .notification-item-icon i {
+            font-size: 16px;
+        }
+
+        .notification-item-header strong {
+            font-size: 13.5px;
+        }
+
+        .notification-message {
+            font-size: 12.5px;
+        }
+
+        .notification-actions .view-btn,
+        .notification-actions .delete-notification {
+            padding: 5px 10px !important;
+            font-size: 11px !important;
         }
     }
 
@@ -336,16 +441,6 @@ $activeLink = uriPagePath();
     .terms-link:hover i {
         color: #007bff;
     }
-
-    .notification-item.unread {
-        background-color: #f0f9ff;
-        border-left: 3px solid #3b82f6;
-    }
-
-    .notification-item.unread .notification-item-header strong {
-        color: #1e40af;
-        font-weight: 700;
-    }
 </style>
 
 <!-- Site Header -->
@@ -372,17 +467,22 @@ $activeLink = uriPagePath();
             <!-- Enhanced Notification Dropdown -->
             <div class="notification-bell" id="notificationDropdown">
                 <i class='bx bx-bell'></i>
-                <span class="notification-badge" style="display: none">0</span>
+                <span class="notification-badge" style="display: none;">0</span>
                 <div class="notification-menu">
                     <div class="notification-menu-header">
                         <span>Notifications</span>
-                        <button class="ui mini basic button mark-all-read">Clear all</button>
+                        <div class="notification-header-actions">
+                            <button class="ui mini basic button filter-unread-btn" title="Show unread only">
+                                <i class='bx bx-filter'></i> Unread
+                            </button>
+                            <button class="ui mini basic button mark-all-read">Clear all</button>
+                        </div>
                     </div>
                     <div class="notifications-list">
                         <!-- Notifications will be loaded here -->
                     </div>
                     <div class="notification-footer">
-                        <a href="<?= app('user/appointments') ?>">View all appointments</a>
+                        <a href="<?= app('user/notifications') ?>">View all notifications</a>
                     </div>
                 </div>
             </div>
