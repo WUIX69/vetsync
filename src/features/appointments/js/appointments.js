@@ -59,27 +59,37 @@ function validateRescheduleDate(inputElement) {
 // Helper function to extract original user instructions from note (for admin side)
 function getOriginalInstructions(note) {
     if (!note) {
-        return "No special instructions provided.";
+        return ""; // Return empty string instead of default message
     }
 
-    // Remove admin messages and get original instructions
+    // Remove ALL admin/system messages and get original instructions
     let originalNote = note;
 
-    // Remove admin cancellation messages
-    if (originalNote.includes("[CANCELLED BY ADMIN]")) {
-        originalNote = originalNote.split("[CANCELLED BY ADMIN]")[0];
-    }
+    // Remove all status update messages (including GROUP variants)
+    const systemPrefixes = [
+        "[CANCELLED - GROUP]",
+        "[CANCELLED BY ADMIN]",
+        "[CANCELLED]",
+        "[RESCHEDULED - GROUP]",
+        "[RESCHEDULED BY ADMIN]",
+        "[RESCHEDULED]",
+        "[ACCEPTED - GROUP]",
+        "[ACCEPTED]",
+        "[COMPLETED - GROUP]",
+        "[COMPLETED]",
+    ];
 
-    // Remove admin reschedule messages
-    if (originalNote.includes("[RESCHEDULED BY ADMIN]")) {
-        originalNote = originalNote.split("[RESCHEDULED BY ADMIN]")[0];
-    }
+    // Split by newlines and filter out system messages
+    const lines = originalNote.split("\n\n");
+    const cleanedLines = lines.filter((line) => {
+        // Check if line starts with any system prefix
+        return !systemPrefixes.some((prefix) => line.trim().startsWith(prefix));
+    });
 
-    // Clean up whitespace and newlines
-    originalNote = originalNote.trim().replace(/\n\n$/, "");
+    originalNote = cleanedLines.join("\n\n").trim();
 
-    // Return original instructions or default message
-    return originalNote || "No special instructions provided.";
+    // Return original instructions or empty string (no default message)
+    return originalNote;
 }
 
 function getAllAppointments() {
@@ -657,13 +667,15 @@ function tableRowHtml(
                 <small class="text-muted">${app.user_email || ""}</small>
             </td>
             <td>
-                <div class="fw-bold">${serviceName}${groupBadge}</div>
-                ${
-                    shortInstructions
-                        ? `<small class="text-muted" title="${instructions}">${shortInstructions}</small>`
-                        : ""
-                }
-            </td>
+    <div class="fw-bold">${serviceName}${groupBadge}</div>
+    ${
+        shortInstructions &&
+        shortInstructions.trim() !== "" &&
+        shortInstructions !== "No special instructions provided."
+            ? `<small class="text-muted" title="${instructions}">${shortInstructions}</small>`
+            : ""
+    }
+</td>
             ${reasonColumn}
             ${statusBadge}
             <td>${actionButtons}</td>

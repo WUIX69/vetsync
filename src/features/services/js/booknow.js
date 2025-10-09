@@ -124,24 +124,22 @@ function checkDateAvailability(dateString) {
     const $availabilityDiv = $("#dateAvailability");
 
     if (disabledDates.includes(dateString)) {
+        // Show warning for fully booked dates
         $availabilityDiv
             .removeClass("available")
             .addClass("fully-booked")
             .html(
-                '<i class="times circle icon"></i><span><strong>Fully Booked!</strong> This date has reached the maximum 10 appointments. Please select another date.</span>'
+                '<i class="times circle icon"></i><span><strong>Fully Booked!</strong> This date has reached capacity. Please select another date.</span>'
             );
         return false;
     } else {
-        $availabilityDiv
-            .removeClass("fully-booked")
-            .addClass("available")
-            .html(
-                '<i class="check circle icon"></i><span><strong>Date Available!</strong> Slots are still open for this date.</span>'
-            );
+        // Hide message when date is available (no clutter)
+        $availabilityDiv.removeClass("fully-booked available").hide().html("");
         return true;
     }
 }
 
+// Real-time date validation
 // Real-time date validation
 function validateDateInput(inputElement) {
     const selectedDate = $(inputElement).val();
@@ -168,17 +166,12 @@ function validateDateInput(inputElement) {
             showDateNotification(
                 "warning",
                 "Date Fully Booked",
-                "This date has reached the maximum of 10 appointments. Please select another available date."
+                "This date has reached capacity. Please select another available date."
             );
             $(inputElement).val("");
             return false;
-        } else {
-            showDateNotification(
-                "success",
-                "Date Available",
-                "Great! This date has available slots for appointments."
-            );
         }
+        // Removed success notification - less clutter!
     }
     return true;
 }

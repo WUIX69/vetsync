@@ -640,6 +640,25 @@
         }).modal('show');
     }
 
+    // Helper function to clean system notes from display
+    function cleanSystemNotes(note) {
+        if (!note) return '';
+
+        const systemPrefixes = [
+            '[CANCELLED - GROUP]', '[CANCELLED BY ADMIN]', '[CANCELLED]',
+            '[RESCHEDULED - GROUP]', '[RESCHEDULED BY ADMIN]', '[RESCHEDULED]',
+            '[ACCEPTED - GROUP]', '[ACCEPTED]',
+            '[COMPLETED - GROUP]', '[COMPLETED]'
+        ];
+
+        const lines = note.split('\n\n');
+        const cleanedLines = lines.filter(line => {
+            return !systemPrefixes.some(prefix => line.trim().startsWith(prefix));
+        });
+
+        return cleanedLines.join('\n\n').trim();
+    }
+
     // NEW FUNCTION: Create grouped appointment item (multiple services as ONE item)
     function createGroupedAppointmentModalItem(appointmentGroup) {
         const firstApt = appointmentGroup[0];
@@ -662,9 +681,10 @@
         const statusLabel = statusLabels[firstApt.status] || firstApt.status;
 
         // Build service list
-        const servicesList = appointmentGroup.map(apt =>
-            `<li><strong>${apt.service_name || 'Custom Service'}</strong>${apt.note && !apt.note.includes('CUSTOM') ? ' - ' + apt.note : ''}</li>`
-        ).join('');
+        const servicesList = appointmentGroup.map(apt => {
+            const cleanNote = cleanSystemNotes(apt.note);
+            return `<li><strong>${apt.service_name || 'Custom Service'}</strong>${cleanNote && !cleanNote.includes('CUSTOM') ? ' - ' + cleanNote : ''}</li>`;
+        }).join('');
 
         let actionButtons = '';
 
@@ -821,7 +841,7 @@
                     <div class="description">
                         <strong>Service:</strong> ${groupBadge}${appointment.service_name || 'Custom Service'}<br>
                         <strong>Time:</strong> ${appointment.formatted_time || 'Not specified'}
-                        ${appointment.note ? `<br><strong>Notes:</strong> ${appointment.note.substring(0, 100)}${appointment.note.length > 100 ? '...' : ''}` : ''}
+                        ${appointment.note ? `<br><strong>Notes:</strong> ${cleanSystemNotes(appointment.note).substring(0, 100)}${cleanSystemNotes(appointment.note).length > 100 ? '...' : ''}` : ''}
                     </div>
                     <div class="extra">
                         ${actionButtons}
@@ -1036,7 +1056,7 @@
                                             </div>
                                             <div class="description">
                                                 <strong>Service:</strong> ${appointment.service_name || 'Custom Service'}${appointment.note && !appointment.note.includes('CUSTOM') ? ' - ' + appointment.note : ''}
-                                                <br><strong>Notes:</strong> ${appointment.note || 'No notes'}
+                                                <br><strong>Notes:</strong> ${cleanSystemNotes(appointment.note)}
                                             </div>
                                             <div class="extra">
                                                 <button class="ui mini green button" onclick="quickUpdateStatus('${appointment.uuid}', 'completed')">
