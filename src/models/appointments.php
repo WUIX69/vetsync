@@ -226,10 +226,13 @@ class Appointments
                     a.date,
                     a.time,
                     p.name as pet_name,
-                    s.name as service_name
+                    s.name as service_name,
+                    u.email as user_email,
+                    CONCAT(u.firstname, ' ', u.lastname) as user_name
                 FROM appointments a
                 LEFT JOIN pets p ON a.pet_uuid = p.uuid
                 LEFT JOIN services s ON a.service_uuid = s.uuid
+                LEFT JOIN users u ON a.user_uuid = u.uuid
                 WHERE a.uuid = ?
             ");
             $checkStmt->execute([$uuid]);
@@ -240,6 +243,8 @@ class Appointments
             }
 
             $userUuid = $appointment['user_uuid'];
+            $userEmail = $appointment['user_email'];
+            $userName = $appointment['user_name'];
             $petName = $appointment['pet_name'] ?? 'Your pet';
             $serviceName = $appointment['service_name'] ?? 'appointment';
             $appointmentDate = date('M d, Y', strtotime($appointment['date']));
@@ -279,6 +284,25 @@ class Appointments
                 // CREATE NOTIFICATION for group appointment
                 self::createNotification($userUuid, 'appointment', $uuid, $status, $petName, $serviceName, $appointmentDate, $appointmentTime, true);
 
+                // SEND EMAIL for confirmed appointments
+                if ($status === 'accepted' && $userEmail) {
+                    try {
+                        require_once __DIR__ . '/../services/email.php';
+                        $emailService = new \VetSync\Services\Email();
+                        $emailService->sendAppointmentConfirmation(
+                            $userEmail,
+                            $userName,
+                            $petName,
+                            $serviceName,
+                            $appointment['date'], // Use raw date for email formatting
+                            $appointmentTime
+                        );
+                    } catch (Exception $e) {
+                        error_log("Failed to send appointment confirmation email: " . $e->getMessage());
+                        // Don't fail the status update if email fails
+                    }
+                }
+
                 return [
                     'success' => true,
                     'message' => 'Group appointment updated successfully. All services in this booking have been updated.',
@@ -314,6 +338,25 @@ class Appointments
 
                 // CREATE NOTIFICATION for single appointment
                 self::createNotification($userUuid, 'appointment', $uuid, $status, $petName, $serviceName, $appointmentDate, $appointmentTime, false);
+
+                // SEND EMAIL for confirmed appointments
+                if ($status === 'accepted' && $userEmail) {
+                    try {
+                        require_once __DIR__ . '/../services/email.php';
+                        $emailService = new \VetSync\Services\Email();
+                        $emailService->sendAppointmentConfirmation(
+                            $userEmail,
+                            $userName,
+                            $petName,
+                            $serviceName,
+                            $appointment['date'], // Use raw date for email formatting
+                            $appointmentTime
+                        );
+                    } catch (Exception $e) {
+                        error_log("Failed to send appointment confirmation email: " . $e->getMessage());
+                        // Don't fail the status update if email fails
+                    }
+                }
 
                 return [
                     'success' => true,
