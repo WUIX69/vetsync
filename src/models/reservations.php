@@ -285,31 +285,49 @@ class Reservations
                     error_log("User health penalty applied: {$reservationData['user_email']} health reduced from {$currentHealth}% to {$newHealth}%");
                 }
 
-                // Send email notification when reservation is ready for pickup
-                if ($status === 'ready_for_pickup' && $reservationData && $reservationData['user_email']) {
+                // Get product names for notifications
+                $productNames = 'Your products';
+                if (!empty($reservationData['products'])) {
+                    $products = json_decode($reservationData['products'], true);
+                    if (is_array($products) && count($products) > 0) {
+                        $firstProduct = $products[0]['name'] ?? 'Product';
+                        $productNames = count($products) > 1
+                            ? $firstProduct . ' and ' . (count($products) - 1) . ' more'
+                            : $firstProduct;
+                    }
+                }
+
+                // Create database notification for ready_for_pickup status
+                if ($status === 'ready_for_pickup' && $reservationData && $reservationData['user_uuid']) {
+                    self::createNotification(
+                        $reservationData['user_uuid'],
+                        'reservation',
+                        $id,
+                        'ready_for_pickup',
+                        $productNames
+                    );
+
+                    // Send email notification
                     try {
                         $emailService = new \VetSync\Services\Email();
 
-                        // Parse products for email
-                        $productNames = '';
-                        if (!empty($reservationData['products'])) {
-                            $products = json_decode($reservationData['products'], true);
-                            if (is_array($products)) {
-                                $productList = [];
-                                foreach ($products as $product) {
-                                    $name = $product['name'] ?? 'Product';
-                                    $qty = $product['qty'] ?? 1;
-                                    $productList[] = "• {$name} (Qty: {$qty})";
-                                }
-                                $productNames = implode('<br>', $productList);
+                        $productList = '';
+                        $products = json_decode($reservationData['products'], true);
+                        if (is_array($products)) {
+                            $items = [];
+                            foreach ($products as $product) {
+                                $name = $product['name'] ?? 'Product';
+                                $qty = $product['qty'] ?? 1;
+                                $items[] = "• {$name} (Qty: {$qty})";
                             }
+                            $productList = implode('<br>', $items);
                         }
 
                         $emailResult = $emailService->sendPickupNotification(
                             $reservationData['user_email'],
                             $reservationData['user_name'],
-                            $productNames,
-                            $reservationData['created_at'], // Using created_at as reservation date
+                            $productList,
+                            $reservationData['created_at'],
                             $reservationData['total_amount'] ?? 0
                         );
 
@@ -318,8 +336,30 @@ class Reservations
                         }
                     } catch (Exception $e) {
                         error_log("Pickup notification email error: " . $e->getMessage());
-                        // Don't fail the status update if email fails
                     }
+                }
+
+                // Create database notification for picked_up status
+                if ($status === 'picked_up' && $reservationData && $reservationData['user_uuid']) {
+                    self::createNotification(
+                        $reservationData['user_uuid'],
+                        'reservation',
+                        $id,
+                        'picked_up',
+                        $productNames
+                    );
+                }
+
+                // Create database notification for rejected/cancelled status
+                if (($status === 'rejected' || $status === 'cancelled') && $reservationData && $reservationData['user_uuid']) {
+                    self::createNotification(
+                        $reservationData['user_uuid'],
+                        'reservation',
+                        $id,
+                        $status,
+                        $productNames,
+                        $reason
+                    );
                 }
 
                 return [
@@ -338,6 +378,75 @@ class Reservations
                 'success' => false,
                 'message' => 'Failed to update reservation: ' . $e->getMessage(),
             ];
+        }
+    }
+
+    /**
+     * Create a database notification for reservation status changes
+     */
+    private static function createNotification($userUuid, $type, $referenceId, $status, $productNames, $reason = null)
+    {
+        try {
+            $conn = self::conn();
+
+            // Build notification based on status
+            $notifications = [
+                'ready_for_pickup' => [
+                    'title' => 'Products Ready for Pickup',
+                    'message' => "{$productNames} is ready for pickup at J.A.A Veterinary Clinic!",
+                    'icon' => 'bookmark',
+                    'color' => 'orange',
+                    'link' => '/src/app/user/my-reservations.php'
+                ],
+                'picked_up' => [
+                    'title' => 'Products Picked Up',
+                    'message' => "Thank you for picking up {$productNames}!",
+                    'icon' => 'check',
+                    'color' => 'green',
+                    'link' => '/src/app/user/my-reservations.php'
+                ],
+                'rejected' => [
+                    'title' => 'Reservation Rejected',
+                    'message' => "Your reservation for {$productNames} has been rejected." . ($reason ? " Reason: {$reason}" : ""),
+                    'icon' => 'times',
+                    'color' => 'red',
+                    'link' => '/src/app/user/my-reservations.php'
+                ],
+                'cancelled' => [
+                    'title' => 'Reservation Cancelled',
+                    'message' => "Your reservation for {$productNames} has been cancelled." . ($reason ? " Reason: {$reason}" : ""),
+                    'icon' => 'times',
+                    'color' => 'red',
+                    'link' => '/src/app/user/my-reservations.php'
+                ]
+            ];
+
+            if (!isset($notifications[$status])) {
+                return; // No notification for this status
+            }
+
+            $notif = $notifications[$status];
+
+            $stmt = $conn->prepare("
+                INSERT INTO notifications (user_uuid, type, reference_id, title, message, icon, color, link, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())
+            ");
+
+            $stmt->execute([
+                $userUuid,
+                $type,
+                $referenceId,
+                $notif['title'],
+                $notif['message'],
+                $notif['icon'],
+                $notif['color'],
+                $notif['link']
+            ]);
+
+            error_log("Notification created for user {$userUuid}: {$notif['title']}");
+        } catch (PDOException $e) {
+            error_log("Failed to create notification: " . $e->getMessage());
+            // Don't fail the reservation update if notification fails
         }
     }
 
