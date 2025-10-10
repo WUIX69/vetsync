@@ -251,6 +251,7 @@ class Reservations
                     r.*, 
                     CONCAT(u.firstname, " ", u.lastname) AS user_name,
                     u.email AS user_email,
+                    u.telephone AS user_phone,
                     u.user_health AS current_health
                 FROM reservations r
                 LEFT JOIN users u ON r.user_uuid = u.uuid
@@ -359,6 +360,17 @@ class Reservations
                         $status,
                         $productNames,
                         $reason
+                    );
+                }
+
+                // 📱 ADD SMS NOTIFICATION
+                if (!empty($reservationData['user_phone'])) {
+                    require_once __DIR__ . '/../services/Sms.php';
+                    $smsService = new \VetSync\Services\Sms();
+                    $smsService->sendProductReadyNotification(
+                        $reservationData['user_phone'],
+                        $reservationData['user_name'],
+                        $productNames
                     );
                 }
 
