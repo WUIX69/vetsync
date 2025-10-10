@@ -1,0 +1,231 @@
+/* ===================================
+   ADMIN PANEL RESPONSIVE STYLES
+   =================================== */
+
+/* Tablets (1024px and below) */
+@media screen and (max-width: 1024px) {
+    .container-fluid {
+        padding: 0 1rem;
+    }
+
+    /* Admin dashboard cards */
+    .dashboard-stats .row {
+        gap: 1rem;
+    }
+
+    .dashboard-stats .col-md-3 {
+        flex: 0 0 48%;
+        max-width: 48%;
+    }
+
+    /* Admin tables */
+    .dataTables_wrapper {
+        overflow-x: auto;
+    }
+
+    table.dataTable {
+        min-width: 800px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Tablets and Large Phones (768px and below) */
+@media screen and (max-width: 768px) {
+    /* Sidebar - Convert to mobile drawer */
+    .admin-sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+
+    .admin-sidebar.active {
+        left: 0;
+    }
+
+    /* Add mobile menu toggle */
+    .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 999;
+        background: #006a71;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* Main content full width */
+    .admin-main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    /* Dashboard stats - Stack vertically */
+    .dashboard-stats .row {
+        flex-direction: column;
+    }
+
+    .dashboard-stats .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Admin tables */
+    table.dataTable {
+        font-size: 0.85rem;
+    }
+
+    table.dataTable thead th,
+    table.dataTable tbody td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    /* DataTables controls */
+    .dataTables_length,
+    .dataTables_filter {
+        margin-bottom: 1rem;
+    }
+
+    .dataTables_length label,
+    .dataTables_filter label {
+        font-size: 0.9rem;
+    }
+
+    /* Cards */
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .card-header {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* New users section */
+    .new-users {
+        padding: 1.5rem;
+    }
+
+    /* Appointments list */
+    .appointments-list .appointment-item {
+        padding: 1rem;
+    }
+
+    /* Analytics charts */
+    .chart-container {
+        height: 250px !important;
+    }
+
+    /* Month selector */
+    .month-selector {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Report buttons */
+    .report-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .report-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Mobile Phones (576px and below) */
+@media screen and (max-width: 576px) {
+    .admin-main-content {
+        padding: 0.5rem;
+    }
+
+    /* Page titles */
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Dashboard stats */
+    .dashboard-stats .stat-card {
+        padding: 1rem;
+    }
+
+    .dashboard-stats .stat-card .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .dashboard-stats .stat-card .stat-label {
+        font-size: 0.85rem;
+    }
+
+    /* Tables - Force horizontal scroll */
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table.dataTable {
+        min-width: 600px;
+        font-size: 0.8rem;
+    }
+
+    /* Forms */
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Modals */
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+    }
+
+    /* User grid */
+    .user-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Analytics report */
+    .appointments-report-table {
+        font-size: 0.75rem;
+    }
+
+    .appointments-report-table th,
+    .appointments-report-table td {
+        padding: 0.4rem 0.3rem;
+    }
+}

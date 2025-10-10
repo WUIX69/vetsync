@@ -474,6 +474,104 @@
         /* Actions */
         text-align: center !important;
     }
+
+    /* Mobile-friendly table view */
+    @media screen and (max-width: 768px) {
+
+        /* Convert table to card layout on mobile */
+        .appointments-table-mobile {
+            display: block;
+        }
+
+        .appointments-table-mobile .table {
+            display: none;
+        }
+
+        .appointment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .appointment-card.status-pending {
+            border-left-color: #f59e0b;
+        }
+
+        .appointment-card.status-confirmed {
+            border-left-color: #3b82f6;
+        }
+
+        .appointment-card.status-completed {
+            border-left-color: #10b981;
+        }
+
+        .appointment-card.status-cancelled {
+            border-left-color: #ef4444;
+        }
+
+        .appointment-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .appointment-card-date {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .appointment-card-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .appointment-card-body {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .appointment-card-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .appointment-card-label {
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.85rem;
+            min-width: 80px;
+        }
+
+        .appointment-card-value {
+            color: #1f2937;
+            font-size: 0.85rem;
+            flex: 1;
+        }
+
+        .appointment-card-actions {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .appointment-card-actions .btn {
+            flex: 1;
+            min-width: 100px;
+            font-size: 0.8rem;
+        }
+    }
 </style>
 
 <section class="appointments">
