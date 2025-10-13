@@ -27,43 +27,116 @@ $(function () {
             remember: {
                 identifier: "remember",
                 optional: true,
-                // rules: [],
             },
         },
         inline: true,
-        on: "blur", // EG: submit, blur
+        on: "blur",
         onSuccess: function (event, fields) {
             event.preventDefault();
-            const $submitBtn = $(this).find("button[type=submit]");
-            // const formData = new FormData(this); // Only use when a file is included
-
-            // console.log(formData);
-            // console.log(fields);
-            // return false;
+            const formData = new FormData(this);
 
             $.ajax({
                 url: apiUrl("auth") + "login.php",
                 method: "POST",
-                data: fields,
-                // processData: false, // Only use when FormData is used
-                // contentType: false, // Only use when FormData is used
+                data: formData,
+                processData: false,
+                contentType: false,
                 dataType: "json",
                 timeout: 5000,
-                beforeSend: function () {
-                    $submitBtn.addClass("loading");
-                },
                 success: function (response) {
-                    console.log("API Response:", response);
-                    alert(response.message);
-
-                    if (!response.success) return false;
-                    window.location.replace(response.data.route); // Redirect to its route dir
+                    if (response.success) {
+                        window.location.href = response.data.route;
+                    } else {
+                        alert(response.message);
+                    }
                 },
-                complete: function () {
-                    $submitBtn.removeClass("loading");
+                error: function (xhr) {
+                    alert("Login failed. Please try again.");
                 },
-                error: ajaxErrorHandler,
             });
         },
+    });
+
+    // Forgot Password Modal
+    $("#forgotPasswordLink").click(function (e) {
+        e.preventDefault();
+        $("#forgotPasswordModal").modal("show");
+    });
+
+    // Validate forgot password form
+    $("#forgotPasswordForm").form({
+        fields: {
+            email: {
+                identifier: "email",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please enter your email",
+                    },
+                    {
+                        type: "email",
+                        prompt: "Please enter a valid email",
+                    },
+                ],
+            },
+        },
+        inline: true,
+        on: "blur",
+    });
+
+    // Send reset link (Development: Generate temp password)
+    $("#sendResetLink").click(function () {
+        if (!$("#forgotPasswordForm").form("is valid")) {
+            return;
+        }
+
+        const $btn = $(this);
+        const formData = new FormData($("#forgotPasswordForm")[0]);
+
+        $.ajax({
+            url: apiUrl("auth") + "forgot-password.php",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            beforeSend: function () {
+                $btn.addClass("loading");
+                $("#tempPasswordDisplay").hide();
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Show temporary password
+                    if (response.temp_password) {
+                        $("#tempPasswordValue").text(response.temp_password);
+                        $("#tempPasswordDisplay").show();
+                        $btn.text("Close")
+                            .removeClass("positive")
+                            .addClass("black");
+
+                        // Change button to close on next click
+                        $btn.off("click").on("click", function () {
+                            $("#forgotPasswordModal").modal("hide");
+                            $("#forgotPasswordForm")[0].reset();
+                            $("#tempPasswordDisplay").hide();
+                            location.reload(); // Reload to reset button
+                        });
+                    } else {
+                        // Email version (when deployed)
+                        alert(response.message);
+                        $("#forgotPasswordModal").modal("hide");
+                        $("#forgotPasswordForm")[0].reset();
+                    }
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to reset password. Please try again.");
+            },
+            complete: function () {
+                $btn.removeClass("loading");
+            },
+        });
     });
 });

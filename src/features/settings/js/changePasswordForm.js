@@ -57,6 +57,16 @@ $(function () {
                     console.log("Password change response:", response);
 
                     if (response.success) {
+                        // Disable browser password manager popup
+                        setTimeout(function () {
+                            $("input[type=password]")
+                                .attr("type", "text")
+                                .val("");
+                            setTimeout(function () {
+                                $("input[type=text]").attr("type", "password");
+                            }, 50);
+                        }, 100);
+
                         // Show success notification
                         $("body").toast({
                             title: "Success!",

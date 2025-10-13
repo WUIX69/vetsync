@@ -459,4 +459,69 @@ class Email
 
         return $this->send($userEmail, $subject, $message);
     }
+
+    // Send password reset email
+    public function sendPasswordReset($userEmail, $userName, $resetToken)
+    {
+        $subject = "Password Reset Request - J.A.A Veterinary Clinic";
+
+        $resetLink = "http://vetsync.test/src/app/auth/reset-password.php?token=" . urlencode($resetToken);
+
+        $message = "
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: #dc3545; color: white; padding: 20px; text-align: center; }
+                .content { background: white; padding: 30px; }
+                .details { background: #fff3cd; padding: 20px; margin: 20px 0; border-left: 4px solid #ffc107; }
+                .button { display: inline-block; background: #dc3545; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+                .footer { text-align: center; padding: 20px; color: #666; font-size: 14px; }
+                .warning { background: #f8d7da; padding: 15px; margin: 20px 0; border-left: 4px solid #dc3545; color: #721c24; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2 style='margin: 0;'>J.A.A Veterinary Clinic</h2>
+                    <p style='margin: 5px 0 0 0;'>Password Reset Request</p>
+                </div>
+                
+                <div class='content'>
+                    <h3 style='color: #dc3545;'>Reset Your Password</h3>
+                    <p>Dear {$userName},</p>
+                    <p>We received a request to reset your password. Click the button below to create a new password:</p>
+                    
+                    <div style='text-align: center;'>
+                        <a href='{$resetLink}' class='button'>Reset Password</a>
+                    </div>
+                    
+                    <div class='details'>
+                        <strong>Or copy this link:</strong><br>
+                        <a href='{$resetLink}'>{$resetLink}</a>
+                    </div>
+                    
+                    <div class='warning'>
+                        <strong>⚠️ Security Notice:</strong><br>
+                        • This link expires in 1 hour<br>
+                        • If you didn't request this, please ignore this email<br>
+                        • Your password won't change unless you click the link
+                    </div>
+                    
+                    <p>If you're having trouble, contact us at J.A.A Veterinary Clinic.</p>
+                    
+                    <p>Thank you,<br><strong>J.A.A Veterinary Clinic</strong><br>Tel: (02) 8888-8888</p>
+                </div>
+                
+                <div class='footer'>
+                    <p>This is an automated message. Please do not reply to this email.</p>
+                </div>
+            </div>
+        </body>
+        </html>";
+
+        return $this->send($userEmail, $subject, $message);
+    }
 }

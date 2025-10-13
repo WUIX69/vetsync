@@ -20,6 +20,11 @@ try {
     $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
 
+    error_log("=== LOGIN ATTEMPT START ===");
+    error_log("Email: " . $email);
+    error_log("Password length: " . strlen($password));
+    error_log("Password: " . $password); // TEMP DEBUG - remove in production!
+
     if (!$email || !$password) {
         $response['message'] = 'All fields are required!';
         echo json_encode($response);
@@ -29,7 +34,17 @@ try {
     $user = Users::singleWhereUserEmail($email);
     $admin = Users::singleWhereAdminEmail($email);
 
+    error_log("User found: " . (!empty($user) ? 'YES' : 'NO'));
+    error_log("Admin found: " . (!empty($admin) ? 'YES' : 'NO'));
+
+    if ($user) {
+        error_log("User password hash: " . substr($user['password'], 0, 30) . "...");
+        $passwordMatch = password_verify($password, $user['password']);
+        error_log("Password verify result: " . ($passwordMatch ? 'MATCH' : 'NO MATCH'));
+    }
+
     if ($user && password_verify($password, $user['password'])) {
+        error_log("LOGIN SUCCESS - User authenticated");
 
         // AUTO NO-SHOW DETECTION: Check for past accepted appointments
         global $conn;
