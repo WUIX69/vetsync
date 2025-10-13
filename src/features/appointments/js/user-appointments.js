@@ -278,7 +278,7 @@ function createAppointmentGroupCard(appointmentGroup) {
                 ${
                     canDelete
                         ? `
-                    <button class="btn btn-outline-secondary btn-delete-group" data-group-id="${firstAppointment.booking_group_id}">
+                    <button class="btn btn-outline-danger btn-delete-group" data-group-id="${firstAppointment.booking_group_id}">
                         <span class="emoji">🗑️</span> Remove All
                     </button>
                 `
@@ -404,6 +404,25 @@ $(document).ready(function () {
             hideAppointment(uuid);
         }
     });
+
+    // NEW: Handle "Remove All" for grouped appointments
+    $(document).on("click", ".btn-delete-group", function () {
+        const groupId = $(this).data("group-id");
+        console.log("Remove All clicked - Group ID:", groupId); // Debug
+
+        if (!groupId) {
+            alert("Error: No group ID found");
+            return;
+        }
+
+        if (
+            confirm(
+                "Are you sure you want to remove all appointments in this group from your list?"
+            )
+        ) {
+            hideAppointmentGroup(groupId);
+        }
+    });
 });
 
 // Additional helper functions
@@ -446,4 +465,37 @@ function hideAppointment(uuid) {
 
     // Re-render appointments
     renderAppointments($(".appointments-nav .nav-link.active").data("filter"));
+}
+
+// NEW: Function to hide all appointments in a group
+function hideAppointmentGroup(groupId) {
+    console.log("Hiding group:", groupId); // Debug
+
+    $.ajax({
+        url: "/src/features/appointments/api/user-appointments.php",
+        method: "POST",
+        data: {
+            action: "hide_group",
+            group_id: groupId,
+        },
+        dataType: "json",
+        success: function (response) {
+            console.log("API Response:", response); // Debug
+
+            if (response.success) {
+                alert("Appointments removed successfully!");
+                loadUserAppointments(); // Reload to update the list
+            } else {
+                alert("Failed to remove appointments: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error:", {
+                status: status,
+                error: error,
+                response: xhr.responseText,
+            });
+            alert("Error removing appointments. Check console for details.");
+        },
+    });
 }

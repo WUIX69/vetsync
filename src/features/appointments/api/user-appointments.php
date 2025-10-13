@@ -321,6 +321,41 @@ try {
             exit;
         }
 
+        if ($_POST['action'] === 'hide_group') {
+            $groupId = $_POST['group_id'] ?? '';
+
+            if (empty($groupId)) {
+                echo json_encode(['success' => false, 'message' => 'No group ID provided.']);
+                exit;
+            }
+
+            try {
+                // DELETE all appointments in the group for this user (cancelled only)
+                global $conn;
+                $stmt = $conn->prepare("
+                    DELETE FROM appointments 
+                    WHERE booking_group_id = ? 
+                    AND user_uuid = ? 
+                    AND status = 'cancelled'
+                ");
+                $stmt->execute([$groupId, $userUuid]);
+
+                $affectedRows = $stmt->rowCount();
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Removed {$affectedRows} appointment(s)"
+                ]);
+            } catch (PDOException $e) {
+                error_log("Error deleting appointment group: " . $e->getMessage());
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to remove appointments: ' . $e->getMessage()
+                ]);
+            }
+            exit;
+        }
+
         echo json_encode(['success' => false, 'message' => 'Invalid action']);
         exit;
     }
