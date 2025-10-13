@@ -31,8 +31,6 @@ try {
             'name' => $_POST['name'] ?? '',
             'description' => $_POST['description'] ?? '',
             'og_price' => $_POST['og_price'] ?? '',
-            'dc_price' => $_POST['dc_price'] ? $_POST['dc_price'] : null,
-            'stock' => $_POST['stock'] ?? '',
             'status' => $_POST['status'] ?? '',
             'tags' => $_POST['tags'] ? $_POST['tags'] : null,
             'specs' => $_POST['specs'] ? $_POST['specs'] : null,

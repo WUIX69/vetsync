@@ -98,149 +98,144 @@ function getAllProducts() {
             }
 
             allProducts = response.data;
-            renderProducts(allProducts);
-        },
-        complete: function () {
-            productsTableBody.find(".ui.dropdown").dropdown();
-            productsTableBody.find(".actions-dd").dropdown({
-                onChange: function (value) {
-                    const productUuid = $(this)
-                        .closest(".product-item")
-                        .data("product-uuid");
-
-                    if (value === "view" || value === "edit") {
-                        getSingleProduct(productUuid);
-                    } else if (value === "delete") {
-                        deleteProduct(productUuid);
-                    }
-                },
-            });
+            renderProducts(response.data);
         },
         error: ajaxErrorHandler,
     });
 }
 
-function loadProductCategories() {
-    $.ajax({
-        url: apiUrl("shared") + "categories.php",
-        method: "GET",
-        headers: {
-            "X-Reference-Model": "products",
-        },
-        data: {
-            action: "all",
-        },
-        dataType: "json",
-        timeout: 5000,
-        success: function (response) {
-            if (response.success) {
-                allCategories = response.data;
-                populateCategoryDropdown();
-            }
-        },
-        error: ajaxErrorHandler,
-    });
-}
-
-function populateCategoryDropdown() {
-    const $dropdown = $(".table-filters .ui.dropdown").has(
-        'input[name="category-filter"]'
-    );
-    const $menu = $dropdown.find(".menu");
-
-    $menu.empty();
-    $menu.append('<div class="item" data-value="all">All Categories</div>');
-
-    allCategories.forEach((category) => {
-        if (category.status === "active") {
-            $menu.append(`
-                <div class="item" data-value="${category.name}">
-                    <i class="${category.icon} icon"></i>
-                    ${category.name}
-                </div>
-            `);
-        }
-    });
-
-    $dropdown.dropdown("refresh");
-}
-
-function renderProducts(products) {
+function renderProducts(products = []) {
     productsTableBody.empty();
 
     if (products.length === 0) {
         productsTableBody.append(`
             <tr>
-                <td colspan="10" class="center aligned">
-                    <p class="text-muted">No products found</p>
+                <td colspan="9" class="center aligned">
+                    <div class="ui icon message">
+                        <i class="inbox icon"></i>
+                        <div class="content">
+                            <div class="header">No Products Found</div>
+                            <p>No products match your current filters.</p>
+                        </div>
+                    </div>
                 </td>
             </tr>
         `);
         return;
     }
 
-    let productsHTML = "";
-
     products.forEach((product) => {
-        productsHTML += `
+        productsTableBody.append(`
             <tr class="product-item" data-product-uuid="${product.uuid}">
                 <td>
-                    <img src="${product.image}" alt="Product" class="product-image">
+                    <img src="${product.image}" alt="${
+            product.name
+        }" class="ui mini image" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
                 </td>
-                <td class="product-name">${product.name}</td>
-                <td class="product-category">
-                    <i class="${product.category.icon} icon"></i>
-                    ${product.category.label}
-                </td>
-                <td class="product-price">&#8369; ${product.og_price}</td>
+                <td>${product.name}</td>
+                <td>${product.category}</td>
+                <td>₱${parseFloat(product.og_price).toFixed(2)}</td>
+                <td>${product.status}</td>
                 <td>
-                    <span class="text-capitalize product-status ${product.status.label}">
-                        <i class="${product.status.icon} icon"></i>
-                        ${product.status.label}
-                    </span>
-                </td>
-                <td>
-                    <span class="text-capitalize product-tags">
-                        ${product.tags}
-                    </span>
+                    ${
+                        product.tagsCount > 0
+                            ? `<span class="ui mini label">${product.tagsCount} tags</span>`
+                            : '<span class="ui mini basic label">No tags</span>'
+                    }
                 </td>
                 <td>
-                    <span class="text-capitalize product-specs">
-                        ${product.specs}
-                    </span>
+                    ${
+                        product.specsCount > 0
+                            ? `<span class="ui mini label">${product.specsCount} specs</span>`
+                            : '<span class="ui mini basic label">No specs</span>'
+                    }
                 </td>
                 <td>${product.created_at}</td>
-                <td>${product.updated_at}</td>
                 <td>
-                    <div class="ui compact floating selection dropdown actions-dd">
-                        <i class="dropdown icon"></i>
-                        <div class="text">Actions</div>
-                        <div class="menu">
-                            <div class="item" data-value="view"><i class="eye icon"></i>View</div>
-                            <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
-                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
+                    <div class="ui compact menu">
+                        <div class="ui simple dropdown item">
+                            <i class="ellipsis vertical icon"></i>
+                            <div class="menu">
+                                <div class="item edit-product" data-product-uuid="${
+                                    product.uuid
+                                }">
+                                    <i class="edit icon"></i> Edit
+                                </div>
+                                <div class="item delete-product" data-product-uuid="${
+                                    product.uuid
+                                }">
+                                    <i class="trash icon"></i> Delete
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </td>
             </tr>
-        `;
+        `);
     });
 
-    productsTableBody.append(productsHTML);
+    // Reinitialize dropdown after rendering
+    $(".ui.dropdown").dropdown();
 
-    productsTableBody.find(".ui.dropdown").dropdown();
-    productsTableBody.find(".actions-dd").dropdown({
-        onChange: function (value) {
-            const productUuid = $(this)
-                .closest(".product-item")
-                .data("product-uuid");
+    // Delete product
+    $("body").on("click", ".delete-product", function (e) {
+        e.stopPropagation();
+        const productUuid = $(this).data("product-uuid");
 
-            if (value === "view" || value === "edit") {
-                getSingleProduct(productUuid);
-            } else if (value === "delete") {
-                deleteProduct(productUuid);
-            }
+        if (!confirm("Are you sure you want to delete this product?")) return;
+
+        $.ajax({
+            url: apiUrl("products") + "products.php?uuid=" + productUuid,
+            method: "DELETE",
+            dataType: "json",
+            timeout: 5000,
+            success: function (response) {
+                alert(response.message);
+                getAllProducts();
+            },
+            error: ajaxErrorHandler,
+        });
+    });
+}
+
+function loadProductCategories() {
+    $.ajax({
+        url: apiUrl("categories") + "categories.php",
+        method: "GET",
+        data: {
+            action: "all",
+            reference: "products",
         },
+        dataType: "json",
+        timeout: 5000,
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message);
+                return false;
+            }
+
+            allCategories = response.data;
+
+            // Populate category filter
+            const categoryFilter = $(".table-filters .category-filter .menu");
+            categoryFilter.empty();
+            categoryFilter.append(
+                `<div class="item" data-value="">All Categories</div>`
+            );
+
+            response.data.forEach((category) => {
+                categoryFilter.append(`
+                    <div class="item" data-value="${category.id}">
+                        <i class="${category.icon} icon"></i>
+                        ${category.name}
+                    </div>
+                `);
+            });
+
+            // Reinitialize dropdown
+            $(".table-filters .ui.dropdown").dropdown();
+        },
+        error: ajaxErrorHandler,
     });
 }
 
@@ -249,48 +244,31 @@ function filterProducts() {
         .val()
         .toLowerCase()
         .trim();
-    const statusFilter = $('input[name="status-filter"]').val();
-    const categoryFilter = $('input[name="category-filter"]').val();
+    const categoryId = $(".table-filters .category-filter").dropdown(
+        "get value"
+    );
+    const status = $(".table-filters .status-filter").dropdown("get value");
 
     let filtered = allProducts;
 
-    // Search filter
+    // Filter by search term
     if (searchTerm) {
         filtered = filtered.filter((product) => {
-            const tags = Array.isArray(product.tags)
-                ? product.tags.join(" ")
-                : product.tags || "";
-            const specs = Array.isArray(product.specs)
-                ? product.specs.join(" ")
-                : product.specs || "";
-
-            return (
-                product.name.toLowerCase().includes(searchTerm) ||
-                product.description.toLowerCase().includes(searchTerm) ||
-                product.category.label.toLowerCase().includes(searchTerm) ||
-                tags.toLowerCase().includes(searchTerm) ||
-                specs.toLowerCase().includes(searchTerm)
-            );
+            return product.name.toLowerCase().includes(searchTerm);
         });
     }
 
-    // Status filter
-    if (statusFilter && statusFilter !== "all") {
+    // Filter by category
+    if (categoryId) {
         filtered = filtered.filter((product) => {
-            return (
-                product.status.label.toLowerCase() ===
-                statusFilter.toLowerCase()
-            );
+            return product.category_id == categoryId;
         });
     }
 
-    // Category filter
-    if (categoryFilter && categoryFilter !== "all") {
+    // Filter by status
+    if (status) {
         filtered = filtered.filter((product) => {
-            return (
-                product.category.label.toLowerCase() ===
-                categoryFilter.toLowerCase()
-            );
+            return product.status.toLowerCase().includes(status.toLowerCase());
         });
     }
 
@@ -299,7 +277,6 @@ function filterProducts() {
 
 function getSingleProduct(productUuid = null) {
     if (!productUuid) return false;
-    // loadExistingFiles(productUuid);
 
     $.ajax({
         url: apiUrl("products") + "products.php",
@@ -311,9 +288,6 @@ function getSingleProduct(productUuid = null) {
         dataType: "json",
         timeout: 5000,
         success: function (response) {
-            // console.log("API Response:", response);
-            // return false;
-
             if (!response.success) {
                 alert(response.message);
                 return false;
@@ -349,31 +323,16 @@ function getSingleProduct(productUuid = null) {
                 }
             });
 
+            // Initialize dropdowns with current values
+            productModalForm.find(".ui.dropdown").each(function () {
+                const value = $(this).find("input[type=hidden]").val();
+                if (value) {
+                    $(this).dropdown("set selected", value);
+                }
+            });
+
             // Show the modal
             productModal.modal("show");
-        },
-        error: ajaxErrorHandler,
-    });
-}
-
-function deleteProduct(productUuid = null) {
-    if (!productUuid) return false;
-
-    // console.log(productUuid);
-    // return false;
-
-    $.ajax({
-        url: apiUrl("products") + "products.php?uuid=" + productUuid,
-        method: "DELETE",
-        dataType: "json",
-        timeout: 5000,
-        success: function (response) {
-            // console.log("API Response:", response);
-            // return false;
-
-            alert(response.message);
-            if (!response.success) return false;
-            getAllProducts(); // Refresh the products data
         },
         error: ajaxErrorHandler,
     });
@@ -402,6 +361,20 @@ $(function () {
 
         const productUuid = $(this).data("product-uuid");
         getSingleProduct(productUuid);
+    });
+
+    // Remove files from FilePond when modal is hidden
+    productModal.modal("setting", "onHide", function () {
+        isModalHide = true;
+        if (!isPondRender) {
+            // Delete files from storage and FilePond
+            productImagePond.removeFiles({ revert: true });
+        } else {
+            // Delete files from FilePond UI
+            productImagePond.removeFiles();
+            // Reset the flag for next time
+            isPondRender = false;
+        }
     });
 
     // Validate Product Modal Form
@@ -438,16 +411,6 @@ $(function () {
                     },
                 ],
             },
-            dc_price: {
-                identifier: "dc_price",
-                optional: true,
-                rules: [
-                    {
-                        type: "decimal",
-                        prompt: "Please enter a valid discounted price",
-                    },
-                ],
-            },
             status: {
                 identifier: "status",
                 rules: [
@@ -463,32 +426,6 @@ $(function () {
                     {
                         type: "empty",
                         prompt: "Please select a category",
-                    },
-                ],
-            },
-            tags: {
-                identifier: "tags",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please select a tag",
-                    },
-                    {
-                        type: "minCount[2]",
-                        prompt: "Please select at least 2 tags",
-                    },
-                ],
-            },
-            specs: {
-                identifier: "specs",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please select a spec",
-                    },
-                    {
-                        type: "minCount[2]",
-                        prompt: "Please select at least 2 specs",
                     },
                 ],
             },
@@ -513,7 +450,7 @@ $(function () {
             // return false;
 
             $.ajax({
-                url: apiUrl("products") + "products.php", // Change to your actual products endpoint if needed
+                url: apiUrl("products") + "products.php",
                 method: "POST",
                 data: formData,
                 processData: false,
