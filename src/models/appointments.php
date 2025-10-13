@@ -294,8 +294,11 @@ class Appointments
                             $userName,
                             $petName,
                             $serviceName,
-                            $appointment['date'], // Use raw date for email formatting
-                            $appointmentTime
+                            $appointment['date'],
+                            $appointmentTime,
+                            $appointment['user_phone'] ?? '',
+                            $appointment['note'] ?? '',
+                            $appointment['booking_group_id'] ?? 'APT-' . strtoupper(substr(md5($appointment['uuid']), 0, 8))
                         );
                     } catch (Exception $e) {
                         error_log("Failed to send appointment confirmation email: " . $e->getMessage());
