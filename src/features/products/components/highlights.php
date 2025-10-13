@@ -8,10 +8,6 @@ if (!$product) {
 $tags = !empty($product['tags']) ? explode(',', $product['tags']) : [];
 $specs = !empty($product['specs']) ? explode(',', $product['specs']) : [];
 
-// Calculate stock status
-$stock_status = intval($product['stock']) > 0 ? 'in-stock' : 'out-stock';
-$stock_text = intval($product['stock']) > 0 ? 'In Stock' : 'Out of Stock';
-
 // Calculate effective price
 $effective_price = !empty($product['dc_price']) && floatval($product['dc_price']) > 0
     ? floatval($product['dc_price'])
@@ -123,24 +119,6 @@ $has_discount = !empty($product['dc_price']) && floatval($product['dc_price']) >
         color: var(--color-text-muted);
         font-size: 1.2rem;
         margin-left: 1rem;
-    }
-
-    main section.highlights .stock-status {
-        display: inline-block;
-        padding: 0.4rem 0.8rem;
-        border-radius: 4px;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-    }
-
-    main section.highlights .stock-status.in-stock {
-        background-color: #FFC107;
-        color: #fff;
-    }
-
-    main section.highlights .stock-status.out-stock {
-        background-color: #ffebee;
-        color: #c62828;
     }
 
     main section.highlights .product-description {
@@ -285,70 +263,96 @@ $has_discount = !empty($product['dc_price']) && floatval($product['dc_price']) >
 
             <!-- Product Info -->
             <div class="col-lg-5">
-                <div class="product-info-card">
-                    <div class="stock-status <?= $stock_status ?>"><?= $stock_text ?> (<?= intval($product['stock']) ?>)
-                    </div>
-                    <div class="product-title">
-                        <h1><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h1>
-                    </div>
-
-                    <div class="product-rating">
-                        <i class="star icon"></i>
-                        <i class="star icon"></i>
-                        <i class="star icon"></i>
-                        <i class="star outline icon"></i>
-                        <span class="review-count">- 2 Customer Reviews</span>
-                    </div>
-
-                    <div class="product-price">
-                        ₱<?= number_format($effective_price, 2) ?>
-                        <?php if ($has_discount): ?>
-                            <span class="original-price">₱<?= number_format(floatval($product['og_price']), 2) ?></span>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="product-description">
-                        <?= nl2br(htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8')) ?>
-                    </div>
-
-                    <?php if (!empty($specs)): ?>
-                        <div class="size-selector">
-                            <div class="size-label">
-                                <span>Specs : </span>
-                            </div>
-                            <div class="size-options">
-                                <?php foreach (array_slice($specs, 0, 4) as $spec): ?>
-                                    <div class="size-option"><?= htmlspecialchars(trim($spec), ENT_QUOTES, 'UTF-8') ?></div>
-                                <?php endforeach; ?>
-                            </div>
+                <div class="product-listing" data-product-uuid="<?= $product['uuid'] ?>">
+                    <div class="product-info-card">
+                        <div class="product-title">
+                            <h1><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h1>
                         </div>
-                    <?php endif; ?>
 
-                    <div class="product-actions">
-                        <div class="ui input quantity-selector">
-                            <input type="number" value="1" min="1" max="<?= intval($product['stock']) ?>">
+                        <div class="product-rating">
+                            <?php
+                            $rating = $product['weighted_average'] ?? 0;
+                            $fullStars = floor($rating);
+                            $hasHalfStar = ($rating - $fullStars) >= 0.5;
+
+                            // Full stars
+                            for ($i = 0; $i < $fullStars; $i++) {
+                                echo '<i class="star icon"></i>';
+                            }
+
+                            // Half star
+                            if ($hasHalfStar) {
+                                echo '<i class="star half icon"></i>';
+                            }
+
+                            // Empty stars
+                            $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+                            for ($i = 0; $i < $emptyStars; $i++) {
+                                echo '<i class="star outline icon"></i>';
+                            }
+
+                            $reviewCount = $product['total_reviews'] ?? 0;
+                            ?>
+                            <span class="review-count">- <?= $reviewCount ?> Customer
+                                Review<?= $reviewCount != 1 ? 's' : '' ?></span>
                         </div>
-                        <button class="ui primary compact mini button" <?= intval($product['stock']) <= 0 ? 'disabled' : '' ?>>
-                            ADD TO CART
-                        </button>
-                        <button class="ui basic compact mini button wishlist-button">
-                            <i class="heart outline icon"></i> Add To Wishlist
-                        </button>
-                    </div>
 
-                    <div class="product-meta">
-                        <?php if (!empty($tags)): ?>
-                            <div class="meta-item tags">
-                                <span><i class="tag icon"></i>Tags :</span>
-                                <div class="ui circular labels">
-                                    <?php foreach ($tags as $tag): ?>
-                                        <a class="ui mini grey basic label">
-                                            <?= strtoupper(htmlspecialchars(trim($tag), ENT_QUOTES, 'UTF-8')) ?>
-                                        </a>
+                        <div class="product-price">
+                            ₱<?= number_format($effective_price, 2) ?>
+                            <?php if ($has_discount): ?>
+                                <span class="original-price">₱<?= number_format(floatval($product['og_price']), 2) ?></span>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="product-description">
+                            <?= nl2br(htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8')) ?>
+                        </div>
+
+                        <?php if (!empty($specs)): ?>
+                            <div class="size-selector-wrapper">
+                                <div class="size-label">
+                                    <span>Specs : </span>
+                                </div>
+                                <!-- Hidden input to store selected size -->
+                                <input type="hidden" class="size-selector" value="m">
+                                <div class="size-options">
+                                    <?php foreach (array_slice($specs, 0, 4) as $index => $spec): ?>
+                                        <div class="size-option <?= $index === 0 ? 'active' : '' ?>"
+                                            data-size="<?= strtolower(substr(trim($spec), 0, 1)) ?>">
+                                            <?= htmlspecialchars(trim($spec), ENT_QUOTES, 'UTF-8') ?>
+                                        </div>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
                         <?php endif; ?>
+
+                        <div class="product-actions">
+                            <div class="ui input">
+                                <input type="number" class="quantity-selector" value="1" min="1">
+                            </div>
+                            <button class="ui primary compact mini button add-to-cart-btn"
+                                data-product-uuid="<?= $product['uuid'] ?>">
+                                ADD TO CART
+                            </button>
+                            <!-- <button class="ui basic compact mini button wishlist-button">
+                                <i class="heart outline icon"></i> Add To Wishlist
+                            </button> -->
+                        </div>
+
+                        <div class="product-meta">
+                            <?php if (!empty($tags)): ?>
+                                <div class="meta-item tags">
+                                    <span><i class="tag icon"></i>Tags :</span>
+                                    <div class="ui circular labels">
+                                        <?php foreach ($tags as $tag): ?>
+                                            <a class="ui mini grey basic label">
+                                                <?= strtoupper(htmlspecialchars(trim($tag), ENT_QUOTES, 'UTF-8')) ?>
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,8 @@
 const productsList = {
     init() {
         this.productsContainer = $(".products .row.g-4");
+        this.allProducts = []; // Store all products
+        this.currentSort = "default"; // Default sort
         this.loadProducts();
         this.bindEvents();
         this.startAutoRefresh();
@@ -57,6 +59,54 @@ const productsList = {
                 console.error("Cart object not available");
             }
         });
+
+        // Search functionality
+        $(".ui.search").search({
+            type: "category",
+            minCharacters: 2,
+            source: [],
+            searchFields: ["title"],
+            onSelect: (result) => {
+                const product = this.allProducts.find(
+                    (p) => p.uuid === result.uuid
+                );
+                if (product) {
+                    this.renderProducts([product]);
+                }
+                return false;
+            },
+            onSearchQuery: (query) => {
+                if (query.length === 0) {
+                    this.applySort();
+                } else if (query.length >= 2) {
+                    // Filter products based on search query
+                    const filtered = this.allProducts.filter(
+                        (product) =>
+                            product.name
+                                .toLowerCase()
+                                .includes(query.toLowerCase()) ||
+                            product.description
+                                .toLowerCase()
+                                .includes(query.toLowerCase()) ||
+                            (product.category &&
+                                product.category.label &&
+                                product.category.label
+                                    .toLowerCase()
+                                    .includes(query.toLowerCase()))
+                    );
+                    this.renderProducts(filtered);
+                }
+            },
+        });
+
+        // Sort dropdown
+        $(".sort-dropdown").dropdown({
+            onChange: (value) => {
+                console.log("Sort changed to:", value);
+                this.currentSort = value || "default";
+                this.applySort();
+            },
+        });
     },
 
     loadProducts() {
@@ -71,12 +121,63 @@ const productsList = {
                     console.error("API Error:", response.message);
                     return;
                 }
-                this.renderProducts(response.data);
+                this.allProducts = response.data;
+                this.updateSearchSource(response.data);
+                this.applySort();
             },
             error: (xhr, status, error) => {
                 console.error("Error loading products:", error);
             },
         });
+    },
+
+    updateSearchSource(products) {
+        const searchData = products.map((product) => ({
+            title: product.name,
+            description: product.category.label,
+            uuid: product.uuid,
+        }));
+
+        $(".ui.search").search("setting", "source", {
+            products: { name: "Products", results: searchData },
+        });
+    },
+
+    applySort() {
+        let sorted = [...this.allProducts];
+
+        switch (this.currentSort) {
+            case "newest":
+                sorted.sort(
+                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                );
+                break;
+            case "price-low":
+                sorted.sort(
+                    (a, b) => parseFloat(a.og_price) - parseFloat(b.og_price)
+                );
+                break;
+            case "price-high":
+                sorted.sort(
+                    (a, b) => parseFloat(b.og_price) - parseFloat(a.og_price)
+                );
+                break;
+            case "popular":
+                sorted.sort(
+                    (a, b) => (b.orders_count || 0) - (a.orders_count || 0)
+                );
+                break;
+            case "rating":
+                sorted.sort(
+                    (a, b) =>
+                        (b.weighted_average || 0) - (a.weighted_average || 0)
+                );
+                break;
+            default:
+                sorted.sort((a, b) => a.category_id - b.category_id);
+        }
+
+        this.renderProducts(sorted);
     },
 
     renderProducts(products) {
@@ -188,10 +289,14 @@ const productsList = {
 
             html += `
                 <div class="col-md-4">
-                    <div class="product-listing card" data-product-uuid="${product.uuid}">
+                    <div class="product-listing card" data-product-uuid="${
+                        product.uuid
+                    }">
                         <div class="card-body">
                             <div class="content-1">
-                                <img src="${product.image}" alt="${product.name}" class="product-image">
+                                <img src="${product.image}" alt="${
+                product.name
+            }" class="product-image">
                                 ${tagHtml}
                                 <div class="product-price">${discountedPrice}</div>
                             </div>
@@ -201,6 +306,24 @@ const productsList = {
                                     <div class="category">
                                         <i class="${categoryIcon} icon"></i>
                                         ${product.category.label}
+                                    </div>
+                                    <div class="vr-line"></div>
+                                    <div class="rating">
+                                        <span class="stars">${generateRatingStars(
+                                            product.weighted_average || 0
+                                        )}</span>
+                                        ${
+                                            product.weighted_average
+                                                ? `<span class="rating-text">${product.weighted_average.toFixed(
+                                                      1
+                                                  )}</span>`
+                                                : ""
+                                        }
+                                        ${
+                                            product.total_reviews
+                                                ? `<span class="review-count">(${product.total_reviews})</span>`
+                                                : ""
+                                        }
                                     </div>
                                     <div class="vr-line"></div>
                                     <div class="status">
@@ -215,7 +338,9 @@ const productsList = {
                                 </div>
                                 <div class="product-footer">
                                     <div class="learnmore">
-                                        <a class="ui teal button learnmore-btn" href="/src/app/user/product-single-view.php?uuid=${product.uuid}">
+                                        <a class="ui teal button learnmore-btn" href="/src/app/user/product-single-view.php?uuid=${
+                                            product.uuid
+                                        }">
                                             Learn More
                                         </a>
                                     </div>
@@ -229,7 +354,8 @@ const productsList = {
         });
 
         this.productsContainer.html(html);
-        $(".ui.dropdown").dropdown();
+        // Only initialize dropdowns inside product cards, NOT the sort dropdown
+        this.productsContainer.find(".ui.dropdown").dropdown();
     },
 
     startAutoRefresh() {
@@ -238,3 +364,31 @@ const productsList = {
 };
 
 $(document).ready(() => productsList.init());
+
+// Helper function to generate rating stars
+function generateRatingStars(rating) {
+    let stars = "";
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+
+    // Add full stars
+    for (let i = 0; i < fullStars; i++) {
+        stars += "★";
+    }
+
+    // Add half star if needed
+    if (hasHalfStar) {
+        stars += "☆";
+    }
+
+    // Calculate remaining empty stars
+    const totalShown = fullStars + (hasHalfStar ? 1 : 0);
+    const emptyStars = 5 - totalShown;
+
+    // Add empty stars
+    for (let i = 0; i < emptyStars; i++) {
+        stars += "☆";
+    }
+
+    return stars;
+}

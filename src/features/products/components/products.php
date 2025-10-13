@@ -278,6 +278,30 @@
         opacity: 0.6 !important;
         cursor: not-allowed !important;
     }
+
+    /* Add this to your product styles */
+    main section.products .product-listing .content-2 .meta .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .stars {
+        color: #ffc107;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .rating-text {
+        font-size: 0.75rem;
+        color: var(--color-dark);
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .review-count {
+        font-size: 0.7rem;
+        color: var(--color-muted);
+        font-weight: 400;
+    }
 </style>
 
 <!-- Products Section -->
@@ -339,6 +363,6 @@
         </div>
 
         <!-- Pagination -->
-        <?= shared('components/pagination'); ?>
+        <!--  shared('components/pagination'); -->
     </div>
 </section>

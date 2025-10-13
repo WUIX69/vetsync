@@ -11,6 +11,8 @@ if (!$product_uuid) {
 
 // Fetch product data
 use VetSync\Models\Products;
+use VetSync\Models\Reviews;
+
 $product_result = Products::single($product_uuid);
 
 if (!$product_result['success'] || empty($product_result['data'])) {
@@ -19,6 +21,11 @@ if (!$product_result['success'] || empty($product_result['data'])) {
 }
 
 $product = $product_result['data'];
+
+// Fetch review stats
+$reviewStats = Reviews::getByReference($product_uuid, 'products');
+$product['weighted_average'] = $reviewStats['stats']['weighted_average'] ?? 0;
+$product['total_reviews'] = $reviewStats['stats']['total_reviews'] ?? 0;
 
 // Ensure essential fields exist with defaults
 $product['name'] = $product['name'] ?? 'Unknown Product';
@@ -73,6 +80,16 @@ $GLOBALS['product'] = $product;
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?> <!-- rcs Scripts -->
+    <script src="/src/features/products/js/cart.js"></script>
+    <script>
+        // Update hidden size selector when size option is clicked
+        $(document).on("click", ".size-option", function () {
+            $(this).siblings().removeClass("active");
+            $(this).addClass("active");
+            const size = $(this).data("size") || "m";
+            $(this).closest(".size-selector-wrapper").find(".size-selector").val(size);
+        });
+    </script>
 </body>
 
 </html>

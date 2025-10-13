@@ -6,6 +6,7 @@ apiHeaders();
 use VetSync\Models\Products;
 use VetSync\Models\Categories;
 use VetSync\Models\Attachments;
+use VetSync\Models\Reviews;
 
 use VetSync\Utils\Php\Helpers;
 use VetSync\Utils\Php\Formatters;
@@ -65,6 +66,9 @@ try {
 
             $products = Products::all();
             $products['data'] = array_map(function ($item) use ($reference_model) {
+                // Get review data
+                $reviewData = Reviews::getByReference($item['uuid'], 'products');
+
                 // Format correct data
                 $formattedData = [
                     'image' => media($item['uuid']),
@@ -76,10 +80,13 @@ try {
                     'specs' => $item['specs'] ? explode(',', $item['specs']) : [],
                     'created_at' => Formatters::dateToMDY($item['created_at']),
                     'updated_at' => Formatters::dateToMDY($item['updated_at']),
+                    'weighted_average' => $reviewData['weighted_average'] ?? null,
+                    'total_reviews' => $reviewData['total_reviews'] ?? 0,
                 ];
 
+                // Keep category_id for sorting (don't unset it)
                 // Remove unnecessary data
-                unset($item['category_id'], $item['dc_price'], $item['features'], $item['size']);
+                unset($item['dc_price'], $item['features'], $item['size']);
 
                 // Merge formatted data with the original item
                 return array_merge($item, $formattedData);

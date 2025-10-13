@@ -163,8 +163,6 @@ $specs = !empty($product['specs']) ? explode(',', $product['specs']) : [];
 
                         <div id="data" class="tab-pane fade">
                             <ul class="features-list">
-                                <li><i class="circle icon"></i> Stock: <?= intval($product['stock']) ?> units available
-                                </li>
                                 <li><i class="circle icon"></i> Price:
                                     ₱<?= number_format(floatval($product['og_price']), 2) ?></li>
                                 <?php if (!empty($product['dc_price']) && floatval($product['dc_price']) > 0): ?>
@@ -172,9 +170,11 @@ $specs = !empty($product['specs']) ? explode(',', $product['specs']) : [];
                                         ₱<?= number_format(floatval($product['dc_price']), 2) ?></li>
                                 <?php endif; ?>
                                 <li><i class="circle icon"></i> Product ID:
-                                    <?= htmlspecialchars($product['uuid'], ENT_QUOTES, 'UTF-8') ?></li>
+                                    <?= htmlspecialchars($product['uuid'], ENT_QUOTES, 'UTF-8') ?>
+                                </li>
                                 <li><i class="circle icon"></i> Status:
-                                    <?= intval($product['stock']) > 0 ? 'Available' : 'Out of Stock' ?></li>
+                                    <?= intval($product['stock']) > 0 ? 'Available' : 'Out of Stock' ?>
+                                </li>
                             </ul>
                         </div>
 
