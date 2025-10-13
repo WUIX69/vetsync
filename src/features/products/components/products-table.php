@@ -24,6 +24,10 @@
         border-radius: 0.3rem;
         object-fit: cover;
     }
+
+    main section.products-table table tbody tr {
+        cursor: pointer;
+    }
 </style>
 <!-- Products Table -->
 <section class="products-table">
@@ -34,7 +38,7 @@
 
                 <div class="ui fluid mini category search service-search">
                     <div class="ui icon input">
-                        <input class="prompt" type="text" placeholder="Search services..." />
+                        <input class="prompt" type="text" placeholder="Search products..." />
                         <i class="search icon"></i>
                     </div>
                     <div class="results"></div>
@@ -57,10 +61,6 @@
                     <div class="default text">All Categories</div>
                     <div class="menu">
                         <div class="item" data-value="all">All Categories</div>
-                        <div class="item" data-value="examination">Examination</div>
-                        <div class="item" data-value="treatment">Treatment</div>
-                        <div class="item" data-value="surgery">Surgery</div>
-                        <div class="item" data-value="grooming">Grooming</div>
                     </div>
                 </div>
 
@@ -78,7 +78,6 @@
                         <th>Name</th>
                         <th>Category</th>
                         <th>Price</th>
-                        <th>Stock</th>
                         <th>Status</th>
                         <th>Tags</th>
                         <th>Specs</th>

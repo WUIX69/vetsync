@@ -120,6 +120,12 @@ const Cart = {
                     color: white;
                     border: 1px solid rgba(149, 165, 166, 0.3);
                 }
+
+                .status-badge.picked_up {
+                    background: linear-gradient(135deg, #28a745, #20c997);
+                    color: white;
+                    border: 1px solid rgba(40, 167, 69, 0.3);
+                }
             </style>
         `;
 
@@ -132,6 +138,12 @@ const Cart = {
         // Add to cart buttons (for product pages)
         $(document).on("click", ".add-to-cart-btn", (e) => {
             e.preventDefault();
+
+            // Check if button is disabled (for unavailable products)
+            if ($(e.currentTarget).hasClass("disabled")) {
+                return false;
+            }
+
             const productUuid = $(e.currentTarget)
                 .closest(".product-listing")
                 .data("product-uuid");
@@ -155,9 +167,11 @@ const Cart = {
             $(this).addClass("active");
         });
 
-        // Quantity controls (cart page)
+        // Quantity controls (cart page) - FIX: Use regular function instead of arrow function
         $(document).on("click", ".update-quantity", (e) => {
             e.preventDefault();
+            console.log("Quantity button clicked:", e.currentTarget); // Debug log
+
             const productUuid = $(e.currentTarget).data("product-uuid");
             const size = $(e.currentTarget).data("size");
             const action = $(e.currentTarget).data("action");
@@ -165,11 +179,19 @@ const Cart = {
                 $(e.currentTarget).siblings(".quantity-display").text() || 1
             );
 
+            console.log("Quantity update data:", {
+                productUuid,
+                size,
+                action,
+                currentQty,
+            }); // Debug log
+
             let newQty =
                 action === "increase" ? currentQty + 1 : currentQty - 1;
             if (newQty < 1) newQty = 1;
 
-            this.updateQuantity(productUuid, size, newQty);
+            console.log("New quantity:", newQty); // Debug log
+            Cart.updateQuantity(productUuid, size, newQty); // Use Cart. instead of this.
         });
 
         // Remove item (cart page)
@@ -177,46 +199,56 @@ const Cart = {
             e.preventDefault();
             const productUuid = $(e.currentTarget).data("product-uuid");
             const size = $(e.currentTarget).data("size");
-            this.removeItem(productUuid, size);
+            Cart.removeItem(productUuid, size); // Use Cart. instead of this.
         });
 
         // Reserve button (cart page)
         $(document).on("click", ".reserve-btn", (e) => {
             e.preventDefault();
-            this.openReservationModal();
+            Cart.openReservationModal(); // Use Cart. instead of this.
         });
 
         // NEW: Select/Deselect cart items
         $(document).on("change", ".cart-item-checkbox", () => {
-            this.updateSelectedItemsSummary();
+            Cart.updateSelectedItemsSummary(); // Use Cart. instead of this.
         });
 
         // NEW: Select all / Deselect all
         $(document).on("click", "#selectAllItems", (e) => {
             const isChecked = $(e.currentTarget).is(":checked");
             $(".cart-item-checkbox").prop("checked", isChecked);
-            this.updateSelectedItemsSummary();
+            Cart.updateSelectedItemsSummary(); // Use Cart. instead of this.
         });
 
         // NEW: Cancel pending reservation
         $(document).on("click", ".cancel-reservation-btn", (e) => {
             const reservationId = $(e.currentTarget).data("reservation-id");
-            this.cancelReservation(reservationId);
+            Cart.cancelReservation(reservationId); // Use Cart. instead of this.
+        });
+
+        // Handle rate reservation button clicks
+        $(document).on("click", ".rate-reservation-btn", (e) => {
+            e.preventDefault();
+            const reservationId = $(e.currentTarget).data("reservation-id");
+            const products = $(e.currentTarget).data("products");
+            Cart.handleRateReservation(reservationId, products); // Use Cart. instead of this.
         });
 
         // FIXED: Submit reservation - Handle both form submit and button click
         $(document).on("submit", "#reservationForm", (e) => {
             e.preventDefault();
-            if (this.validateReservationForm()) {
-                this.submitReservation();
+            if (Cart.validateReservationForm()) {
+                // Use Cart. instead of this.
+                Cart.submitReservation(); // Use Cart. instead of this.
             }
         });
 
         // FIXED: Also handle the submit button click specifically
         $(document).on("click", "#reservationModal .submit.button", (e) => {
             e.preventDefault();
-            if (this.validateReservationForm()) {
-                this.submitReservation();
+            if (Cart.validateReservationForm()) {
+                // Use Cart. instead of this.
+                Cart.submitReservation(); // Use Cart. instead of this.
             }
         });
 
@@ -253,19 +285,202 @@ const Cart = {
         $(".tab-content").removeClass("active");
         $(`#${tab}Tab`).addClass("active");
 
-        // Update summary title based on active tab
+        // Update summary based on active tab
         if (tab === "active") {
-            $("#summaryTitle").text("Order Summary");
-        } else {
             $("#summaryTitle").text("Reservation Summary");
-            this.updateReservationSummary(tab);
+            this.updateCartSummary(); // Show cart summary for making reservations
+        } else {
+            $("#summaryTitle").text("Order Summary");
+            this.updateOrderSummary(tab); // Show order summary for reservations
+        }
+    },
+
+    // NEW: Update cart summary for Active Cart tab (for making reservations)
+    updateCartSummary() {
+        const cartItems = JSON.parse(localStorage.getItem("cart") || "[]");
+
+        let totalAmount = 0;
+        let totalItems = 0;
+        const selectedItems = [];
+
+        cartItems.forEach((item) => {
+            if (item.selected) {
+                const itemTotal =
+                    parseFloat(item.price) * parseInt(item.quantity);
+                totalAmount += itemTotal;
+                totalItems += parseInt(item.quantity);
+
+                selectedItems.push({
+                    name: item.name,
+                    size: item.size,
+                    quantity: parseInt(item.quantity),
+                    price: parseFloat(item.price),
+                    total: itemTotal,
+                });
+            }
+        });
+
+        const summaryHtml = `
+            <div class="summary-row">
+                <span>Selected Items:</span>
+                <span>${totalItems}</span>
+            </div>
+            <div class="summary-row">
+                <span>Total Amount:</span>
+                <span>₱${totalAmount.toFixed(2)}</span>
+            </div>
+            ${
+                selectedItems.length > 0
+                    ? `
+            <div class="selected-items">
+                <h6><i class='bx bx-package'></i> Selected Products</h6>
+                <div class="items-list">
+                    ${selectedItems
+                        .map(
+                            (item) => `
+                        <div class="summary-item">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">
+                                <span>Size: ${item.size}</span>
+                                <span>Qty: ${item.quantity}</span>
+                                <span>₱${item.total.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    `
+                        )
+                        .join("")}
+                </div>
+            </div>
+            `
+                    : ""
+            }
+            <button class="reserve-btn ${totalItems === 0 ? "disabled" : ""}" 
+                    ${totalItems === 0 ? "disabled" : ""} 
+                    onclick="Cart.openReservationModal()">
+                <i class='bx bx-calendar-check'></i>
+                MAKE RESERVATION (${totalItems} ITEMS)
+            </button>
+        `;
+
+        $("#cartSummary .summary-content").html(summaryHtml);
+    },
+
+    // ENHANCED: Update reservation summary for reservation tabs (showing order details)
+    updateOrderSummary(status) {
+        // Get reservations from localStorage
+        const reservations = this.getReservationsByStatus(status);
+
+        let totalAmount = 0;
+        let totalItems = 0;
+        const allProducts = [];
+
+        reservations.forEach((reservation) => {
+            totalAmount += parseFloat(reservation.total_amount || 0);
+            const products = JSON.parse(reservation.products || "[]");
+            totalItems += products.length;
+
+            // Add products to the list
+            products.forEach((product) => {
+                allProducts.push({
+                    name: product.name,
+                    size: product.size,
+                    quantity: product.qty,
+                    price: product.total_price,
+                    reservationId: reservation.id,
+                    status: reservation.status,
+                });
+            });
+        });
+
+        // FIXED: Handle all status types including "ready" and "picked_up"
+        const statusLabel =
+            status === "ready"
+                ? "Ready for Pickup"
+                : status === "picked_up"
+                ? "Picked Up"
+                : status.charAt(0).toUpperCase() + status.slice(1);
+
+        const statusIcon =
+            status === "pending"
+                ? "bx-time"
+                : status === "accepted"
+                ? "bx-check-circle"
+                : status === "ready"
+                ? "bx-package"
+                : status === "picked_up"
+                ? "bx-check-double"
+                : "bx-x-circle";
+
+        const summaryHtml = `
+            <div class="summary-row">
+                <span>${statusLabel} Reservations:</span>
+                <span>${reservations.length}</span>
+            </div>
+            <div class="summary-row">
+                <span>Total Items:</span>
+                <span>${totalItems}</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total Amount:</span>
+                <span>₱${totalAmount.toFixed(2)}</span>
+            </div>
+            ${
+                allProducts.length > 0
+                    ? `
+            <div class="order-items">
+                <h6><i class='bx ${statusIcon}'></i> ${statusLabel} Products</h6>
+                <div class="items-list">
+                    ${allProducts
+                        .map(
+                            (item) => `
+                        <div class="summary-item">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-details">
+                                <span>Size: ${item.size}</span>
+                                <span>Qty: ${item.quantity}</span>
+                                <span>₱${item.price}</span>
+                            </div>
+                            <div class="item-status">
+                                <span class="status-badge ${
+                                    item.status
+                                }">${item.status.toUpperCase()}</span>
+                            </div>
+                        </div>
+                    `
+                        )
+                        .join("")}
+                </div>
+            </div>
+            `
+                    : ""
+            }
+        `;
+
+        $("#cartSummary .summary-content").html(summaryHtml);
+    },
+
+    // Helper function to get reservations by status
+    getReservationsByStatus(status) {
+        const allReservations = JSON.parse(
+            localStorage.getItem("allReservations") || "[]"
+        );
+
+        // Handle specific status mappings
+        if (status === "ready") {
+            return allReservations.filter(
+                (reservation) => reservation.status === "completed"
+            );
         }
 
-        // Mark reservations as viewed when switching to reservation tabs
-        if (tab !== "active") {
-            localStorage.setItem("reservationsLastViewed", Date.now());
-            this.updateCartBadge(); // Refresh badge
+        if (status === "picked_up") {
+            return allReservations.filter(
+                (reservation) => reservation.status === "picked_up"
+            );
         }
+
+        return allReservations.filter(
+            (reservation) => reservation.status === status
+        );
     },
 
     // Load user reservations
@@ -286,30 +501,70 @@ const Cart = {
 
     // Render reservations in tabs
     renderReservations(reservations) {
+        // Store all reservations in localStorage for summary calculations
+        localStorage.setItem("allReservations", JSON.stringify(reservations));
+
         const pendingReservations = reservations.filter(
             (r) => r.status === "pending"
         );
         const acceptedReservations = reservations.filter(
             (r) => r.status === "accepted"
         );
-        // FIXED: Include user-cancelled reservations in rejected tab
+        const readyReservations = reservations.filter(
+            (r) => r.status === "completed"
+        );
         const rejectedReservations = reservations.filter(
             (r) => r.status === "rejected"
+        );
+        const pickedUpReservations = reservations.filter(
+            (r) => r.status === "picked_up"
+        );
+
+        // Store individual status arrays
+        localStorage.setItem(
+            "pendingReservations",
+            JSON.stringify(pendingReservations)
+        );
+        localStorage.setItem(
+            "acceptedReservations",
+            JSON.stringify(acceptedReservations)
+        );
+        localStorage.setItem(
+            "readyReservations",
+            JSON.stringify(readyReservations)
+        );
+        localStorage.setItem(
+            "rejectedReservations",
+            JSON.stringify(rejectedReservations)
+        );
+        localStorage.setItem(
+            "pickedUpReservations",
+            JSON.stringify(pickedUpReservations)
         );
 
         // Update counts
         $("#pendingCount").text(pendingReservations.length);
         $("#acceptedCount").text(acceptedReservations.length);
+        $("#readyCount").text(readyReservations.length);
         $("#rejectedCount").text(rejectedReservations.length);
+        $("#pickedUpCount").text(pickedUpReservations.length);
 
         // Render each tab
         this.renderReservationTab("pending", pendingReservations);
         this.renderReservationTab("accepted", acceptedReservations);
+        this.renderReservationTab("ready", readyReservations);
         this.renderReservationTab("rejected", rejectedReservations);
+        this.renderReservationTab("picked_up", pickedUpReservations);
     },
 
+    // Update the renderReservationTab function around line 548:
     renderReservationTab(status, reservations) {
-        const container = $(`#${status}Reservations`);
+        // Handle special case for picked_up status - convert to camelCase for container ID
+        const containerId =
+            status === "picked_up"
+                ? "pickedUpReservations"
+                : `${status}Reservations`;
+        const container = $(`#${containerId}`);
         container.empty();
 
         if (reservations.length === 0) {
@@ -323,7 +578,7 @@ const Cart = {
         });
     },
 
-    // ENHANCED: Create reservation card with cancel button for pending and proper display for cancelled items
+    // ENHANCED: Create reservation card with Ready for Pickup status
     createReservationCard(reservation) {
         const products = JSON.parse(reservation.products || "[]");
         const statusClass = reservation.status.toLowerCase();
@@ -377,21 +632,48 @@ const Cart = {
             </div>`
                 : "";
 
-        // FIXED: Show appropriate status badge
+        // Update the rateButton creation around line 621:
+        const rateButton =
+            reservation.status === "picked_up"
+                ? `<div class="reservation-actions">
+                    <button class="rate-reservation-btn" 
+                            data-reservation-id="${reservation.id}"
+                            data-products='${reservation.products}'>
+                        <i class='bx bx-star'></i> Rate Your Experience
+                    </button>
+                </div>`
+                : "";
+
+        // ENHANCED: Show appropriate status badge
         const displayStatus =
             reservation.status === "rejected" &&
             reservation.rejection_reason === "Cancelled by user"
                 ? "CANCELLED"
+                : reservation.status === "completed"
+                ? "READY FOR PICKUP"
+                : reservation.status === "picked_up"
+                ? "PICKED UP"
                 : reservation.status.toUpperCase();
 
         const displayStatusClass =
             reservation.status === "rejected" &&
             reservation.rejection_reason === "Cancelled by user"
                 ? "cancelled"
+                : reservation.status === "completed"
+                ? "ready-for-pickup"
+                : reservation.status === "picked_up"
+                ? "picked_up"
                 : statusClass;
 
+        // FIXED: Simplified the conditional class assignment
+        const itemClass =
+            reservation.status === "completed" ||
+            reservation.status === "picked_up"
+                ? "ready-for-pickup-item"
+                : "";
+
         return $(`
-            <div class="reservation-item">
+            <div class="reservation-item ${itemClass}">
                 <div class="reservation-header">
                     <div>
                         <div class="reservation-id">Reservation #${
@@ -406,31 +688,34 @@ const Cart = {
                     </div>
                     <div class="status-badge ${displayStatusClass}">${displayStatus}</div>
                 </div>
-                
+
                 <div class="reservation-details">
                     <div class="detail-item">
                         <i class='bx bx-package'></i>
-                        <span>Products: ${products.length} item(s)</span>
+                        <div>
+                            <strong>Delivery:</strong>
+                            <span>${reservation.delivery_method.toUpperCase()}</span>
+                        </div>
                     </div>
                     <div class="detail-item">
                         <i class='bx bx-money'></i>
-                        <span>₱${parseFloat(
-                            reservation.total_amount || 0
-                        ).toFixed(2)}</span>
+                        <div>
+                            <strong>Total Amount:</strong>
+                            <span>₱${reservation.total_amount}</span>
+                        </div>
                     </div>
                     ${rejectionReason}
                 </div>
-                
+
                 <div class="reservation-products">
-                    <h6><i class='bx bx-package'></i> Products (${
-                        products.length
-                    })</h6>
+                    <h6><i class='bx bx-package'></i> Products</h6>
                     <div class="product-list">
                         ${productsHtml}
                     </div>
                 </div>
-                
+
                 ${cancelButton}
+                ${rateButton}
             </div>
         `);
     },
@@ -474,44 +759,6 @@ const Cart = {
         });
     },
 
-    updateReservationSummary(status) {
-        // This updates the summary sidebar when viewing reservations
-        const reservations =
-            status === "pending"
-                ? JSON.parse(
-                      localStorage.getItem("pendingReservations") || "[]"
-                  )
-                : status === "accepted"
-                ? JSON.parse(
-                      localStorage.getItem("acceptedReservations") || "[]"
-                  )
-                : JSON.parse(
-                      localStorage.getItem("rejectedReservations") || "[]"
-                  );
-
-        let totalAmount = 0;
-        let totalItems = 0;
-
-        reservations.forEach((reservation) => {
-            totalAmount += parseFloat(reservation.total_amount || 0);
-            const products = JSON.parse(reservation.products || "[]");
-            totalItems += products.length;
-        });
-
-        const summaryHtml = `
-            <div class="summary-row">
-                <span>Reservations (${reservations.length}):</span>
-                <span>${reservations.length}</span>
-            </div>
-            <div class="summary-row total">
-                <span>Total Amount:</span>
-                <span>₱${totalAmount.toFixed(2)}</span>
-            </div>
-        `;
-
-        $("#cartSummary .summary-content").html(summaryHtml);
-    },
-
     getEmptyState(status) {
         const messages = {
             pending: {
@@ -524,10 +771,20 @@ const Cart = {
                 title: "No Accepted Reservations",
                 message: "You have no accepted reservations yet.",
             },
+            ready: {
+                icon: "bx-package",
+                title: "No Ready Reservations",
+                message: "You have no reservations ready for pickup.",
+            },
             rejected: {
                 icon: "bx-x-circle",
                 title: "No Rejected Reservations",
                 message: "You have no rejected reservations.",
+            },
+            picked_up: {
+                icon: "bx-check-double",
+                title: "No Picked Up Orders",
+                message: "You have no picked up orders yet.",
             },
         };
 
@@ -578,7 +835,7 @@ const Cart = {
         });
     },
 
-    // Update cart badge - ENHANCED VERSION
+    // Update cart badge - Show total active cart count
     updateCartBadge() {
         $.ajax({
             url: apiUrl("products") + "cart.php",
@@ -586,21 +843,11 @@ const Cart = {
             data: { action: "count" },
             success: (response) => {
                 if (response.success) {
-                    const cartLastViewed =
-                        localStorage.getItem("cartLastViewed") || 0;
-                    const cartItems = response.items || [];
+                    const totalCartItems = response.count || 0; // Get total count
 
-                    // Count items added after last view
-                    const newCartItemsCount = cartItems.filter((item) => {
-                        const itemTimestamp = new Date(
-                            item.created_at
-                        ).getTime();
-                        return itemTimestamp > cartLastViewed;
-                    }).length;
-
-                    // ONLY show cart items in cart badge
-                    if (newCartItemsCount > 0) {
-                        $("#cartBadge").text(newCartItemsCount).show();
+                    // Show badge with total count if there are items
+                    if (totalCartItems > 0) {
+                        $("#cartBadge").text(totalCartItems).show();
                     } else {
                         $("#cartBadge").hide();
                     }
@@ -660,21 +907,22 @@ const Cart = {
             const itemKey = `${item.product_uuid}-${item.size}`;
 
             html += `
-                <div class="cart-item">
-                    <div class="row align-items-center">
-                        <div class="col-md-1">
-                            <div class="cart-checkbox-container">
-                                <input type="checkbox" 
-                                       class="cart-item-checkbox" 
-                                       value="${itemKey}"
-                                       data-product-uuid="${item.product_uuid}"
-                                       data-size="${item.size}"
-                                       data-price="${item.total_price}"
-                                       data-qty="${item.qty}"
-                                       data-name="${item.name}"
-                                       checked>
-                            </div>
+            <div class="cart-item">
+                <div class="row align-items-center">
+                    <div class="col-md-1">
+                        <div class="cart-checkbox-container">
+                            <input type="checkbox" 
+                                   class="cart-item-checkbox" 
+                                   value="${itemKey}"
+                                   data-product-uuid="${item.product_uuid}"
+                                   data-size="${item.size}"
+                                   data-price="${price}"
+                                   data-total-price="${item.total_price}"
+                                   data-qty="${item.qty}"
+                                   data-name="${item.name}"
+                                   checked>
                         </div>
+                    </div>
                         <div class="col-md-2">
                             <img src="${item.image}" alt="${
                 item.name
@@ -737,7 +985,8 @@ const Cart = {
 
         selectedCheckboxes.each(function () {
             totalItems += parseInt($(this).data("qty"));
-            totalAmount += parseFloat($(this).data("price"));
+            // Fix: Use total-price instead of price
+            totalAmount += parseFloat($(this).data("total-price"));
         });
 
         const selectedCount = selectedCheckboxes.length;
@@ -806,40 +1055,49 @@ const Cart = {
             method: "DELETE",
             success: (response) => {
                 if (response.success) {
-                    this.loadCartItems();
-                    this.updateCartBadge();
-                    this.showNotification("Item removed from cart", "success");
+                    Cart.loadCartItems(); // Use Cart. instead of this.
+                    Cart.updateCartBadge(); // Use Cart. instead of this.
+                    Cart.showNotification("Item removed from cart", "success"); // Use Cart. instead of this.
                 } else {
-                    this.showNotification(response.message, "error");
+                    Cart.showNotification(response.message, "error"); // Use Cart. instead of this.
                 }
             },
             error: (xhr, status, error) => {
                 console.error("Remove item error:", { xhr, status, error });
-                this.showNotification("Failed to remove item", "error");
+                Cart.showNotification("Failed to remove item", "error"); // Use Cart. instead of this.
             },
         });
     },
 
     // Update quantity
     updateQuantity(productUuid, size, qty) {
+        console.log("updateQuantity called with:", { productUuid, size, qty }); // Debug log
+
+        // Use POST with action=update instead of PUT
+        const formData = new FormData();
+        formData.append("action", "update");
+        formData.append("product_uuid", productUuid);
+        formData.append("size", size);
+        formData.append("qty", qty);
+
         $.ajax({
             url: apiUrl("products") + "cart.php",
-            method: "PUT",
-            data: {
-                product_uuid: productUuid,
-                size: size,
-                qty: qty,
-            },
+            method: "POST", // Changed from PUT to POST
+            data: formData,
+            processData: false,
+            contentType: false,
             success: (response) => {
+                console.log("Update quantity response:", response); // Debug log
                 if (response.success) {
-                    this.loadCartItems();
-                    this.updateCartBadge();
+                    Cart.loadCartItems(); // Reload cart items to show updated quantity
+                    Cart.updateCartBadge(); // Update cart badge
                 } else {
-                    this.showNotification(response.message, "error");
+                    Cart.showNotification(response.message, "error");
                 }
             },
-            error: () => {
-                this.showNotification("Failed to update quantity", "error");
+            error: (xhr, status, error) => {
+                console.error("Update quantity error:", { xhr, status, error });
+                Cart.showNotification("Failed to update quantity", "error");
             },
         });
     },
@@ -864,7 +1122,8 @@ const Cart = {
                 size: $(this).data("size"),
                 qty: $(this).data("qty"),
                 name: $(this).data("name"),
-                total_price: $(this).data("price"),
+                price: $(this).data("price"),
+                total_price: $(this).data("total-price"),
             });
         });
 
@@ -943,24 +1202,19 @@ const Cart = {
                 console.log("Reservation response:", response); // Debug log
 
                 if (response.success) {
-                    // CHANGED: Use plain notification instead of fancy center modal
-                    this.showNotification(
-                        "🎉 Reservation submitted successfully! Please wait for admin approval.",
-                        "success"
-                    );
-
-                    // Hide modal after showing notification
-                    setTimeout(() => {
-                        $("#reservationModal").modal("hide");
-                    }, 500);
-
-                    // Remove selected items from cart
+                    // Remove selected items from cart first
                     this.removeSelectedItemsFromCart();
 
-                    // Redirect after longer delay to show notification
+                    // Hide the reservation form modal
+                    $("#reservationModal").modal("hide");
+
+                    // Simple alert like sign-in
                     setTimeout(() => {
+                        alert(
+                            "Reservation submitted successfully!\n\nPlease wait for admin approval."
+                        );
                         window.location.href = "/src/app/user/products.php";
-                    }, 4000); // Increased to 4 seconds
+                    }, 300);
                 } else {
                     this.showNotification(
                         response.message || "Failed to submit reservation",
@@ -1140,111 +1394,6 @@ const Cart = {
                         transform: translateX(100px);
                     }
                 }
-
-                /* Cart Selection Styles */
-                .cart-selection-header {
-                    background: linear-gradient(135deg, #f8fffe, #e8f5f3);
-                    padding: 1rem 1.5rem;
-                    border-radius: 12px;
-                    margin-bottom: 1rem;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .select-all-label {
-                    display: flex;
-                    align-items: center;
-                    gap: 0.75rem;
-                    font-weight: 600;
-                    color: #2c3e50;
-                    cursor: pointer;
-                    margin: 0;
-                }
-
-                .cart-checkbox-container {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
-
-                .cart-item-checkbox, #selectAllItems {
-                    width: 18px;
-                    height: 18px;
-                    cursor: pointer;
-                    accent-color: #21ba45;
-                }
-
-                .reserve-btn.disabled {
-                    background: linear-gradient(135deg, #bdc3c7, #95a5a6) !important;
-                    cursor: not-allowed !important;
-                    transform: none !important;
-                    box-shadow: none !important;
-                }
-
-                /* Cancel Reservation Button */
-                .reservation-actions {
-                    margin-top: 1.5rem;
-                    padding-top: 1.5rem;
-                    border-top: 1px solid #f0f8f5;
-                    text-align: center;
-                }
-
-                .cancel-reservation-btn {
-                    background: linear-gradient(135deg, #e74c3c, #c0392b);
-                    color: white;
-                    border: none;
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 12px;
-                    cursor: pointer;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    transition: all 0.3s ease;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 0.5rem;
-                }
-
-                .cancel-reservation-btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
-                }
-
-                .cancel-reservation-btn i {
-                    font-size: 1rem;
-                }
-
-                /* Status Badge Styles */
-                .status-badge {
-                    padding: 0.4rem 0.8rem;
-                    border-radius: 12px;
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    display: inline-block;
-                    text-align: center;
-                }
-
-                .status-badge.pending {
-                    background: linear-gradient(135deg, #f8fffe, #e8f5f3);
-                    color: #2c3e50;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .status-badge.accepted {
-                    background: linear-gradient(135deg, #e8f5f3, #f8fffe);
-                    color: #21ba45;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .status-badge.rejected {
-                    background: linear-gradient(135deg, #f8fffe, #e8f5f3);
-                    color: #e74c3c;
-                    border: 1px solid #e8f5f3;
-                }
-
-                .status-badge.cancelled {
-                    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-                    color: white;
-                    border-color: rgba(149, 165, 166, 0.3);
-                }
             </style>
         `;
 
@@ -1289,6 +1438,94 @@ const Cart = {
                 }
             },
         });
+    },
+
+    // Handle rate reservation button clicks
+    handleRateReservation(reservationId, products) {
+        // Parse products if it's a string
+        const productList =
+            typeof products === "string" ? JSON.parse(products) : products;
+
+        if (productList && productList.length > 0) {
+            // If single product, redirect to product page
+            if (productList.length === 1) {
+                const product = productList[0];
+                // Use product_uuid instead of uuid
+                const productUuid = product.product_uuid || product.uuid;
+                window.location.href = `/src/app/user/product-single-view.php?uuid=${productUuid}&review=true#reviews-section`;
+            } else {
+                // If multiple products, show selection modal
+                this.showProductRatingModal(reservationId, productList);
+            }
+        } else {
+            console.error("No products found for rating");
+        }
+    },
+
+    // Show modal for selecting which product to rate (for multiple products)
+    showProductRatingModal(reservationId, products) {
+        const modalHtml = `
+            <div class="rating-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                <div class="modal-content" style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0; color: #333;">
+                            <i class='bx bx-star' style="color: #ffc107;"></i>
+                            Rate Your Products
+                        </h3>
+                        <p style="color: #666; margin: 10px 0 0 0;">Select a product to rate your experience</p>
+                    </div>
+                    <div class="product-list" style="margin-bottom: 20px;">
+                        ${products
+                            .map((product) => {
+                                const productUuid =
+                                    product.product_uuid || product.uuid;
+                                return `
+                                <div class="product-option" style="display: flex; align-items: center; padding: 15px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s;" 
+                                     onclick="Cart.rateProduct('${productUuid}', '${
+                                    product.name
+                                }')" 
+                                     onmouseover="this.style.background='#f8f9fa'; this.style.borderColor='#007bff';" 
+                                     onmouseout="this.style.background='white'; this.style.borderColor='#ddd';">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; margin-bottom: 5px;">${
+                                            product.name
+                                        }</div>
+                                        <div style="color: #666; font-size: 0.9em;">Size: ${product.size.toUpperCase()} | Qty: ${
+                                    product.qty
+                                }</div>
+                                    </div>
+                                    <div style="color: #007bff;">
+                                        <i class='bx bx-chevron-right'></i>
+                                    </div>
+                                </div>
+                            `;
+                            })
+                            .join("")}
+                    </div>
+                    <div class="modal-actions" style="text-align: center;">
+                        <button onclick="Cart.closeRatingModal()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    },
+
+    // Rate a specific product
+    rateProduct(productUuid, productName) {
+        this.closeRatingModal();
+        window.location.href = `/src/app/user/product-single-view.php?uuid=${productUuid}&review=true#reviews-section`;
+    },
+
+    // Close rating modal
+    closeRatingModal() {
+        const modal = document.querySelector(".rating-modal");
+        if (modal) {
+            modal.remove();
+        }
     },
 };
 

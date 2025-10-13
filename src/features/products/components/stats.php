@@ -1,104 +1,73 @@
+<?php
+// Simple products stats - no complex code
+$stats = [
+    'total_products' => 0,
+    'available_products' => 0,
+    'unavailable_products' => 0
+];
+
+try {
+    // Get database connection
+    global $conn;
+    include_once dirname(__FILE__) . '/../../../core/conn.php';
+
+    if ($conn) {
+        // Get total products
+        $total_stmt = $conn->prepare("SELECT COUNT(*) as count FROM products");
+        $total_stmt->execute();
+        $stats['total_products'] = $total_stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        // Get available products
+        $available_stmt = $conn->prepare("SELECT COUNT(*) as count FROM products WHERE status = 'available'");
+        $available_stmt->execute();
+        $stats['available_products'] = $available_stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        // Get unavailable products
+        $unavailable_stmt = $conn->prepare("SELECT COUNT(*) as count FROM products WHERE status = 'unavailable'");
+        $unavailable_stmt->execute();
+        $stats['unavailable_products'] = $unavailable_stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    }
+} catch (Exception $e) {
+    // Keep default values if database fails
+}
+?>
+
 <!-- Product Stats -->
 <section class="stats">
     <div class="container">
         <div class="row g-4">
-            <div class="col-md-3 col-sm-3">
+            <!-- Total Products -->
+            <div class="col-md-4 col-sm-4">
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Total Services
+                            Total Products
                         </h6>
-                        <h2>10</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#20c997"
-                                stroke-width="4.3" stroke-dasharray="81, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +81%
-                            </text>
-                        </svg>
+                        <h2><?= $stats['total_products'] ?></h2>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-3">
+
+            <!-- Available Products -->
+            <div class="col-md-4 col-sm-4">
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Available Services
+                            Available Products
                         </h6>
-                        <h2>10</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff0060"
-                                stroke-width="4.3" stroke-dasharray="23, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +23%
-                            </text>
-                        </svg>
+                        <h2><?= $stats['available_products'] ?></h2>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-3">
+
+            <!-- Unavailable Products -->
+            <div class="col-md-4 col-sm-4">
                 <div class="box stat-card">
                     <div class="info">
                         <h6 class="text-muted mb-2">
-                            Unavailable Services
+                            Unavailable Products
                         </h6>
-                        <h2>0</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c9bcf"
-                                stroke-width="4.3" stroke-dasharray="12, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +12%
-                            </text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-3">
-                <div class="box stat-card">
-                    <div class="info">
-                        <h6 class="text-muted mb-2">
-                            Total Bookings
-                        </h6>
-                        <h2>10</h2>
-                    </div>
-                    <div class="progress-circle">
-                        <svg viewBox="0 0 36 36" class="circular-chart">
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee"
-                                stroke-width="3" />
-                            <path d="M18 2.0845
-                                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                                    a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6c9bcf"
-                                stroke-width="4.3" stroke-dasharray="12, 100" />
-                            <text x="18" y="20.35" class="percentage">
-                                +12%
-                            </text>
-                        </svg>
+                        <h2><?= $stats['unavailable_products'] ?></h2>
                     </div>
                 </div>
             </div>

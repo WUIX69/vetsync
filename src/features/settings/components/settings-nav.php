@@ -46,11 +46,8 @@
         <button class="nav-link" data-bs-toggle="pill" data-bs-target="#changePassword">
             <i class="bx bx-shield-alt"></i>Change Password
         </button>
-        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#notification">
-            <i class="bx bx-bell"></i>Notifications
-        </button>
-        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#preferences">
-            <i class="bx bx-cog"></i>Preferences
+        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#terms">
+            <i class="file text outline icon"></i>Terms & Agreement
         </button>
     </div>
 </div>

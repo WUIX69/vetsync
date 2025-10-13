@@ -71,7 +71,7 @@ class Cart
     {
         try {
             $stmt = self::conn()->prepare('
-                SELECT c.*, p.name, p.og_price, p.dc_price, p.stock
+                SELECT c.*, p.name, p.og_price, p.dc_price
                 FROM carts c 
                 JOIN products p ON c.product_uuid = p.uuid 
                 WHERE c.user_uuid = ?

@@ -128,7 +128,7 @@
         }
     }
 
-    /*----------- CART ITEMS (Active Cart) - FIXED FOR BOOTSTRAP STRUCTURE -----------*/
+    /*----------- CART ITEMS (Active Cart) -----------*/
     main section.cart .cart-item {
         margin-bottom: 1.5rem;
         background: linear-gradient(135deg, #ffffff, #f8fffe);
@@ -390,6 +390,17 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     }
 
+    /* Ready for Pickup Item Styling */
+    main section.cart .reservation-item.ready-for-pickup-item {
+        border-left: 6px solid #3498db;
+        background: linear-gradient(135deg, #e3f2fd, #ffffff);
+        box-shadow: 0 6px 20px rgba(52, 152, 219, 0.15);
+    }
+
+    main section.cart .reservation-item.ready-for-pickup-item:hover {
+        box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
+    }
+
     main section.cart .reservation-header {
         display: flex;
         justify-content: space-between;
@@ -447,6 +458,12 @@
         background: linear-gradient(135deg, #e74c3c, #c0392b);
         color: white;
         border-color: rgba(231, 76, 60, 0.3);
+    }
+
+    main section.cart .status-badge.ready-for-pickup {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        border-color: rgba(52, 152, 219, 0.3);
     }
 
     main section.cart .reservation-details {
@@ -571,6 +588,106 @@
     main section.cart .empty-state p {
         font-size: 0.9rem;
         line-height: 1.5;
+    }
+
+    /* Enhanced Summary Styles */
+    .selected-items,
+    .order-items {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f0f8f5;
+    }
+
+    .selected-items h6,
+    .order-items h6 {
+        margin: 0 0 1rem 0;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .selected-items h6 i,
+    .order-items h6 i {
+        color: #21ba45;
+        font-size: 1rem;
+    }
+
+    .items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .summary-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.75rem;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .summary-item:hover {
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .summary-item .item-name {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-item .item-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-item .item-details span:last-child {
+        color: #21ba45;
+        font-weight: 600;
+    }
+
+    .summary-item .item-status {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .summary-item .status-badge {
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .summary-item .status-badge.pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .summary-item .status-badge.accepted {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .summary-item .status-badge.rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .summary-item .status-badge.ready-for-pickup {
+        background: #d1ecf1;
+        color: #0c5460;
     }
 
     /*----------- RESPONSIVE DESIGN -----------*/
@@ -774,6 +891,17 @@
                 <span>Accepted</span>
                 <span class="count-badge" id="acceptedCount">0</span>
             </button>
+            <button class="cart-tab" data-tab="ready">
+                <i class='bx bx-package'></i>
+                <span>Ready for Pickup</span>
+                <span class="count-badge" id="readyCount">0</span>
+            </button>
+            <!-- NEW: Picked Up Tab -->
+            <button class="cart-tab" data-tab="picked_up">
+                <i class='bx bx-check-double'></i>
+                <span>Picked Up</span>
+                <span class="count-badge" id="pickedUpCount">0</span>
+            </button>
             <button class="cart-tab" data-tab="rejected">
                 <i class='bx bx-x-circle'></i>
                 <span>Rejected</span>
@@ -796,6 +924,16 @@
                 <!-- Accepted Reservations Tab -->
                 <div class="tab-content" id="acceptedTab">
                     <div id="acceptedReservations"></div>
+                </div>
+
+                <!-- Ready for Pickup Tab -->
+                <div class="tab-content" id="readyTab">
+                    <div id="readyReservations"></div>
+                </div>
+
+                <!-- NEW: Picked Up Tab -->
+                <div class="tab-content" id="picked_upTab">
+                    <div id="pickedUpReservations"></div>
                 </div>
 
                 <!-- Rejected Reservations Tab -->

@@ -71,12 +71,10 @@ class Products
                     description, 
                     status,
                     og_price, 
-                    dc_price,
-                    stock,
                     tags,
                     specs
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?
                 )
             ");
 
@@ -87,8 +85,6 @@ class Products
                 $data['description'],
                 $data['status'],
                 $data['og_price'],
-                $data['dc_price'],
-                $data['stock'],
                 $data['tags'],
                 $data['specs']
             ]);
@@ -120,8 +116,6 @@ class Products
                     description=?, 
                     status=?,
                     og_price=?, 
-                    dc_price=?,
-                    stock=?,
                     tags=?,
                     specs=?,
                     updated_at=NOW()
@@ -134,8 +128,6 @@ class Products
                 $data['description'],
                 $data['status'],
                 $data['og_price'],
-                $data['dc_price'],
-                $data['stock'],
                 $data['tags'],
                 $data['specs'],
                 $data['uuid']

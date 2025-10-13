@@ -1,11 +1,11 @@
 const profilePond = FilePond.create(document.querySelector(".profile-pond"), {
     maxFiles: 1,
-    maxFileSize: "2MB",
+    maxFileSize: "4MB", // Changed from "2MB" to "4MB"
     instantUpload: false,
     allowMultiple: false,
     allowFileTypes: ["image/*"],
 
-    labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
+    labelIdle: `Drag & Drop your picture (max 4MB) or <span class="filepond--label-action">Browse</span>`,
 
     imagePreviewHeight: 170,
     imageCropAspectRatio: "1:1",
@@ -17,11 +17,10 @@ const profilePond = FilePond.create(document.querySelector(".profile-pond"), {
     styleProgressIndicatorPosition: "right bottom",
     styleButtonRemoveItemPosition: "left bottom",
     styleButtonProcessItemPosition: "right bottom",
+
     onremovefile: function (error, file) {
-        // console.log(error, file);
-        // Only handle "local" files (already on server) and only if not modal hide
         if (file.origin === 3) {
-            console.log("is local delete");
+            console.log("Removing local file");
             $.ajax({
                 url: apiUrl("shared") + "filepond.php",
                 headers: {
@@ -31,8 +30,36 @@ const profilePond = FilePond.create(document.querySelector(".profile-pond"), {
                 data: file.serverId,
                 processData: false,
                 contentType: false,
-                error: ajaxErrorHandler,
+                success: function (response) {
+                    console.log("File removed successfully");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error removing file:", error);
+                },
             });
+        }
+    },
+
+    onaddfile: function (error, file) {
+        if (error) {
+            console.error("Error adding file:", error);
+        } else {
+            console.log("File added to FilePond:", file);
+        }
+    },
+
+    onprocessfile: function (error, file) {
+        if (error) {
+            console.error("Error processing file:", error);
+        } else {
+            console.log("File processed successfully:", file);
+
+            // Auto-refresh profile data after successful upload
+            setTimeout(function () {
+                if (typeof getProfile === "function") {
+                    getProfile();
+                }
+            }, 1500);
         }
     },
 });
@@ -43,32 +70,67 @@ profilePond.setOptions({
         headers: {
             "X-Reference-Model": "profiles",
         },
-        timeout: 7000,
+        timeout: 10000, // Increased timeout
         withCredentials: false,
-        credit: false,
         process: {
             url: apiUrl("settings") + "profilePost.php",
             method: "POST",
             ondata: function (formData) {
                 formData.append("action", "profile-upload");
+                console.log(
+                    "Sending upload request with action: profile-upload"
+                );
+                console.log(
+                    "FormData contents:",
+                    Array.from(formData.entries())
+                );
                 return formData;
             },
-            onload: (jsonResponse) => {
-                const response = JSON.parse(jsonResponse);
-                alert(response.message);
+            onload: (response) => {
+                console.log("Raw upload response:", response);
 
-                // Update all visible img src that uses profile photo with fade animation
-                $("img.user-profile-photo").transition(
-                    "fade out",
-                    300,
-                    function () {
-                        $(this)
-                            .attr("src", response.data.profile_url)
-                            .transition("fade in", 300);
-                    }
-                );
+                // Check if response indicates success (folder name returned)
+                if (
+                    response &&
+                    response.trim() !== "" &&
+                    !response.toLowerCase().includes("failed") &&
+                    !response.toLowerCase().includes("error") &&
+                    !response.toLowerCase().includes("invalid")
+                ) {
+                    console.log("Upload successful, folder:", response.trim());
 
-                return response.data.folder; // filepond needs the unique foldername
+                    // Show success notification
+                    $("body").toast({
+                        title: "Success!",
+                        message: "Profile image uploaded successfully!",
+                        class: "success",
+                        displayTime: 3000,
+                        position: "top right",
+                    });
+
+                    return response.trim(); // Return folder name for FilePond
+                } else {
+                    console.error("Upload failed:", response);
+                    // Show error notification
+                    $("body").toast({
+                        title: "Upload Failed!",
+                        message: "Failed to upload image: " + response,
+                        class: "error",
+                        displayTime: 5000,
+                        position: "top right",
+                    });
+                    return false;
+                }
+            },
+            onerror: (response) => {
+                console.error("Upload error:", response);
+                $("body").toast({
+                    title: "Upload Failed!",
+                    message: "Network error occurred. Please try again.",
+                    class: "error",
+                    displayTime: 5000,
+                    position: "top right",
+                });
             },
         },
         revert: {
@@ -82,3 +144,5 @@ profilePond.setOptions({
 
 // Export profilePond to window for debugging
 window.profilePond = profilePond;
+
+console.log("ProfileUpload.js loaded, FilePond initialized");

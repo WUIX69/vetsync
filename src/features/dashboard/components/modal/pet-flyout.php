@@ -1,4 +1,20 @@
 <style>
+    .pet-flyout {
+        max-width: 600px;
+    }
+
+    .pet-flyout .header {
+        background: #21ba45;
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+        padding: 1rem 1.5rem;
+    }
+
+    .pet-flyout .content {
+        padding: 0;
+    }
+
     .pet-flyout .pet-flyout-tabs {
         display: flex;
         gap: 1rem;
@@ -31,23 +47,7 @@
 
     .pet-flyout .pet-flyout-panel {
         width: 100%;
-    }
-
-    .pet-flyout .rate-us-btn {
-        background: #1976d2;
-        color: #fff;
-        border: none;
-        border-radius: 22px;
-        padding: 10px 32px;
-        font-size: 17px;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        transition: background 0.2s;
-    }
-
-    .pet-flyout .rate-us-btn:hover {
-        background: #1256a3;
+        padding: 1.5rem;
     }
 
     .pet-flyout .pet-profile-row {
@@ -63,7 +63,6 @@
         object-fit: cover;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
         background: #fff;
-
         display: flex !important;
         justify-content: center !important;
         align-items: center;
@@ -72,12 +71,6 @@
     .pet-flyout .pet-profile-info {
         font-family: 'Segoe UI', Arial, sans-serif;
         color: #222;
-    }
-
-    .pet-flyout .pet-profile-info .pet-profile-label {
-        color: #888;
-        font-size: 1.05rem;
-        font-weight: 500;
     }
 
     .pet-flyout .pet-profile-info .pet-profile-name {
@@ -92,12 +85,6 @@
         margin-left: 6px;
     }
 
-    .pet-flyout .pet-profile-info .pet-profile-row {
-        display: flex;
-        gap: 18px;
-        margin-bottom: 8px;
-    }
-
     .pet-flyout .pet-profile-info .pet-profile-section {
         margin-bottom: 8px;
     }
@@ -105,31 +92,9 @@
     .pet-flyout .pet-profile-info .pet-profile-section.breed {
         margin-bottom: 14px;
     }
-
-    .pet-flyout #rateUsflyout textarea {
-        resize: vertical;
-    }
-
-    .pet-flyout .rate-stars {
-        display: flex;
-        justify-content: center;
-        gap: 6px;
-        margin-bottom: 16px;
-    }
-
-    .pet-flyout .rate-star {
-        font-size: 2rem;
-        color: #ccc;
-        cursor: pointer;
-        transition: color 0.2s;
-    }
-
-    .pet-flyout .rate-star.selected,
-    .pet-flyout .rate-star.hovered {
-        color: #f7b731;
-    }
 </style>
-<!-- Pet Details flyout (refactored to match category-flyout.php) -->
+
+<!-- Pet Details flyout -->
 <div class="ui wide flyout pet-flyout" id="petFlyout">
     <i class="close icon"></i>
     <div class="header">
@@ -144,7 +109,7 @@
                         data-bs-target="#profile" type="button" role="tab" aria-controls="profile"
                         aria-selected="true">Profile</button>
                 </li>
-                <li class="nav-item " role="presentation">
+                <li class="nav-item" role="presentation">
                     <button class="pet-flyout-tab nav-link" id="service-tab" data-bs-toggle="tab"
                         data-bs-target="#service" type="button" role="tab" aria-controls="service"
                         aria-selected="false">Service</button>
@@ -171,10 +136,12 @@
                                     <label>Breed:</label>
                                     <span class="pet-profile-breed pet-profile-value"></span>
                                 </div>
+                                <!-- Date of Birth - HIDDEN (not used in system)
                                 <div class="pet-profile-section">
                                     <label>Date of Birth:</label>
                                     <span class="pet-profile-dob pet-profile-value"></span>
                                 </div>
+                                -->
                                 <div class="pet-profile-section">
                                     <label>Created:</label>
                                     <span class="pet-profile-created_at pet-profile-value"></span>
@@ -189,24 +156,29 @@
                                 <i class="trash alternate outline icon"></i> Delete
                             </button>
                         </div>
+                        <div class="archive-actions" style="margin-top: 10px;">
+                            <button class="ui red button" id="deceasedPetBtn">
+                                <i class="heart broken icon"></i> Mark as Deceased
+                            </button>
+                            <button class="ui green button" id="unarchivePetBtn" style="display: none;">
+                                <i class="undo icon"></i> Restore Pet
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="service" role="tabpanel" aria-labelledby="service-tab">
                     <!-- Service Tab -->
                     <div class="pet-flyout-panel">
-                        <div style="font-size:17px; margin-top:30px;">
-                            <p>Pet services and appointment history will be shown here.</p>
+                        <h4>Service History</h4>
+                        <div class="service-history-container">
+                            <div style="text-align: center; padding: 2rem; color: #666;">
+                                Click to load service history...
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
         </div>
-    </div>
-    <div class="actions" style="display:flex; justify-content:center; margin-top:8px;">
-        <button id="rateUsBtn" class="ui positive right labeled icon rate-us-btn" style="display:block;">
-            Rate Us
-            <i class="star icon"></i>
-        </button>
     </div>
 </div>

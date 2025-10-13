@@ -4,7 +4,7 @@
 
 <head>
     <?= shared('elements/meta') ?>
-    <title>Analytics Dashboard</title>
+    <title>Analytics Management - VetSync</title>
     <?= shared('elements/styles') ?>
 </head>
 
@@ -16,26 +16,17 @@
 
     <div class="container-body pusher">
         <!-- Sidebar -->
-        <?= partial('layouts/sidebar') ?> <!-- Sidebar -->
-        <?= partial('layouts/navbar') ?> <!-- Navbar -->
+        <?= partial('layouts/sidebar') ?>
+        <!-- Navbar -->
+        <?= partial('layouts/navbar') ?>
 
         <!-- Main Content -->
         <main class="container-main">
-
-
-            <?= featured('analytics/components/stats') ?>
             <div class="row">
-                <div class="col-md-8">
-                    <?= featured('analytics/components/revenue-trends') ?>
-                </div>
-                <div class="col-md-4">
-                    <?= featured('analytics/components/traffic-sources') ?>
-                </div>
-                <div class="col-md-7">
-                    <?= featured('analytics/components/user-activity') ?>
-                </div>
-                <div class="col-md-5">
-                    <?= featured('analytics/components/quick-stats') ?>
+                <div class="col-lg-12">
+                    <h2 class="mb-4">Analytics Management</h2>
+                    <!-- Analytics Dashboard -->
+                    <?= featured('analytics/components/analytics-dashboard') ?>
                 </div>
             </div>
         </main>
@@ -43,10 +34,6 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts') ?>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="<?= featured('analytics/js/revenueChart.js', true) ?>"></script>
-    <script src="<?= featured('analytics/js/trafficSourceChart.js', true) ?>"></script>
-    <script src="<?= featured('analytics/js/userActivityChart.js', true) ?>"></script>
 </body>
 
 </html>

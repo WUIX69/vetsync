@@ -29,7 +29,7 @@ try {
         $data = [
             'user_uuid' => userData()['uuid'] ?? null, // Use server-side session
             'name' => $_POST['name'] ?? '',
-            'dob' => $_POST['dob'] ?? '',
+            'dob' => !empty($_POST['dob']) ? $_POST['dob'] : null, // FIX: Set to NULL if empty
             'species' => $_POST['species'] ?? '',
             'breed' => $_POST['breed'] ?? '',
             'files' => $_POST['files'] ? explode(',', $_POST['files']) : [],
@@ -63,12 +63,20 @@ try {
 
         if ($action === 'all') {
             $user_uuid = userData()['uuid'] ?? null;
+            $archive_status = $_GET['archive_status'] ?? 'active';
             error_log("User UUID for pets: " . $user_uuid);
-            $result = Pets::all($user_uuid); // Pass user_uuid to the model
+
+            // If requesting archived, get both inactive and deceased
+            if ($archive_status === 'archived') {
+                $result = Pets::getAllArchived($user_uuid);
+            } else {
+                $result = Pets::all($user_uuid, $archive_status);
+            }
+
             $result['data'] = array_map(function ($item) use ($reference_model) {
-                // Format correct data
+                // Format correct data with cache busting
                 $formattedData = [
-                    'image' => media($item['uuid']),
+                    'image' => media($item['uuid']) . '?v=' . (time() + rand(1, 1000)), // Add timestamp to prevent caching
                     'created_at' => Formatters::dateToMDY($item['created_at']),
                 ];
 
@@ -80,13 +88,26 @@ try {
             }, $result['data'] ?? []);
             $response = $result;
 
+        } else if ($action === 'archive') {
+            $pet_uuid = $_GET['uuid'] ?? null;
+            $archive_status = $_GET['status'] ?? 'inactive';
+            $response = Pets::archive($pet_uuid, $archive_status);
+
+        } else if ($action === 'unarchive') {
+            $pet_uuid = $_GET['uuid'] ?? null;
+            $response = Pets::unarchive($pet_uuid);
+
+        } else if ($action === 'inactive') {
+            $user_uuid = userData()['uuid'] ?? null;
+            $response = Pets::getInactivePets($user_uuid);
+
         } else if ($action === 'single') {
             $pet_uuid = $_GET['uuid'] ?? null;
             $response = Pets::single($pet_uuid);
 
             // Add formatted image and files data (same as the 'all' action)
             if ($response['success'] && !empty($response['data'])) {
-                $response['data']['image'] = media($response['data']['uuid']);
+                $response['data']['image'] = media($response['data']['uuid']) . '?v=' . (time() + rand(1, 1000)); // Add cache busting
                 $response['data']['files'] = Attachments::all($pet_uuid)['data'] ?? [];
                 $response['data']['created_at'] = Formatters::dateToMDY($response['data']['created_at']);
             }

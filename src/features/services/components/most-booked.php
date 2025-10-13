@@ -1,3 +1,58 @@
+<?php
+// Simple fetch of most booked services - no complex code
+$most_booked_services = [];
+
+try {
+    // Get database connection
+    global $conn;
+    include_once dirname(__FILE__) . '/../../../core/conn.php';
+
+    if ($conn) {
+        // Simple query to get most booked services
+        $stmt = $conn->prepare("
+            SELECT 
+                s.name AS service_name,
+                COUNT(a.uuid) AS booking_count,
+                c.name AS category_name
+            FROM appointments a
+            LEFT JOIN services s ON a.service_uuid = s.uuid
+            LEFT JOIN categories c ON s.category_id = c.id
+            WHERE s.name IS NOT NULL
+            GROUP BY s.uuid, s.name, c.name
+            ORDER BY booking_count DESC
+            LIMIT 3
+        ");
+        $stmt->execute();
+        $most_booked_services = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+} catch (Exception $e) {
+    // If database fails, use empty array
+    $most_booked_services = [];
+}
+
+// Simple function to get service icon based on category or name
+function getServiceIcon($service_name, $category_name)
+{
+    $service_lower = strtolower($service_name);
+    $category_lower = strtolower($category_name);
+
+    // Simple icon mapping
+    if (strpos($service_lower, 'vaccination') !== false || strpos($service_lower, 'vaccine') !== false) {
+        return 'syringe';
+    } elseif (strpos($service_lower, 'groom') !== false || strpos($category_lower, 'groom') !== false) {
+        return 'paw';
+    } elseif (strpos($service_lower, 'dental') !== false || strpos($service_lower, 'teeth') !== false) {
+        return 'tooth';
+    } elseif (strpos($service_lower, 'surgery') !== false || strpos($category_lower, 'surgery') !== false) {
+        return 'cut';
+    } elseif (strpos($service_lower, 'checkup') !== false || strpos($service_lower, 'check') !== false) {
+        return 'heart';
+    } else {
+        return 'heartbeat'; // Default icon
+    }
+}
+?>
+
 <style>
     /* Most Booked Services Section - Card Style */
     main section.most-booked-services {
@@ -77,30 +132,37 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+    .no-services {
+        text-align: center;
+        padding: 2rem;
+        color: var(--color-dark-variant);
+        grid-column: 1 / -1;
+    }
 </style>
+
 <section class="most-booked-services">
     <h2 class="title">Most Booked Services</h2>
     <div class="container most-booked-grid">
-        <div class="most-booked-card">
-            <div class="most-booked-icon"><i class="syringe icon"></i></div>
-            <div class="most-booked-info">
-                <div class="most-booked-title">Vaccination</div>
-                <div class="most-booked-desc">86 bookings this month</div>
+
+        <?php if (empty($most_booked_services)): ?>
+            <div class="no-services">
+                <i class="icon calendar times outline" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                <p>No booking data available</p>
             </div>
-        </div>
-        <div class="most-booked-card">
-            <div class="most-booked-icon"><i class="paw icon"></i></div>
-            <div class="most-booked-info">
-                <div class="most-booked-title">Pet Grooming</div>
-                <div class="most-booked-desc">42 bookings this month</div>
-            </div>
-        </div>
-        <div class="most-booked-card">
-            <div class="most-booked-icon"><i class="tooth icon"></i></div>
-            <div class="most-booked-info">
-                <div class="most-booked-title">Dental Cleaning</div>
-                <div class="most-booked-desc">29 bookings this month</div>
-            </div>
-        </div>
+        <?php else: ?>
+            <?php foreach ($most_booked_services as $index => $service): ?>
+                <div class="most-booked-card <?= $index === 0 ? 'top-service' : '' ?>">
+                    <div class="most-booked-icon">
+                        <i class="<?= getServiceIcon($service['service_name'], $service['category_name'] ?: '') ?> icon"></i>
+                    </div>
+                    <div class="most-booked-info">
+                        <div class="most-booked-title"><?= htmlspecialchars($service['service_name']) ?></div>
+                        <div class="most-booked-desc"><?= $service['booking_count'] ?> bookings total</div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
     </div>
 </section>

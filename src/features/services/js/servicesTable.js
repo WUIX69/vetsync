@@ -6,6 +6,10 @@ const servicesTableBody = serviceSection.find("table tbody");
 const serviceModal = $("#serviceModal");
 const serviceModalForm = serviceModal.find("form");
 
+// Store all services and categories for filtering
+let allServices = [];
+let allCategories = [];
+
 // Filepond Flags (Required)
 let isModalHide = false;
 let isPondRender = false;
@@ -88,70 +92,18 @@ function getAllServices() {
         dataType: "json",
         timeout: 5000,
         success: function (response) {
-            // console.log("API Response:", response);
-            // return false;
-
             if (!response.success) {
                 alert(response.message);
                 return false;
             }
 
-            const services = response.data;
-            let servicesHTML = "";
-
-            services.forEach((service, idx) => {
-                servicesHTML += `
-                    <tr class="service-item" data-service-uuid="${service.uuid}">
-                        <td>
-                            <img class="service-img" src="${service.image}" alt="Services">
-                        </td>
-                        <td>${service.name}</td>
-                        <td>
-                            ${service.description}
-                        </td>
-                        <td>&#8369; ${service.price}</td>
-                        <td>${service.duration}</td>
-                        <td>
-                            <i class="${service.category.icon} icon"></i>
-                            ${service.category.label}
-                        </td>
-                       <td>
-                            <span class="text-capitalize service-status ${service.status.label}">
-                                <i class="${service.status.icon} icon"></i>
-                                ${service.status.label}
-                            </span>
-                        </td>
-                        <td>
-                            ${service.created_at}
-                        </td>
-                        <td>
-                            ${service.updated_at}
-                        </td>
-                        <td>
-                            <div class="ui compact floating selection dropdown actions-dd">
-                                <i class="dropdown icon"></i>
-                                <div class="text">Actions</div>
-                                <div class="menu">
-                                    <div class="item" data-value="view"><i class="eye icon"></i>View</div>
-                                    <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
-                                    <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            servicesTableBody.append(servicesHTML);
+            allServices = response.data;
+            renderServices(allServices);
         },
         complete: function () {
-            // Add event listener to dropdown
             servicesTableBody.find(".ui.dropdown").dropdown();
             servicesTableBody.find(".actions-dd").dropdown({
                 onChange: function (value) {
-                    // console.log(value);
-
-                    // Get the category ID on its tr
                     const serviceUuid = $(this)
                         .closest(".service-item")
                         .data("service-uuid");
@@ -160,8 +112,6 @@ function getAllServices() {
                         getSingleService(serviceUuid);
                     } else if (value === "delete") {
                         deleteService(serviceUuid);
-                    } else {
-                        return false;
                     }
                 },
             });
@@ -170,9 +120,177 @@ function getAllServices() {
     });
 }
 
+function loadServiceCategories() {
+    $.ajax({
+        url: apiUrl("shared") + "categories.php",
+        method: "GET",
+        headers: {
+            "X-Reference-Model": "services",
+        },
+        data: {
+            action: "all",
+        },
+        dataType: "json",
+        timeout: 5000,
+        success: function (response) {
+            if (response.success) {
+                allCategories = response.data;
+                populateCategoryDropdown();
+            }
+        },
+        error: ajaxErrorHandler,
+    });
+}
+
+function populateCategoryDropdown() {
+    const $dropdown = $(".table-filters .ui.dropdown").has(
+        'input[name="category-filter"]'
+    );
+    const $menu = $dropdown.find(".menu");
+
+    $menu.empty();
+    $menu.append('<div class="item" data-value="all">All Categories</div>');
+
+    allCategories.forEach((category) => {
+        if (category.status === "active") {
+            $menu.append(`
+                <div class="item" data-value="${category.name}">
+                    <i class="${category.icon} icon"></i>
+                    ${category.name}
+                </div>
+            `);
+        }
+    });
+
+    $dropdown.dropdown("refresh");
+}
+
+function renderServices(services) {
+    servicesTableBody.empty();
+
+    if (services.length === 0) {
+        servicesTableBody.append(`
+            <tr>
+                <td colspan="12" class="center aligned">
+                    <p class="text-muted">No services found</p>
+                </td>
+            </tr>
+        `);
+        return;
+    }
+
+    let servicesHTML = "";
+
+    services.forEach((service) => {
+        // Safety check for category
+        const categoryIcon = service.category?.icon || "tag";
+        const categoryLabel = service.category?.label || "Uncategorized";
+
+        // Format vaccination doses and interval
+        let dosesDisplay = "-";
+        let intervalDisplay = "-";
+
+        if (service.vaccination_doses) {
+            dosesDisplay = `<span class="ui mini teal label">${
+                service.vaccination_doses
+            } ${service.vaccination_doses === 1 ? "dose" : "doses"}</span>`;
+        }
+
+        if (service.vaccination_interval && service.vaccination_interval_unit) {
+            const unit =
+                service.vaccination_interval === 1
+                    ? service.vaccination_interval_unit.replace(/s$/, "") // Remove 's' for singular
+                    : service.vaccination_interval_unit;
+            intervalDisplay = `<span class="ui mini purple label">${service.vaccination_interval} ${unit}</span>`;
+        }
+
+        servicesHTML += `
+            <tr class="service-item" data-service-uuid="${service.uuid}">
+                <td>
+                    <img class="service-img" src="${service.image}" alt="Services">
+                </td>
+                <td>${service.name}</td>
+                <td>${service.description}</td>
+                <td>&#8369; ${service.price}</td>
+                <td>${service.duration}</td>
+                <td>${dosesDisplay}</td>
+                <td>${intervalDisplay}</td>
+                <td>
+                    <i class="${categoryIcon} icon"></i>
+                    ${categoryLabel}
+                </td>
+                <td>
+                    <span class="text-capitalize service-status ${service.status.label}">
+                        <i class="${service.status.icon} icon"></i>
+                        ${service.status.label}
+                    </span>
+                </td>
+                <td>${service.created_at}</td>
+                <td>${service.updated_at}</td>
+                <td>
+                    <div class="ui compact floating selection dropdown actions-dd">
+                        <i class="dropdown icon"></i>
+                        <div class="text">Actions</div>
+                        <div class="menu">
+                            <div class="item" data-value="view"><i class="eye icon"></i>View</div>
+                            <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
+                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    servicesTableBody.html(servicesHTML);
+}
+
+function filterServices() {
+    const searchTerm = $(".service-search input.prompt")
+        .val()
+        .toLowerCase()
+        .trim();
+    const statusFilter = $('input[name="status-filter"]').val();
+    const categoryFilter = $('input[name="category-filter"]').val();
+
+    let filtered = allServices;
+
+    // Search filter
+    if (searchTerm) {
+        filtered = filtered.filter((service) => {
+            return (
+                service.name.toLowerCase().includes(searchTerm) ||
+                service.description.toLowerCase().includes(searchTerm) ||
+                service.category.label.toLowerCase().includes(searchTerm)
+            );
+        });
+    }
+
+    // Status filter
+    if (statusFilter && statusFilter !== "all") {
+        filtered = filtered.filter((service) => {
+            return (
+                service.status.label.toLowerCase() ===
+                statusFilter.toLowerCase()
+            );
+        });
+    }
+
+    // Category filter
+    if (categoryFilter && categoryFilter !== "all") {
+        filtered = filtered.filter((service) => {
+            return (
+                service.category.label.toLowerCase() ===
+                categoryFilter.toLowerCase()
+            );
+        });
+    }
+
+    renderServices(filtered);
+}
+
 function getSingleService(serviceUuid = null) {
     if (!serviceUuid) return false;
-    // loadExistingFiles(serviceUuid);
 
     $.ajax({
         url: apiUrl("services") + "services.php",
@@ -184,9 +302,6 @@ function getSingleService(serviceUuid = null) {
         dataType: "json",
         timeout: 5000,
         success: function (response) {
-            // console.log("API Response:", response);
-            // return false;
-
             if (!response.success) {
                 alert(response.message);
                 return false;
@@ -222,18 +337,79 @@ function getSingleService(serviceUuid = null) {
                 }
             });
 
-            // Show the modal
+            // Initialize dropdowns with current values
+            serviceModalForm.find(".ui.dropdown").each(function () {
+                const $dropdown = $(this);
+                const currentValue = $dropdown.find("input[type=hidden]").val();
+                $dropdown.dropdown("set selected", currentValue);
+            });
+
+            // Get category name to check if it's vaccination - WITH DELAY
+            setTimeout(() => {
+                const categoryId = service.category_id;
+                console.log("Category ID:", categoryId);
+                console.log("All Categories:", allCategories);
+
+                const category = allCategories.find(
+                    (cat) => cat.id == categoryId
+                );
+                console.log("Found Category:", category);
+
+                if (category) {
+                    console.log("Toggling for category:", category.name);
+                    toggleVaccinationDosesField(category.name);
+                }
+            }, 100);
+
+            // Open the modal
             serviceModal.modal("show");
         },
         error: ajaxErrorHandler,
     });
 }
 
+// Function to show/hide vaccination doses field based on category
+function toggleVaccinationDosesField(categoryName) {
+    const $vaccDosesField = $(".vaccination-doses-field");
+    const $vaccIntervalField = $(".vaccination-interval-field");
+
+    console.log("toggleVaccinationDosesField called with:", categoryName);
+
+    // Show if category contains "vaccination", "vacination" (typo), or "vaccine" (case-insensitive)
+    if (
+        categoryName &&
+        (categoryName.toLowerCase().includes("vacin") || // This catches both "vaccination" and "vacination"
+            categoryName.toLowerCase().includes("vaccine"))
+    ) {
+        console.log("Showing vaccination fields");
+        $vaccDosesField.show();
+        $vaccIntervalField.show();
+
+        // Set default unit to 'weeks' if empty
+        const $unitDropdown = $vaccIntervalField
+            .find(".ui.dropdown")
+            .has('input[name="vaccination_interval_unit"]');
+        const currentUnit = $unitDropdown
+            .find('input[name="vaccination_interval_unit"]')
+            .val();
+        if (!currentUnit) {
+            $unitDropdown.dropdown("set selected", "weeks");
+        }
+    } else {
+        console.log("Hiding vaccination fields");
+        $vaccDosesField.hide();
+        $vaccIntervalField.hide();
+        // Clear the values when hiding
+        $vaccDosesField.find('input[name="vaccination_doses"]').val("");
+        $vaccIntervalField.find('input[name="vaccination_interval"]').val("");
+        $vaccIntervalField
+            .find('input[name="vaccination_interval_unit"]')
+            .val("");
+    }
+}
+
 function deleteService(serviceUuid = null) {
     if (!serviceUuid) return false;
-
-    // console.log(serviceUuid);
-    // return false;
 
     $.ajax({
         url: apiUrl("services") + "services.php?uuid=" + serviceUuid,
@@ -241,9 +417,6 @@ function deleteService(serviceUuid = null) {
         dataType: "json",
         timeout: 5000,
         success: function (response) {
-            // console.log("API Response:", response);
-            // return false;
-
             alert(response.message);
             if (!response.success) return false;
             getAllServices(); // Refresh the services data
@@ -253,13 +426,45 @@ function deleteService(serviceUuid = null) {
 }
 
 $(function () {
+    loadServiceCategories();
     getAllServices();
+
+    // Initialize dropdowns with onChange
+    $(".table-filters .ui.dropdown").dropdown({
+        onChange: function () {
+            filterServices();
+        },
+    });
+
+    // Search on input
+    $(".service-search input.prompt").on("input", function () {
+        filterServices();
+    });
+
+    // Listen for category change in the service modal
+    serviceModal
+        .find(".ui.dropdown")
+        .has('input[name="category_id"]')
+        .dropdown({
+            onChange: function (value, text, $selectedItem) {
+                toggleVaccinationDosesField(text);
+            },
+        });
 
     // Get Single service and open modal
     $("body").on("click", ".service-item", function (e) {
         if (e.target.closest(".ui.dropdown")) return false;
         const serviceUuid = $(this).data("service-uuid");
         getSingleService(serviceUuid);
+    });
+
+    // Open Add Service Modal
+    $("body").on("click", "[data-open-modal='service']", function () {
+        serviceModalForm.form("clear");
+        serviceModal
+            .find(".header")
+            .html('<i class="plus circle icon"></i> Add New Service');
+        serviceModal.modal("show");
     });
 
     // Remove files from FilePond when modal is hidden

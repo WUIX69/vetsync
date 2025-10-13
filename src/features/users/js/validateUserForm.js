@@ -42,7 +42,11 @@ $(function () {
                 rules: [
                     {
                         type: "empty",
-                        prompt: "Please enter an email",
+                        prompt: "Please enter a password",
+                    },
+                    {
+                        type: "minLength[6]",
+                        prompt: "Password must be at least 6 characters",
                     },
                 ],
             },
@@ -52,27 +56,6 @@ $(function () {
                     {
                         type: "empty",
                         prompt: "Please enter a telephone number",
-                    },
-                    {
-                        type: "minLength[11]",
-                        prompt: "Telephone number must be at least 11 digits",
-                    },
-                    {
-                        type: "maxLength[11]",
-                        prompt: "Telephone number must be at most 11 digits",
-                    },
-                    {
-                        type: "number",
-                        prompt: "Telephone number must be a number",
-                    },
-                ],
-            },
-            dob: {
-                identifier: "dob",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Please enter a date of birth",
                     },
                 ],
             },
@@ -87,16 +70,15 @@ $(function () {
             },
         },
         inline: true,
-        on: "blur", // EG: submit, blur
+        on: "blur",
         onSuccess: function (event, fields) {
             event.preventDefault();
             const $submitBtn = $(this).find("button[type=submit]");
 
-            // console.log(fields);
-            // return false;
+            console.log("💾 Saving user data:", fields);
 
             $.ajax({
-                url: apiUrl("users") + "users.php",
+                url: "../../features/users/api/users.php",
                 method: "POST",
                 data: {
                     action: fields.uuid ? "update" : "store",
@@ -106,21 +88,54 @@ $(function () {
                 timeout: 5000,
                 beforeSend: function () {
                     $submitBtn.addClass("loading");
+                    console.log("⏳ Sending user data to server...");
                 },
                 success: function (response) {
-                    // console.log("API Response:", response);
-                    // return false;
+                    console.log("✅ User save response:", response);
 
-                    alert(response.message);
-                    $usersDataTable.ajax.reload();
+                    if (response && response.success) {
+                        // ✅ SHOW SUCCESS MESSAGE
+                        alert(
+                            "✅ " +
+                                (response.message || "User saved successfully!")
+                        );
+
+                        // ✅ SIMPLE SOLUTION: ALWAYS REFRESH PAGE
+                        console.log("�� Refreshing page to show new user...");
+                        location.reload();
+                    } else {
+                        alert(
+                            "❌ " + (response.message || "Failed to save user")
+                        );
+                    }
                 },
                 complete: function () {
                     $submitBtn.removeClass("loading");
+                    console.log("⏹️ User save request completed");
                 },
-                error: ajaxErrorHandler,
+                error: function (xhr, status, error) {
+                    console.error("❌ User save error:", {
+                        xhr,
+                        status,
+                        error,
+                        responseText: xhr.responseText,
+                    });
+                    alert("❌ Error saving user: " + error);
+                },
             });
         },
     });
+});
+
+// ✅ EXPOSE DATATABLE TO WINDOW FOR ACCESS
+$(document).ready(function () {
+    // Wait for DataTable to be initialized, then expose it
+    setTimeout(function () {
+        if (typeof $usersDataTable !== "undefined") {
+            window.$usersDataTable = $usersDataTable;
+            console.log("✅ DataTable exposed to window");
+        }
+    }, 1000);
 });
 
 // Export userModal and userModalForm to window for debugging

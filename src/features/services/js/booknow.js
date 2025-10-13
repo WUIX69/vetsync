@@ -1,5 +1,181 @@
 // src/features/services/js/booknow.js
 
+// Global variable to store disabled dates
+let disabledDates = [];
+let dailyAppointmentCounts = {};
+
+// Date validation notification function
+function showDateNotification(type, title, message) {
+    // Create notification element
+    const notification = $(`
+        <div class="ui ${type} message date-notification" style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <div class="header">
+                <i class="calendar times icon"></i>
+                ${title}
+            </div>
+            <p>${message}</p>
+            <button class="ui mini button" onclick="$(this).closest('.date-notification').fadeOut()">
+                <i class="close icon"></i>
+                Dismiss
+            </button>
+        </div>
+    `);
+
+    // Add to page and animate
+    $("body").append(notification);
+    notification.hide().fadeIn(300);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        notification.fadeOut(300, function () {
+            $(this).remove();
+        });
+    }, 5000);
+}
+
+// Load availability data
+function loadAppointmentAvailability() {
+    return $.ajax({
+        url: "/src/features/appointments/api/check-availability.php",
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
+            if (response.success) {
+                disabledDates = response.disabled_dates || [];
+                console.log("Disabled dates loaded:", disabledDates);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Failed to load availability:", error);
+        },
+    });
+}
+
+// Load available time slots for a specific date
+function loadAvailableTimeSlots(date, serviceUuids) {
+    const $timeSlotDropdown = $("#appointmentTimeSlot");
+
+    if (!date || !serviceUuids || serviceUuids.length === 0) {
+        $timeSlotDropdown
+            .prop("disabled", true)
+            .html('<option value="">Select services first</option>');
+        return;
+    }
+
+    // Reset dropdown and show loading
+    $timeSlotDropdown.html('<option value="">Loading time slots...</option>');
+    $timeSlotDropdown.parent(".ui.dropdown").addClass("disabled"); // Disable Fomantic UI dropdown
+    $timeSlotDropdown.dropdown("clear");
+    $timeSlotDropdown.dropdown("refresh");
+
+    // Build query string with service UUIDs
+    const serviceParams = serviceUuids
+        .map((uuid) => `service_uuids[]=${encodeURIComponent(uuid)}`)
+        .join("&");
+
+    $.ajax({
+        url: `/src/features/appointments/api/check-time-availability.php?date=${date}&${serviceParams}`,
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
+            if (response.success && response.time_slots) {
+                let options =
+                    '<option value="">Select your preferred time</option>';
+
+                response.time_slots.forEach((slot) => {
+                    if (slot.available) {
+                        options += `<option value="${slot.value}">${slot.label}</option>`;
+                    } else {
+                        options += `<option value="${slot.value}" disabled>${slot.label} (Booked)</option>`;
+                    }
+                });
+
+                $timeSlotDropdown.html(options);
+                $timeSlotDropdown.prop("disabled", false); // Enable select element
+                $timeSlotDropdown
+                    .parent(".ui.dropdown")
+                    .removeClass("disabled"); // Enable Fomantic UI dropdown
+                $timeSlotDropdown.dropdown("refresh");
+
+                console.log("Time slots loaded for", date);
+            } else {
+                $timeSlotDropdown.html(
+                    '<option value="">No time slots available</option>'
+                );
+                $timeSlotDropdown.prop("disabled", true);
+                $timeSlotDropdown.parent(".ui.dropdown").addClass("disabled");
+                $timeSlotDropdown.dropdown("refresh");
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Failed to load time slots:", error);
+            $timeSlotDropdown.html(
+                '<option value="">Error loading time slots</option>'
+            );
+            $timeSlotDropdown.prop("disabled", true);
+            $timeSlotDropdown.parent(".ui.dropdown").addClass("disabled");
+            $timeSlotDropdown.dropdown("refresh");
+        },
+    });
+}
+
+// Check if a date is available
+function checkDateAvailability(dateString) {
+    const $availabilityDiv = $("#dateAvailability");
+
+    if (disabledDates.includes(dateString)) {
+        // Show warning for fully booked dates
+        $availabilityDiv
+            .removeClass("available")
+            .addClass("fully-booked")
+            .html(
+                '<i class="times circle icon"></i><span><strong>Fully Booked!</strong> This date has reached capacity. Please select another date.</span>'
+            );
+        return false;
+    } else {
+        // Hide message when date is available (no clutter)
+        $availabilityDiv.removeClass("fully-booked available").hide().html("");
+        return true;
+    }
+}
+
+// Real-time date validation
+// Real-time date validation
+function validateDateInput(inputElement) {
+    const selectedDate = $(inputElement).val();
+    if (selectedDate) {
+        const today = new Date();
+        const appointmentDate = new Date(selectedDate);
+        today.setHours(0, 0, 0, 0);
+        appointmentDate.setHours(0, 0, 0, 0);
+
+        // Check if past date
+        if (appointmentDate < today) {
+            showDateNotification(
+                "error",
+                "Past Date Selected",
+                "You cannot book an appointment for a past date. Please select today or a future date."
+            );
+            $(inputElement).val("");
+            $("#dateAvailability").hide();
+            return false;
+        }
+
+        // Check if date is fully booked
+        if (!checkDateAvailability(selectedDate)) {
+            showDateNotification(
+                "warning",
+                "Date Fully Booked",
+                "This date has reached capacity. Please select another available date."
+            );
+            $(inputElement).val("");
+            return false;
+        }
+        // Removed success notification - less clutter!
+    }
+    return true;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     $(document).on("click", "[data-open-modal]", function () {
         const modalSelector = $(this).data("open-modal");
@@ -7,6 +183,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // For Book Now modal, store selected service UUID
         if ($(this).hasClass("book-now-btn")) {
+            // Check if button is disabled (for unavailable services)
+            if ($(this).hasClass("disabled")) {
+                return false;
+            }
+
             const serviceUuid = $(this).data("service-uuid");
             window.selectedServiceUuids = serviceUuid ? [serviceUuid] : [];
         }
@@ -17,9 +198,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 observeChanges: true,
                 onShow: function () {
                     if (modalSelector === "#bookNowModal") {
-                        $(
-                            "#bookNowPetDropdown, #bookNowServiceDropdown"
-                        ).dropdown();
+                        // Load availability data first
+                        loadAppointmentAvailability().then(function () {
+                            console.log(
+                                "Availability loaded, disabled dates:",
+                                disabledDates
+                            );
+                        });
+
+                        // Initialize pet dropdown first
+                        $("#bookNowPetDropdown").dropdown();
+
+                        // Initialize multi-select dropdown for services
+                        $("#bookNowServiceDropdown").dropdown({
+                            placeholder: "Select one or more services",
+                            allowAdditions: false,
+                            hideAdditions: true,
+                            minCharacters: 0,
+                        });
+
+                        // Initialize time slot dropdown
+                        $("#appointmentTimeSlot").dropdown({
+                            placeholder: "Select your preferred time",
+                        });
 
                         // Fetch pets
                         $.ajax({
@@ -80,16 +281,31 @@ document.addEventListener("DOMContentLoaded", function () {
                                             })
                                         );
                                     });
-                                    if (
-                                        window.selectedServiceUuids &&
-                                        window.selectedServiceUuids.length
-                                    ) {
-                                        $serviceDropdown.val(
-                                            window.selectedServiceUuids[0]
-                                        );
-                                    }
+                                    // Add "Others" option at the end
+                                    $serviceDropdown.append(
+                                        $("<option>", {
+                                            value: "others",
+                                            text: "Others (Custom Service Request)",
+                                        })
+                                    );
                                 }
+
+                                // Refresh dropdown FIRST
                                 $serviceDropdown.dropdown("refresh");
+
+                                // THEN set pre-selected values (after refresh)
+                                if (
+                                    window.selectedServiceUuids &&
+                                    window.selectedServiceUuids.length > 0
+                                ) {
+                                    // Use setTimeout to ensure dropdown is fully ready
+                                    setTimeout(function () {
+                                        $serviceDropdown.dropdown(
+                                            "set selected",
+                                            window.selectedServiceUuids
+                                        );
+                                    }, 100);
+                                }
                             },
                             error: function (xhr, status, error) {
                                 console.error(
@@ -98,6 +314,104 @@ document.addEventListener("DOMContentLoaded", function () {
                                 );
                             },
                         });
+
+                        // Add real-time date validation
+                        $("#appointmentDateInput").on("change", function () {
+                            validateDateInput(this);
+
+                            const selectedDate = $(this).val();
+                            if (
+                                selectedDate &&
+                                checkDateAvailability(selectedDate)
+                            ) {
+                                loadAvailableTimeSlots(
+                                    selectedDate,
+                                    window.selectedServiceUuids
+                                );
+                                // Remove error state from time field if it exists
+                                $("#appointmentTimeSlot")
+                                    .closest(".field")
+                                    .removeClass("error");
+                                $("#timeSlotError").remove();
+                            } else {
+                                // Reset time slot dropdown if date is invalid
+                                $("#appointmentTimeSlot")
+                                    .html(
+                                        '<option value="">Select a date first</option>'
+                                    )
+                                    .dropdown("clear")
+                                    .dropdown("refresh");
+                            }
+                        });
+
+                        // Add validation for time slot dropdown click
+                        $("#appointmentTimeSlot")
+                            .parent(".ui.dropdown")
+                            .on("click", function () {
+                                const selectedDate = $(
+                                    "#appointmentDateInput"
+                                ).val();
+                                const $timeField = $(
+                                    "#appointmentTimeSlot"
+                                ).closest(".field");
+
+                                if (!selectedDate) {
+                                    // Show error on time field
+                                    $timeField.addClass("error");
+
+                                    // Remove existing error message if any
+                                    $("#timeSlotError").remove();
+
+                                    // Add error message
+                                    $timeField.append(
+                                        '<div class="ui pointing above prompt label" id="timeSlotError">Please select an appointment date first</div>'
+                                    );
+
+                                    // Focus on date input
+                                    $("#appointmentDateInput").focus();
+
+                                    return false;
+                                } else {
+                                    // Remove error if date is selected
+                                    $timeField.removeClass("error");
+                                    $("#timeSlotError").remove();
+                                }
+                            });
+
+                        // Add change event handler for service dropdown
+                        $("#bookNowServiceDropdown")
+                            .off("change")
+                            .on("change", function () {
+                                const selectedValues =
+                                    $(this).dropdown("get value");
+
+                                // Handle both array and string returns
+                                let valuesArray = [];
+                                if (Array.isArray(selectedValues)) {
+                                    valuesArray = selectedValues;
+                                } else if (typeof selectedValues === "string") {
+                                    valuesArray = selectedValues
+                                        ? selectedValues.split(",")
+                                        : [];
+                                }
+
+                                const $customServiceField = $(
+                                    "#customServiceField"
+                                );
+                                const $customTextarea =
+                                    $customServiceField.find(
+                                        'textarea[name="custom_service_request"]'
+                                    );
+
+                                if (valuesArray.includes("others")) {
+                                    $customServiceField.show();
+                                    $customTextarea.prop("required", true);
+                                } else {
+                                    $customServiceField.hide();
+                                    $customTextarea.prop("required", false);
+                                    $customTextarea.val(""); // Clear the field when hidden
+                                }
+                            });
                     }
                 },
             })
@@ -108,43 +422,25 @@ document.addEventListener("DOMContentLoaded", function () {
 $(function () {
     $("#bookNowForm").form({
         fields: {
-            full_name: {
-                identifier: "full_name",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Full name is required",
-                    },
-                ],
-            },
-            email: {
-                identifier: "email",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Email is required",
-                    },
-                    {
-                        type: "email",
-                        prompt: "Please enter a valid email",
-                    },
-                ],
-            },
-            phone: {
-                identifier: "phone",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "Phone number is required",
-                    },
-                ],
-            },
             date: {
                 identifier: "date",
                 rules: [
                     {
                         type: "empty",
                         prompt: "Please select an appointment date",
+                    },
+                    {
+                        type: "regExp[/^\\d{4}-\\d{2}-\\d{2}$/]",
+                        prompt: "Please enter a valid date format",
+                    },
+                ],
+            },
+            time: {
+                identifier: "time",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "Please select a preferred time slot",
                     },
                 ],
             },
@@ -157,49 +453,175 @@ $(function () {
                     },
                 ],
             },
-            service_uuid: {
-                identifier: "service_uuid",
+            custom_service_request: {
+                identifier: "custom_service_request",
                 rules: [
                     {
                         type: "empty",
-                        prompt: "Please select a service",
+                        prompt: "Please describe the custom service you need",
                     },
                 ],
+                optional: true,
             },
         },
-        onSuccess: function () {
-            const $form = $(this);
-            const $submitBtn = $form.find("button[type=submit]");
-            $submitBtn.addClass("loading");
+        onSuccess: function (event, fields) {
+            event.preventDefault();
+            console.log("Form validation passed, submitting...");
 
-            const formData = $form.serialize();
+            // Additional validation: Check if selected date is fully booked
+            if (disabledDates.includes(fields.date)) {
+                showDateNotification(
+                    "error",
+                    "Date Fully Booked",
+                    "This date is no longer available. Please select another date."
+                );
+                $("#appointmentDateInput").val("");
+                $("#dateAvailability").hide();
+                return false;
+            }
+
+            // Get selected services
+            const selectedServices = $("#bookNowServiceDropdown").dropdown(
+                "get value"
+            );
+
+            // Handle both array and string returns
+            let serviceUuids = [];
+            if (Array.isArray(selectedServices)) {
+                serviceUuids = selectedServices;
+            } else if (typeof selectedServices === "string") {
+                serviceUuids = selectedServices
+                    ? selectedServices.split(",")
+                    : [];
+            }
+
+            // Manual validation for services (since array fields don't work well with Semantic UI)
+            if (serviceUuids.length === 0) {
+                $("#bookNowForm").form(
+                    "add prompt",
+                    "service_uuids[]",
+                    "Please select at least one service"
+                );
+                // Show error on the dropdown
+                $("#bookNowServiceDropdown").parent().addClass("error");
+                return false;
+            } else {
+                $("#bookNowServiceDropdown").parent().removeClass("error");
+            }
+
+            // Custom validation for "Others" service
+            const customServiceRequest = fields.custom_service_request;
+
+            if (
+                serviceUuids.includes("others") &&
+                (!customServiceRequest || customServiceRequest.trim() === "")
+            ) {
+                // Show error for custom service field
+                $("#bookNowForm").form(
+                    "add prompt",
+                    "custom_service_request",
+                    "Please describe the custom service you need"
+                );
+                return false;
+            }
+
+            const formData = new FormData();
+            formData.append("action", "add_multiple");
+            formData.append("service_uuids", JSON.stringify(serviceUuids));
+            formData.append("pet_uuid", fields.pet_uuid);
+            formData.append("date", fields.date);
+            formData.append("time", fields.time); // Changed from fields.time_slot
+            formData.append("note", fields.special_request || "");
+
+            // Add custom service request if "Others" is selected
+            if (serviceUuids.includes("others")) {
+                formData.append(
+                    "custom_service_request",
+                    fields.custom_service_request
+                );
+            }
+
+            // Show loading state
+            const submitBtn = $("#bookNowForm .ui.button");
+            submitBtn.addClass("loading disabled");
 
             $.ajax({
-                url: "/src/features/appointments/api/appointments.php",
-                method: "POST",
+                url: "/src/features/appointments/api/user-appointments.php",
+                type: "POST",
                 data: formData,
-                dataType: "json",
+                processData: false,
+                contentType: false,
+                dataType: "json", // Add this to ensure proper JSON parsing
                 success: function (response) {
+                    console.log("Booking response:", response);
+                    submitBtn.removeClass("loading disabled");
+
                     if (response.success) {
-                        alert(response.message);
+                        // Close modal first
                         $("#bookNowModal").modal("hide");
-                        $form[0].reset();
-                        $form.find(".ui.dropdown").dropdown("clear");
+
+                        // Show simple alert message (like login)
+                        alert(
+                            "✅ Appointment booked successfully! We will contact you to confirm."
+                        );
+
+                        // Reset form
+                        $("#bookNowForm")[0].reset();
+                        $("#bookNowServiceDropdown").dropdown("clear");
+                        $("#dateAvailability").hide();
+
+                        // Reload page
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 500);
                     } else {
                         alert(
-                            "Failed to book appointment: " + response.message
+                            "❌ " +
+                                (response.message ||
+                                    "Failed to book appointment. Please try again.")
                         );
                     }
                 },
-                complete: function () {
-                    $submitBtn.removeClass("loading");
-                },
                 error: function (xhr, status, error) {
-                    alert("Failed to book appointment. Please try again.");
+                    console.error("Booking error:", error);
+                    console.log("XHR:", xhr);
+                    submitBtn.removeClass("loading disabled");
+
+                    // Try to parse error response
+                    let errorMessage =
+                        "An error occurred while booking your appointments. Please try again.";
+                    try {
+                        const errorResponse = JSON.parse(xhr.responseText);
+                        if (errorResponse.message) {
+                            errorMessage = errorResponse.message;
+                        }
+                    } catch (e) {
+                        // Keep default message
+                    }
+
+                    showDateNotification(
+                        "error",
+                        "Booking Failed",
+                        errorMessage
+                    );
                 },
             });
 
             return false; // Prevent default form submission
+        },
+        onFailure: function () {
+            // Add debug logging for validation failures
+            console.log("Form validation failed");
+            const errors = $(this).find(".error.message .list li");
+            console.log(
+                "Validation errors:",
+                errors
+                    .map(function () {
+                        return $(this).text();
+                    })
+                    .get()
+            );
+            return false;
         },
     });
 });

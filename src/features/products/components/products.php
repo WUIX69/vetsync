@@ -2,7 +2,8 @@
     /*----------- MAIN (Products) -----------*/
     main section.products {
         background: var(--color-background);
-        padding-top: 1rem;
+        padding-top: 0;
+        /* Remove extra top padding */
         padding-bottom: 3rem;
     }
 
@@ -38,7 +39,8 @@
         justify-content: end;
         gap: 1rem;
         align-items: center;
-        margin-bottom: 2.3rem;
+        margin-bottom: 1rem;
+        /* Reduced from 2.3rem */
         flex-wrap: nowrap;
     }
 
@@ -254,11 +256,67 @@
     .status-badge i {
         font-size: 0.8em;
     }
+
+    /* Disabled cart controls and buttons for unavailable products */
+    main section.products .product-listing .content-2 .product-footer .ui.buttons.disabled,
+    main section.products .product-listing .content-2 .product-footer .ui.button.disabled {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.vertical.button.disabled {
+        background-color: #6c757d !important;
+        color: white !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.vertical.button.disabled:hover {
+        background-color: #6c757d !important;
+        transform: none !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.buttons.disabled .ui.button {
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+    }
+
+    /* Add this to your product styles */
+    main section.products .product-listing .content-2 .meta .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .stars {
+        color: #ffc107;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .rating-text {
+        font-size: 0.75rem;
+        color: var(--color-dark);
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .review-count {
+        font-size: 0.7rem;
+        color: var(--color-muted);
+        font-weight: 400;
+    }
 </style>
 
 <!-- Products Section -->
 <section class="products">
     <div class="container-xl">
+        <?php if (uriAppPath('landing')): ?>
+            <div class="products-title">
+                <div class="section-title">
+                    <span class="sub-title">Products</span>
+                    <h2>What We Offer</h2>
+                    <p>Quality pet products for your beloved companions</p>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <!-- Header with filters -->
         <div class="header">
             <!-- Sort -->
@@ -305,6 +363,6 @@
         </div>
 
         <!-- Pagination -->
-        <?= shared('components/pagination'); ?>
+        <!--  shared('components/pagination'); -->
     </div>
 </section>

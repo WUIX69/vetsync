@@ -103,17 +103,22 @@
             font-weight: 600;
         }
 
-        .status-upcoming {
-            background-color: #e3f2fd;
-            color: #1976d2;
+        .appointment-status.pending {
+            background-color: #fff3cd;
+            color: #856404;
         }
 
-        .status-completed {
+        .appointment-status.accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .appointment-status.completed {
             background-color: #e8f5e9;
             color: #2e7d32;
         }
 
-        .status-cancelled {
+        .appointment-status.cancelled {
             background-color: #ffebee;
             color: #c62828;
         }
@@ -310,9 +315,13 @@
                                         <i class="list icon"></i>
                                         <span>All</span>
                                     </a>
-                                    <a href="#" class="nav-link" data-filter="upcoming">
+                                    <a href="#" class="nav-link" data-filter="pending">
                                         <i class="clock outline icon"></i>
-                                        <span>Upcoming</span>
+                                        <span>Pending</span>
+                                    </a>
+                                    <a href="#" class="nav-link" data-filter="confirmed">
+                                        <i class="check circle outline icon"></i>
+                                        <span>Confirmed</span>
                                     </a>
                                     <a href="#" class="nav-link" data-filter="completed">
                                         <i class="check circle icon"></i>

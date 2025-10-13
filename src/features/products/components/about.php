@@ -1,3 +1,12 @@
+<?php
+$product = $GLOBALS['product'] ?? null;
+if (!$product) {
+    return;
+}
+
+// Parse specs for features display
+$specs = !empty($product['specs']) ? explode(',', $product['specs']) : [];
+?>
 <style>
     /* main section.about {
         margin-top: 3rem;
@@ -99,16 +108,14 @@
         <div class="row">
             <div class="col-lg-5">
                 <div class="product-image">
-                    <img src="<?= asset('img/contents/products/camera.jpg'); ?>" alt="Vintage camera">
+                    <img src="<?= media($product['uuid']) ?>"
+                        alt="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>">
                 </div>
             </div>
             <div class="col-lg-7">
-                <h2>The Christina Fashion</h2>
+                <h2><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h2>
                 <div class="product-description">
-                    <p>Cramond Leopard & Pythong Print Anorak Jacket In Beige but also the leap into electronic
-                        typesetting, remaining Lorem Ipsum is simply dummy text of the printing and typesetting
-                        industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                        unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                    <p><?= nl2br(htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8')) ?></p>
                 </div>
                 <div class="details-tab">
                     <ul class="nav nav-tabs mb-0 justify-content-center details-nav">
@@ -124,7 +131,7 @@
                         </li>
                         <li class="nav-item d-inline-block">
                             <a href="#data" data-bs-toggle="tab" aria-expanded="true" class="nav-link">
-                                <span class="d-md-block">Data</span>
+                                <span class="d-md-block">Details</span>
                             </a>
                         </li>
                     </ul>
@@ -132,34 +139,42 @@
 
                         <div id="features" class="tab-pane fade show active">
                             <ul class="features-list">
-                                <li><i class="circle icon"></i> 55% poly, 45% rayon</li>
-                                <li><i class="circle icon"></i> Hand wash cold</li>
-                                <li><i class="circle icon"></i> Partially lined</li>
-                                <li><i class="circle icon"></i> Hidden front button closure with keyhole accents</li>
-                                <li><i class="circle icon"></i> Button cuff sleeves</li>
-                                <li><i class="circle icon"></i> Made in USA</li>
+                                <li><i class="circle icon"></i> Premium quality product for your pet</li>
+                                <li><i class="circle icon"></i> Made with safe, non-toxic materials</li>
+                                <li><i class="circle icon"></i> Easy to use and maintain</li>
+                                <li><i class="circle icon"></i> Suitable for all pet sizes</li>
+                                <li><i class="circle icon"></i> Veterinarian recommended</li>
+                                <li><i class="circle icon"></i> Satisfaction guaranteed</li>
                             </ul>
                         </div>
 
                         <div id="specs" class="tab-pane fade">
                             <ul class="features-list">
-                                <li><i class="circle icon"></i> 55% poly, 45% rayon</li>
-                                <li><i class="circle icon"></i> Hand wash cold</li>
-                                <li><i class="circle icon"></i> Partially lined</li>
-                                <li><i class="circle icon"></i> Hidden front button closure with keyhole accents</li>
-                                <li><i class="circle icon"></i> Button cuff sleeves</li>
-                                <li><i class="circle icon"></i> Made in USA</li>
+                                <?php if (!empty($specs)): ?>
+                                    <?php foreach ($specs as $spec): ?>
+                                        <li><i class="circle icon"></i>
+                                            <?= htmlspecialchars(trim($spec), ENT_QUOTES, 'UTF-8') ?></li>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <li><i class="circle icon"></i> No specifications available</li>
+                                <?php endif; ?>
                             </ul>
                         </div>
 
                         <div id="data" class="tab-pane fade">
                             <ul class="features-list">
-                                <li><i class="circle icon"></i> 55% poly, 45% rayon</li>
-                                <li><i class="circle icon"></i> Hand wash cold</li>
-                                <li><i class="circle icon"></i> Partially lined</li>
-                                <li><i class="circle icon"></i> Hidden front button closure with keyhole accents</li>
-                                <li><i class="circle icon"></i> Button cuff sleeves</li>
-                                <li><i class="circle icon"></i> Made in USA</li>
+                                <li><i class="circle icon"></i> Price:
+                                    ₱<?= number_format(floatval($product['og_price']), 2) ?></li>
+                                <?php if (!empty($product['dc_price']) && floatval($product['dc_price']) > 0): ?>
+                                    <li><i class="circle icon"></i> Discounted Price:
+                                        ₱<?= number_format(floatval($product['dc_price']), 2) ?></li>
+                                <?php endif; ?>
+                                <li><i class="circle icon"></i> Product ID:
+                                    <?= htmlspecialchars($product['uuid'], ENT_QUOTES, 'UTF-8') ?>
+                                </li>
+                                <li><i class="circle icon"></i> Status:
+                                    <?= intval($product['stock']) > 0 ? 'Available' : 'Out of Stock' ?>
+                                </li>
                             </ul>
                         </div>
 

@@ -34,6 +34,16 @@ function userData($uuid = null)
     }
 
     $user = getUserByUuid($uuid);
+
+    // Return empty data if no user found
+    if (!$user) {
+        return [
+            'type' => '',
+            'name' => '',
+            'profile' => null,
+        ];
+    }
+
     $user_formatted_data = [
         'type' => $session->get()['type'] ?? '',
         'name' => $user['firstname'] . ' ' . $user['lastname'] ?? '',

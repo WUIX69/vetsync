@@ -33,6 +33,9 @@ function rcsScripts()
 
     // Add notification system script
     echo '<script src="/src/shared/js/notifications.js"></script>';
+
+    // Add cart system script (for badge and cart functionality on all pages)
+    echo '<script src="/src/features/products/js/cart.js"></script>';
 }
 
 

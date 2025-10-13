@@ -378,8 +378,9 @@ main section.stats .stat-card {
     position: relative;
     overflow: hidden;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    padding: 2rem 1rem;
 }
 
 main section.stats .stat-card h6 {
@@ -397,31 +398,9 @@ main section.stats .stat-card .info {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
-}
-
-main section.stats .stat-card .circular-chart {
-    width: 100%;
-    height: 100%;
-}
-
-main section.stats .stat-card .circular-chart path {
-    stroke-linecap: round;
-}
-
-main section.stats .stat-card .circular-chart text {
-    fill: #666;
-    font-family: "Poppins", sans-serif;
-    font-size: 5.5px !important;
-    text-anchor: middle;
-}
-
-main section.stats .stat-card .progress-circle {
-    width: 80px;
-    height: 80px;
-    display: flex;
     align-items: center;
-    justify-content: center;
+    text-align: center;
+    width: 100%;
 }
 
 main section.new-users .user small {

@@ -24,24 +24,11 @@ $categories = Categories::all('products')['data'] ?? [];
                 <label>Description</label>
                 <textarea name="description" rows="3" placeholder="Enter product description"></textarea>
             </div>
-            <div class="three fields">
-                <div class="field">
-                    <label>Original Price</label>
-                    <div class="ui labeled input">
-                        <div class="ui label">&#8369;</div>
-                        <input type="decimal" name="og_price" placeholder="0.00">
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Discounted Price</label>
-                    <div class="ui labeled input">
-                        <div class="ui label">&#8369;</div>
-                        <input type="decimal" name="dc_price" placeholder="0.00">
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Stock</label>
-                    <input type="number" name="stock" placeholder="0" min="1">
+            <div class="field">
+                <label>Original Price</label>
+                <div class="ui labeled input">
+                    <div class="ui label">&#8369;</div>
+                    <input type="decimal" name="og_price" placeholder="0.00">
                 </div>
             </div>
             <div class="two fields">
@@ -112,6 +99,10 @@ $categories = Categories::all('products')['data'] ?? [];
                         <div class="item" data-value="softchews">Soft Chews</div>
                         <div class="item" data-value="liquid">Liquid</div>
                         <div class="item" data-value="tablet">Tablet</div>
+                        <div class="item" data-value="Metal">Metal</div>
+                        <div class="item" data-value="Plastic">Plastic</div>
+                        <div class="item" data-value="Stainless Steel  ">Stainless Steel</div>
+
                     </div>
                 </div>
             </div>

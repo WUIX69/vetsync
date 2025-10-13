@@ -1,3 +1,58 @@
+<?php
+use VetSync\Models\Services;
+
+// Get random services for related section (excluding current service)
+$current_service = $GLOBALS['service'] ?? null;
+$current_uuid = $current_service['uuid'] ?? '';
+
+$services_result = Services::all();
+$all_services = $services_result['data'] ?? [];
+
+// Filter out current service and get 3 random ones
+$related_services = array_filter($all_services, function ($service) use ($current_uuid) {
+    return $service['uuid'] !== $current_uuid;
+});
+
+// Shuffle and take first 3
+shuffle($related_services);
+$related_services = array_slice($related_services, 0, 3);
+
+// Service icons mapping
+$service_icons = [
+    'vaccination' => 'bx-injection',
+    'surgery' => 'bx-plus-medical',
+    'grooming' => 'bx-cut',
+    'checkup' => 'bx-health',
+    'dental' => 'bx-smile',
+    'emergency' => 'bx-first-aid',
+    'boarding' => 'bx-home',
+    'training' => 'bx-brain',
+    'default' => 'bx-heart'
+];
+
+function getServiceIcon($serviceName, $iconMap)
+{
+    $name = strtolower($serviceName);
+    foreach ($iconMap as $key => $icon) {
+        if (strpos($name, $key) !== false) {
+            return $icon;
+        }
+    }
+    return $iconMap['default'];
+}
+
+function getServiceStatus($status)
+{
+    $statuses = [
+        'available' => ['class' => 'green', 'icon' => 'bx-check-circle', 'text' => 'Available'],
+        'unavailable' => ['class' => 'red', 'icon' => 'bx-x-circle', 'text' => 'Unavailable'],
+        'busy' => ['class' => 'yellow', 'icon' => 'bx-time', 'text' => 'Busy'],
+        'soon' => ['class' => 'blue', 'icon' => 'bx-calendar-plus', 'text' => 'Coming Soon']
+    ];
+
+    return $statuses[$status] ?? $statuses['available'];
+}
+?>
 <style>
     main section.related .service-card {
         background: var(--color-white);
@@ -109,7 +164,6 @@
 
     main section.related .service-card .card-body .service-details p {
         color: #667;
-        /* font-size: 14px; */
         line-height: 1.5;
         margin-bottom: 15px;
     }
@@ -130,10 +184,10 @@
         color: #031224;
     }
 
-    main section.related .service-card .card-body .service-meta button {
-        border: none;
-        color: #fff;
-        background: #031224;
+    main section.related .service-card .card-body .service-meta .service-btn {
+        border: none !important;
+        color: #fff !important;
+        background: #031224 !important;
         padding: 10px 20px;
         border-radius: 10px;
         display: flex;
@@ -141,10 +195,18 @@
         gap: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        text-decoration: none;
+        font-weight: 500;
     }
 
-    main section.related .service-card .card-body .service-meta button:hover {
-        background: #062451;
+    main section.related .service-card .card-body .service-meta .service-btn:hover {
+        background: #062451 !important;
+        color: #fff !important;
+    }
+
+    main section.related .service-card .card-body .service-meta .service-btn:focus {
+        background: #062451 !important;
+        color: #fff !important;
     }
 </style>
 <section class="related py-5">
@@ -155,100 +217,54 @@
         </div>
         <!-- Services -->
         <div class="row g-4">
-            <!-- Vaccination Service -->
-            <div class="col-lg-4">
-                <div class="service-card card">
-                    <div class="card-img">
-                        <div class="service-status">
-                            <span class="ui green label status-avail available">
-                                <i class='bx bx-check-circle'></i> Available</span>
-                        </div>
-                        <img src="<?= asset('img/contents/services/vaccination.jpg'); ?>" alt="Vaccination Services">
-                        <div class="service-tag">
-                            <span class="ui primary tag label">Featured</span>
+            <?php if (!empty($related_services)): ?>
+                <?php foreach ($related_services as $service): ?>
+                    <?php
+                    $status_info = getServiceStatus($service['status'] ?? 'available');
+                    $icon = getServiceIcon($service['name'], $service_icons);
+                    ?>
+                    <div class="col-lg-4">
+                        <div class="service-card card">
+                            <div class="card-img">
+                                <div class="service-status">
+                                    <span class="ui <?= $status_info['class'] ?> label status-avail">
+                                        <i class='bx <?= $status_info['icon'] ?>'></i> <?= $status_info['text'] ?>
+                                    </span>
+                                </div>
+                                <img src="<?= media($service['uuid']) ?>"
+                                    alt="<?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?>">
+                                <div class="service-tag">
+                                    <span class="ui primary tag label">Featured</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="service-header">
+                                    <h4><?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?></h4>
+                                    <i class='bx <?= $icon ?>'></i>
+                                </div>
+                                <div class="service-details">
+                                    <p><?= htmlspecialchars(substr($service['description'], 0, 120), ENT_QUOTES, 'UTF-8') ?>...
+                                    </p>
+                                    <p>Duration: <?= htmlspecialchars($service['duration'], ENT_QUOTES, 'UTF-8') ?></p>
+                                </div>
+                                <div class="service-meta">
+                                    <span class="price">₱<?= number_format(floatval($service['price']), 2) ?></span>
+                                    <a href="/src/app/user/service-single-view.php?uuid=<?= $service['uuid'] ?>"
+                                        class="service-btn">
+                                        <?= $status_info['text'] === 'Available' ? 'Book Now' : 'View Details' ?> <i
+                                            class='bx bx-right-arrow-alt'></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <div class="service-header">
-                            <h4>Vaccination</h4>
-                            <i class='bx bx-injection'></i>
-                        </div>
-                        <div class="service-details">
-                            <p>Essential vaccinations to protect your pet against common diseases. Includes
-                                consultation and vaccine administration.</p>
-                            <p>Duration: 20-30 minutes</p>
-                        </div>
-                        <div class="service-meta">
-                            <span class="price">₱75.00</span>
-                            <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
-                        </div>
-                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <!-- Fallback if no services available -->
+                <div class="col-12">
+                    <p class="text-center">No related services available at the moment.</p>
                 </div>
-            </div>
-
-            <!-- Surgery Service -->
-            <div class="col-lg-4">
-                <div class="service-card card">
-                    <div class="card-img">
-                        <div class="service-status">
-                            <span class="ui red label status-avail unavailable">
-                                <i class='bx bx-x-circle'></i> Unavailable</span>
-                        </div>
-                        <img src="<?= asset('img/contents/services/surgery.jpg'); ?>" alt="Surgery Services">
-                        <div class="service-tag">
-                            <span class="ui primary tag label">Featured</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="service-header">
-                            <h4>Surgery</h4>
-                            <i class='bx bx-plus-medical'></i>
-                        </div>
-                        <div class="service-details">
-                            <p>Professional surgical procedures performed by experienced veterinarians in a
-                                state-of-the-art facility. Lorem ipsum dolor sit amet consectetur
-                                adipisicing elit.</p>
-                            <p>Duration: Varies by procedure</p>
-                        </div>
-                        <div class="service-meta">
-                            <span class="price">From ₱200.00</span>
-                            <button>Consult Now <i class='bx bx-right-arrow-alt'></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Grooming Service -->
-            <div class="col-lg-4">
-                <div class="service-card card">
-                    <div class="card-img">
-                        <div class="service-status">
-                            <span class="ui yellow label status-avail busy">
-                                <i class='bx bx-time'></i> Busy</span>
-                        </div>
-                        <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Pet Grooming">
-                        <div class="service-tag">
-                            <span class="ui primary tag label">Featured</span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="service-header">
-                            <h4>Grooming</h4>
-                            <i class='bx bx-cut'></i>
-                        </div>
-                        <div class="service-details">
-                            <p>Professional grooming services including bath, haircut, nail trimming, and
-                                ear
-                                cleaning. Lorem, ipsum dolor. Lorem ipsum dolor sit amet.</p>
-                            <p>Duration: 60-120 minutes</p>
-                        </div>
-                        <div class="service-meta">
-                            <span class="price">From ₱65.00</span>
-                            <button>Book Now <i class='bx bx-right-arrow-alt'></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
 
     </div>

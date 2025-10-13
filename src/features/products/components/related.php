@@ -1,3 +1,41 @@
+<?php
+use VetSync\Models\Products;
+use VetSync\Models\Reviews;
+
+// Get random products for related section (excluding current product)
+$current_product = $GLOBALS['product'] ?? null;
+$current_uuid = $current_product['uuid'] ?? '';
+
+$products_result = Products::all();
+$all_products = $products_result['data'] ?? [];
+
+// Filter out current product
+$related_products = array_filter($all_products, function ($product) use ($current_uuid) {
+    return $product['uuid'] !== $current_uuid;
+});
+
+// Reset array keys, shuffle, and take 3
+$related_products = array_values($related_products);
+shuffle($related_products);
+$related_products = array_slice($related_products, 0, 3);
+
+// Make sure we have unique UUIDs (just in case)
+$unique_products = [];
+$seen_uuids = [];
+
+foreach ($related_products as $product) {
+    if (!in_array($product['uuid'], $seen_uuids)) {
+        $seen_uuids[] = $product['uuid'];
+        // Fetch review stats
+        $reviewStats = Reviews::getByReference($product['uuid'], 'products');
+        $product['weighted_average'] = $reviewStats['stats']['weighted_average'] ?? 0;
+        $product['total_reviews'] = $reviewStats['stats']['total_reviews'] ?? 0;
+        $unique_products[] = $product;
+    }
+}
+
+$related_products = $unique_products;
+?>
 <style>
     /*----------- MAIN (Products) -----------*/
     main section.products {
@@ -83,10 +121,6 @@
     }
 
     main section.products .product-listing .content-2 .meta {
-        /* position: absolute;
-        top: 15px;
-        left: 15px;
-        padding: 5px 10px; */
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
@@ -140,22 +174,132 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
         width: 100%;
+        flex-wrap: wrap;
+        gap: 0.5rem;
     }
 
     main section.products .product-listing .content-2 .product-footer .learnmore {
         text-wrap: nowrap;
-        flex: 1;
+        flex: 0 0 auto;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .learnmore-btn {
+        background: #26a69a !important;
+        color: white !important;
+        text-decoration: none;
+        padding: 0.7rem 1rem;
+        border-radius: 0.28571429rem;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+        font-size: 0.85rem;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .learnmore-btn:hover {
+        background: #20918a !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .quantity-controls {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        margin: 0 0.5rem;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.mini.icon.buttons {
+        display: flex;
+        background: #f8f9fa;
+        border-radius: 0.28571429rem;
+        overflow: hidden;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.mini.icon.buttons .ui.button {
+        background: #f8f9fa !important;
+        color: #495057 !important;
+        border: 1px solid #dee2e6 !important;
+        padding: 0.4rem 0.6rem;
+        margin: 0;
+        border-radius: 0;
+        font-size: 0.8rem;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.mini.icon.buttons .ui.button:hover {
+        background: #e9ecef !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .ui.mini.icon.buttons .quantity-value {
+        background: white !important;
+        border-left: 1px solid #dee2e6 !important;
+        border-right: 1px solid #dee2e6 !important;
+        min-width: 35px;
+        text-align: center;
+        font-size: 0.8rem;
     }
 
     main section.products .product-listing .content-2 .product-footer .add-to-cart-btn {
+        background: #007bff !important;
+        color: white !important;
         text-wrap: nowrap;
-        width: 26%;
-        margin-left: 0.6rem;
+        flex: 1;
+        min-width: 100px;
+        border: none !important;
+        padding: 0.7rem 0.8rem;
+        border-radius: 0.28571429rem;
+        transition: background-color 0.3s ease;
+        font-size: 0.85rem;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .add-to-cart-btn:hover {
+        background: #0056b3 !important;
+    }
+
+    main section.products .product-listing .content-2 .product-footer .add-to-cart-btn:disabled {
+        background: #6c757d !important;
+        cursor: not-allowed;
+    }
+
+    /* Make the footer responsive */
+    @media (max-width: 768px) {
+        main section.products .product-listing .content-2 .product-footer {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        main section.products .product-listing .content-2 .product-footer .quantity-controls {
+            justify-content: center;
+            margin: 0.5rem 0;
+        }
+
+        main section.products .product-listing .content-2 .product-footer .add-to-cart-btn {
+            width: 100%;
+        }
     }
 
     /* Product Card - Content 2 END */
+    main section.products .product-listing .content-2 .meta .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .stars {
+        color: #ffc107;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .rating-text {
+        font-size: 0.75rem;
+        color: var(--color-dark);
+    }
+
+    main section.products .product-listing .content-2 .meta .rating .review-count {
+        font-size: 0.7rem;
+        color: var(--color-muted);
+        font-weight: 400;
+    }
 </style>
 
 <!-- Products Section -->
@@ -168,219 +312,118 @@
         <div class="products-grid">
             <div class="row g-4">
 
-                <!-- Product 1 -->
-                <div class="col-md-4">
-                    <div class="product-listing card">
-                        <div class="card-body">
-                            <div class="content-1">
-                                <img src="<?= asset('img/contents/products/pdogfood.jpg'); ?>" alt="Premium Dog Food"
-                                    class="product-image">
-                                <div class="product-tag">
-                                    <div class="ui tag label red">Hot</div>
-                                    <!-- <div class="title">Premium Dry Dog Food</div> -->
-                                </div>
-                                <div class="product-price">₱22.99</div>
-                            </div>
-                            <div class="content-2">
-                                <h3 class="product-title">Premium Dry Dog Food</h3>
-                                <div class="meta">
-                                    <div class="rating">
-                                        Rating:&nbsp;
-                                        <div class="ui yellow disabled rating" data-rating="3" data-max-rating="5">
-                                        </div>
-                                    </div>
-                                    <div class="vr-line"></div>
-                                    <div class="category">
-                                        <i class="tag icon"></i>
-                                        Dog Food
-                                    </div>
-                                </div>
-                                <p class="paragraph">
-                                    High-quality dry dog food with balanced nutrition for adult dogs.
-                                    Contains chicken, rice, and essential vitamins.
-                                </p>
-                                <div class="product-specs">
-                                    <div class="product-spec-item">
-                                        <i class="weight icon"></i> Weight: 8 kg
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="heartbeat icon"></i> Life Stage: Adult
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="paw icon"></i> Breed: All
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="food icon"></i> Flavor: Chicken
-                                    </div>
-                                </div>
-                                <div class="product-footer">
-                                    <div class="learnmore">
-                                        <a class="ui teal button learnmore-btn" href="#">Learn
-                                            More</a>
-                                    </div>
-                                    <div class="ui mini icon buttons">
-                                        <button class="ui button decrease-quantity">
-                                            <i class="minus icon"></i>
-                                        </button>
-                                        <div class="ui disabled button quantity-value">1</div>
-                                        <button class="ui button increase-quantity">
-                                            <i class="plus icon"></i>
-                                        </button>
-                                    </div>
-                                    <div class="ui vertical animated button add-to-cart-btn" tabindex="0">
-                                        <div class="hidden content">Add to Cart</div>
-                                        <div class="visible content">
-                                            <i class="shop icon"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <?php if (!empty($related_products)): ?>
+                    <?php foreach ($related_products as $product): ?>
+                        <?php
+                        // Calculate effective price
+                        $effective_price = !empty($product['dc_price']) && floatval($product['dc_price']) > 0
+                            ? floatval($product['dc_price'])
+                            : floatval($product['og_price']);
 
-                <!-- Product 2 -->
-                <div class="col-md-4">
-                    <div class="product-listing card">
-                        <div class="card-body">
-                            <div class="content-1">
-                                <img src="<?= asset('img/contents/products/vitamins.jpg'); ?>" alt="Pet Vitamins"
-                                    class="product-image">
-                                <div class="product-tag">
-                                    <div class="ui tag label teal">Popular</div>
-                                </div>
-                                <div class="product-price">₱18.50</div>
-                            </div>
-                            <div class="content-2">
-                                <h3 class="product-title">Joint Health Supplements</h3>
-                                <div class="meta">
-                                    <div class="rating">
-                                        Rating:&nbsp;
-                                        <div class="ui yellow disabled rating" data-rating="4.5" data-max-rating="5">
+                        // Parse specs and tags
+                        $specs = !empty($product['specs']) ? explode(',', $product['specs']) : [];
+                        $tags = !empty($product['tags']) ? explode(',', $product['tags']) : [];
+                        ?>
+                        <div class="col-md-4">
+                            <div class="product-listing card">
+                                <div class="card-body">
+                                    <div class="content-1">
+                                        <img src="<?= media($product['uuid']) ?>"
+                                            alt="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>"
+                                            class="product-image">
+                                        <div class="product-tag">
+                                            <?php if (!empty($tags)): ?>
+                                                <div class="ui tag label <?= rand(0, 1) ? 'red' : 'teal' ?>">
+                                                    <?= htmlspecialchars(ucfirst(trim($tags[0])), ENT_QUOTES, 'UTF-8') ?>
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="ui tag label blue">Featured</div>
+                                            <?php endif; ?>
                                         </div>
+                                        <div class="product-price">₱<?= number_format($effective_price, 2) ?></div>
                                     </div>
-                                    <div class="vr-line"></div>
-                                    <div class="category">
-                                        <i class="tag icon"></i>
-                                        Supplements
-                                    </div>
-                                </div>
-                                <p class="paragraph">
-                                    Support your pet's joint health with these premium supplements.
-                                    Ideal for senior pets or those with mobility issues.
-                                </p>
-                                <div class="product-specs">
-                                    <div class="product-spec-item">
-                                        <i class="tablets icon"></i> Count: 60 tablets
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="heartbeat icon"></i> Life Stage: Senior
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="paw icon"></i> For: Dogs & Cats
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="certificate icon"></i> Organic: Yes
-                                    </div>
-                                </div>
-                                <div class="product-footer">
-                                    <div class="learnmore">
-                                        <a class="ui teal button learnmore-btn" href="#">Learn
-                                            More</a>
-                                    </div>
-                                    <div class="ui mini icon buttons">
-                                        <button class="ui button decrease-quantity">
-                                            <i class="minus icon"></i>
-                                        </button>
-                                        <div class="ui disabled button quantity-value">1</div>
-                                        <button class="ui button increase-quantity">
-                                            <i class="plus icon"></i>
-                                        </button>
-                                    </div>
-                                    <div class="ui vertical animated button add-to-cart-btn" tabindex="0">
-                                        <div class="hidden content">Add to Cart</div>
-                                        <div class="visible content">
-                                            <i class="shop icon"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                    <div class="content-2">
+                                        <h3 class="product-title"><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>
+                                        </h3>
+                                        <div class="meta">
+                                            <div class="rating">
+                                                <?php
+                                                $rating = $product['weighted_average'] ?? 0;
+                                                $stars = '';
+                                                $fullStars = floor($rating);
+                                                $hasHalfStar = ($rating - $fullStars) >= 0.5;
 
-                <!-- Product 3 -->
-                <div class="col-md-4">
-                    <div class="product-listing card">
-                        <div class="card-body">
-                            <div class="content-1">
-                                <img src="<?= asset('img/contents/products/petcollar.jpg'); ?>" alt="Pet Collar"
-                                    class="product-image">
-                                <div class="product-tag">
-                                    <div class="ui tag blue label">Featured</div>
-                                </div>
-                                <div class="product-price">₱14.99</div>
-                            </div>
-                            <div class="content-2">
-                                <h3 class="product-title">Adjustable Comfort Collar</h3>
-                                <div class="meta">
-                                    <div class="rating">
-                                        Rating:&nbsp;
-                                        <div class="ui yellow disabled rating" data-rating="5" data-max-rating="5">
+                                                for ($i = 0; $i < $fullStars; $i++) {
+                                                    $stars .= '★';
+                                                }
+                                                if ($hasHalfStar) {
+                                                    $stars .= '☆';
+                                                }
+                                                $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+                                                for ($i = 0; $i < $emptyStars; $i++) {
+                                                    $stars .= '☆';
+                                                }
+                                                ?>
+                                                <span class="stars"><?= $stars ?></span>
+                                                <?php if ($rating > 0): ?>
+                                                    <span class="rating-text"><?= number_format($rating, 1) ?></span>
+                                                <?php endif; ?>
+                                                <?php if ($product['total_reviews'] > 0): ?>
+                                                    <span class="review-count">(<?= $product['total_reviews'] ?>)</span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="vr-line"></div>
+                                            <div class="category">
+                                                <i class="tag icon"></i>
+                                                Product
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="vr-line"></div>
-                                    <div class="category">
-                                        <i class="tag icon"></i>
-                                        Accessories
-                                    </div>
-                                </div>
-                                <p class="paragraph">
-                                    Comfortable, durable collar with adjustable sizing.
-                                    Available in multiple colors to suit your pet's style. Lorem ipsum dolor sit amet.
-                                </p>
-                                <div class="product-specs">
-                                    <div class="product-spec-item">
-                                        <i class="ruler icon"></i> Size: Medium
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="palette icon"></i> Colors: 4 options
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="paw icon"></i> For: Dogs
-                                    </div>
-                                    <div class="product-spec-item">
-                                        <i class="tag icon"></i> Material: Nylon
-                                    </div>
-                                </div>
-                                <div class="product-footer">
-                                    <div class="learnmore">
-                                        <a class="ui teal button learnmore-btn" href="#">Learn
-                                            More</a>
-                                    </div>
-                                    <div class="ui mini icon buttons">
-                                        <button class="ui button decrease-quantity">
-                                            <i class="minus icon"></i>
-                                        </button>
-                                        <div class="ui disabled button quantity-value">1</div>
-                                        <button class="ui button increase-quantity">
-                                            <i class="plus icon"></i>
-                                        </button>
-                                    </div>
-                                    <div class="ui vertical animated button add-to-cart-btn" tabindex="0">
-                                        <div class="hidden content">Add to Cart</div>
-                                        <div class="visible content">
-                                            <i class="shop icon"></i>
+                                        <p class="paragraph">
+                                            <?= htmlspecialchars(substr($product['description'], 0, 100), ENT_QUOTES, 'UTF-8') ?>...
+                                        </p>
+                                        <div class="product-specs">
+                                            <?php if (!empty($specs)): ?>
+                                                <?php foreach (array_slice($specs, 0, 3) as $spec): ?>
+                                                    <div class="product-spec-item">
+                                                        <i class="checkmark icon"></i>
+                                                        <?= htmlspecialchars(trim($spec), ENT_QUOTES, 'UTF-8') ?>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="learnmore">
+                                                <a class="learnmore-btn"
+                                                    href="/src/app/user/product-single-view.php?uuid=<?= $product['uuid'] ?>">Learn
+                                                    More</a>
+                                            </div>
+                                            <div class="quantity-controls">
+                                                <div class="ui mini icon buttons">
+                                                    <button class="ui button decrease-quantity">
+                                                        <i class="minus icon"></i>
+                                                    </button>
+                                                    <div class="ui disabled button quantity-value">1</div>
+                                                    <button class="ui button increase-quantity">
+                                                        <i class="plus icon"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <button class="add-to-cart-btn">
+                                                Add to Cart
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12">
+                        <p class="text-center">No related products available.</p>
                     </div>
-                </div>
+                <?php endif; ?>
+
             </div>
-
         </div>
-
     </div>
 </section>

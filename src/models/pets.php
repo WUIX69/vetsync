@@ -4,6 +4,7 @@ namespace VetSync\Models;
 
 use PDO;
 use PDOException;
+use Exception;
 
 class Pets
 {
@@ -18,15 +19,20 @@ class Pets
         return self::$conn;
     }
 
-    public static function all($user_uuid = null)
+    public static function all($user_uuid = null, $archive_status = 'active')
     {
         try {
+            // Auto-archive inactive pets before fetching active pets
+            if ($archive_status === 'active') {
+                self::autoArchiveInactivePets($user_uuid);
+            }
+
             if ($user_uuid) {
-                $stmt = self::conn()->prepare('SELECT * FROM pets WHERE user_uuid = ?');
-                $stmt->execute([$user_uuid]);
+                $stmt = self::conn()->prepare('SELECT * FROM pets WHERE user_uuid = ? AND archive_status = ?');
+                $stmt->execute([$user_uuid, $archive_status]);
             } else {
-                $stmt = self::conn()->prepare('SELECT * FROM pets');
-                $stmt->execute();
+                $stmt = self::conn()->prepare('SELECT * FROM pets WHERE archive_status = ?');
+                $stmt->execute([$archive_status]);
             }
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
             return [
@@ -149,16 +155,34 @@ class Pets
         try {
             self::conn()->beginTransaction();
 
-            // Check for existing appointments
-            $appointmentCheck = \VetSync\Models\Appointments::getByPetUuid($uuid);
-            if ($appointmentCheck['success'] && $appointmentCheck['data']['appointment_count'] > 0) {
+            // Check for existing appointments (all statuses)
+            $appointmentStmt = self::conn()->prepare("
+                SELECT COUNT(*) as total_count,
+                       SUM(CASE WHEN status IN ('pending', 'accepted') THEN 1 ELSE 0 END) as active_count,
+                       SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_count
+                FROM appointments 
+                WHERE pet_uuid = ?
+            ");
+            $appointmentStmt->execute([$uuid]);
+            $appointmentCounts = $appointmentStmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($appointmentCounts['active_count'] > 0) {
                 self::conn()->rollBack();
                 return [
                     'success' => false,
-                    'message' => 'Cannot delete pet with active appointments. Please cancel or complete appointments first.',
+                    'message' => "Cannot delete pet with {$appointmentCounts['active_count']} active appointment(s). Please cancel them first or mark the pet as deceased instead.",
                 ];
             }
 
+            if ($appointmentCounts['completed_count'] > 0) {
+                self::conn()->rollBack();
+                return [
+                    'success' => false,
+                    'message' => "Cannot delete pet with medical history ({$appointmentCounts['completed_count']} completed appointments). Consider marking as deceased to preserve medical records.",
+                ];
+            }
+
+            // Safe to delete if no appointments exist
             $stmt = self::conn()->prepare('DELETE FROM pets WHERE uuid=?');
             $stmt->execute([$uuid]);
 
@@ -173,6 +197,255 @@ class Pets
             return [
                 'success' => false,
                 'message' => 'Pet deletion failed: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function archive($uuid, $archive_status = 'inactive')
+    {
+        try {
+            self::conn()->beginTransaction();
+
+            // Get pet and user data before archiving for email notification
+            $petStmt = self::conn()->prepare("
+                SELECT p.name as pet_name, p.user_uuid, u.firstname, u.lastname, u.email 
+                FROM pets p 
+                JOIN users u ON p.user_uuid = u.uuid 
+                WHERE p.uuid = ?
+            ");
+            $petStmt->execute([$uuid]);
+            $petData = $petStmt->fetch(PDO::FETCH_ASSOC);
+
+            // Update pet archive status
+            $stmt = self::conn()->prepare("
+                UPDATE pets SET 
+                    archive_status = ?,
+                    archived_at = NOW()
+                WHERE uuid = ?
+            ");
+
+            $stmt->execute([$archive_status, $uuid]);
+
+            $cancelledCount = 0;
+
+            // If marking as deceased, cancel all future appointments
+            if ($archive_status === 'deceased') {
+                $cancelStmt = self::conn()->prepare("
+                    UPDATE appointments SET 
+                        status = 'cancelled',
+                        note = CONCAT(
+                            COALESCE(note, ''), 
+                            CASE 
+                                WHEN note IS NULL OR note = '' THEN ''
+                                ELSE '\\n\\n'
+                            END,
+                            '[AUTO-CANCELLED] Pet marked as deceased on ', NOW()
+                        )
+                    WHERE pet_uuid = ? 
+                    AND status IN ('pending', 'accepted') 
+                    AND date >= CURDATE()
+                ");
+
+                $cancelStmt->execute([$uuid]);
+
+                // Get count of cancelled appointments for feedback
+                $countStmt = self::conn()->prepare("
+                    SELECT COUNT(*) as cancelled_count 
+                    FROM appointments 
+                    WHERE pet_uuid = ? 
+                    AND status = 'cancelled' 
+                    AND note LIKE '%Pet marked as deceased%'
+                ");
+                $countStmt->execute([$uuid]);
+                $cancelledCount = $countStmt->fetch(PDO::FETCH_ASSOC)['cancelled_count'];
+
+                // Send email notification to user
+                if ($petData && $petData['email']) {
+                    try {
+                        $emailService = new \VetSync\Services\Email();
+                        $userName = $petData['firstname'] . ' ' . $petData['lastname'];
+
+                        $emailResult = $emailService->sendPetDeceasedNotification(
+                            $petData['email'],
+                            $userName,
+                            $petData['pet_name'],
+                            $cancelledCount
+                        );
+
+                        // Log email result (optional)
+                        if (!$emailResult['success']) {
+                            error_log("Failed to send pet deceased notification email: " . $emailResult['message']);
+                        }
+                    } catch (Exception $e) {
+                        error_log("Email notification error: " . $e->getMessage());
+                        // Don't fail the operation if email fails
+                    }
+                }
+
+                self::conn()->commit();
+
+                $message = "Pet marked as deceased. Our condolences.";
+                if ($cancelledCount > 0) {
+                    $message .= " {$cancelledCount} future appointment(s) were automatically cancelled.";
+                }
+
+                return [
+                    'success' => true,
+                    'message' => $message,
+                ];
+            }
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => 'Pet archived successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Pet archiving failed: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function unarchive($uuid)
+    {
+        try {
+            self::conn()->beginTransaction();
+
+            $stmt = self::conn()->prepare("
+                UPDATE pets SET 
+                    archive_status = 'active',
+                    archived_at = NULL
+                WHERE uuid = ?
+            ");
+
+            $stmt->execute([$uuid]);
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => 'Pet restored successfully.',
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Pet restoration failed: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function getInactivePets($user_uuid = null)
+    {
+        try {
+            // Get pets that haven't had appointments in the last year
+            $sql = "
+                SELECT DISTINCT p.* 
+                FROM pets p
+                LEFT JOIN appointments a ON p.uuid = a.pet_uuid 
+                    AND a.date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+                    AND a.status IN ('completed', 'accepted')
+                WHERE p.archive_status = 'active'
+                AND a.pet_uuid IS NULL
+            ";
+
+            if ($user_uuid) {
+                $sql .= " AND p.user_uuid = ?";
+                $stmt = self::conn()->prepare($sql);
+                $stmt->execute([$user_uuid]);
+            } else {
+                $stmt = self::conn()->prepare($sql);
+                $stmt->execute();
+            }
+
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Inactive pets fetched successfully.',
+                'data' => $data,
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Inactive pets fetching failed: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    public static function getAllArchived($user_uuid = null)
+    {
+        try {
+            if ($user_uuid) {
+                $stmt = self::conn()->prepare('SELECT * FROM pets WHERE user_uuid = ? AND archive_status IN ("inactive", "deceased")');
+                $stmt->execute([$user_uuid]);
+            } else {
+                $stmt = self::conn()->prepare('SELECT * FROM pets WHERE archive_status IN ("inactive", "deceased")');
+                $stmt->execute();
+            }
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC) ?? [];
+            return [
+                'success' => true,
+                'message' => 'Archived pets fetched successfully.',
+                'data' => $data,
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Archived pets fetching failed: ' . $e->getMessage(),
+            ];
+        }
+    }
+
+    // Add this method to auto-archive only inactive pets (not deceased)
+    public static function autoArchiveInactivePets($user_uuid = null)
+    {
+        try {
+            self::conn()->beginTransaction();
+
+            // PRODUCTION VERSION - Archives pets after 1 year without appointments
+            $sql = "
+                UPDATE pets p 
+                SET archive_status = 'inactive', archived_at = NOW()
+                WHERE p.archive_status = 'active'
+                AND p.uuid NOT IN (
+                    SELECT DISTINCT a.pet_uuid 
+                    FROM appointments a 
+                    WHERE a.pet_uuid = p.uuid 
+                    AND a.date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+                    AND a.status IN ('completed', 'accepted')
+                )
+                AND p.created_at <= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+            ";
+
+            if ($user_uuid) {
+                $sql .= " AND p.user_uuid = ?";
+                $stmt = self::conn()->prepare($sql);
+                $stmt->execute([$user_uuid]);
+            } else {
+                $stmt = self::conn()->prepare($sql);
+                $stmt->execute();
+            }
+
+            $archivedCount = $stmt->rowCount();
+
+            self::conn()->commit();
+            return [
+                'success' => true,
+                'message' => "Automatically archived {$archivedCount} inactive pets.",
+                'archived_count' => $archivedCount,
+            ];
+        } catch (PDOException $e) {
+            error_log("SQL Error in autoArchiveInactivePets: " . $e->getMessage());
+            self::conn()->rollBack();
+            return [
+                'success' => false,
+                'message' => 'Auto-archiving failed: ' . $e->getMessage(),
             ];
         }
     }

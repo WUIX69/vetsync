@@ -44,28 +44,12 @@ $categories = Categories::all('services')['data'] ?? [];
                     <label>Price</label>
                     <div class="ui labeled input">
                         <div class="ui label">&#8369;</div>
-                        <input type="number" name="price" placeholder="0.00">
+                        <input type="number" name="price" placeholder="0.00" step="0.01">
                     </div>
                 </div>
                 <div class="field">
                     <label>Duration (minutes)</label>
                     <input type="number" name="duration" placeholder="30">
-                </div>
-            </div>
-            <div class="field">
-                <label>Status</label>
-                <div class="ui selection dropdown">
-                    <input type="hidden" name="status">
-                    <i class="dropdown icon"></i>
-                    <div class="default text">Select Status</div>
-                    <div class="menu">
-                        <div class="item" data-value="available">
-                            <i class="check circle green icon"></i>Available
-                        </div>
-                        <div class="item" data-value="unavailable">
-                            <i class="times circle red icon"></i>Unavailable
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="field">
@@ -81,6 +65,73 @@ $categories = Categories::all('services')['data'] ?? [];
                                 <i class="<?= $category['icon'] ?> icon"></i><?= $category['name'] ?>
                             </div>
                         <?php } ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vaccination Doses Field - Shows only for vaccination services -->
+            <div class="field vaccination-doses-field" style="display: none;">
+                <label>
+                    <i class="syringe icon"></i> Number of Doses/Sessions Required
+                    <span class="ui mini teal label">For Vaccination Series Tracking</span>
+                </label>
+                <input type="number" name="vaccination_doses" placeholder="e.g., 1, 2, or 3" min="1" max="10">
+                <small style="display: block; margin-top: 0.5rem; color: #666;">
+                    <i class="info circle icon"></i>
+                    How many doses needed to complete this vaccine? Examples: Anti-rabies (3 doses), Deworming (2
+                    doses), Anti-parvo (1 dose)
+                </small>
+            </div>
+
+            <!-- Vaccination Interval Field - Shows only for vaccination services -->
+            <div class="field vaccination-interval-field" style="display: none;">
+                <label>
+                    <i class="calendar alternate icon"></i> Interval Between Doses
+                    <span class="ui mini purple label">Time Between Each Dose</span>
+                </label>
+                <div class="two fields">
+                    <div class="field">
+                        <input type="number" name="vaccination_interval" placeholder="e.g., 2, 3, or 4" min="1"
+                            max="365" value="2">
+                    </div>
+                    <div class="field">
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="vaccination_interval_unit">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Select Unit</div>
+                            <div class="menu">
+                                <div class="item" data-value="days">
+                                    <i class="calendar day icon"></i>Days
+                                </div>
+                                <div class="item" data-value="weeks">
+                                    <i class="calendar week icon"></i>Weeks
+                                </div>
+                                <div class="item" data-value="months">
+                                    <i class="calendar icon"></i>Months
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <small style="display: block; margin-top: 0.5rem; color: #666;">
+                    <i class="clock icon"></i>
+                    Time interval between each dose. Examples: 2 weeks, 14 days, 1 month
+                </small>
+            </div>
+
+            <div class="field">
+                <label>Status</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="status">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Select Status</div>
+                    <div class="menu">
+                        <div class="item" data-value="available">
+                            <i class="check circle green icon"></i>Available
+                        </div>
+                        <div class="item" data-value="unavailable">
+                            <i class="times circle red icon"></i>Unavailable
+                        </div>
                     </div>
                 </div>
             </div>

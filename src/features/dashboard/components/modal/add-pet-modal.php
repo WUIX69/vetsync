@@ -34,20 +34,30 @@
                 <input type="text" name="name" placeholder="Enter pet name">
             </div>
 
-            <div class="field">
-                <label>Date Of Birth</label>
-                <input type="date" name="dob">
-            </div>
-
             <div class="two fields">
                 <div class="field">
                     <label>Species</label>
-                    <input type="text" name="species" placeholder="e.g. Dog/Cat">
+                    <select class="ui dropdown" name="species" id="petSpeciesDropdown">
+                        <option value="">Select Species</option>
+                        <option value="Dog">🐕 Dog</option>
+                        <option value="Cat">🐱 Cat</option>
+                        <!-- <option value="Bird">🦜 Bird</option>
+                        <option value="Rabbit">🐰 Rabbit</option>
+                        <option value="Other">🐾 Other</option> -->
+                    </select>
                 </div>
                 <div class="field">
                     <label>Breed</label>
-                    <input type="text" name="breed" placeholder="Enter breed">
+                    <select class="ui dropdown" name="breed" id="petBreedDropdown">
+                        <option value="">Select species first</option>
+                    </select>
                 </div>
+            </div>
+
+            <!-- Custom Breed Input (hidden by default) -->
+            <div class="field" id="customBreedField" style="display: none;">
+                <label>Custom Breed <span style="color: #666; font-weight: normal;">(Please specify)</span></label>
+                <input type="text" id="customBreedInput" placeholder="Enter custom breed name">
             </div>
 
             <div class="field">

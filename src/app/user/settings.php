@@ -44,13 +44,11 @@
                                     <?= featured('settings/components/tab/change-password'); ?>
                                     <!-- Change Password Tab End -->
 
-                                    <!-- Notification Tab Start -->
-                                    <?= featured('settings/components/tab/notification'); ?>
-                                    <!-- Notification Tab End -->
-
-                                    <!-- Preferences Tab Start -->
-                                    <?= featured('settings/components/tab/preferences'); ?>
-                                    <!-- Preferences Tab End -->
+                                    <!-- Terms and Agreement Tab Start -->
+                                    <div class="tab-pane fade" id="terms" role="tabpanel">
+                                        <?= featured('settings/components/terms-agreement'); ?>
+                                    </div>
+                                    <!-- Terms and Agreement Tab End -->
                                 </div>
                             </div>
                         </div>
@@ -65,12 +63,13 @@
     <!-- Filepond -->
     <?= shared('elements/filepond/scripts'); ?>
     <!-- Profile -->
-    <script src="<?= featured('settings/js/profileUrlInputs.js', true); ?>"></script>
     <script src="<?= featured('settings/js/profileFetch.js', true); ?>"></script>
     <script src="<?= featured('settings/js/profileForm.js', true); ?>"></script>
     <script src="<?= featured('settings/js/profileUpload.js', true); ?>"></script>
     <!-- Change Password -->
     <script src="<?= featured('settings/js/changePasswordForm.js', true); ?>"></script>
+    <!-- Terms and Agreement -->
+    <script src="<?= featured('settings/js/settings.js', true); ?>"></script>
 </body>
 
 </html>

@@ -1,3 +1,9 @@
+<?php
+$service = $GLOBALS['service'] ?? null;
+if (!$service) {
+    return;
+}
+?>
 <style>
     /*----------- MAIN (Single Service) -----------*/
 
@@ -98,16 +104,11 @@
 
 <section class="service pb-5">
     <div class="container-xl">
-        <div class="service-title">
-            <!-- <div class="service-tag">Featured Service</div> -->
-            <!-- <h1>Wellness Checkup</h1>
-            <div class="service-description">Comprehensive health assessment for your beloved
-                pets to ensure they stay happy and healthy.</div> -->
-        </div>
         <div class="row">
             <div class="col-lg-8">
                 <div class="service-image-main">
-                    <img src="<?= asset('img/contents/services/grooming.jpg'); ?>" alt="Wellness Checkup">
+                    <img src="<?= media($service['uuid']) ?>"
+                        alt="<?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?>">
                 </div>
             </div>
             <div class="col-lg-4">
@@ -119,45 +120,45 @@
                                     <span class="emoji">🩺</span>
                                 </div>
                                 <div class="benefit-content">
-                                    <h4 class="benefit-title">Complete Examination</h4>
-                                    <p class="benefit-description">Thorough physical assessment by
-                                        our experienced veterinarians</p>
+                                    <h4 class="benefit-title">Professional Care</h4>
+                                    <p class="benefit-description">Expert veterinary service provided by our experienced
+                                        team</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="service-benefit-card">
                                 <div class="benefit-icon">
-                                    <span class="emoji">💉</span>
+                                    <span class="emoji">⏱️</span>
                                 </div>
                                 <div class="benefit-content">
-                                    <h4 class="benefit-title">Vaccinations</h4>
-                                    <p class="benefit-description">Up-to-date immunizations to
-                                        protect against common diseases</p>
+                                    <h4 class="benefit-title">Quick Service</h4>
+                                    <p class="benefit-description">Efficient service duration of
+                                        <?= htmlspecialchars($service['duration'], ENT_QUOTES, 'UTF-8') ?></p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="service-benefit-card">
                                 <div class="benefit-icon">
-                                    <span class="emoji">🐛</span>
+                                    <span class="emoji">💰</span>
                                 </div>
                                 <div class="benefit-content">
-                                    <h4 class="benefit-title">Parasite Control</h4>
-                                    <p class="benefit-description">Preventive treatments for fleas,
-                                        ticks, and intestinal parasites</p>
+                                    <h4 class="benefit-title">Affordable Price</h4>
+                                    <p class="benefit-description">Starting from
+                                        ₱<?= number_format(floatval($service['price']), 2) ?></p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="service-benefit-card">
                                 <div class="benefit-icon">
-                                    <span class="emoji">🍽️</span>
+                                    <span class="emoji">🏥</span>
                                 </div>
                                 <div class="benefit-content">
-                                    <h4 class="benefit-title">Nutritional Advice</h4>
-                                    <p class="benefit-description">Personalized dietary
-                                        recommendations for optimal health</p>
+                                    <h4 class="benefit-title">Modern Facility</h4>
+                                    <p class="benefit-description">State-of-the-art equipment and comfortable
+                                        environment</p>
                                 </div>
                             </div>
                         </div>

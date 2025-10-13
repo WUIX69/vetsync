@@ -87,6 +87,8 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Duration</th>
+                        <th>Doses</th>
+                        <th>Interval</th>
                         <th>Category</th>
                         <th>Status</th>
                         <th>Created_at</th>

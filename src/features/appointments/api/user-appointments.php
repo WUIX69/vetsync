@@ -1,78 +1,307 @@
 <?php
+// Clean any output buffering
+while (ob_get_level()) {
+    ob_end_clean();
+}
 
 include '../../../core/app.php';
-apiHeaders();
+
+// Set headers
+header('Content-Type: application/json');
+header('Cache-Control: no-cache, must-revalidate');
 
 use VetSync\Models\Appointments;
 
-$response = [];
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        // Ensure user is logged in
+        global $session;
+        if (!$session->has()) {
+            echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
+            exit;
+        }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Ensure user is logged in
-    if (!$session->has()) {
-        echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
+        $userData = $session->get();
+        $userUuid = $userData['uuid'];
+
+        $result = Appointments::getByUserUuid($userUuid);
+
+        // Format the data to include additional info
+        if ($result['success'] && !empty($result['data'])) {
+            $result['data'] = array_map(function ($item) {
+                // Safe formatting
+                $formattedData = [
+                    'pet_image' => !empty($item['pet_uuid']) ? media($item['pet_uuid']) : asset('img/placeholders/image.png'),
+                    'formatted_date' => !empty($item['date']) ? date('F j, Y', strtotime($item['date'])) : 'Date not set',
+                    'formatted_time' => !empty($item['time']) ? date('g:i A', strtotime($item['time'])) : 'No time set',
+                ];
+
+                // Merge formatted data with the original item
+                return array_merge($item, $formattedData);
+            }, $result['data']);
+        }
+
+        echo json_encode($result);
         exit;
     }
 
-    $userData = $session->get();
-    $userUuid = $userData['uuid'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+        global $session;
 
-    $result = Appointments::getByUserUuid($userUuid);
+        // Ensure user is logged in
+        if (!$session->has()) {
+            echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
+            exit;
+        }
 
-    // Format the data to include pet images (same pattern as admin)
-    if ($result['success']) {
-        $result['data'] = array_map(function ($item) {
-            // Add pet image using media() function
-            $formattedData = [
-                'pet_image' => $item['pet_uuid'] ? media($item['pet_uuid']) : asset('img/placeholders/image.png'),
-                'formatted_date' => date('F j, Y', strtotime($item['date'])),
-                'formatted_time' => date('g:i A', strtotime($item['date'])),
+        $userData = $session->get();
+        $userUuid = $userData['uuid'];
+
+        if ($_POST['action'] === 'add_multiple') {
+            $service_uuids = json_decode($_POST['service_uuids'] ?? '[]', true);
+            $pet_uuid = $_POST['pet_uuid'] ?? null;
+            $date = $_POST['date'] ?? null;
+            $time = $_POST['time'] ?? null;
+            $note = $_POST['note'] ?? '';
+            $custom_service_request = $_POST['custom_service_request'] ?? null;
+
+            // Validate required fields
+            if (!$pet_uuid || !$date) {
+                echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+                exit;
+            }
+
+            // Validate service selection
+            if (empty($service_uuids) || !is_array($service_uuids)) {
+                echo json_encode(['success' => false, 'message' => 'Please select at least one service']);
+                exit;
+            }
+
+            // Validate pet belongs to user
+            global $conn;
+            $stmt = $conn->prepare('SELECT user_uuid FROM pets WHERE uuid = ? AND user_uuid = ? LIMIT 1');
+            $stmt->execute([$pet_uuid, $userUuid]);
+            $pet = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$pet) {
+                echo json_encode(['success' => false, 'message' => 'Invalid pet selection']);
+                exit;
+            }
+
+            // **NEW: Validate appointment doesn't extend past closing time (8 PM)**
+            if ($time) {
+                // Calculate total duration of selected services
+                $totalDuration = 0;
+
+                foreach ($service_uuids as $service_uuid) {
+                    if ($service_uuid !== 'others') {
+                        $durationStmt = $conn->prepare('SELECT duration FROM services WHERE uuid = ? LIMIT 1');
+                        $durationStmt->execute([$service_uuid]);
+                        $service = $durationStmt->fetch(PDO::FETCH_ASSOC);
+                        $totalDuration += $service ? (int) $service['duration'] : 60; // Default 60 min if not found
+                    } else {
+                        $totalDuration += 60; // Custom services default to 60 minutes
+                    }
+                }
+
+                // Check if appointment would extend past 8 PM (20:00:00)
+                $startTime = strtotime($time);
+                $endTime = $startTime + ($totalDuration * 60); // Convert minutes to seconds
+                $closingTime = strtotime('20:00:00');
+
+                if ($endTime > $closingTime) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'This appointment would extend past our closing time (8 PM). Total duration: ' . $totalDuration . ' minutes. Please select an earlier time slot.'
+                    ]);
+                    exit;
+                }
+            }
+
+            // Generate a shared booking group ID for multiple services
+            $bookingGroupId = uuid();
+            $appointmentCount = 0;
+            $successCount = 0;
+
+            try {
+                // Begin transaction
+                $conn->beginTransaction();
+
+                foreach ($service_uuids as $service_uuid) {
+                    $appointmentCount++;
+                    $appointmentNote = $note;
+                    $actualServiceUuid = $service_uuid;
+
+                    // Handle "Others" custom service request
+                    if ($service_uuid === 'others') {
+                        if (!$custom_service_request || trim($custom_service_request) === '') {
+                            throw new Exception('Please describe the custom service you need');
+                        }
+                        $actualServiceUuid = null;
+                        $appointmentNote = "CUSTOM SERVICE REQUEST: " . trim($custom_service_request) .
+                            ($note ? "\n\nAdditional Notes: " . $note : "");
+                    }
+
+                    // Generate UUID for each appointment
+                    $appointmentUuid = uuid();
+
+                    // Create appointment data
+                    $appointmentData = [
+                        'uuid' => $appointmentUuid,
+                        'booking_group_id' => $bookingGroupId,
+                        'service_uuid' => $actualServiceUuid,
+                        'user_uuid' => $userUuid,
+                        'pet_uuid' => $pet_uuid,
+                        'date' => $date,
+                        'time' => $time,
+                        'note' => $appointmentNote
+                    ];
+
+                    $response = Appointments::storeWithGroup($appointmentData);
+                    if ($response['success']) {
+                        $successCount++;
+                    }
+                }
+
+                // Commit transaction
+                $conn->commit();
+
+                if ($successCount === $appointmentCount) {
+                    echo json_encode([
+                        'success' => true,
+                        'message' => $appointmentCount > 1
+                            ? "Successfully booked {$appointmentCount} appointments! We will contact you to confirm."
+                            : "Appointment booked successfully! We will contact you to confirm.",
+                        'booking_group_id' => $bookingGroupId,
+                        'count' => $successCount
+                    ]);
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => "Only {$successCount} of {$appointmentCount} appointments were booked successfully."
+                    ]);
+                }
+            } catch (Exception $e) {
+                $conn->rollBack();
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+            exit;
+        }
+
+        if ($_POST['action'] === 'add') {
+            $service_uuid = $_POST['service_uuid'] ?? null;
+            $pet_uuid = $_POST['pet_uuid'] ?? null;
+            $date = $_POST['date'] ?? null;
+            $time = $_POST['time'] ?? null;
+            $note = $_POST['note'] ?? '';
+            $custom_service_request = $_POST['custom_service_request'] ?? null;
+
+            // Validate required fields
+            if (!$pet_uuid || !$date) {
+                echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+                exit;
+            }
+
+            // Validate service selection
+            if (!$service_uuid || $service_uuid === '') {
+                echo json_encode(['success' => false, 'message' => 'Please select a service']);
+                exit;
+            }
+
+            // Handle "Others" custom service request
+            if ($service_uuid === 'others') {
+                if (!$custom_service_request || trim($custom_service_request) === '') {
+                    echo json_encode(['success' => false, 'message' => 'Please describe the custom service you need']);
+                    exit;
+                }
+
+                $service_uuid = null;
+                $note = "CUSTOM SERVICE REQUEST: " . trim($custom_service_request) .
+                    ($note ? "\n\nAdditional Notes: " . $note : "");
+            }
+
+            // Validate pet belongs to user
+            global $conn;
+            $stmt = $conn->prepare('SELECT user_uuid FROM pets WHERE uuid = ? AND user_uuid = ? LIMIT 1');
+            $stmt->execute([$pet_uuid, $userUuid]);
+            $pet = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$pet) {
+                echo json_encode(['success' => false, 'message' => 'Invalid pet selection']);
+                exit;
+            }
+
+            // Generate UUID for the appointment
+            $appointmentUuid = uuid();
+
+            // Create appointment data
+            $appointmentData = [
+                'uuid' => $appointmentUuid,
+                'service_uuid' => $service_uuid,
+                'user_uuid' => $userUuid,
+                'pet_uuid' => $pet_uuid,
+                'date' => $date,
+                'time' => $time,
+                'note' => $note
             ];
 
-            // Merge formatted data with the original item
-            return array_merge($item, $formattedData);
-        }, $result['data'] ?? []);
-    }
-
-    $response = $result;
-    echo json_encode($response);
-    exit;
-}
-
-// Handle POST requests (cancel and delete)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    // Ensure user is logged in
-    if (!$session->has()) {
-        echo json_encode(['success' => false, 'message' => 'You must be logged in.']);
-        exit;
-    }
-
-    $userData = $session->get();
-    $userUuid = $userData['uuid'];
-
-    if ($_POST['action'] === 'cancel') {
-        $appointmentUuid = $_POST['uuid'] ?? null;
-        $reason = $_POST['cancellation_reason'] ?? 'Cancelled by patient - no reason provided';
-
-        if (!$appointmentUuid) {
-            echo json_encode(['success' => false, 'message' => 'Missing appointment ID']);
+            $response = Appointments::store($appointmentData);
+            echo json_encode($response);
             exit;
         }
 
-        $response = Appointments::updateStatusWithReason($appointmentUuid, 'cancelled', $reason);
-        echo json_encode($response);
-        exit;
-    }
+        if ($_POST['action'] === 'cancel') {
+            $appointmentUuid = $_POST['uuid'] ?? null;
+            $reason = $_POST['cancellation_reason'] ?? 'Cancelled by patient - no reason provided';
 
-    if ($_POST['action'] === 'delete') {
-        $appointmentUuid = $_POST['uuid'] ?? null;
-        if (!$appointmentUuid) {
-            echo json_encode(['success' => false, 'message' => 'Missing appointment ID']);
+            if (!$appointmentUuid) {
+                echo json_encode(['success' => false, 'message' => 'Missing appointment ID']);
+                exit;
+            }
+
+            // Check if appointment is within 2 days - PREVENT CANCELLATION
+            global $conn;
+            $stmt = $conn->prepare('SELECT date FROM appointments WHERE uuid = ? AND user_uuid = ? LIMIT 1');
+            $stmt->execute([$appointmentUuid, $userUuid]);
+            $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$appointment) {
+                echo json_encode(['success' => false, 'message' => 'Appointment not found']);
+                exit;
+            }
+
+            // Calculate days until appointment
+            $appointmentDate = new DateTime($appointment['date']);
+            $today = new DateTime();
+            $today->setTime(0, 0, 0);
+            $appointmentDate->setTime(0, 0, 0);
+
+            $daysUntil = $today->diff($appointmentDate)->days;
+            $isPast = $appointmentDate < $today;
+
+            // Prevent cancellation if within 2 days or past
+            if (!$isPast && $daysUntil < 2) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Cannot cancel appointment within 2 days of the scheduled date. Please contact us directly if you need to make changes.'
+                ]);
+                exit;
+            }
+
+            $response = Appointments::updateStatusWithReason($appointmentUuid, 'cancelled', $reason);
+            echo json_encode($response);
             exit;
         }
 
-        // Verify appointment belongs to current user (using direct query to avoid warnings)
-        try {
+        if ($_POST['action'] === 'delete') {
+            $appointmentUuid = $_POST['uuid'] ?? null;
+            if (!$appointmentUuid) {
+                echo json_encode(['success' => false, 'message' => 'Missing appointment ID']);
+                exit;
+            }
+
+            // Verify appointment belongs to current user
+            global $conn;
             $stmt = $conn->prepare('SELECT user_uuid, status FROM appointments WHERE uuid = ? LIMIT 1');
             $stmt->execute([$appointmentUuid]);
             $appointment = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -82,26 +311,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 exit;
             }
 
-            // Only allow deletion of cancelled appointments
             if ($appointment['status'] !== 'cancelled') {
                 echo json_encode(['success' => false, 'message' => 'Only cancelled appointments can be deleted']);
                 exit;
             }
-        } catch (PDOException $e) {
-            echo json_encode(['success' => false, 'message' => 'Database error']);
+
+            $response = Appointments::delete($appointmentUuid);
+            echo json_encode($response);
             exit;
         }
 
-        $response = Appointments::delete($appointmentUuid);
-        echo json_encode($response);
+        if ($_POST['action'] === 'hide_group') {
+            $groupId = $_POST['group_id'] ?? '';
+
+            if (empty($groupId)) {
+                echo json_encode(['success' => false, 'message' => 'No group ID provided.']);
+                exit;
+            }
+
+            try {
+                // DELETE all appointments in the group for this user (cancelled only)
+                global $conn;
+                $stmt = $conn->prepare("
+                    DELETE FROM appointments 
+                    WHERE booking_group_id = ? 
+                    AND user_uuid = ? 
+                    AND status = 'cancelled'
+                ");
+                $stmt->execute([$groupId, $userUuid]);
+
+                $affectedRows = $stmt->rowCount();
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Removed {$affectedRows} appointment(s)"
+                ]);
+            } catch (PDOException $e) {
+                error_log("Error deleting appointment group: " . $e->getMessage());
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to remove appointments: ' . $e->getMessage()
+                ]);
+            }
+            exit;
+        }
+
+        echo json_encode(['success' => false, 'message' => 'Invalid action']);
         exit;
     }
 
-    // Invalid action
-    echo json_encode(['success' => false, 'message' => 'Invalid action']);
-    exit;
-}
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 
-// Invalid request method
-echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+} catch (Exception $e) {
+    error_log("User Appointments API Error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'An error occurred: ' . $e->getMessage()
+    ]);
+} catch (Error $e) {
+    error_log("User Appointments API Fatal Error: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'message' => 'System error occurred'
+    ]);
+}
+exit;
 ?>

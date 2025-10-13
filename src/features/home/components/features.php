@@ -14,12 +14,18 @@
     main section.features-section .feature-card {
         background: var(--color-white);
         border: 1px solid transparent !important;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
     }
 
     main section.features-section .feature-card:hover {
         transform: translateY(-5px);
         border: 1px solid var(--color-dark-variant) !important;
         cursor: pointer;
+        z-index: 10;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
     main section.features-section .feature-header {
@@ -52,6 +58,25 @@
         line-clamp: 4;
         -webkit-box-orient: vertical;
         text-align: center;
+        transition: all 0.3s ease;
+        max-height: 6.4em;
+        /* 4 lines * 1.6 line-height */
+        position: relative;
+    }
+
+    /* Simple hover effect - just remove the line clamp */
+    main section.features-section .feature-card:hover .feature-description {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        max-height: none;
+        overflow: visible;
+        text-overflow: unset;
+        display: block;
+        background: var(--color-white);
+        padding: 0.5rem;
+        border-radius: 0.3rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 </style>
 
@@ -60,39 +85,34 @@
         <div class="section-title">
             <span class="sub-title">Features</span>
             <h2>Why Choose Us</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
         </div>
         <div class="features-cont">
             <div class="feature-card box">
                 <div class="feature-header">
                     <img src="<?= asset('img/icons/fast.png'); ?>" alt="">
-                    <h2 class="feature-title">Quick Setup</h2>
+                    <h2 class="feature-title">User Friendly Website</h2>
                 </div>
-                <p class="feature-description">Lorem ipsum dolor sit amet consectetur adipisicing
-                    elit. Obcaecati amet illum facilis ut nihil ullam rerum consequuntur, dolorum et
-                    itaque.</p>
+                <p class="feature-description">Easy to use menus help user`s find what they need quickly,
+                    Clear fonts and spacing improve uderstanding, A search bar lets users locate information fast,
+                    uniform styles build professionalism and trust, Prominent buttons guide users toward key actions.
+                </p>
             </div>
             <div class="feature-card box">
                 <div class="feature-header">
                     <img src="<?= asset('img/icons/24hr.png'); ?>" alt="">
                     <h2 class="feature-title">24/hr Open</h2>
                 </div>
-                <p class="feature-description">Lorem ipsum dolor sit amet consectetur
-                    adipisicing
-                    elit. Dolorem dolorum eveniet tempore? Dignissimos ipsam, rerum eum
-                    repudiandae
-                    doloribus molestiae aliquam.</p>
+                <p class="feature-description"></p>
             </div>
             <div class="feature-card box">
                 <div class="feature-header">
                     <img src="<?= asset('img/icons/support.png'); ?>" alt="">
                     <h2 class="feature-title">Support</h2>
                 </div>
-                <p class="feature-description">Lorem ipsum, dolor sit amet consectetur
-                    adipisicing
-                    elit. Sunt saepe quia autem nostrum! Harum, illum cumque quod numquam
-                    quasi
-                    veritatis.</p>
+                <p class="feature-description">Provide users with assistance through multiple channels such as facebook,
+                    email,or contact number. These features ensure customers can quickly resolve issues, get
+                    guidance,
+                    and feel confident using the website or service.</p>
             </div>
         </div>
     </div>

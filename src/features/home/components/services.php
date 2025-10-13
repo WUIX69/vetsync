@@ -107,7 +107,6 @@
         <div class="section-title">
             <span class="sub-title">Services</span>
             <h2>What We Offer</h2>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
         </div>
         <div class="services-container">
             <div class="row g-4">
@@ -124,9 +123,9 @@
                         <div class="hovered-content">
                             <h3 class="title">Grooming</h3>
                             <p class="paragraph">
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolore
-                                quibusdam soluta ipsa eum facilis quaerat odio assumenda voluptatum
-                                fugit quod.
+                                Cleaning, trimming, and maintaining a pet’s hygiene under the supervision
+                                of a veterinarian or trained staff, ensuring both proper grooming and early
+                                detection of health issues.
                             </p>
                             <div class="read-more-btn">Read More</div>
                         </div>
@@ -145,11 +144,9 @@
                         <div class="hovered-content">
                             <h3 class="title">Vaccination</h3>
                             <p class="paragraph">
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Et
-                                pariatur,
-                                libero veritatis quasi in fugiat, itaque temporibus ab, ipsa cum
-                                architecto vitae ut. Deleniti ipsam eligendi fugit quibusdam labore
-                                nam!
+                                giving a vaccine to stimulate the body’s immune system, helping it build protection
+                                (immunity) against specific diseases. It prepares the body to recognize and fight
+                                infections in the future without causing the illness itself.
                             </p>
                             <div class="read-more-btn">Read More</div>
                         </div>
@@ -168,12 +165,9 @@
                         <div class="hovered-content">
                             <h3 class="title">Foods</h3>
                             <p class="paragraph">
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
-                                similique accusantium non ea provident, labore itaque a animi,
-                                temporibus quo repellendus debitis totam dolore modi tenetur fugit.
-                                Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente
-                                sed
-                                nihil obcaecati delectus!
+                                Specially prepared diets designed to provide pets with the essential nutrients they need
+                                for energy, growth, and overall health. They come in different types such as dry kibble,
+                                wet food, raw diets, and specialized formulas for age, breed, or health conditions.
                             </p>
                             <div class="read-more-btn">Read More</div>
                         </div>
@@ -192,12 +186,11 @@
                         <div class="hovered-content">
                             <h3 class="title">accessories</h3>
                             <p class="paragraph">
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laborum,
-                                similique accusantium non ea provident, labore itaque a animi,
-                                temporibus quo repellendus debitis totam dolore modi tenetur fugit.
-                                Temporibus, alias laudantium totam fugiat nisi minima. Ad sapiente
-                                sed
-                                nihil obcaecati delectus!
+                                Items designed to support a pet’s comfort, safety, training, and lifestyle. These
+                                include essentials
+                                like collars, leashes, harnesses, beds, feeding bowls, toys, carriers, and grooming
+                                tools that make
+                                pet care easier and enhance a pet’s well-being.
                             </p>
                             <div class="read-more-btn">Read More</div>
                         </div>

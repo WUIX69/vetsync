@@ -13,7 +13,8 @@
         justify-content: end;
         gap: 1rem;
         align-items: center;
-        margin-bottom: 2.3rem;
+        margin-bottom: 1rem;
+        /* Reduced from 2.3rem */
         flex-wrap: nowrap;
     }
 
@@ -243,6 +244,19 @@
         /* Make "Duration:" text bolder */
         color: #031224;
     }
+
+    /* Disabled button styles for unavailable services */
+    main section.services .service-card .card-body .service-meta .actions .book-now-btn.disabled {
+        background-color: #6c757d !important;
+        color: white !important;
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
+    }
+
+    main section.services .service-card .card-body .service-meta .actions .book-now-btn.disabled:hover {
+        background-color: #6c757d !important;
+        transform: none !important;
+    }
 </style>
 
 <section class="services">
@@ -258,7 +272,7 @@
 
         <!-- Header -->
         <div class="header">
-            <!-- Status -->
+            <!-- ❌ REMOVE THIS ENTIRE STATUS DROPDOWN SECTION:
             <div class="sort-container">
                 <div class="ui tiny floating selection compact clearable dropdown status-dropdown">
                     <input type="hidden" name="filter">
@@ -280,8 +294,9 @@
                     </div>
                 </div>
             </div>
+            -->
 
-            <!-- Sort -->
+            <!-- Sort - Keep this -->
             <div class="sort-container">
                 <div class="ui tiny floating selection compact clearable dropdown sort-dropdown">
                     <input type="hidden" name="sort">
@@ -307,7 +322,7 @@
                 </div>
             </div>
 
-            <!-- Search -->
+            <!-- Search - Keep this -->
             <div class="ui tiny search">
                 <div class="ui icon input">
                     <input class="prompt" type="text" placeholder="Search for services...">
@@ -322,8 +337,9 @@
             <!-- Services will be loaded dynamically -->
         </div>
 
-        <!-- Pagination -->
-        <?= shared('components/pagination'); ?>
+        <!-- ❌ REMOVE THIS LINE:
+         shared('components/pagination'); 
+        -->
     </div>
 </section>
 

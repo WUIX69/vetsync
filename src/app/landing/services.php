@@ -39,6 +39,11 @@
 
     <!-- Scripts -->
     <?= shared('elements/scripts'); ?>
+    <script src="/src/features/services/js/user-services-list.js"></script>
+    <script src="/src/features/services/js/landing-lock.js"></script>
+</body>
+
+</html>
 </body>
 
 </html>
