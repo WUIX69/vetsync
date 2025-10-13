@@ -728,10 +728,10 @@ if ($session && $session->has()) {
                 $('#average-stars').html(generateStars(avgRating));
                 $('#total-reviews').text(`${totalReviews} review${totalReviews !== 1 ? 's' : ''}`);
 
-                // Show transparency note if there's a difference
-                if (stats && Math.abs(originalRating - avgRating) > 0.1) {
-                    $('#total-reviews').append(` <small class="text-muted" title="Original: ${originalRating.toFixed(1)}, Adjusted for sentiment">(Quality-adjusted)</small>`);
-                }
+                // Show transparency note if there's a difference (HIDDEN)
+                // if (stats && Math.abs(originalRating - avgRating) > 0.1) {
+                //     $('#total-reviews').append(` <small class="text-muted" title="Original: ${originalRating.toFixed(1)}, Adjusted for sentiment">(Quality-adjusted)</small>`);
+                // }
             }
 
             function generateStars(rating) {

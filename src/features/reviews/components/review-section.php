@@ -503,6 +503,11 @@ if (!$reference_uuid) {
             day: 'numeric'
         });
 
+        // ✅ Use user image if available, otherwise show initial
+        const userAvatar = review.user_image
+            ? `<img src="${review.user_image}" alt="${review.user_name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">`
+            : `<div class="reviewer-avatar">${userInitial}</div>`;
+
         // Create rating stars
         let ratingStars = '';
         for (let i = 1; i <= 5; i++) {
@@ -516,7 +521,7 @@ if (!$reference_uuid) {
         reviewDiv.innerHTML = `
         <div class="review-header">
             <div class="reviewer-info">
-                <div class="reviewer-avatar">${userInitial}</div>
+                ${userAvatar}
                 <div class="reviewer-details">
                     <h5>${review.user_name || 'Anonymous'}</h5>
                     <p class="review-date">${reviewDate}</p>

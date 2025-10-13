@@ -82,14 +82,30 @@ class Reviews
                 SELECT 
                     r.*,
                     CONCAT(u.firstname, " ", u.lastname) AS user_name,
+                    a.filename AS user_image_filename,
+                    a.folder AS user_image_folder,
                     DATE_FORMAT(r.created_at, "%M %d, %Y") AS formatted_date
                 FROM reviews r
                 LEFT JOIN users u ON r.user_uuid = u.uuid
+                LEFT JOIN attachments a ON u.uuid = a.reference_uuid 
+                    AND a.reference_model = "profiles"
                 WHERE r.reference_uuid = ? AND r.reference_model = ?
                 ORDER BY r.created_at DESC
             ');
             $stmt->execute([$reference_uuid, $reference_model]);
             $reviews = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Build full image paths for each review
+            foreach ($reviews as &$review) {
+                if (!empty($review['user_image_filename']) && !empty($review['user_image_folder'])) {
+                    // Build the media path (similar to how media() helper works)
+                    $review['user_image'] = '/src/uploads/profiles/' . $review['user_image_folder'] . '/' . $review['user_image_filename'];
+                } else {
+                    $review['user_image'] = null;
+                }
+                // Clean up temporary fields
+                unset($review['user_image_filename'], $review['user_image_folder']);
+            }
 
             // Calculate average rating and sentiment distribution
             $stats = self::calculateReviewStats($reviews);

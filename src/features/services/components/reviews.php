@@ -728,21 +728,32 @@ if ($session && $session->has()) {
                 reviews.forEach(review => {
                     const stars = generateStars(review.rating);
 
+                    // ✅ Use actual user image if available, otherwise use placeholder
+                    const userImage = review.user_image
+                        ? review.user_image
+                        : '<?= asset("img/placeholders/image.png") ?>';
+
+                    // ✅ Get first letter of name for alt text
+                    const userInitial = (review.user_name || 'User').charAt(0).toUpperCase();
+
                     html += `
-                <div class="review-item">
-                    <div class="reviewer-img">
-                        <img src="<?= asset('img/placeholders/image.png') ?>" alt="${review.user_name}" class="rounded-circle">
-                    </div>
-                    <div class="review-content ms-3">
-                        <div class="reviewer-name">
-                            <h5 class="mb-0">${review.user_name}</h5>
-                            <span class="review-date ms-2 text-muted">- ${review.formatted_date}</span>
-                            <div class="rating-stars ms-3">${stars}</div>
+                        <div class="review-item">
+                            <div class="reviewer-img">
+                                <img src="${userImage}" 
+                                     alt="${review.user_name}" 
+                                     class="rounded-circle"
+                                     onerror="this.src='<?= asset("img/placeholders/image.png") ?>'">
+                            </div>
+                            <div class="review-content ms-3">
+                                <div class="reviewer-name">
+                                    <h5 class="mb-0">${review.user_name}</h5>
+                                    <span class="review-date ms-2 text-muted">- ${review.formatted_date}</span>
+                                    <div class="rating-stars ms-3">${stars}</div>
+                                </div>
+                                <p class="mt-2">${review.message}</p>
+                            </div>
                         </div>
-                        <p class="mt-2">${review.message}</p>
-                    </div>
-                </div>
-            `;
+                    `;
                 });
 
                 $('#reviews-list').html(html);
@@ -758,10 +769,10 @@ if ($session && $session->has()) {
                 $('#average-stars').html(generateStars(avgRating));
                 $('#total-reviews').text(`${totalReviews} review${totalReviews !== 1 ? 's' : ''}`);
 
-                // Show transparency note if there's a difference
-                if (stats && Math.abs(originalRating - avgRating) > 0.1) {
-                    $('#total-reviews').append(` <small class="text-muted" title="Original: ${originalRating.toFixed(1)}, Adjusted for sentiment">(Quality-adjusted)</small>`);
-                }
+                // Show transparency note if there's a difference (HIDDEN)
+                // if (stats && Math.abs(originalRating - avgRating) > 0.1) {
+                //     $('#total-reviews').append(` <small class="text-muted" title="Original: ${originalRating.toFixed(1)}, Adjusted for sentiment">(Quality-adjusted)</small>`);
+                // }
             }
 
             function generateStars(rating) {

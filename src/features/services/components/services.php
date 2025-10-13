@@ -272,7 +272,7 @@
 
         <!-- Header -->
         <div class="header">
-            <!-- Status -->
+            <!-- ❌ REMOVE THIS ENTIRE STATUS DROPDOWN SECTION:
             <div class="sort-container">
                 <div class="ui tiny floating selection compact clearable dropdown status-dropdown">
                     <input type="hidden" name="filter">
@@ -294,8 +294,9 @@
                     </div>
                 </div>
             </div>
+            -->
 
-            <!-- Sort -->
+            <!-- Sort - Keep this -->
             <div class="sort-container">
                 <div class="ui tiny floating selection compact clearable dropdown sort-dropdown">
                     <input type="hidden" name="sort">
@@ -321,7 +322,7 @@
                 </div>
             </div>
 
-            <!-- Search -->
+            <!-- Search - Keep this -->
             <div class="ui tiny search">
                 <div class="ui icon input">
                     <input class="prompt" type="text" placeholder="Search for services...">
@@ -336,8 +337,9 @@
             <!-- Services will be loaded dynamically -->
         </div>
 
-        <!-- Pagination -->
-        <?= shared('components/pagination'); ?>
+        <!-- ❌ REMOVE THIS LINE:
+         shared('components/pagination'); 
+        -->
     </div>
 </section>
 
