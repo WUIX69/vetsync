@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             LEFT JOIN services s ON a.service_uuid = s.uuid
             LEFT JOIN categories c ON s.category_id = c.id
             WHERE a.user_uuid = ? 
+            AND a.status != 'cancelled'
             AND (c.name LIKE '%vaccination%' OR s.name LIKE '%vaccine%' OR s.name LIKE '%rabies%' OR s.vaccination_doses IS NOT NULL)
             ORDER BY p.name ASC, a.date DESC
         ");
