@@ -1,4 +1,5 @@
 .env
+.env.*
 composer.lock
 
 /vendor
@@ -11,3 +12,16 @@ logs
 /src/uploads
 /src/uploads/*
 vetsync.zip
+vetsync_backup.sql
+
+# Test files
+test-connection.php
+test-pdo.php
+debug.php
+test_*.php
+
+# Temporary files
+*.tmp
+*.log
+.DS_Store
+Thumbs.db

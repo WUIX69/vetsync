@@ -1007,7 +1007,7 @@
                     $('#dateAppointmentsModal').modal('hide');
                     // Add delay and cache-busting to ensure refresh
                     setTimeout(() => {
-                        loadCalendar(currentMonth, currentYear);
+                    loadCalendar(currentMonth, currentYear);
                     }, 500);
                     alert('Appointment cancelled successfully!');
                 } else {

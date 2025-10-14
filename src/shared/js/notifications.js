@@ -53,8 +53,8 @@ const NotificationSystem = {
 
         // Handle individual notification delete
         $(document).on("click", ".delete-notification", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+                e.preventDefault();
+                e.stopPropagation();
             const notificationId = $(e.currentTarget).data("id");
             this.deleteNotification(notificationId);
         });
@@ -76,18 +76,18 @@ const NotificationSystem = {
     },
 
     loadNotifications() {
-        $.ajax({
+            $.ajax({
             url: "/src/features/notifications/api/notifications.php",
-            method: "GET",
+                method: "GET",
             dataType: "json",
-            success: (response) => {
-                if (response.success) {
+                success: (response) => {
+                    if (response.success) {
                     this.allNotifications = response.data;
                     this.renderNotifications(response.data);
                     this.updateNotificationBadge(response.unread_count);
-                }
-            },
-            error: (xhr, status, error) => {
+                    }
+                },
+                error: (xhr, status, error) => {
                 console.error("Failed to load notifications:", error);
             },
         });
@@ -152,9 +152,9 @@ const NotificationSystem = {
                         <span class="notification-time">${timeAgo}</span>
                     </div>
                     <p class="notification-message">${notification.message}</p>
-                    <div class="notification-actions">
-                        <a href="${
-                            notification.link
+                <div class="notification-actions">
+                    <a href="${
+                        notification.link
                         }" class="ui mini primary button view-btn">
                             <i class="eye icon"></i>View
                         </a>
