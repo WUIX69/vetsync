@@ -179,7 +179,7 @@ function renderServices(services) {
         return;
     }
 
-    let servicesHTML = "";
+            let servicesHTML = "";
 
     services.forEach((service) => {
         // Safety check for category
@@ -204,43 +204,43 @@ function renderServices(services) {
             intervalDisplay = `<span class="ui mini purple label">${service.vaccination_interval} ${unit}</span>`;
         }
 
-        servicesHTML += `
-            <tr class="service-item" data-service-uuid="${service.uuid}">
-                <td>
-                    <img class="service-img" src="${service.image}" alt="Services">
-                </td>
-                <td>${service.name}</td>
+                servicesHTML += `
+                    <tr class="service-item" data-service-uuid="${service.uuid}">
+                        <td>
+                            <img class="service-img" src="${service.image}" alt="Services">
+                        </td>
+                        <td>${service.name}</td>
                 <td>${service.description}</td>
-                <td>&#8369; ${service.price}</td>
-                <td>${service.duration}</td>
+                        <td>&#8369; ${service.price}</td>
+                        <td>${service.duration}</td>
                 <td>${dosesDisplay}</td>
                 <td>${intervalDisplay}</td>
-                <td>
+                        <td>
                     <i class="${categoryIcon} icon"></i>
                     ${categoryLabel}
-                </td>
-                <td>
-                    <span class="text-capitalize service-status ${service.status.label}">
-                        <i class="${service.status.icon} icon"></i>
-                        ${service.status.label}
-                    </span>
-                </td>
+                        </td>
+                       <td>
+                            <span class="text-capitalize service-status ${service.status.label}">
+                                <i class="${service.status.icon} icon"></i>
+                                ${service.status.label}
+                            </span>
+                        </td>
                 <td>${service.created_at}</td>
                 <td>${service.updated_at}</td>
-                <td>
-                    <div class="ui compact floating selection dropdown actions-dd">
-                        <i class="dropdown icon"></i>
-                        <div class="text">Actions</div>
-                        <div class="menu">
-                            <div class="item" data-value="view"><i class="eye icon"></i>View</div>
-                            <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
-                            <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        `;
-    });
+                        <td>
+                            <div class="ui compact floating selection dropdown actions-dd">
+                                <i class="dropdown icon"></i>
+                                <div class="text">Actions</div>
+                                <div class="menu">
+                                    <div class="item" data-value="view"><i class="eye icon"></i>View</div>
+                                    <div class="item" data-value="edit"><i class="edit blue icon"></i>Edit</div>
+                                    <div class="item" data-value="delete"><i class="trash alternate outline red icon"></i>Delete</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
 
     servicesTableBody.html(servicesHTML);
 }
